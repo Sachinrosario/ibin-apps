@@ -1,7 +1,7 @@
 {
   "updated": "2026-10-22",
   "owner": "Sachinrosario",
-  "releasesRepo": "ecosoft-releases",
+  "releasesRepo": "ibin-apps",
   "apps": [
     {
       "id": "phyllanthus-rattans-kit",
@@ -15,7 +15,7 @@
       "published": false,
       "facts": ["59 species", "4 identification keys", "264 images", "1,117 localities", "DNA barcodes"],
       "gis": "Not needed. Locality coordinates can be exported to GIS from Version 2.",
-      "web": "https://sachinrosario.github.io/ecosoft-releases/phyllanthus-rattans-kit/",
+      "web": "https://sachinrosario.github.io/ibin-apps/phyllanthus-rattans-kit/",
       "preview": "https://claude.ai/artifact/56VWoteCcb6azsGiqrxxsQ",
       "downloads": [
         {"os": "windows", "kind": "Installer", "file": "PhyllanthusRattansKit_1.0.0_Setup.exe", "size": "19 MB", "note": "Adds Start-menu and desktop shortcuts. No administrator password."},

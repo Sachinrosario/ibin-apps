@@ -3,7 +3,7 @@
   "productName": "Phyllanthus and Rattans Identification Kit",
   "mainBinaryName": "phyllanthus-rattans-kit",
   "version": "1.0.0",
-  "identifier": "in.ecosoft.phyllanthusrattanskit",
+  "identifier": "in.ibinapps.phyllanthusrattanskit",
   "build": { "frontendDist": "../web" },
   "app": {
     "windows": [
@@ -14,7 +14,7 @@
   "bundle": {
     "active": true,
     "targets": "all",
-    "publisher": "EcoSoft Revival",
+    "publisher": "IBIN Apps",
     "copyright": "Indian Barcode of Life kit (DBT; ATREE, UAS Bangalore, BSI). Rebuild 2026.",
     "category": "Education",
     "shortDescription": "Identify Phyllanthus and rattans by their characters",

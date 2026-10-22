@@ -1,4 +1,4 @@
-# Publishes the web versions of all apps at https://sachinrosario.github.io/ecosoft-releases/
+# Publishes the web versions of all apps at https://sachinrosario.github.io/ibin-apps/
 # Runs by itself whenever something changes on the main branch.
 name: Web version
 

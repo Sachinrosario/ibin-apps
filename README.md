@@ -1,10 +1,10 @@
-# EcoSoft Apps — downloads
+# IBIN Apps — downloads
 
 Finished apps only. Source code and raw data live in private repositories.
 
 | App | Use online | Download |
 | --- | --- | --- |
-| Phyllanthus & Rattans Identification Kit — Version 1.0.0, Original | https://sachinrosario.github.io/ecosoft-releases/phyllanthus-rattans-kit/ | [Releases page](https://github.com/Sachinrosario/ecosoft-releases/releases) |
+| Phyllanthus & Rattans Identification Kit — Version 1.0.0, Original | https://sachinrosario.github.io/ibin-apps/phyllanthus-rattans-kit/ | [Releases page](https://github.com/Sachinrosario/ibin-apps/releases) |
 
 ## Which file do I download?
 
