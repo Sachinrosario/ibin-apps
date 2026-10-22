@@ -1,17 +1,20 @@
-; Setup for the Phyllanthus & Rattans Identification Kit, Version 1.0.0 (Original)
+; Setup for the Phyllanthus & Rattans Identification Kit (version passed in as /DVERSION=x.y.z)
 ; Installs for the current user only: no administrator password needed.
 Unicode true
+!ifndef VERSION
+  !define VERSION "1.0.0"
+!endif
 !include "MUI2.nsh"
 Name "Phyllanthus & Rattans Identification Kit"
-OutFile "PhyllanthusRattansKit_1.0.0_Setup.exe"
+OutFile "PhyllanthusRattansKit_${VERSION}_Setup.exe"
 InstallDir "$LOCALAPPDATA\Programs\PhyllanthusRattansKit"
 RequestExecutionLevel user
 SetCompressor /SOLID lzma
-VIProductVersion "1.0.0.0"
+VIProductVersion "${VERSION}.0"
 VIAddVersionKey "ProductName" "Phyllanthus and Rattans Identification Kit"
 VIAddVersionKey "FileDescription" "Setup - Phyllanthus and Rattans Identification Kit"
-VIAddVersionKey "FileVersion" "1.0.0"
-VIAddVersionKey "ProductVersion" "1.0.0 Original"
+VIAddVersionKey "FileVersion" "${VERSION}"
+VIAddVersionKey "ProductVersion" "${VERSION}"
 VIAddVersionKey "CompanyName" "IBIN Apps"
 VIAddVersionKey "LegalCopyright" "Indian Barcode of Life kit (DBT; ATREE, UAS Bangalore, BSI). Rebuild 2026."
 !define MUI_ICON "app.ico"
@@ -37,7 +40,7 @@ Section "Install"
   CreateShortcut "$SMPROGRAMS\Phyllanthus & Rattans Identification Kit\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
   CreateShortcut "$DESKTOP\Phyllanthus & Rattans Identification Kit.lnk" "$INSTDIR\PhyllanthusRattansKit.exe" "" "$INSTDIR\app.ico"
   WriteRegStr HKCU "${UNINST}" "DisplayName" "Phyllanthus & Rattans Identification Kit"
-  WriteRegStr HKCU "${UNINST}" "DisplayVersion" "1.0.0"
+  WriteRegStr HKCU "${UNINST}" "DisplayVersion" "${VERSION}"
   WriteRegStr HKCU "${UNINST}" "Publisher" "IBIN Apps"
   WriteRegStr HKCU "${UNINST}" "DisplayIcon" "$INSTDIR\app.ico"
   WriteRegStr HKCU "${UNINST}" "InstallLocation" "$INSTDIR"

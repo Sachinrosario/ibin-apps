@@ -62,9 +62,11 @@ jobs:
         working-directory: apps/${{ needs.prepare.outputs.app }}/windows
         run: |
           cp -r ../web web
+          V=${{ needs.prepare.outputs.version }}; C=$(echo $V | tr . ,)
+          sed -i "s/1,0,0,0/$C,0/g; s/\"1\.0\.0\"/\"$V\"/g; s/1\.0\.0 Original/$V/g" app.rc
           x86_64-w64-mingw32-windres --preprocessor=cat -O coff -i app.rc -o rsrc_windows_amd64.syso
           GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -ldflags "-s -w -H windowsgui" -o ${{ needs.prepare.outputs.base }}.exe .
-          makensis -V2 installer.nsi
+          makensis -V2 -DVERSION=${{ needs.prepare.outputs.version }} installer.nsi
           ls -la *.exe
       - name: Attach to release
         env:
@@ -83,6 +85,9 @@ jobs:
         with:
           node-version: 22
       - uses: dtolnay/rust-toolchain@stable
+      - name: Set version number
+        working-directory: apps/${{ needs.prepare.outputs.app }}
+        run: node -e "const f='src-tauri/tauri.conf.json',c=require('./'+f);c.version='${{ needs.prepare.outputs.version }}';require('fs').writeFileSync(f,JSON.stringify(c,null,2))"
       - name: Build .deb
         working-directory: apps/${{ needs.prepare.outputs.app }}
         run: |
@@ -106,6 +111,9 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: aarch64-apple-darwin,x86_64-apple-darwin
+      - name: Set version number
+        working-directory: apps/${{ needs.prepare.outputs.app }}
+        run: node -e "const f='src-tauri/tauri.conf.json',c=require('./'+f);c.version='${{ needs.prepare.outputs.version }}';require('fs').writeFileSync(f,JSON.stringify(c,null,2))"
       - name: Build .dmg (Intel and Apple silicon)
         working-directory: apps/${{ needs.prepare.outputs.app }}
         run: |

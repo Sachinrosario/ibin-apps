@@ -9,7 +9,7 @@
       "icon": "apps/phyllanthus-rattans-kit.png",
       "summary": "Identify Phyllanthus and rattans by the characters you can see, then read nomenclature, descriptions, uses, images, distribution and DNA barcodes.",
       "origin": "Indian Barcode of Life kit (DBT, Government of India), 2010. Built by ATREE Bangalore, UAS Bangalore and BSI Kolkata.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "versionName": "Version 1 – Original",
       "released": "2026-10-22",
       "published": true,
@@ -27,7 +27,7 @@
         {
           "os": "windows",
           "kind": "Installer",
-          "file": "PhyllanthusRattansKit_1.0.0_Setup.exe",
+          "file": "PhyllanthusRattansKit_1.0.1_Setup.exe",
           "size": "19 MB",
           "note": "Adds Start-menu and desktop shortcuts. No administrator password."
         },
@@ -41,26 +41,31 @@
         {
           "os": "mac",
           "kind": "App",
-          "file": "PhyllanthusRattansKit_1.0.0_universal.dmg",
+          "file": "PhyllanthusRattansKit_1.0.1_universal.dmg",
           "size": "38 MB",
           "note": "Built by the GitHub build robot. Intel and Apple-silicon Macs."
         },
         {
           "os": "ubuntu",
           "kind": "Package",
-          "file": "PhyllanthusRattansKit_1.0.0_amd64.deb",
+          "file": "PhyllanthusRattansKit_1.0.1_amd64.deb",
           "size": "18 MB",
           "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
         },
         {
           "os": "any",
           "kind": "Offline folder",
-          "file": "PhyllanthusRattansKit_1.0.0_offline.zip",
+          "file": "PhyllanthusRattansKit_1.0.1_offline.zip",
           "size": "17 MB",
           "note": "Any computer. Extract, then double-click Open Kit.html."
         }
       ],
       "changes": [
+        {
+          "version": "1.0.1",
+          "date": "2026-10-22",
+          "text": "Opening screen now credits the proprietary right holder, Dr. K.N. Ganeshaiah, and the 2026 update by Dr. Sachin A. Rosario. No other changes."
+        },
         {
           "version": "1.0.0",
           "date": "2026-10-22",

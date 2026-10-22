@@ -60,6 +60,9 @@ button{font:inherit}
 .splash figure img{display:block;width:100%;border-radius:6px}
 .splash figcaption{font-size:13px;color:var(--muted);padding:8px 4px 0}
 .splash .stack{display:flex;flex-direction:column;gap:14px}
+.credit{display:flex;flex-direction:column;gap:2px;font-size:15px;padding-left:12px;border-left:3px solid var(--leaf)}
+.credit span{color:var(--muted)}
+.credit b{font-weight:600}
 .stats{display:flex;gap:22px;flex-wrap:wrap;margin:8px 0}
 .stats div{display:flex;flex-direction:column}
 .stats b{font-family:var(--f-display);font-size:30px;line-height:1;font-variant-numeric:tabular-nums}
@@ -168,7 +171,7 @@ details summary{cursor:pointer;color:var(--leaf);font-weight:600;margin:6px 0}
 <header class="bar"><div class="wrap">
   <button class="brand" id="home" type="button"><b>Identification Kit</b><span>Indian Barcode of Life · Phyllanthus &amp; Rattans</span></button>
   <nav class="crumbs" id="crumbs" aria-label="Where you are"></nav>
-  <span class="tag">Version 1.0.0 · Original</span>
+  <span class="tag">Version 1.0.1 · Original</span>
 </div></header>
 <main class="wrap" id="app"><p class="lead">Loading the kit…</p></main>
 <div class="lb" id="lb" hidden><button type="button" id="lbclose">Close</button><figure><img id="lbimg" alt=""><figcaption id="lbcap"></figcaption></figure></div>
@@ -216,6 +219,7 @@ function splash(){
     <figcaption>Opening screen of the original program, kept as it was.</figcaption></figure>
     <div class="stack">
       <h1>Identification Kit</h1>
+      <div class="credit"><div><span>Proprietary right holder</span> <b>Dr. K.N. Ganeshaiah</b></div><div><span>Updated in 2026 by</span> <b>Dr. Sachin A. Rosario</b></div></div>
       <p class="lead">Identify <span class="sp">Phyllanthus</span> and rattans by the characters you can see, then read each species' nomenclature, description, uses, images, distribution and DNA barcode.</p>
       <div class="stats">
         <div><b>${phy}</b><span>Phyllanthus species</span></div>
