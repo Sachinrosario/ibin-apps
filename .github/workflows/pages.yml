@@ -1,0 +1,38 @@
+# Publishes the web versions of all apps at https://sachinrosario.github.io/ecosoft-releases/
+# Runs by itself whenever something changes on the main branch.
+name: Web version
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Collect web files
+        run: |
+          mkdir -p site
+          cp index.html site/
+          for d in apps/*/; do n=$(basename "$d"); mkdir -p "site/$n"; cp -r "$d/web/." "site/$n/"; done
+          touch site/.nojekyll
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4

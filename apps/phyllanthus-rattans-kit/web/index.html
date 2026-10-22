@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta charset="utf-8">
+<title>Phyllanthus &amp; Rattans Identification Kit</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,500;0,700;1,500;1,700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: field-kit console. A slim herbarium-label header, then one working surface per screen:
+   characters on the left, picture choices in the middle, matching species on the right. */
+:root{
+  --paper:#F4F6F1; --sheet:#FFFFFF; --ink:#1C2B22; --muted:#5B6B60; --rule:#D5DDD2;
+  --leaf:#2F6B45; --leaf-soft:#E2EEE5; --cane:#9A6A12; --cane-soft:#F5EBD6; --warn:#A23B2A;
+  --A:#2F8F4E; --C:#2C62B8; --G:#C68A12; --T:#C2412D; --N:#9AA39C;
+  --f-display:"Spectral", Georgia, "Times New Roman", serif;
+  --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#111813; --sheet:#18211B; --ink:#E4ECE5; --muted:#9CAB9F; --rule:#2C3A30;
+  --leaf:#7FC797; --leaf-soft:#1F3326; --cane:#E0B060; --cane-soft:#33281A; --warn:#F08A76;
+  --A:#5CC37C; --C:#6E9BEA; --G:#E6B54A; --T:#EE7560; --N:#6B766E; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#111813; --sheet:#18211B; --ink:#E4ECE5; --muted:#9CAB9F; --rule:#2C3A30;
+  --leaf:#7FC797; --leaf-soft:#1F3326; --cane:#E0B060; --cane-soft:#33281A; --warn:#F08A76;
+  --A:#5CC37C; --C:#6E9BEA; --G:#E6B54A; --T:#EE7560; --N:#6B766E; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--paper);color:var(--ink)}
+body{font-family:var(--f-body);font-size:16px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--sheet)}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--sheet);border-bottom:1px solid var(--rule)}
+header.bar .wrap{display:flex;align-items:center;gap:16px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;flex-direction:column;line-height:1.15;cursor:pointer;background:none;border:0;color:inherit;text-align:left;padding:0;font:inherit}
+.brand b{font-family:var(--f-display);font-size:20px;font-weight:700}
+.brand span{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.crumbs{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+.crumbs button{background:none;border:0;color:var(--leaf);font:inherit;cursor:pointer;padding:2px 0;text-decoration:underline;text-underline-offset:3px}
+.tag{margin-left:auto;font-size:12px;border:1px solid var(--rule);border-radius:999px;padding:3px 10px;color:var(--muted)}
+main{padding-block:24px 48px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0}
+h1{font-size:clamp(26px,4vw,36px);font-weight:700}
+h2{font-size:22px;font-weight:700}
+h3{font-size:17px;font-weight:700}
+.sp{font-style:italic}
+.lead{color:var(--muted);max-width:65ch;margin:6px 0 0}
+button{font:inherit}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--rule);background:var(--sheet);color:var(--ink);border-radius:8px;padding:8px 14px;cursor:pointer}
+.btn:hover{border-color:var(--leaf)}
+.btn.primary{background:var(--leaf);border-color:var(--leaf);color:var(--sheet);font-weight:600}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--cane);outline-offset:2px}
+
+/* splash */
+.splash{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;align-items:center}
+.splash figure{margin:0;background:var(--sheet);border:1px solid var(--rule);border-radius:var(--r);padding:10px}
+.splash figure img{display:block;width:100%;border-radius:6px}
+.splash figcaption{font-size:13px;color:var(--muted);padding:8px 4px 0}
+.splash .stack{display:flex;flex-direction:column;gap:14px}
+.stats{display:flex;gap:22px;flex-wrap:wrap;margin:8px 0}
+.stats div{display:flex;flex-direction:column}
+.stats b{font-family:var(--f-display);font-size:30px;line-height:1;font-variant-numeric:tabular-nums}
+.stats span{font-size:13px;color:var(--muted)}
+
+/* module grid */
+.modules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:20px}
+.mod{display:grid;grid-template-columns:120px minmax(0,1fr);gap:16px;align-items:center;text-align:left;background:var(--sheet);border:1px solid var(--rule);border-radius:var(--r);padding:12px;cursor:pointer;color:inherit}
+.mod:hover{border-color:var(--leaf)}
+.mod img{width:120px;height:96px;object-fit:cover;border-radius:6px;display:block}
+.mod small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.mod .kind{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+.mod.phy .kind{color:var(--leaf)} .mod.rat .kind{color:var(--cane)}
+.habits{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:20px}
+.habits .mod{grid-template-columns:1fr}
+.habits .mod img{width:100%;height:160px}
+
+/* key screen */
+.key{display:grid;grid-template-columns:260px minmax(0,1fr) 280px;gap:16px;margin-top:18px;align-items:start}
+.panel{background:var(--sheet);border:1px solid var(--rule);border-radius:var(--r);padding:14px;min-width:0}
+.panel h3{margin-bottom:8px}
+.hint{font-size:13px;color:var(--muted);margin:0 0 10px}
+.chars{display:flex;flex-direction:column;gap:6px}
+.char{display:flex;justify-content:space-between;gap:8px;align-items:center;width:100%;text-align:left;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:8px;padding:8px 10px;cursor:pointer}
+.char:hover{border-color:var(--leaf)}
+.char.on{background:var(--leaf-soft);border-color:var(--leaf)}
+.char.done{background:var(--sheet);border-style:dashed;cursor:default;color:var(--muted)}
+.char .v{font-size:13px;font-weight:600;color:var(--leaf);text-align:right}
+.char.done .v{color:var(--ink)}
+.sectionlabel{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:10px 0 2px;font-weight:700}
+.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.opt{display:flex;flex-direction:column;gap:6px;border:1px solid var(--rule);background:var(--paper);border-radius:8px;padding:8px;cursor:pointer;color:var(--ink);text-align:left}
+.opt:hover{border-color:var(--leaf)}
+.opt img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:5px;display:block;background:var(--rule)}
+.opt b{font-size:15px}
+.opt.cant{justify-content:center;align-items:center;min-height:120px;border-style:dashed;color:var(--muted)}
+.opt .n{font-size:12px;color:var(--muted)}
+.empty{border:1px dashed var(--rule);border-radius:8px;padding:28px 16px;text-align:center;color:var(--muted)}
+.count{font-family:var(--f-display);font-size:40px;line-height:1;font-variant-numeric:tabular-nums;color:var(--leaf)}
+.matched{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:4px;max-height:420px;overflow:auto}
+.matched button{width:100%;text-align:left;border:0;background:none;color:var(--ink);padding:6px 8px;border-radius:6px;cursor:pointer;font-style:italic}
+.matched button:hover{background:var(--leaf-soft)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.trail{font-size:13px;color:var(--muted);margin-top:10px}
+.trail ol{margin:4px 0 0;padding-left:18px}
+
+/* details */
+.details{display:grid;grid-template-columns:240px minmax(0,1fr);gap:16px;margin-top:18px;align-items:start}
+.splist{list-style:none;margin:0;padding:0;max-height:70vh;overflow:auto;display:flex;flex-direction:column;gap:2px}
+.splist button{width:100%;text-align:left;background:none;border:0;padding:6px 8px;border-radius:6px;cursor:pointer;color:var(--ink);font-style:italic}
+.splist button.on{background:var(--leaf-soft);color:var(--leaf);font-weight:600}
+.splist button:hover{background:var(--leaf-soft)}
+.sphead{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-end;border-bottom:1px solid var(--rule);padding-bottom:12px}
+.sphead .meta{font-size:13px;color:var(--muted)}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin:12px 0 16px}
+.tabs button{border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:999px;padding:5px 12px;cursor:pointer;font-size:14px}
+.tabs button.on{background:var(--ink);border-color:var(--ink);color:var(--sheet)}
+.tabs button:disabled{opacity:.4;cursor:not-allowed}
+.prose{max-width:72ch}
+.prose p{margin:0 0 10px}
+dl.facts{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:8px 18px;margin:0}
+dl.facts dt{font-weight:700;color:var(--muted);font-size:14px}
+dl.facts dd{margin:0}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.gallery figure{margin:0;cursor:zoom-in}
+.gallery img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;display:block;border:1px solid var(--rule)}
+.gallery figcaption{font-size:13px;color:var(--muted);margin-top:4px}
+.mapbox{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.mapbox img{width:100%;border-radius:6px;border:1px solid var(--rule);cursor:zoom-in}
+.tablebox{overflow:auto;max-height:420px;border:1px solid var(--rule);border-radius:6px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:6px 10px;border-bottom:1px solid var(--rule);text-align:left;white-space:nowrap}
+th{position:sticky;top:0;background:var(--sheet);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+td.num{font-variant-numeric:tabular-nums;font-family:var(--f-mono);font-size:13px}
+.seq{margin:0 0 16px}
+.seq canvas{width:100%;height:34px;display:block;border-radius:4px;border:1px solid var(--rule)}
+.seq .lab{font-size:13px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:4px}
+.legend{display:flex;gap:12px;font-family:var(--f-mono);font-size:13px;margin-bottom:10px;flex-wrap:wrap}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:-1px;margin-right:4px}
+pre.aln{font-family:var(--f-mono);font-size:12px;line-height:1.45;margin:0;padding:10px;background:var(--paper)}
+pre.aln .hit{background:var(--cane-soft)}
+.b-A{color:var(--A)}.b-C{color:var(--C)}.b-G{color:var(--G)}.b-T{color:var(--T)}
+.chipline{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--rule);border-radius:999px;padding:2px 10px;font-size:13px;background:var(--paper)}
+details summary{cursor:pointer;color:var(--leaf);font-weight:600;margin:6px 0}
+.note{font-size:13px;color:var(--muted);border-left:3px solid var(--cane);padding:4px 10px;margin:12px 0;max-width:72ch}
+
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:20;background:rgba(10,14,11,.86);display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.lb figure{margin:0;max-width:min(1100px,100%);display:flex;flex-direction:column;gap:8px}
+.lb img{max-height:80vh;width:auto;max-width:100%;border-radius:6px;margin:0 auto;display:block}
+.lb figcaption{color:#E4ECE5;font-size:14px;text-align:center}
+.lb button{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));right:calc(12px + env(safe-area-inset-right,0px));background:#E4ECE5;color:#111813;border:0;border-radius:999px;padding:8px 14px;cursor:pointer;font-weight:600}
+
+@media (max-width:1000px){.key{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.key .center{grid-column:1/-1;order:-1}}
+@media (max-width:760px){
+  .splash,.details,.mapbox{grid-template-columns:minmax(0,1fr)}
+  .modules,.habits{grid-template-columns:minmax(0,1fr)}
+  .key{grid-template-columns:minmax(0,1fr)}
+  .splist{max-height:200px}
+  .tag{margin-left:0}
+}
+@media (prefers-reduced-motion:no-preference){.panel,.mod,.opt{transition:border-color .15s}}
+</style>
+
+<header class="bar"><div class="wrap">
+  <button class="brand" id="home" type="button"><b>Identification Kit</b><span>Indian Barcode of Life · Phyllanthus &amp; Rattans</span></button>
+  <nav class="crumbs" id="crumbs" aria-label="Where you are"></nav>
+  <span class="tag">Version 1.0.0 · Original</span>
+</div></header>
+<main class="wrap" id="app"><p class="lead">Loading the kit…</p></main>
+<div class="lb" id="lb" hidden><button type="button" id="lbclose">Close</button><figure><img id="lbimg" alt=""><figcaption id="lbcap"></figcaption></figure></div>
+
+<script src="data/kit.js"></script>
+<script>
+"use strict";
+let KIT=null;
+const $=s=>document.querySelector(s);
+const app=$('#app');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const low=v=>String(v??'').trim().toLowerCase();
+const spById=id=>KIT.species.find(s=>s.spid===id);
+const nm=s=>`<span class="sp">${esc(s.genus)} ${esc(s.species)}</span>`;
+
+/* ---------- navigation ---------- */
+let route={view:'splash'};
+function go(r){route=r;render();window.scrollTo({top:0});}
+$('#home').onclick=()=>go({view:'modules'});
+function crumbs(list){
+  $('#crumbs').innerHTML=list.map((c,i)=>i<list.length-1?`<button type="button" data-i="${i}">${esc(c[0])}</button> ›`:`<span>${esc(c[0])}</span>`).join(' ');
+  $('#crumbs').querySelectorAll('button').forEach(b=>b.onclick=()=>go(list[+b.dataset.i][1]));
+}
+
+/* ---------- lightbox ("Click on the image to enlarge") ---------- */
+function zoom(src,cap){$('#lbimg').src=src;$('#lbimg').alt=cap;$('#lbcap').textContent=cap;$('#lb').hidden=false;$('#lbclose').focus();}
+$('#lbclose').onclick=()=>{$('#lb').hidden=true};
+$('#lb').onclick=e=>{if(e.target.id==='lb')$('#lb').hidden=true};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('#lb').hidden=true});
+
+/* ---------- screens ---------- */
+function render(){
+  if(route.view==='splash') return splash();
+  if(route.view==='modules') return modules();
+  if(route.view==='habit') return habitPick();
+  if(route.view==='key') return keyScreen(route.key);
+  if(route.view==='details') return details(route.group,route.spid,route.tab);
+}
+
+function splash(){
+  crumbs([['Start',{view:'splash'}]]);
+  const phy=KIT.species.filter(s=>s.genus==='Phyllanthus').length, rat=KIT.species.length-phy;
+  app.innerHTML=`<section class="splash">
+    <figure><img src="img/splash.webp" alt="Original opening screen: Indian Barcode of Life, Department of Biotechnology, Government of India; groups Rattans and Phyllanthus; institutions ATREE, UAS and BSI; team credits">
+    <figcaption>Opening screen of the original program, kept as it was.</figcaption></figure>
+    <div class="stack">
+      <h1>Identification Kit</h1>
+      <p class="lead">Identify <span class="sp">Phyllanthus</span> and rattans by the characters you can see, then read each species' nomenclature, description, uses, images, distribution and DNA barcode.</p>
+      <div class="stats">
+        <div><b>${phy}</b><span>Phyllanthus species</span></div>
+        <div><b>${rat}</b><span>rattan species</span></div>
+        <div><b>${KIT.species.reduce((a,s)=>a+s.images.length,0)}</b><span>specimen images</span></div>
+        <div><b>${KIT.species.reduce((a,s)=>a+s.localities.length,0)}</b><span>locality records</span></div>
+      </div>
+      <div class="actions"><button class="btn primary" type="button" id="cont">Click here to continue</button></div>
+    </div></section>`;
+  $('#cont').onclick=()=>go({view:'modules'});
+}
+
+function firstPhoto(name){const s=KIT.species.find(x=>x.name===name);const p=s&&(s.images.find(i=>i.cat==='P')||s.images[0]);return p?p.src:'';}
+function modules(){
+  crumbs([['Start',{view:'splash'}],['Select the Module',{view:'modules'}]]);
+  const card=(cls,kind,title,sub,img,id)=>`<button type="button" class="mod ${cls}" id="${id}"><img src="${img}" alt=""><div><span class="kind">${kind}</span><h2>${title}</h2><small>${sub}</small></div></button>`;
+  app.innerHTML=`<h1>Select the Module</h1><p class="lead">The four modules of the original program.</p>
+  <div class="modules">
+    ${card('phy','Phyllanthus','Phyllanthus Identification','Identify a Phyllanthus herb, shrub or tree from its characters',firstPhoto('Phyllanthus amarus'),'m1')}
+    ${card('phy','Phyllanthus','Phyllanthus Details','Browse all 25 Phyllanthus species',firstPhoto('Phyllanthus emblica'),'m2')}
+    ${card('rat','Rattans','Rattans Identification','Identify a rattan from 17 characters',firstPhoto('Calamus gamblei'),'m3')}
+    ${card('rat','Rattans','Rattans Details','Browse the Calamus species',firstPhoto('Calamus hookerianus'),'m4')}
+  </div>`;
+  $('#m1').onclick=()=>go({view:'habit'});
+  $('#m2').onclick=()=>go({view:'details',group:'phyllanthus'});
+  $('#m3').onclick=()=>go({view:'key',key:'rattans'});
+  $('#m4').onclick=()=>go({view:'details',group:'calamus'});
+}
+
+function habitPick(){
+  crumbs([['Start',{view:'splash'}],['Modules',{view:'modules'}],['Phyllanthus Identification',{view:'habit'}]]);
+  const n=k=>KIT.keys[k].records.length;
+  app.innerHTML=`<h1>Select Phyllanthus habit</h1><p class="lead">Start with the habit of your plant. Each habit has its own identification key.</p>
+  <div class="habits">
+    <button type="button" class="mod phy" id="h1"><img src="${firstPhoto('Phyllanthus amarus')}" alt=""><div><span class="kind">${n('herb')} species · 7 characters</span><h2>Herb</h2></div></button>
+    <button type="button" class="mod phy" id="h2"><img src="${firstPhoto('Phyllanthus reticulatus')}" alt=""><div><span class="kind">${n('shrub')} species · 9 characters</span><h2>Shrub</h2></div></button>
+    <button type="button" class="mod phy" id="h3"><img src="${firstPhoto('Phyllanthus emblica')}" alt=""><div><span class="kind">${n('tree')} species · 4 characters</span><h2>Tree</h2></div></button>
+  </div>`;
+  $('#h1').onclick=()=>go({view:'key',key:'herb'});
+  $('#h2').onclick=()=>go({view:'key',key:'shrub'});
+  $('#h3').onclick=()=>go({view:'key',key:'tree'});
+}
+
+/* ---------- identification key: same rules as the VB6 program ----------
+   Every choice adds  [field] = 'value'  to the filter (Access compares text without regard to case).
+   The choices offered for a character are the distinct values among species that still match.
+   "Previous Selection" removes the last choice; "Clear" removes all. */
+const keyState={};
+function matches(K,steps){return K.records.filter(r=>steps.every(s=>s.value===null||low(r[s.field])===low(s.value)));}
+function keyScreen(k){
+  const K=KIT.keys[k]; const st=keyState[k]||(keyState[k]={steps:[],open:null});
+  const isR=k==='rattans';
+  crumbs(isR?[['Start',{view:'splash'}],['Modules',{view:'modules'}],['Rattans Identification',{view:'key',key:k}]]
+            :[['Start',{view:'splash'}],['Modules',{view:'modules'}],['Phyllanthus Identification',{view:'habit'}],[K.title.replace('Phyllanthus ','').replace(' Identification keys',''),{view:'key',key:k}]]);
+  const left=matches(K,st.steps);
+  const chosen=new Map(st.steps.map(s=>[s.field,s]));
+  const charBtn=c=>{const s=chosen.get(c.field);
+    return `<button type="button" class="char ${s?'done':''} ${st.open===c.field?'on':''}" data-f="${c.field}" ${s?'disabled':''}><span>${esc(c.label)}</span><span class="v">${s?(s.value===null?"Can't say":esc(s.value)):''}</span></button>`;};
+  let center='';
+  const oc=K.chars.find(c=>c.field===st.open);
+  if(oc){
+    const vals=new Map();
+    left.forEach(r=>{const v=r[oc.field];if(v&&v!=='-'){const key=low(v);if(!vals.has(key))vals.set(key,{v,n:0});vals.get(key).n++;}});
+    center=`<h3>${esc(oc.prompt.replace(/\.+\?$|\?$/,''))}</h3><p class="hint">Click the picture that matches your plant.</p><div class="opts">`+
+      [...vals.entries()].sort((a,b)=>a[0].localeCompare(b[0])).map(([key,o])=>`<button type="button" class="opt" data-v="${esc(o.v)}">${oc.pictures[key]?`<img src="${oc.pictures[key]}" alt="${esc(oc.label)}: ${esc(o.v)}" loading="lazy">`:''}<b>${esc(o.v)}</b><span class="n">${o.n} of ${left.length} species</span></button>`).join('')+
+      `<button type="button" class="opt cant" data-cant="1"><b>Can't say</b><span class="n">Skip this character</span></button></div>`;
+  } else {
+    center=`<div class="empty">${left.length===1?`<p>One species matches. Open its details from the list.</p>`:`<p><b>Start with the parameters which you are more confident of.</b></p><p>Pick a character on the left.</p>`}</div>`;
+  }
+  const remaining=K.chars.filter(c=>!chosen.has(c.field)), done=K.chars.filter(c=>chosen.has(c.field));
+  app.innerHTML=`<h1>${esc(K.title)}</h1>
+  <div class="key">
+    <section class="panel"><h3>Characters</h3>
+      <div class="sectionlabel">List of parameters left for selection · ${remaining.length}</div>
+      <div class="chars">${remaining.map(charBtn).join('')}</div>
+      ${done.length?`<div class="sectionlabel">Selected</div><div class="chars">${st.steps.map(s=>charBtn(K.chars.find(c=>c.field===s.field))).join('')}</div>`:''}
+      <div class="actions"><button type="button" class="btn" id="undo" ${st.steps.length?'':'disabled'} title="Present selection will be cancelled">Previous Selection</button><button type="button" class="btn" id="clr" ${st.steps.length?'':'disabled'}>Clear all</button></div>
+    </section>
+    <section class="panel center">${center}</section>
+    <section class="panel"><h3>${esc(K.matched)}</h3><div class="count">${left.length}</div>
+      <ul class="matched">${left.map(r=>`<li><button type="button" data-s="${r.spid}">${esc(r.name)}</button></li>`).join('')}</ul>
+      ${left.length===0?`<p class="hint">No species match. Use Previous Selection.</p>`:''}
+    </section>
+  </div>`;
+  app.querySelectorAll('.char:not(.done)').forEach(b=>b.onclick=()=>{st.open=b.dataset.f;render();});
+  app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{st.steps.push({field:st.open,value:b.dataset.cant?null:b.dataset.v});st.open=null;render();});
+  $('#undo').onclick=()=>{st.steps.pop();st.open=null;render();};
+  $('#clr').onclick=()=>{st.steps=[];st.open=null;render();};
+  app.querySelectorAll('.matched button').forEach(b=>b.onclick=()=>go({view:'details',group:isR?'rattan-key':'phyllanthus',spid:+b.dataset.s,back:{view:'key',key:k}}));
+}
+
+/* ---------- species details ---------- */
+const TABS=[['nomen','Nomenclature'],['desc','Description'],['habitat','Habit & Habitat'],['season','Flowering & Fruiting'],['common','Common Names'],['uses','Uses'],['syn','Synonyms'],['images','Images'],['dist','Distribution'],['dna','DNA Barcode']];
+function details(group,spid,tab){
+  // the original lists genus = 'phyllanthus' and genus = 'calamus'
+  let list=group==='phyllanthus'?KIT.species.filter(s=>s.genus==='Phyllanthus'):group==='calamus'?KIT.species.filter(s=>s.genus==='Calamus'):KIT.species.filter(s=>KIT.keys.rattans.records.some(r=>r.spid===s.spid));
+  list=[...list].sort((a,b)=>a.species.localeCompare(b.species));
+  const s=spid?spById(spid):list[0]; tab=tab||'nomen';
+  const title=group==='phyllanthus'?'Phyllanthus Details':'Rattans Details';
+  const cr=[['Start',{view:'splash'}],['Modules',{view:'modules'}]];
+  if(route.back) cr.push([route.back.key==='rattans'?'Rattans Identification':KIT.keys[route.back.key].title.replace('Phyllanthus ','').replace(' Identification keys',''),route.back]);
+  cr.push([title,{view:'details',group,spid:s.spid,back:route.back}]);
+  crumbs(cr);
+  const has={nomen:!!s.nomen,desc:!!s.desc,habitat:!!(s.habit||s.habitat),season:!!(s.flowering||s.fruiting),common:s.common.length>0,uses:!!s.uses,syn:s.synonyms.length>0,images:s.images.length>0,dist:!!(s.map||s.localities.length),dna:s.barcode.length>0||s.sequences.length>0||alnRows(s).length>0};
+  if(!has[tab]) tab=TABS.find(t=>has[t[0]])?.[0]||'nomen';
+  app.innerHTML=`<h1>${title}</h1>
+  <div class="details">
+    <section class="panel"><h3>Select Species</h3><ul class="splist">${list.map(x=>`<li><button type="button" class="${x.spid===s.spid?'on':''}" data-s="${x.spid}">${esc(x.name)}</button></li>`).join('')}</ul></section>
+    <section class="panel">
+      <div class="sphead"><div><h2>${nm(s)}</h2><div class="meta">${esc(s.habit&&s.habit!=='-'?s.habit:'')}${s.common.length?` · ${esc(s.common[0])}`:''}</div></div><div class="meta">Species ID ${s.spid}</div></div>
+      <div class="tabs" role="tablist">${TABS.map(([k,l])=>`<button type="button" role="tab" data-t="${k}" class="${k===tab?'on':''}" ${has[k]?'':'disabled'}>${l}</button>`).join('')}</div>
+      <div id="tabbody">${tabBody(s,tab)}</div>
+    </section>
+  </div>`;
+  app.querySelectorAll('.splist button').forEach(b=>b.onclick=()=>go({view:'details',group,spid:+b.dataset.s,tab,back:route.back}));
+  app.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>go({view:'details',group,spid:s.spid,tab:b.dataset.t,back:route.back}));
+  app.querySelectorAll('[data-zoom]').forEach(el=>el.onclick=()=>zoom(el.dataset.zoom,el.dataset.cap));
+  app.querySelectorAll('canvas[data-seq]').forEach(drawSeq);
+}
+function partName(s,i){const t=i.title; const r=t.startsWith(s.name)?(t.slice(s.name.length).replace(/^[\s_]+/,'')||'Specimen'):t; return /^\d+$/.test(r)?'Sheet '+r:r;}
+function alnRows(s){const ep=s.species.toLowerCase();return KIT.alignment.filter(l=>l.trim().toLowerCase().replace(/^p[._]/,'').startsWith(ep));}
+function tabBody(s,tab){
+  if(tab==='nomen') return `<div class="prose">${s.nomen}</div>`;
+  if(tab==='desc') return `<div class="prose">${s.desc}</div>`;
+  if(tab==='habitat') return `<dl class="facts"><dt>Habit</dt><dd>${esc(s.habit||'—')}</dd><dt>Habitat</dt><dd>${esc(s.habitat||'—')}</dd></dl>`;
+  if(tab==='season') return `<dl class="facts"><dt>Flowering</dt><dd>${esc(s.flowering||'—')}</dd><dt>Fruiting</dt><dd>${esc(s.fruiting||'—')}</dd></dl>`;
+  if(tab==='common') return `<dl class="facts">${s.common.map(c=>{const m=c.split(/\s*-\s*/);return m.length>1?`<dt>${esc(m[0])}</dt><dd>${esc(m.slice(1).join(' - '))}</dd>`:`<dt></dt><dd>${esc(c)}</dd>`;}).join('')}</dl>`;
+  if(tab==='uses') return `<div class="prose"><p>${esc(s.uses)}</p></div>`;
+  if(tab==='syn') return `<div class="prose">${s.synonyms.map(x=>`<p class="sp">${esc(x)}</p>`).join('')}</div>`;
+  if(tab==='images'){
+    const g=(cat,lab)=>{const im=s.images.filter(i=>i.cat===cat);return im.length?`<div class="sectionlabel">${lab} · ${im.length}</div><div class="gallery">${im.map(i=>`<figure data-zoom="${i.src}" data-cap="${esc(s.name)} — ${esc(partName(s,i))}"><img src="${i.src}" alt="${esc(s.name)} ${esc(partName(s,i))}" loading="lazy"><figcaption>${esc(partName(s,i))}</figcaption></figure>`).join('')}</div>`:'';};
+    return `<p class="hint">Click on the image to enlarge.</p>${g('P','Photographs')}${g('H','Herbarium specimens')}`;
+  }
+  if(tab==='dist') return `<div class="mapbox">${s.map?`<div><img src="${s.map}" alt="Distribution map of ${esc(s.name)}" data-zoom="${s.map}" data-cap="Distribution of ${esc(s.name)}"><p class="hint">Click on the map to get better view.</p></div>`:''}
+    <div><div class="sectionlabel">${s.localities.length} localities</div><div class="tablebox"><table><thead><tr><th>District</th><th>Location</th><th>Latitude</th><th>Longitude</th></tr></thead><tbody>${s.localities.map(l=>`<tr><td>${esc(l.district)}</td><td>${esc(l.location)}</td><td class="num">${esc(l.lat)}</td><td class="num">${esc(l.long)}</td></tr>`).join('')}</tbody></table></div></div></div>`;
+  if(tab==='dna'){
+    const rows=alnRows(s);
+    return `<div class="legend"><span><i style="background:var(--A)"></i>A</span><span><i style="background:var(--C)"></i>C</span><span><i style="background:var(--G)"></i>G</span><span><i style="background:var(--T)"></i>T</span><span><i style="background:var(--N)"></i>unknown</span></div>
+    ${s.sequences.length?`<div class="sectionlabel">Sequences · ${s.sequences.length}</div>${s.sequences.map((q,i)=>`<div class="seq"><div class="lab"><span>Sequence ${i+1}</span><span>${q.length} bp</span></div><canvas data-seq="${q}" aria-label="Sequence ${i+1} drawn as a colour barcode"></canvas><details><summary>Show bases</summary><pre class="aln">${colorBases(q.replace(/(.{60})/g,'$1\n'))}</pre></details></div>`).join('')}`:''}
+    ${s.barcode.length?`<div class="sectionlabel">Diagnostic sites · ${s.barcode.length}</div><div class="tablebox" style="max-width:420px"><table><thead><tr><th>Nucleotide position</th><th>Nucleotide change</th></tr></thead><tbody>${s.barcode.map(b=>`<tr><td class="num">${esc(b.np)}</td><td class="num">${esc(b.nc)}</td></tr>`).join('')}</tbody></table></div>`:''}
+    <div class="sectionlabel" style="margin-top:16px">Alignment of all Phyllanthus samples</div>
+    <p class="hint">Dots mean the same base as the first row. Rows for this species are highlighted.</p>
+    <div class="tablebox"><pre class="aln">${KIT.alignment.map(l=>rows.includes(l)?`<span class="hit">${colorBases(l)}</span>`:colorBases(l)).join('\n')}</pre></div>`;
+  }
+  return '';
+}
+function colorBases(t){return esc(t).replace(/(\s)([ACGTN?.]{8,})/g,(m,sp,seq)=>sp+seq.replace(/[ACGT]/g,b=>`<span class="b-${b}">${b}</span>`)).replace(/^([ACGTN]+)$/gm,seq=>seq.replace(/[ACGT]/g,b=>`<span class="b-${b}">${b}</span>`));}
+function drawSeq(cv){
+  const q=cv.dataset.seq, w=cv.clientWidth||600, h=34, dpr=window.devicePixelRatio||1;
+  cv.width=w*dpr; cv.height=h*dpr; const g=cv.getContext('2d'); g.scale(dpr,dpr);
+  const cs=getComputedStyle(document.documentElement), col={A:cs.getPropertyValue('--A'),C:cs.getPropertyValue('--C'),G:cs.getPropertyValue('--G'),T:cs.getPropertyValue('--T')};
+  const bw=w/q.length; for(let i=0;i<q.length;i++){g.fillStyle=col[q[i]]||cs.getPropertyValue('--N');g.fillRect(i*bw,0,Math.ceil(bw),h);}
+}
+
+(window.KIT_DATA?Promise.resolve(window.KIT_DATA):fetch('data/kit.json').then(r=>{if(!r.ok)throw new Error(r.status);return r.json();})).then(k=>{KIT=k;render();})
+  .catch(e=>{app.innerHTML=`<p class="lead">The kit's data could not be loaded (${esc(e.message)}). Reload the page to try again.</p>`;});
+</script>

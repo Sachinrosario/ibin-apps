@@ -1,0 +1,3 @@
+node_modules/
+apps/*/src-tauri/target/
+apps/*/src-tauri/gen/

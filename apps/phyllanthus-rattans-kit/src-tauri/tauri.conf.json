@@ -1,0 +1,25 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Phyllanthus and Rattans Identification Kit",
+  "mainBinaryName": "phyllanthus-rattans-kit",
+  "version": "1.0.0",
+  "identifier": "in.ecosoft.phyllanthusrattanskit",
+  "build": { "frontendDist": "../web" },
+  "app": {
+    "windows": [
+      { "title": "Phyllanthus & Rattans Identification Kit", "width": 1280, "height": 860, "minWidth": 900, "minHeight": 600, "center": true }
+    ],
+    "security": { "csp": null }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "publisher": "EcoSoft Revival",
+    "copyright": "Indian Barcode of Life kit (DBT; ATREE, UAS Bangalore, BSI). Rebuild 2026.",
+    "category": "Education",
+    "shortDescription": "Identify Phyllanthus and rattans by their characters",
+    "longDescription": "Version 1 Original: a faithful rebuild of the 2010 Indian Barcode of Life identification kit for Phyllanthus and rattans, with species details, images, distribution and DNA barcodes.",
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
+    "windows": { "nsis": { "installMode": "currentUser" } }
+  }
+}

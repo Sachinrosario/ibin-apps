@@ -1,0 +1,107 @@
+# Build & Release: makes Windows, macOS and Ubuntu installers plus an offline zip for one app,
+# and publishes them on this repository's Releases page.
+# Run it from: Actions -> "Build & Release" -> Run workflow.
+name: Build & Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      app:
+        description: "App folder under apps/"
+        required: true
+        default: "phyllanthus-rattans-kit"
+      version:
+        description: "Version number, e.g. 1.0.0"
+        required: true
+        default: "1.0.0"
+      title:
+        description: "Release title"
+        required: true
+        default: "Version 1 - Original"
+      notes:
+        description: "One-line note shown on the release page"
+        required: true
+        default: "Faithful rebuild of the 2010 program. Same species, data and identification keys."
+
+permissions:
+  contents: write
+
+jobs:
+  desktop:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            args: ""
+          - os: ubuntu-22.04
+            args: ""
+          - os: macos-latest
+            args: "--target universal-apple-darwin"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ubuntu build libraries
+        if: matrix.os == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libgtk-3-dev librsvg2-dev libayatana-appindicator3-dev patchelf
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.os == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: apps/${{ inputs.app }}/src-tauri -> target
+
+      - name: Install build tool
+        working-directory: apps/${{ inputs.app }}
+        run: npm install
+
+      - name: Set version number
+        shell: bash
+        working-directory: apps/${{ inputs.app }}
+        run: |
+          node -e "const f='src-tauri/tauri.conf.json',c=require('./'+f);c.version='${{ inputs.version }}';require('fs').writeFileSync(f,JSON.stringify(c,null,2))"
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          projectPath: apps/${{ inputs.app }}
+          tagName: ${{ inputs.app }}-v${{ inputs.version }}
+          releaseName: "${{ inputs.title }} (${{ inputs.version }})"
+          releaseBody: |
+            ${{ inputs.notes }}
+
+            **Which file do I download?**
+            - Windows 10/11: the file ending in `_x64-setup.exe` (double-click, then Next → Install).
+            - Mac: the file ending in `.dmg` (open it, drag the app to Applications). The first time, right-click the app and choose Open.
+            - Ubuntu: the file ending in `.deb` (double-click to install) or `.AppImage` (right-click → Properties → Allow executing, then double-click).
+            - Any computer, no install: the file ending in `_offline.zip` (extract it, then double-click "Open Kit.html").
+          releaseDraft: false
+          prerelease: false
+          args: ${{ matrix.args }}
+
+  offline-zip:
+    needs: desktop
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Make offline zip and attach it to the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          APP=${{ inputs.app }}; VER=${{ inputs.version }}
+          mkdir -p "pack/$APP"
+          cp -r apps/$APP/web/* "pack/$APP/"
+          mv "pack/$APP/index.html" "pack/$APP/Open Kit.html"
+          printf 'Extract this zip, open the folder, then double-click "Open Kit.html". Keep it together with the data and img folders.\r\n' > "pack/$APP/READ ME FIRST.txt"
+          (cd pack && zip -qr "../${APP}_${VER}_offline.zip" "$APP")
+          gh release upload "$APP-v$VER" "${APP}_${VER}_offline.zip" --clobber

@@ -1,0 +1,8 @@
+{
+  "name": "phyllanthus-rattans-kit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Phyllanthus & Rattans Identification Kit (Indian Barcode of Life), rebuilt from the 2010 program",
+  "scripts": { "tauri": "tauri" },
+  "devDependencies": { "@tauri-apps/cli": "2.12.4" }
+}
