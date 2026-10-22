@@ -1,3 +1,6 @@
 node_modules/
 apps/*/src-tauri/target/
 apps/*/src-tauri/gen/
+apps/*/windows/web/
+apps/*/windows/*.syso
+apps/*/windows/*.exe
