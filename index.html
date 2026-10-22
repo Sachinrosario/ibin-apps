@@ -1,35 +1,159 @@
 <!doctype html>
 <html lang="en">
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>EcoSoft Apps</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,600;0,700;1,600&family=Source+Sans+3:wght@400;600;700&display=swap">
 <style>
-:root{--bg:#F4F6F1;--card:#fff;--ink:#1C2B22;--muted:#5B6B60;--rule:#D5DDD2;--leaf:#2F6B45}
-@media (prefers-color-scheme:dark){:root{--bg:#111813;--card:#18211B;--ink:#E4ECE5;--muted:#9CAB9F;--rule:#2C3A30;--leaf:#7FC797;color-scheme:dark}}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Segoe UI",system-ui,sans-serif}
-main{max-width:860px;margin:0 auto;padding:40px 16px}
-h1{font-family:Georgia,serif;margin:0 0 6px}
-p{color:var(--muted);margin:0 0 24px}
-.app{display:flex;gap:18px;align-items:center;background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:16px;flex-wrap:wrap}
-.app img{width:72px;height:72px;border-radius:14px}
-.app div{flex:1;min-width:220px}
-.app h2{margin:0;font-family:Georgia,serif;font-size:20px}
-.links{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-.links a{color:var(--leaf);font-weight:600}
+/* Layout: a software shelf. One guide strip that answers "web or desktop?",
+   then one row per rebuilt program with its downloads grouped by operating system. */
+:root{
+  --paper:#F4F6F1; --sheet:#FFFFFF; --ink:#1C2B22; --muted:#5B6B60; --rule:#D5DDD2;
+  --leaf:#2F6B45; --leaf-soft:#E2EEE5; --cane:#9A6A12; --cane-soft:#F5EBD6;
+  --f-display:"Spectral", Georgia, serif; --f-body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#111813; --sheet:#18211B; --ink:#E4ECE5; --muted:#9CAB9F; --rule:#2C3A30;
+  --leaf:#7FC797; --leaf-soft:#1F3326; --cane:#E0B060; --cane-soft:#33281A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#111813; --sheet:#18211B; --ink:#E4ECE5; --muted:#9CAB9F; --rule:#2C3A30;
+  --leaf:#7FC797; --leaf-soft:#1F3326; --cane:#E0B060; --cane-soft:#33281A; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--paper);color:var(--ink)}
+body{font-family:var(--f-body);font-size:16px;line-height:1.5;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{padding-block:40px 8px}
+h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance}
+h1{font-size:clamp(30px,5vw,44px)}
+.lead{color:var(--muted);max-width:62ch;margin:8px 0 0}
+.guide{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:28px 0 8px}
+.choice{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:16px 18px}
+.choice .q{font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+.choice h3{font-size:20px;margin:4px 0 6px}
+.choice ul{margin:0;padding-left:18px;color:var(--ink)}
+.choice.web h3{color:var(--leaf)} .choice.desk h3{color:var(--cane)}
+.sectiontitle{font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted);margin:36px 0 10px}
+.app{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:20px;display:grid;grid-template-columns:96px minmax(0,1fr);gap:20px}
+.app>img{width:96px;height:96px;border-radius:18px}
+.head{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline}
+.head h2{font-size:26px}
+.ver{font-size:14px;color:var(--muted)}
+.state{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;border-radius:999px;padding:2px 10px;background:var(--cane-soft);color:var(--cane)}
+.state.live{background:var(--leaf-soft);color:var(--leaf)}
+.state::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.summary{margin:8px 0 4px;max-width:70ch}
+.origin{font-size:14px;color:var(--muted);margin:0}
+.facts{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 0;padding:0;list-style:none}
+.facts li{font-size:13px;border:1px solid var(--rule);border-radius:999px;padding:2px 10px;background:var(--paper)}
+.gis{font-size:14px;margin:12px 0 0}
+.gis b{color:var(--muted);font-weight:700}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:8px;padding:9px 16px;font:inherit;font-weight:600;text-decoration:none;border:1px solid var(--rule);color:var(--ink);background:var(--sheet)}
+.btn.primary{background:var(--leaf);border-color:var(--leaf);color:var(--sheet)}
+.btn[aria-disabled="true"]{opacity:.5;pointer-events:none}
+.btn:focus-visible{outline:3px solid var(--cane);outline-offset:2px}
+.dl{margin-top:18px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.os{border:1px solid var(--rule);border-radius:10px;padding:12px;background:var(--paper);min-width:0}
+.os.mine{border-color:var(--leaf);box-shadow:inset 0 0 0 1px var(--leaf)}
+.os h4{margin:0 0 8px;font-size:15px;display:flex;justify-content:space-between;gap:8px}
+.os h4 small{font-weight:600;color:var(--leaf);font-size:12px}
+.file{display:flex;flex-direction:column;gap:2px;padding:8px 0;border-top:1px solid var(--rule)}
+.file:first-of-type{border-top:0;padding-top:0}
+.file a,.file span.name{font-weight:600;color:var(--leaf);overflow-wrap:anywhere}
+.file span.name{color:var(--muted)}
+.file small{color:var(--muted);font-size:13px}
+.pending{font-size:14px;color:var(--cane);background:var(--cane-soft);border-radius:8px;padding:8px 12px;margin-top:14px}
+details{margin-top:14px}
+summary{cursor:pointer;font-weight:600;color:var(--leaf)}
+.changes{margin:8px 0 0;padding-left:18px;font-size:14px}
+.upcoming{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.up{border:1px dashed var(--rule);border-radius:10px;padding:14px;background:var(--sheet)}
+.up b{font-family:var(--f-display);font-size:18px}
+.up small{display:block;color:var(--muted)}
+footer{color:var(--muted);font-size:13px;padding-block:36px 48px}
+@media (max-width:860px){.dl{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.guide,.dl{grid-template-columns:minmax(0,1fr)}.app{grid-template-columns:minmax(0,1fr)}.app>img{width:72px;height:72px}}
 </style>
-<main>
+
+<header class="wrap">
   <h1>EcoSoft Apps</h1>
-  <p>Ecoinformatics software rebuilt to run in the browser and on Windows, Mac and Ubuntu.</p>
-  <section class="app">
-    <img src="phyllanthus-rattans-kit/img/sp/34/fruit.webp" alt="">
-    <div>
-      <h2>Phyllanthus &amp; Rattans Identification Kit</h2>
-      <span>Version 1.0.0 · Original (Indian Barcode of Life, 2010)</span>
-      <div class="links">
-        <a href="phyllanthus-rattans-kit/">Use it online</a>
-        <a href="https://github.com/Sachinrosario/ecosoft-releases/releases">Download for Windows, Mac, Ubuntu</a>
-      </div>
-    </div>
-  </section>
+  <p class="lead">Older ecoinformatics software, rebuilt to run in a browser and on Windows, Mac and Ubuntu.</p>
+  <div class="guide">
+    <section class="choice web"><span class="q">Just identifying or browsing species?</span><h3>Use it online</h3>
+      <ul><li>Nothing to install</li><li>Works on phones, tablets and any computer</li><li>Always the latest version</li></ul></section>
+    <section class="choice desk"><span class="q">Linking to QGIS, ArcGIS or local files?</span><h3>Download the desktop app</h3>
+      <ul><li>Can work with GIS software installed on your computer</li><li>Works fully offline in the field</li><li>Windows, Mac and Ubuntu</li></ul></section>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="sectiontitle" id="countline">Available software</div>
+  <div id="apps"><p class="lead">Loading the catalogue…</p></div>
+  <div class="sectiontitle">Coming next</div>
+  <div class="upcoming" id="upcoming"></div>
 </main>
-</html>
+<footer class="wrap" id="foot"></footer>
+
+<script>
+"use strict";
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const OS_NAMES={windows:'Windows 10 / 11',mac:'Mac',ubuntu:'Ubuntu',any:'Any computer'};
+const ua=navigator.userAgent;
+const myOS=/Windows/i.test(ua)?'windows':/Mac OS X|Macintosh/i.test(ua)&&!/iPhone|iPad/i.test(ua)?'mac':/Ubuntu|Linux/i.test(ua)&&!/Android/i.test(ua)?'ubuntu':'';
+
+async function load(){
+  const cat=await fetch('catalog.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('catalogue '+r.status);return r.json();});
+  // On the public site, ask GitHub which release files really exist.
+  if(/github\.io$/.test(location.hostname)){
+    await Promise.all(cat.apps.map(async a=>{
+      try{
+        const r=await fetch(`https://api.github.com/repos/${cat.owner}/${cat.releasesRepo}/releases/tags/${a.id}-v${a.version}`);
+        if(!r.ok) return;
+        const rel=await r.json(); const names=new Set(rel.assets.map(x=>x.name));
+        a.published=true; a.downloads.forEach(d=>d.live=names.has(d.file));
+      }catch(e){}
+    }));
+  }
+  render(cat);
+}
+
+function render(cat){
+  const base=`https://github.com/${cat.owner}/${cat.releasesRepo}/releases`;
+  document.getElementById('countline').textContent=`Available software · ${cat.apps.length}`;
+  document.getElementById('apps').innerHTML=cat.apps.map(a=>{
+    const tag=`${a.id}-v${a.version}`;
+    const groups=['windows','mac','ubuntu','any'].map(os=>{
+      const files=a.downloads.filter(d=>d.os===os); if(!files.length) return '';
+      return `<div class="os ${os===myOS?'mine':''}"><h4>${OS_NAMES[os]}${os===myOS?'<small>Your computer</small>':''}</h4>`+
+        files.map(d=>{
+          const ok=a.published&&d.live!==false;
+          const name=`${esc(d.kind)}${d.size?' · '+esc(d.size):''}`;
+          return `<div class="file">${ok?`<a href="${base}/download/${tag}/${encodeURIComponent(d.file)}" rel="noopener">${name}</a>`:`<span class="name">${name}</span>`}<small>${esc(d.note)}</small></div>`;
+        }).join('')+`</div>`;
+    }).join('');
+    return `<article class="app">
+      <img src="${esc(a.icon)}" alt="">
+      <div>
+        <div class="head"><h2>${esc(a.name)}</h2><span class="ver">${esc(a.versionName)} · ${esc(a.version)} · ${esc(a.released)}</span>
+          <span class="state ${a.published?'live':''}">${a.published?'Published':'Ready, not yet on GitHub'}</span></div>
+        <p class="summary">${esc(a.summary)}</p>
+        <p class="origin">${esc(a.origin)}</p>
+        <ul class="facts">${a.facts.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>
+        <p class="gis"><b>GIS software:</b> ${esc(a.gis)}</p>
+        <div class="row">
+          <a class="btn primary" href="${esc(a.published?a.web:a.preview)}" target="_blank" rel="noopener">${a.published?'Use it online':'Preview online (private link)'}</a>
+          <a class="btn" href="${base}/tag/${tag}" target="_blank" rel="noopener" ${a.published?'':'aria-disabled="true" tabindex="-1"'}>All files on GitHub</a>
+        </div>
+        <div class="dl">${groups}</div>
+        ${a.published?'':`<p class="pending">The download buttons switch on when this version is published to GitHub. Until then the files are shared directly.</p>`}
+        <details><summary>What changed in each version</summary><ul class="changes">${a.changes.map(c=>`<li><b>${esc(c.version)}</b> (${esc(c.date)}): ${esc(c.text)}</li>`).join('')}</ul></details>
+      </div></article>`;
+  }).join('');
+  document.getElementById('upcoming').innerHTML=cat.upcoming.map(u=>`<div class="up"><b>${esc(u.name)}</b><small>${esc(u.summary)}</small><small>${esc(u.stage)}</small></div>`).join('');
+  document.getElementById('foot').textContent=`Catalogue updated ${cat.updated}. Windows may say "Windows protected your PC" on first run: click More info, then Run anyway. On a Mac, right-click the app the first time and choose Open.`;
+}
+load().catch(e=>{document.getElementById('apps').innerHTML=`<p class="lead">The catalogue could not be loaded (${esc(e.message)}). Reload the page to try again.</p>`;});
+</script>
