@@ -1,0 +1,17 @@
+[package]
+name = "phyllanthus-rattans-kit-2"
+version = "2.0.0"
+description = "Phyllanthus & Rattans Kit 2"
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true

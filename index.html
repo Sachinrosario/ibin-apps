@@ -66,6 +66,10 @@ h1{font-size:clamp(30px,5vw,44px)}
 .file a,.file span.name{font-weight:600;color:var(--leaf);overflow-wrap:anywhere}
 .file span.name{color:var(--muted)}
 .file small{color:var(--muted);font-size:13px}
+.vswitch{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.vswitch button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:10px;padding:8px 14px;cursor:pointer;text-align:left;font:inherit}
+.vswitch button small{color:var(--muted);font-size:12px}
+.vswitch button.on{border-color:var(--leaf);box-shadow:inset 0 0 0 1px var(--leaf);background:var(--leaf-soft)}
 .pending{font-size:14px;color:var(--cane);background:var(--cane-soft);border-radius:8px;padding:8px 12px;margin-top:14px}
 details{margin-top:14px}
 summary{cursor:pointer;font-weight:600;color:var(--leaf)}
@@ -108,54 +112,61 @@ const myOS=/Windows/i.test(ua)?'windows':/Mac OS X|Macintosh/i.test(ua)&&!/iPhon
 
 async function load(){
   const cat=await fetch('catalog.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('catalogue '+r.status);return r.json();});
+  const eds=cat.apps.flatMap(a=>a.editions||[a]);
   // On the public site, ask GitHub which release files really exist.
   if(/github\.io$/.test(location.hostname)){
-    await Promise.all(cat.apps.map(async a=>{
+    await Promise.all(eds.map(async e=>{
       try{
-        const r=await fetch(`https://api.github.com/repos/${cat.owner}/${cat.releasesRepo}/releases/tags/${a.id}-v${a.version}`);
-        if(!r.ok) return;
+        const r=await fetch(`https://api.github.com/repos/${cat.owner}/${cat.releasesRepo}/releases/tags/${e.id}-v${e.version}`);
+        if(!r.ok){e.published=false;return;}
         const rel=await r.json(); const names=new Set(rel.assets.map(x=>x.name));
-        a.published=true; a.downloads.forEach(d=>d.live=names.has(d.file));
-      }catch(e){}
+        e.published=true; e.downloads.forEach(d=>d.live=names.has(d.file));
+      }catch(err){}
     }));
   }
-  render(cat);
+  CAT=cat; render();
 }
-
-function render(cat){
-  const base=`https://github.com/${cat.owner}/${cat.releasesRepo}/releases`;
+let CAT=null; const pick={};
+function render(){
+  const cat=CAT, base=`https://github.com/${cat.owner}/${cat.releasesRepo}/releases`;
   document.getElementById('countline').textContent=`Available software · ${cat.apps.length}`;
-  document.getElementById('apps').innerHTML=cat.apps.map(a=>{
-    const tag=`${a.id}-v${a.version}`;
+  document.getElementById('apps').innerHTML=cat.apps.map((a,ai)=>{
+    const eds=a.editions||[a]; const e=eds.find(x=>x.key===pick[ai])||eds[0];
+    const tag=`${e.id}-v${e.version}`;
     const groups=['windows','mac','ubuntu','any'].map(os=>{
-      const files=a.downloads.filter(d=>d.os===os); if(!files.length) return '';
+      const files=e.downloads.filter(d=>d.os===os); if(!files.length) return '';
       return `<div class="os ${os===myOS?'mine':''}"><h4>${OS_NAMES[os]}${os===myOS?'<small>Your computer</small>':''}</h4>`+
         files.map(d=>{
-          const ok=a.published&&d.live!==false;
+          const ok=e.published&&d.live!==false;
           const name=`${esc(d.kind)}${d.size?' · '+esc(d.size):''}`;
           return `<div class="file">${ok?`<a href="${base}/download/${tag}/${encodeURIComponent(d.file)}" rel="noopener">${name}</a>`:`<span class="name">${name}</span>`}<small>${esc(d.note)}</small></div>`;
         }).join('')+`</div>`;
     }).join('');
+    const sw=eds.length>1?`<div class="vswitch" role="tablist" aria-label="Choose a version">${eds.map(x=>`<button type="button" role="tab" aria-selected="${x===e}" class="${x===e?'on':''}" data-app="${ai}" data-ed="${esc(x.key)}"><b>${esc(x.label)}</b><small>${esc(x.version)}</small></button>`).join('')}</div>`:'';
     return `<article class="app">
       <img src="${esc(a.icon)}" alt="">
       <div>
-        <div class="head"><h2>${esc(a.name)}</h2><span class="ver">${esc(a.versionName)} · ${esc(a.version)} · ${esc(a.released)}</span>
-          <span class="state ${a.published?'live':''}">${a.published?'Published':'Ready, not yet on GitHub'}</span></div>
-        <p class="summary">${esc(a.summary)}</p>
+        <div class="head"><h2>${esc(a.name)}</h2></div>
+        ${a.credit?`<p class="origin" style="margin-top:4px">${esc(a.credit)}</p>`:''}
+        ${sw}
+        <div class="head" style="margin-top:12px"><span class="ver">${esc(e.versionName||'')} · ${esc(e.version)} · ${esc(e.released)}</span>
+          <span class="state ${e.published?'live':''}">${e.published?'Published':'Being published'}</span></div>
+        <p class="summary">${esc(e.summary||a.summary||'')}</p>
         <p class="origin">${esc(a.origin)}</p>
-        <ul class="facts">${a.facts.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>
-        <p class="gis"><b>GIS software:</b> ${esc(a.gis)}</p>
+        <ul class="facts">${(e.facts||[]).map(f=>`<li>${esc(f)}</li>`).join('')}</ul>
+        <p class="gis"><b>GIS software:</b> ${esc(e.gis||'')}</p>
         <div class="row">
-          <a class="btn primary" href="${esc(a.published?a.web:a.preview)}" target="_blank" rel="noopener">${a.published?'Use it online':'Preview online (private link)'}</a>
-          <a class="btn" href="${base}/tag/${tag}" target="_blank" rel="noopener" ${a.published?'':'aria-disabled="true" tabindex="-1"'}>All files on GitHub</a>
+          <a class="btn primary" href="${esc(e.published?e.web:e.preview)}" target="_blank" rel="noopener">${e.published?'Use it online':'Preview online (private link)'}</a>
+          <a class="btn" href="${base}/tag/${tag}" target="_blank" rel="noopener" ${e.published?'':'aria-disabled="true" tabindex="-1"'}>All files on GitHub</a>
         </div>
         <div class="dl">${groups}</div>
-        ${a.published?'':`<p class="pending">The download buttons switch on when this version is published to GitHub. Until then the files are shared directly.</p>`}
-        <details><summary>What changed in each version</summary><ul class="changes">${a.changes.map(c=>`<li><b>${esc(c.version)}</b> (${esc(c.date)}): ${esc(c.text)}</li>`).join('')}</ul></details>
+        ${e.published?'':`<p class="pending">The download buttons switch on when this version's files are on GitHub.</p>`}
+        <details><summary>What changed in each version</summary><ul class="changes">${eds.flatMap(x=>x.changes.map(c=>`<li><b>${esc(c.version)}</b> (${esc(c.date)}): ${esc(c.text)}</li>`)).join('')}</ul></details>
       </div></article>`;
   }).join('');
+  document.querySelectorAll('[data-ed]').forEach(b=>b.onclick=()=>{pick[b.dataset.app]=b.dataset.ed;render();});
   document.getElementById('upcoming').innerHTML=cat.upcoming.map(u=>`<div class="up"><b>${esc(u.name)}</b><small>${esc(u.summary)}</small><small>${esc(u.stage)}</small></div>`).join('');
-  document.getElementById('foot').textContent=`Catalogue updated ${cat.updated}. Windows may say "Windows protected your PC" on first run: click More info, then Run anyway. On a Mac, right-click the app the first time and choose Open.`;
+  document.getElementById('foot').textContent=`Catalogue updated ${cat.updated}. Both versions can be installed on the same computer. Windows may say "Windows protected your PC" on first run: click More info, then Run anyway. On a Mac, right-click the app the first time and choose Open.`;
 }
 load().catch(e=>{document.getElementById('apps').innerHTML=`<p class="lead">The catalogue could not be loaded (${esc(e.message)}). Reload the page to try again.</p>`;});
 </script>

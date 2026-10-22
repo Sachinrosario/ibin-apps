@@ -4,72 +4,143 @@
   "releasesRepo": "ibin-apps",
   "apps": [
     {
-      "id": "phyllanthus-rattans-kit",
       "name": "Phyllanthus & Rattans Identification Kit",
       "icon": "apps/phyllanthus-rattans-kit.png",
-      "summary": "Identify Phyllanthus and rattans by the characters you can see, then read nomenclature, descriptions, uses, images, distribution and DNA barcodes.",
       "origin": "Indian Barcode of Life kit (DBT, Government of India), 2010. Built by ATREE Bangalore, UAS Bangalore and BSI Kolkata.",
-      "version": "1.0.1",
-      "versionName": "Version 1 – Original",
-      "released": "2026-10-22",
-      "published": true,
-      "facts": [
-        "59 species",
-        "4 identification keys",
-        "264 images",
-        "1,117 localities",
-        "DNA barcodes"
-      ],
-      "gis": "Not needed. Locality coordinates can be exported to GIS from Version 2.",
-      "web": "https://sachinrosario.github.io/ibin-apps/phyllanthus-rattans-kit/",
-      "preview": "https://claude.ai/artifact/56VWoteCcb6azsGiqrxxsQ",
-      "downloads": [
+      "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
+      "editions": [
         {
-          "os": "windows",
-          "kind": "Installer",
-          "file": "PhyllanthusRattansKit_1.0.1_Setup.exe",
-          "size": "19 MB",
-          "note": "Adds Start-menu and desktop shortcuts. No administrator password."
+          "id": "phyllanthus-rattans-kit-2",
+          "key": "v2",
+          "label": "Version 2 – Updated (2026)",
+          "versionName": "Version 2 – Updated",
+          "version": "2.0.0",
+          "released": "2026-10-22",
+          "published": true,
+          "summary": "Names updated to the Catalogue of Life (2010 names kept), GenBank DNA barcode records, guided key, India distribution map with GIS export, comparison and glossary.",
+          "facts": [
+            "59 species",
+            "Catalogue of Life names",
+            "GenBank records",
+            "India map",
+            "GIS export"
+          ],
+          "gis": "Exports localities as GeoJSON, KML and CSV for QGIS or ArcGIS (desktop and published web version).",
+          "web": "https://sachinrosario.github.io/ibin-apps/phyllanthus-rattans-kit-2/",
+          "preview": "https://claude.ai/artifact/WEmJbGHc8LigJW9fY9LmrQ",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "PhyllanthusRattansKit2_2.0.0_Setup.exe",
+              "size": "19 MB",
+              "note": "Installs beside Version 1. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "PhyllanthusRattansKit2.exe",
+              "size": "24 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "PhyllanthusRattansKit2_2.0.0_universal.dmg",
+              "size": "",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "PhyllanthusRattansKit2_2.0.0_amd64.deb",
+              "size": "",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "PhyllanthusRattansKit2_2.0.0_offline.zip",
+              "size": "",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "2.0.0",
+              "date": "2026-10-22",
+              "text": "Catalogue of Life names with 2010 names kept; GenBank barcode records; guided key; India map with GIS export; comparison; glossary."
+            }
+          ]
         },
-        {
-          "os": "windows",
-          "kind": "No-install",
-          "file": "PhyllanthusRattansKit.exe",
-          "size": "23.5 MB",
-          "note": "Runs straight from a folder or pen drive."
-        },
-        {
-          "os": "mac",
-          "kind": "App",
-          "file": "PhyllanthusRattansKit_1.0.1_universal.dmg",
-          "size": "38 MB",
-          "note": "Built by the GitHub build robot. Intel and Apple-silicon Macs."
-        },
-        {
-          "os": "ubuntu",
-          "kind": "Package",
-          "file": "PhyllanthusRattansKit_1.0.1_amd64.deb",
-          "size": "18 MB",
-          "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
-        },
-        {
-          "os": "any",
-          "kind": "Offline folder",
-          "file": "PhyllanthusRattansKit_1.0.1_offline.zip",
-          "size": "17 MB",
-          "note": "Any computer. Extract, then double-click Open Kit.html."
-        }
-      ],
-      "changes": [
         {
           "version": "1.0.1",
-          "date": "2026-10-22",
-          "text": "Opening screen now credits the proprietary right holder, Dr. K.N. Ganeshaiah, and the 2026 update by Dr. Sachin A. Rosario. No other changes."
-        },
-        {
-          "version": "1.0.0",
-          "date": "2026-10-22",
-          "text": "Faithful rebuild of the 2010 program. Same species, data and identification keys; results checked against the original database on 1,290 combinations."
+          "versionName": "Version 1 – Original",
+          "released": "2026-10-22",
+          "published": true,
+          "web": "https://sachinrosario.github.io/ibin-apps/phyllanthus-rattans-kit/",
+          "preview": "https://claude.ai/artifact/56VWoteCcb6azsGiqrxxsQ",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "PhyllanthusRattansKit_1.0.1_Setup.exe",
+              "size": "19 MB",
+              "note": "Adds Start-menu and desktop shortcuts. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "PhyllanthusRattansKit.exe",
+              "size": "23.5 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "PhyllanthusRattansKit_1.0.1_universal.dmg",
+              "size": "38 MB",
+              "note": "Built by the GitHub build robot. Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "PhyllanthusRattansKit_1.0.1_amd64.deb",
+              "size": "18 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "PhyllanthusRattansKit_1.0.1_offline.zip",
+              "size": "17 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "1.0.1",
+              "date": "2026-10-22",
+              "text": "Opening screen now credits the proprietary right holder, Dr. K.N. Ganeshaiah, and the 2026 update by Dr. Sachin A. Rosario. No other changes."
+            },
+            {
+              "version": "1.0.0",
+              "date": "2026-10-22",
+              "text": "Faithful rebuild of the 2010 program. Same species, data and identification keys; results checked against the original database on 1,290 combinations."
+            }
+          ],
+          "facts": [
+            "59 species",
+            "4 identification keys",
+            "264 images",
+            "1,117 localities",
+            "DNA barcodes"
+          ],
+          "gis": "Not needed. Locality coordinates can be exported to GIS from Version 2.",
+          "id": "phyllanthus-rattans-kit",
+          "key": "v1",
+          "label": "Version 1 – Original (2010)",
+          "summary": "The 2010 program as it was: original names and data, with the 2026 credits."
         }
       ]
     }

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Phyllanthus and Rattans Kit 2",
+  "mainBinaryName": "phyllanthus-rattans-kit-2",
+  "version": "2.0.0",
+  "identifier": "in.ibinapps.phyllanthusrattanskit2",
+  "build": {
+    "frontendDist": "../web"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Phyllanthus & Rattans Kit 2",
+        "width": 1280,
+        "height": 860,
+        "minWidth": 900,
+        "minHeight": 600,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "publisher": "IBIN Apps",
+    "copyright": "Indian Barcode of Life kit (DBT; ATREE, UAS Bangalore, BSI). Rebuild 2026.",
+    "category": "Education",
+    "shortDescription": "Identify Phyllanthus and rattans, with updated names and GenBank DNA data",
+    "longDescription": "Version 2 (2026) of the Indian Barcode of Life identification kit: names updated to the Catalogue of Life with 2010 names kept, guided key, India distribution map, species comparison, glossary and GenBank DNA barcode data.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    }
+  }
+}
