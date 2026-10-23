@@ -154,7 +154,7 @@ function render(){
         <p class="summary">${esc(e.summary||a.summary||'')}</p>
         <p class="origin">${esc(a.origin)}</p>
         <ul class="facts">${(e.facts||[]).map(f=>`<li>${esc(f)}</li>`).join('')}</ul>
-        <p class="gis"><b>GIS software:</b> ${esc(e.gis||'')}</p>
+        ${e.gis?`<p class="gis"><b>GIS software:</b> ${esc(e.gis)}</p>`:""}
         <div class="row">
           <a class="btn primary" href="${esc(e.published?e.web:e.preview)}" target="_blank" rel="noopener">${e.published?'Use it online':'Preview online (private link)'}</a>
           <a class="btn" href="${base}/tag/${tag}" target="_blank" rel="noopener" ${e.published?'':'aria-disabled="true" tabindex="-1"'}>All files on GitHub</a>
