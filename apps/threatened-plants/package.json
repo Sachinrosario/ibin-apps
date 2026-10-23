@@ -1,0 +1,12 @@
+{
+  "name": "threatened-plants",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Threatened Plants of Western Ghats Version 1 (faithful rebuild of the 2015 RET Kit)",
+  "scripts": {
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "2.12.4"
+  }
+}

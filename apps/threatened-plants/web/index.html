@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Threatened Plants of Western Ghats</title>
+<link rel="icon" href="img/ui/book16.png">
+<style>
+/* A Field Guide to Threatened Plants of Western Ghats (RET Kit, 2015-16) - Version 1, faithful web rebuild.
+   Every window keeps the pixel geometry measured on Windows inside a 1440x900 stage scaled to the browser. */
+@font-face{font-family:"PS Arial";src:local("Arial"),local("ArialMT"),url(fonts/arimo-latin-400-normal.woff2) format("woff2");font-weight:400;font-style:normal}
+@font-face{font-family:"PS Arial";src:local("Arial Bold"),local("Arial-BoldMT"),url(fonts/arimo-latin-700-normal.woff2) format("woff2");font-weight:700;font-style:normal}
+@font-face{font-family:"PS Arial";src:local("Arial Italic"),local("Arial-ItalicMT"),url(fonts/arimo-latin-400-italic.woff2) format("woff2");font-weight:400;font-style:italic}
+:root{--arial:"PS Arial",Arial,sans-serif;--sans:"Microsoft Sans Serif","MS Sans Serif","PS Arial",sans-serif;--segoe:"Segoe UI",Tahoma,"PS Arial",sans-serif}
+html,body{margin:0;height:100%;background:#0f3d5c;overflow:hidden;font-family:var(--sans)}
+#stage{position:absolute;width:1440px;height:900px;transform-origin:0 0;overflow:hidden;user-select:none;-webkit-user-select:none;
+  background:linear-gradient(160deg,#1f6fa8 0%,#17578a 45%,#0e3f6b 100%)}
+#stage img{-webkit-user-drag:none}
+[hidden]{display:none!important}
+.abs{position:absolute}
+.hot{position:absolute;cursor:pointer}
+/* window chrome */
+.win{position:absolute;background:#fff;overflow:hidden}
+.win.normal{border:1px solid #1a5570;box-sizing:border-box;box-shadow:0 7px 24px rgba(0,0,0,.4)}
+.tb{position:absolute;left:0;top:0;right:0;background:#fff;display:flex;align-items:center;font:12px var(--segoe);color:#000;white-space:pre}
+.tb img{width:16px;height:16px;margin:0 6px 0 4px}
+.tb .ctl{position:absolute;top:0;width:46px;height:100%;display:flex;align-items:center;justify-content:center;font:13px var(--segoe)}
+.tb .ctl.x:hover{background:#e81123;color:#fff}
+.tb .ctl.dis{color:#bbb}
+.win.inactive .tb{color:#999}
+/* VB controls */
+.btn{position:absolute;box-sizing:border-box;background:#fff;border:1px solid;border-color:#fff #696969 #696969 #fff;box-shadow:inset -1px -1px #a0a0a0,inset 1px 1px #e3e3e3;
+  display:flex;align-items:center;justify-content:center;text-align:center;color:#000;cursor:default;line-height:1.1;padding:0 2px}
+.btn:active{border-color:#696969 #fff #fff #696969;box-shadow:inset 1px 1px #a0a0a0}
+.btn.def{border:2px solid #000;box-shadow:inset -1px -1px #a0a0a0,inset 1px 1px #e3e3e3}
+.btn.def::after{content:"";position:absolute;inset:3px;border:1px dotted #000}
+.btn.dis{color:#a0a0a0;pointer-events:none}
+.sunk{position:absolute;box-sizing:border-box;border:2px solid;border-color:#a0a0a0 #fff #fff #a0a0a0;box-shadow:inset 1px 1px #696969,inset -1px -1px #e3e3e3;background:#fff}
+.lst{overflow-y:auto;overflow-x:hidden}
+.lst div{white-space:nowrap;padding:0 3px;cursor:default}
+.lst div.sel{background:#0078d7;color:#fff}
+.lst::-webkit-scrollbar{width:17px}
+.lst::-webkit-scrollbar-track{background:#f0f0f0}
+.lst::-webkit-scrollbar-thumb{background:#cdcdcd;border:2px solid #f0f0f0}
+.frame{position:absolute;box-sizing:border-box;border:1px solid #dcdcdc;box-shadow:inset 1px 1px #a0a0a0}
+.frame>span{position:absolute;left:6px;top:-10px;background:#fff;padding:0 2px;font:16px var(--arial);color:#000;white-space:nowrap}
+.frame.small>span{font:11px var(--arial);top:-7px}
+.lbl{position:absolute;white-space:nowrap}
+/* thumbnails */
+.th{position:absolute;width:100px}
+.th .box{width:100px;height:100px;box-sizing:border-box;border:1px solid #c0c0c0;background:#fff;cursor:pointer;position:relative}
+.th .box img{width:98px;height:98px;display:block;object-fit:contain}
+.th.on .box{outline:3px solid #0000ff;outline-offset:-2px}
+.th .blue{position:absolute;left:84px;top:84px;width:15px;height:15px;box-sizing:border-box;border:1px solid;border-color:#e3e3e3 #696969 #696969 #e3e3e3;background:#000080;cursor:pointer}
+.th .cap{font:13px/15px var(--arial);text-align:center;margin:1px 0 0;width:100px}
+/* message box */
+.msg .body{position:absolute;left:0;right:0;top:23px;bottom:41px;display:flex;align-items:center;padding:0 12px;font:12px var(--segoe)}
+.msg .foot{position:absolute;left:0;right:0;bottom:0;height:41px;background:#f0f0f0}
+.msg .foot .btn{right:10px;top:9px;width:75px;height:23px;font:12px var(--segoe);border:1px solid #0078d7;box-shadow:none;background:#e1e1e1}
+/* combo boxes of Species Search */
+.combo{position:absolute;box-sizing:border-box;height:30px;border:2px solid;border-color:#a0a0a0 #fff #fff #a0a0a0;box-shadow:inset 1px 1px #696969;background:#fff;font:13px var(--arial);display:flex;align-items:center;padding-left:3px;cursor:default;white-space:nowrap;overflow:hidden}
+.combo.focus span{background:#0078d7;color:#fff;flex:1;align-self:stretch;display:flex;align-items:center;margin:1px 18px 1px -2px;padding-left:2px}
+.combo .arr{position:absolute;right:0;top:0;bottom:0;width:17px;box-sizing:border-box;background:#f0f0f0;border:1px solid;border-color:#fff #696969 #696969 #fff;display:flex;align-items:center;justify-content:center;font-size:7px}
+.drop{position:absolute;box-sizing:border-box;border:1px solid #646464;background:#fff;overflow-y:auto;font:13px/16px var(--arial);z-index:5}
+.drop div{padding-left:2px;cursor:default;white-space:nowrap}
+.drop div:hover{background:#0078d7;color:#fff}
+/* picture viewer (stands in for the Windows photo viewer the program opens) */
+.viewer .cl{position:absolute;left:0;right:0;top:32px;bottom:0;background:#202020;display:flex;align-items:center;justify-content:center}
+.viewer .cl img{max-width:100%;max-height:100%}
+.viewer .nav{position:absolute;top:50%;width:44px;height:64px;margin-top:-32px;background:rgba(0,0,0,.45);color:#fff;font:28px var(--segoe);display:flex;align-items:center;justify-content:center;cursor:pointer}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="splash" class="abs" style="left:0;top:0;width:1440px;height:900px">
+    <img src="img/ui/splash.png" width="1440" height="860" alt="A Field Guide to Threatened Plants of Western Ghats">
+    <div class="hot" id="sArrow" title="Click here to Continue" style="left:1335px;top:447px;width:80px;height:80px"></div>
+    <div class="abs" style="left:16px;top:745px;font:11px/15px var(--arial);color:#fff">Proprietary right holder - Dr. K.N. Ganeshaiah<br>Updated in 2026 by Dr. Sachin A. Rosario &nbsp;·&nbsp; Version <span id="ver"></span></div>
+  </div>
+  <div id="wins"></div>
+</div>
+<script src="data/kit.js"></script>
+<script>
+"use strict";
+const K = window.KIT_DATA;
+const $ = (s, r = document) => r.querySelector(s);
+const el = (tag, attrs = {}, kids = []) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'style' && typeof v === 'object') Object.assign(e.style, v);
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of [].concat(kids)) if (c != null) e.append(c.nodeType ? c : document.createTextNode(c));
+  return e;
+};
+const px = n => n + 'px';
+const pos = (e, x, y, w, h) => { e.style.left = px(x); e.style.top = px(y); if (w != null) e.style.width = px(w); if (h != null) e.style.height = px(h); return e; };
+const norm = s => String(s).replace(/ /g, ' ').trim().toLowerCase();
+const show = s => String(s).replace(/ /g, ' ');
+// Jet text order: case-insensitive; a non-breaking space sorts after the letters
+const jetKey = s => String(s).toLowerCase().replace(/ /g, '˿');
+const jetCmp = (a, b) => jetKey(a) < jetKey(b) ? -1 : jetKey(a) > jetKey(b) ? 1 : 0;
+$('#ver').textContent = K.version;
+
+/* ---------- stage scaling ---------- */
+const stage = $('#stage');
+function fit() {
+  const s = Math.min(innerWidth / 1440, innerHeight / 900);
+  stage.style.transform = `scale(${s})`;
+  stage.style.left = Math.max(0, (innerWidth - 1440 * s) / 2) + 'px';
+  stage.style.top = Math.max(0, (innerHeight - 900 * s) / 2) + 'px';
+}
+addEventListener('resize', fit); fit();
+
+/* ---------- window manager ---------- */
+const W = {}; let zTop = 10;
+function openWin(id, { title = '', icon, x = 0, y = 0, w = 1440, h = 900, tb = 23, normal = false, max = true, modal = false, onClose, cls = '' } = {}) {
+  closeWin(id, true);
+  const win = el('div', { class: `win${normal ? ' normal' : ''} ${cls}`, id }); pos(win, x, y, w, h);
+  const bar = el('div', { class: 'tb', style: { height: px(tb) } }, [icon ? el('img', { src: icon, alt: '' }) : el('span', { style: { width: '6px' } }), title]);
+  if (max) bar.append(el('div', { class: 'ctl', style: { right: '92px' } }, '—'), el('div', { class: 'ctl', style: { right: '46px' } }, normal ? '☐' : '❐'));
+  bar.append(el('div', { class: 'ctl x', style: { right: '0' }, onclick: () => closeWin(id) }, '✕'));
+  win.append(bar);
+  win.addEventListener('mousedown', () => focusWin(id), true);
+  W[id] = { el: win, bar, onClose };
+  if (modal) $('#wins').append(el('div', { class: 'abs', id: id + '_sh', style: { inset: 0, zIndex: zTop + 1 } }));
+  $('#wins').append(win); focusWin(id);
+  return win;
+}
+function focusWin(id) { if (!W[id]) return; for (const k in W) W[k].el.classList.toggle('inactive', k !== id); W[id].el.style.zIndex = ++zTop + 1; const sh = $('#' + id + '_sh'); if (sh) sh.style.zIndex = zTop; }
+function closeWin(id, silent) {
+  const w = W[id]; if (!w) return; w.el.remove(); const sh = $('#' + id + '_sh'); if (sh) sh.remove(); delete W[id];
+  if (!silent && w.onClose) w.onClose();
+}
+function setTitle(id, t) { const b = W[id].bar; b.childNodes[1].textContent = t; }
+function msgBox(title, text) {
+  const w = Math.max(160, Math.min(440, text.length * 6 + 40)), h = 130;
+  const win = openWin('msg', { title, x: Math.round((1440 - w) / 2), y: 413, w, h, normal: true, max: false, modal: true, cls: 'msg' });
+  win.append(el('div', { class: 'body' }, text), el('div', { class: 'foot' }, el('div', { class: 'btn', onclick: () => closeWin('msg') }, 'OK')));
+}
+
+/* ---------- selection state and the rules recovered from the program ---------- */
+const CH = Object.fromEntries(K.chars.map(c => [c.table, c]));
+const S = { sel: [], list: null };          // sel: [{table, values:[...]}] in the order chosen
+const selOf = t => S.sel.find(s => s.table === t);
+function speciesWhere(skip) {               // species that satisfy every selection (except `skip`)
+  return K.species.filter(sp => S.sel.every(s => s.table === skip || (CH[s.table].data[sp.id] || []).some(v => s.values.some(x => norm(x) === norm(v)))));
+}
+function matched() { return S.sel.length ? speciesWhere(null) : []; }
+function picked() {                          // "List of Characters Picked"
+  // selected characters first (click order), then every character whose matched species share
+  // exactly one value, in the original program's fixed order; an identical line is not repeated
+  const lines = S.sel.map(s => `${CH[s.table].caption}: ${s.values.join('/')}`);
+  if (S.sel.length) {
+    const m = speciesWhere(null);
+    for (const t of AUTO_ORDER) {
+      const c = CH[t];
+      const vals = new Map();
+      for (const sp of m) for (const v of c.data[sp.id] || []) if (!vals.has(norm(v))) vals.set(norm(v), v.trim());
+      const line = vals.size === 1 ? `${c.caption}: ${[...vals.values()][0]}` : null;
+      if (line && !lines.includes(line)) lines.push(line);
+    }
+  }
+  return lines;
+}
+const AUTO_ORDER = ['IUCN', 'BSI', 'FRLHT', 'Leaf Arrangement', 'Leaf Margin', 'Major Leaf Shape', 'Minor Leaf Shape',
+  'Flower colour', 'Flower Symmetry', 'Inflorescence', 'Sexuality', 'Flowering Period (Individual Month)',
+  'Petal Condition', 'Petal Number', 'Sepal Condition', 'Sepal Number', 'Tepal Number', 'Tepal Condition',
+  'Number of Stamens', 'Stamen Condition', 'Carpel Number', 'Ovary Details', 'Habit', 'Habitat', 'fruit Type',
+  'Flowering Period (Month Range)'];
+function toggle(table, value) {
+  let s = selOf(table);
+  if (!s) S.sel.push(s = { table, values: [] });
+  const i = s.values.findIndex(v => norm(v) === norm(value));
+  if (i >= 0) s.values.splice(i, 1); else s.values.push(value);
+  // the original lists the chosen values in thumbnail order, not click order
+  const at = v => CH[table].thumbs.findIndex(t => norm(t.value) === norm(v));
+  s.values.sort((a, b) => at(a) - at(b));
+  if (!s.values.length) S.sel.splice(S.sel.indexOf(s), 1);
+  S.list = null;
+}
+
+/* ---------- right-hand panel shared by every screen ---------- */
+function rightPanel(win, dx, dy, onBack, focusDetails = true) {
+  const p = el('div', { class: 'abs', style: { left: 0, top: 0 } });
+  p.append(pos(el('div', { class: 'lbl', style: { font: '14px var(--arial)' } }, 'List of Characters Picked'), 834 + dx, 33 + dy));
+  const l1 = el('div', { class: 'sunk lst', style: { font: '12px/16px var(--sans)', padding: '2px 0' } }); pos(l1, 808 + dx, 52 + dy, 625, 259);
+  picked().forEach(t => l1.append(el('div', {}, t)));
+  p.append(l1);
+  p.append(pos(el('div', { class: 'btn' + (onBack ? '' : ' dis'), style: { font: '22px var(--arial)' }, title: 'Click here to go to the Previous Screen', onclick: () => onBack && onBack() }, 'Back'), 832 + dx, 327 + dy, 74, 50));
+  p.append(pos(el('div', { class: 'btn', style: { font: '22px var(--arial)' }, title: 'Click here to Clear all the selections made', onclick: () => { S.sel = []; S.list = null; refresh(); } }, 'Clear'), 920 + dx, 327 + dy, 82, 50));
+  const m = matched();
+  p.append(pos(el('div', { class: 'lbl', style: { font: '14px var(--arial)' } }, ['Species Matched', S.sel.length ? el('b', { style: { marginLeft: '9px' } }, String(m.length)) : '']), 853 + dx, 389 + dy));
+  const l2 = el('div', { class: 'sunk lst', style: { font: 'italic 16px/18px var(--arial)', color: '#800000', padding: '2px 0' } }); pos(l2, 808 + dx, 415 + dy, 625, 219);
+  [...new Set(m.map(s => s.name))].sort(jetCmp).forEach(n => l2.append(el('div', { class: n === S.list ? 'sel' : '', onclick: e => { S.list = n; [...l2.children].forEach(c => c.classList.toggle('sel', c === e.currentTarget)); } }, show(n))));
+  p.append(l2);
+  p.append(pos(el('div', { class: 'btn' + (focusDetails ? ' def' : ''), style: { font: '17px/19px var(--arial)' }, title: 'Click here to view the Details of Selected Species that are matched with the Parameters', onclick: () => S.list ? openSheet(S.list) : msgBox('Threatened Plants', 'A species has to be selected to view its details') }, ['Species', el('br'), 'Details']), 824 + dx, 655 + dy, 98, 49));
+  p.append(pos(el('div', { class: 'btn', style: { font: '19px var(--arial)' }, title: 'Click here to Exit Application', onclick: exitApp }, 'EXIT'), 936 + dx, 655 + dy, 74, 49));
+  win.append(p);
+}
+let refresh = () => {};
+
+/* ---------- splash ---------- */
+$('#sArrow').onclick = () => { $('#splash').hidden = true; showMain('Choose Characters'); };
+function exitApp() { for (const k of Object.keys(W)) closeWin(k, true); S.sel = []; S.list = null; $('#splash').hidden = false; }
+
+/* ---------- main screen: the tree ---------- */
+const HOTS = [['habit', 15, 35, 85, 35], ['leaf', 545, 145, 72, 40], ['flowerc', 500, 232, 138, 92], ['flowerp', 350, 296, 82, 88], ['fruit', 695, 416, 76, 38],
+  ['habitat', 20, 664, 114, 38], ['status', 434, 642, 150, 58], ['search', 670, 632, 122, 78]];
+// a character can be opened only while the matched species still show at least two of its values;
+// a tree label opens the first such character of its group (in button order), otherwise nothing happens
+function nvals(t) { const vs = new Set(); for (const sp of speciesWhere(null)) for (const v of CH[t].data[sp.id] || []) vs.add(norm(v)); return vs.size; }
+const openable = t => nvals(t) >= 2;
+function openSection(k) {
+  const list = PANELS[k] ? PANELS[k].btns.map(b => b[0]) : [{ habit: 'Habit', fruit: 'fruit Type', habitat: 'Habitat' }[k]];
+  const t = list.find(openable);
+  if (t) { entry = t; showChoose(t); }
+}
+let mainTitle = 'Choose Characters';
+function showMain(title) {
+  if (title) mainTitle = title;
+  for (const k of Object.keys(W)) closeWin(k, true);
+  const win = openWin('main', { title: mainTitle, icon: 'img/ui/book16.png', x: 0, y: 0, w: 1440, h: 753, tb: 26, normal: true, onClose: exitApp });
+  win.append(pos(el('img', { src: 'img/ui/tree.png', class: 'abs', alt: 'Tree: Habit, Leaf, Floral Characters, Floral Parts, Fruit, Habitat, Conservation Status, Species Search' }), 2, 25, 803, 719));
+  for (const [k, x, y, w, h] of HOTS) win.append(pos(el('div', { class: 'hot', onclick: () => k === 'search' ? showSearch() : openSection(k) }), x, y, w, h));
+  rightPanel(win, 2, 2, null);
+  refresh = () => showMain();
+}
+
+/* ---------- character screens ---------- */
+const PANELS = {
+  leaf: { font: '19px/23px var(--arial)', cap: 'Leaf', frame: [1, 34, 151, 710], btns: [['Leaf Arrangement', 'Leaf\nArrangement', 12, 127, 123, 70], ['Leaf Margin', 'Leaf Margin', 12, 238, 123, 63], ['Major Leaf Shape', 'Major Leaf\nShape', 12, 352, 123, 61], ['Minor Leaf Shape', 'Minor Leaf\nShape', 12, 464, 123, 61]] },
+  flowerc: { cap: 'Flower Characters', frame: [1, 34, 151, 710], btns: [['Flower colour', 'Flower Colour', 8, 71, 130, 70], ['Flower Symmetry', 'Flower\nSymmetry', 8, 176, 130, 69], ['Inflorescence', 'Inflorescence', 8, 280, 130, 69],
+    ['Sexuality', 'Sexuality', 8, 384, 130, 69], ['Flowering Period (Individual Month)', 'Flowering\nPeriod\n(Individual\nMonth)', 8, 480, 130, 101], ['Flowering Period (Month Range)', 'Flowering\nPeriod (Month\nRange)', 8, 609, 130, 92]] },
+  flowerp: { cap: 'Flower Parts', frame: [1, 34, 151, 710], groups: [['ANDROECIUM', 10, 445, 136, 139], ['GYNOECIUM', 10, 597, 136, 139]],
+    btns: [['Sepal Number', 'Sepal Number', 8, 47, 138, 54], ['Sepal Condition', 'Sepal\nCondition', 8, 110, 138, 55], ['Petal Number', 'Petal Number', 8, 175, 138, 54], ['Petal Condition', 'Petal Condition', 8, 240, 138, 61],
+      ['Tepal Number', 'Tepal Number', 8, 310, 138, 55], ['Tepal Condition', 'Tepal\nCondition', 8, 375, 138, 58], ['Number of Stamens', 'Number of\nStamens', 16, 455, 122, 54], ['Stamen Condition', 'Stamen\nCondition', 16, 520, 122, 57],
+      ['Ovary Details', 'Ovary Details', 16, 607, 122, 54], ['Carpel Number', 'Carpel\nNumber', 16, 672, 122, 53]] },
+  status: { font: '19px/23px var(--arial)', cap: 'Conservation Status', frame: [1, 34, 151, 710], btns: [['IUCN', 'IUCN', 12, 183, 123, 70], ['BSI', 'BSI', 12, 310, 123, 63], ['FRLHT', 'FRLHT', 12, 422, 123, 63]] },
+};
+let cur = null, entry = null;   // entry: the character a group was opened with (it keeps the focus frame)
+function showChoose(table, shown) {
+  cur = table;
+  const c = CH[table], panel = PANELS[c.section];
+  for (const k of Object.keys(W)) closeWin(k, true);
+  const title = `Choose ${c.caption}               * Click on the Thumbnail to Select / Unselect the Character.   Click on the Blue Button to view Images of the Character.`;
+  const win = openWin('choose', { title, icon: 'img/ui/book16.png', onClose: exitApp });
+  const x0 = panel ? 151 : 0;
+  win.append(pos(el('div', { class: 'sunk', style: { background: '#fff' } }), x0, 23, 806 - x0, 866));
+  if (panel) {
+    const f = el('div', { class: 'frame' }, el('span', {}, panel.cap)); pos(f, ...panel.frame); win.append(f);
+    for (const [cap, x, y, w, h] of panel.groups || []) win.append(pos(el('div', { class: 'frame small' }, el('span', {}, cap)), x, y, w, h));
+    for (const [t, lab, x, y, w, h] of panel.btns) {
+      const ok = openable(t), on = t === entry && ok;
+      const b = el('div', { class: 'btn' + (on ? ' def' : '') + (ok ? '' : ' dis'), style: { font: panel.font || '19px/23px var(--arial)', whiteSpace: 'pre' }, onclick: () => ok && showChoose(t) }, lab);
+      win.append(pos(b, x, y, w, h));
+    }
+  }
+  // thumbnails: the values found among the matched species when the screen opens; they stay put
+  // while thumbnails are clicked (the original does not reload them until the screen is reopened)
+  const s = selOf(table); const chosen = new Set((s ? s.values : []).map(norm));
+  if (!shown) {
+    const have = new Set();
+    for (const sp of speciesWhere(null)) for (const v of c.data[sp.id] || []) have.add(norm(v));
+    const seen = new Set(); shown = [];
+    for (const th of c.thumbs) { const k = norm(th.value); if (!seen.has(k) && (have.has(k) || chosen.has(k))) { seen.add(k); shown.push(th); } }
+  }
+  const tx = panel ? 192 : 40;
+  let i = 0;
+  for (const th of shown) {
+    const k = norm(th.value);
+    const t = el('div', { class: 'th' + (chosen.has(k) ? ' on' : '') });
+    const box = el('div', { class: 'box', title: th.label, onclick: () => { toggle(table, th.label); showChoose(table, shown); } }, el('img', { src: th.src, alt: th.label }));
+    if (c.blue) box.append(el('div', { class: 'blue', title: 'Click here to view Images of the Character', onclick: e => { e.stopPropagation(); if (th.pics && th.pics.length) openPics(th.label, th.pics); } }));
+    t.append(box, el('div', { class: 'cap' }, th.label));
+    win.append(pos(t, tx + 120 * (i % 5), 45 + 140 * Math.floor(i / 5)));
+    i++;
+  }
+  rightPanel(win, 0, 0, () => showMain('Choose Parameters'), !panel || !panel.btns.some(b => b[0] === entry && openable(entry)));
+  refresh = () => showChoose(table, shown);
+}
+
+/* ---------- Species Search ---------- */
+const SR = { fam: '', gen: '', sp: '', open: null };
+function showSearch() {
+  for (const k of Object.keys(W)) closeWin(k, true);
+  SR.fam = SR.gen = SR.sp = ''; SR.open = null;
+  openWin('search', { title: 'Species Search', icon: 'img/ui/search16.png', onClose: exitApp });
+  renderSearch();
+  refresh = renderSearch;
+}
+function renderSearch() {
+  const win = W.search.el; win.querySelectorAll('.sr').forEach(e => e.remove());
+  const add = e => { e.classList.add('sr'); win.append(e); return e; };
+  const fams = [...new Set(K.species.map(s => s.family))].sort(jetCmp);
+  const gens = SR.fam ? [...new Set(K.species.filter(s => s.family === SR.fam).map(s => s.genus))].sort(jetCmp) : [];
+  const sps = SR.gen ? [...new Set(K.species.filter(s => s.genus === SR.gen).map(s => s.name))].sort(jetCmp) : [...new Set(K.species.map(s => s.name))].sort(jetCmp);
+  const rows = [['Family', 'fam', 347, fams], ['Genera', 'gen', 412, gens], ['Species', 'sp', 476, sps]];
+  for (const [lab, k, y, items] of rows) {
+    add(pos(el('div', { class: 'lbl', style: { font: '18px var(--arial)' } }, lab), 371, y + 3));
+    const cb = add(pos(el('div', { class: 'combo' + (k === 'fam' && !SR.fam && !SR.open ? ' focus' : ''), onclick: () => { SR.open = SR.open === k ? null : k; renderSearch(); } }, [el('span', {}, show(SR[k] || '')), el('div', { class: 'arr' }, '▼')]), 452, y + 1, 399, 30));
+    if (SR.open === k && items.length) {
+      const d = add(pos(el('div', { class: 'drop' }), 452, y + 31, 400, Math.min(items.length, 8) * 16 + 2));
+      items.forEach(v => d.append(el('div', { onclick: e => { e.stopPropagation(); pick(k, v); } }, show(v))));
+    }
+  }
+  add(pos(el('img', { src: 'img/ui/species_search.png', class: 'hot', alt: 'Species Search', onclick: () => SR.sp ? openSheet(SR.sp) : msgBox('Search', 'Please select a species') }), 939, 372, 159, 125));
+  add(pos(el('div', { class: 'btn', style: { font: '19px var(--arial)' }, onclick: () => { SR.fam = SR.gen = SR.sp = ''; SR.open = null; renderSearch(); } }, 'REFRESH'), 586, 556, 121, 48));
+  add(pos(el('div', { class: 'btn', style: { font: '19px var(--arial)' }, onclick: () => showMain('Choose Parameters') }, 'BACK'), 972, 556, 104, 48));
+}
+function pick(k, v) {
+  SR.open = null;
+  if (k === 'fam') { SR.fam = v; SR.gen = ''; SR.sp = ''; }
+  else if (k === 'gen') { SR.gen = v; SR.sp = ''; }
+  else { SR.sp = v; const s = K.species.find(x => x.name === v); if (s) { SR.fam = s.family; SR.gen = s.genus; } }
+  renderSearch();
+}
+
+/* ---------- pictures: the program hands these to the Windows photo viewer ---------- */
+function openSheet(name) {
+  const s = K.species.find(x => x.name === name);
+  if (!s || !s.sheets.length) return;
+  openPics(show(s.name), s.sheets);
+}
+function openPics(name, pics) {
+  let i = 0;
+  const win = openWin('viewer', { title: '', x: 0, y: 0, w: 1440, h: 900, tb: 32, cls: 'viewer', normal: true });
+  const cl = el('div', { class: 'cl' }); win.append(cl);
+  const draw = () => {
+    cl.textContent = '';
+    cl.append(el('img', { src: pics[i].src, alt: name }));
+    win.querySelector('.tb').childNodes[1].textContent = `${pics[i].file} - Photos`;
+    if (pics.length > 1) {
+      cl.append(el('div', { class: 'nav', style: { left: '8px' }, onclick: () => { i = (i + pics.length - 1) % pics.length; draw(); } }, '‹'));
+      cl.append(el('div', { class: 'nav', style: { right: '8px' }, onclick: () => { i = (i + 1) % pics.length; draw(); } }, '›'));
+    }
+  };
+  draw();
+}
+addEventListener('keydown', e => { if (W.msg && (e.key === 'Enter' || e.key === 'Escape' || e.key === ' ')) { e.preventDefault(); closeWin('msg'); } else if (e.key === 'Escape' && W.viewer) closeWin('viewer'); });
+</script>
+</body>
+</html>
