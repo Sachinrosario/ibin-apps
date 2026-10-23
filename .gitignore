@@ -4,3 +4,11 @@ apps/*/src-tauri/gen/
 apps/*/windows/web/
 apps/*/windows/*.syso
 apps/*/windows/*.exe
+apps/*/web/img/photos
+apps/*/web/img/host
+apps/*/web/img/life
+apps/*/web/img/season
+!apps/pathanga-suchya/web/img/photos
+!apps/pathanga-suchya/web/img/host
+!apps/pathanga-suchya/web/img/life
+!apps/pathanga-suchya/web/img/season

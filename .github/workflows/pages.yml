@@ -26,6 +26,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Collect web files
         run: |
+          bash .github/share-images.sh
           mkdir -p site
           cp index.html catalog.json site/ && mkdir -p site/apps && cp apps/*.png site/apps/
           for d in apps/*/; do n=$(basename "$d"); mkdir -p "site/$n"; cp -r "$d/web/." "site/$n/"; done

@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pathanga Suchya 4</title>
+<link rel="icon" href="img/ui/icon_magnifier.png">
+<style>
+@font-face{font-family:"Kalam";src:url(fonts/kalam-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Kalam";src:url(fonts/kalam-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"Atkinson";src:url(fonts/atkinson-hyperlegible-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Atkinson";src:url(fonts/atkinson-hyperlegible-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"Atkinson";src:url(fonts/atkinson-hyperlegible-latin-400-italic.woff2) format("woff2");font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:"Atkinson";src:url(fonts/atkinson-hyperlegible-latin-700-italic.woff2) format("woff2");font-weight:700;font-style:italic;font-display:swap}
+:root{
+  --paper:#F7F8F4; --panel:#FFFFFF; --ink:#1F2A1E; --muted:#5B6858; --rule:#DCE3D6;
+  --leaf:#2E6A3F; --leaf-soft:#E2EDE2; --marigold:#E89A12; --marigold-soft:#FCEFD2; --hibiscus:#B3264D;
+  --s0:#C9CCC4; --s1:#FFCB97; --s2:#BC5E00; --s3:#86430B; --s4:#E12A2A;   /* the original seasonality scale */
+  --hand:"Kalam","Segoe Print",cursive; --ui:"Atkinson",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r-sm:6px; --r-md:12px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 var(--ui)}
+img{max-width:100%;display:block}
+a{color:var(--leaf)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--marigold);outline-offset:2px}
+[hidden]{display:none!important}
+.sci{font-style:italic}
+.muted{color:var(--muted)}
+.wrap{max-width:1240px;margin:0 auto;padding:0 20px}
+/* ---------- header ---------- */
+header.top{background:var(--panel);border-bottom:1px solid var(--rule);position:sticky;top:0;z-index:20}
+header.top .wrap{display:flex;align-items:center;gap:28px;min-height:68px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.brand img{width:40px;height:40px}
+.brand b{display:block;font:700 26px/1 var(--hand);color:var(--leaf)}
+.brand small{display:block;font-size:13px;color:var(--muted);margin-top:3px}
+nav.main{display:flex;gap:4px;flex-wrap:wrap}
+nav.main a{padding:8px 12px;border-radius:var(--r-sm);text-decoration:none;color:var(--ink);font-weight:700}
+nav.main a:hover{background:var(--leaf-soft)}
+nav.main a[aria-current]{background:var(--ink);color:#fff}
+.find{margin-left:auto;position:relative}
+.find input{width:250px;padding:9px 12px;border:1px solid var(--rule);border-radius:var(--r-sm);background:var(--paper);font:inherit}
+.find .res{position:absolute;right:0;top:44px;width:340px;background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);box-shadow:0 12px 32px rgba(31,42,30,.16);max-height:420px;overflow:auto;z-index:30}
+.find .res a{display:flex;gap:10px;align-items:center;padding:8px 10px;text-decoration:none;color:inherit;border-bottom:1px solid var(--rule)}
+.find .res a:hover,.find .res a.sel{background:var(--marigold-soft)}
+.find .res img{width:52px;height:40px;object-fit:cover;border-radius:4px;flex:none}
+.find .res small{display:block;color:var(--muted)}
+main{padding:28px 0 60px}
+h1{font:700 40px/1.1 var(--hand);color:var(--leaf);margin:0 0 6px}
+h2{font-size:21px;margin:0 0 12px}
+h3{font-size:17px;margin:0 0 8px}
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:var(--r-sm);border:1px solid var(--rule);background:#fff;font-weight:700;cursor:pointer;text-decoration:none;color:var(--ink)}
+.btn:hover{border-color:var(--leaf)}
+.btn.primary{background:var(--leaf);border-color:var(--leaf);color:#fff}
+.btn:disabled{opacity:.45;cursor:default}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;background:var(--leaf-soft);font-size:14px}
+.chip button{border:0;background:none;cursor:pointer;padding:0 0 0 2px;font-weight:700;color:var(--muted)}
+/* ---------- identify ---------- */
+.idgrid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:24px;align-items:start}
+.board{background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);padding:16px}
+.wing{position:relative;width:100%;aspect-ratio:691/506}
+.wing>img{position:absolute;inset:0;width:100%;height:100%}
+.wing.landing>img{animation:land 1.6s cubic-bezier(.2,.7,.2,1) both;transform-origin:50% 40%}
+@keyframes land{0%{transform:translateY(-40px) scaleX(.12) rotate(-6deg);opacity:0}35%{opacity:1;transform:translateY(-12px) scaleX(.55) rotate(3deg)}55%{transform:translateY(-4px) scaleX(1.03)}70%{transform:scaleX(.82)}85%{transform:scaleX(1.01)}100%{transform:none}}
+.wing.landing .ring{animation:ringin .5s 1.3s both}
+@keyframes ringin{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.wing.landing>img,.wing.landing .ring{animation:none}}
+.ring{position:absolute;border:3px solid var(--c);border-radius:50%;cursor:pointer;background:transparent;padding:0;transition:background-color .2s}
+.ring.rr{border-radius:10px}
+.ring:hover{background:color-mix(in srgb,var(--c) 22%,transparent)}
+.ring.done{background:color-mix(in srgb,var(--marigold) 40%,transparent);border-style:solid}
+.ring.known{border-style:dashed}
+.ring.cur{box-shadow:0 0 0 4px #fff,0 0 0 7px var(--ink)}
+.tag{position:absolute;transform:translate(-50%,-50%);background:rgba(255,255,255,.92);border-radius:999px;padding:1px 9px;font-size:13px;font-weight:700;white-space:nowrap;pointer-events:none;border:1px solid var(--rule)}
+.tag.known{font-weight:400;color:var(--muted)}
+.answers{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;min-height:30px;align-items:center}
+.actions{display:flex;gap:8px;margin-top:12px}
+.qpanel{background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);padding:20px}
+.chars{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 16px}
+.chars button{border:1px solid var(--rule);background:#fff;border-radius:999px;padding:5px 12px;cursor:pointer;font-size:14px}
+.chars button.cur{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chars button.answered{background:var(--marigold-soft);border-color:var(--marigold)}
+.chars button.cur.answered{background:var(--ink);color:#fff;border-color:var(--marigold)}
+.chars button.known{color:var(--muted);border-style:dashed}
+.chars button .best{font-size:11px;font-weight:700;background:var(--marigold);color:var(--ink);border-radius:999px;padding:0 6px;margin-left:6px}
+.qhead{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.qhead h2{font:700 26px/1.2 var(--hand);color:var(--leaf);margin:0}
+.opts{display:grid;gap:10px;margin-top:14px}
+.opt{display:grid;grid-template-columns:120px 1fr auto;gap:14px;align-items:center;border:1px solid var(--rule);border-radius:var(--r-md);background:#fff;padding:8px;cursor:pointer;text-align:left}
+.opt:hover{border-color:var(--leaf)}
+.opt.sel{border:2px solid var(--marigold);background:var(--marigold-soft)}
+.opt .pic{height:60px;border-radius:var(--r-sm);background-size:cover;background-position:left center}
+.opt b{font-size:16px}
+.opt small{display:block;color:var(--muted)}
+.opt .n{font-variant-numeric:tabular-nums;color:var(--muted);font-size:14px;white-space:nowrap}
+.opt.none{opacity:.45}
+.opt.skip{grid-template-columns:1fr auto;border-style:dashed}
+.cols{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:14px}
+.col{border:1px solid var(--rule);border-radius:var(--r-md);background:#fff;padding:6px;cursor:pointer;text-align:left}
+.col .sw{height:26px;border-radius:4px;background-size:cover}
+.col div{display:flex;justify-content:space-between;margin-top:5px;font-size:14px}
+.col.sel{border:2px solid var(--marigold);background:var(--marigold-soft)}
+.col.none{opacity:.45}
+.patq{border-top:1px solid var(--rule);padding:12px 0}
+.patq:first-of-type{border-top:0}
+.patq .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.seg{border:1px solid var(--rule);background:#fff;border-radius:var(--r-sm);padding:6px 12px;cursor:pointer}
+.seg.sel{background:var(--marigold-soft);border:2px solid var(--marigold)}
+.seg .n{color:var(--muted);font-size:13px;margin-left:6px}
+.seg.none{opacity:.45}
+.results{margin-top:30px}
+.results .head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.results .count{font:700 34px/1 var(--hand);color:var(--leaf)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+.card{background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column}
+.card:hover{border-color:var(--leaf)}
+.card .ph{aspect-ratio:345/232;background:var(--leaf-soft) center 52%/cover}   /* trims the caption bands printed on the photos */
+.card .tx{padding:9px 11px 11px}
+.card b{display:block;line-height:1.25}
+.card .sci{font-size:14px;color:var(--muted)}
+.card .old{font-size:13px;color:var(--muted)}
+.empty{background:#fff;border:1px dashed var(--rule);border-radius:var(--r-md);padding:22px;color:var(--muted)}
+/* ---------- species ---------- */
+.sp-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;flex-wrap:wrap;margin-bottom:18px}
+.sp-head .sci{font-size:20px}
+.sp-head .auth{color:var(--muted)}
+.sp-head .was{color:var(--muted)}
+.spgrid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:24px;align-items:start}
+.viewer{background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);padding:12px}
+.viewer .main{background:#111;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;aspect-ratio:4/3;overflow:hidden}
+.viewer .main img{width:100%;height:100%;object-fit:contain;cursor:zoom-in}
+.viewer .bar{display:flex;justify-content:space-between;align-items:center;margin:10px 2px 8px;gap:10px;font-size:14px}
+.thumbs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px}
+.thumbs button{flex:none;width:78px;height:60px;border:2px solid transparent;border-radius:5px;padding:0;background:var(--leaf-soft) center/cover;cursor:pointer}
+.thumbs button.sel{border-color:var(--marigold)}
+.facts{background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);padding:18px}
+.facts dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;margin:0}
+.facts dt{color:var(--muted)}
+.facts dd{margin:0;font-weight:700}
+.block{background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);padding:18px;margin-top:24px}
+.months{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;margin-top:6px}
+.months div{text-align:center;font-size:12px}
+.months i{display:block;height:30px;border-radius:4px;margin-bottom:3px}
+.months .now{font-weight:700}
+.months .now i{outline:2px solid var(--ink);outline-offset:1px}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--muted);margin-top:10px}
+.legend i{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:-2px;margin-right:5px}
+.hosts{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.hosts figure{margin:0;background:var(--paper);border-radius:var(--r-sm);overflow:hidden}
+.hosts img{aspect-ratio:4/3;object-fit:cover;width:100%;cursor:zoom-in}
+.hosts figcaption{padding:6px 8px;font-size:14px}
+/* ---------- seasons ---------- */
+.mbar{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 20px}
+.mbar button{border:1px solid var(--rule);background:#fff;border-radius:var(--r-sm);padding:7px 12px;cursor:pointer;font-weight:700}
+.mbar button.sel{background:var(--ink);color:#fff;border-color:var(--ink)}
+.phen{width:100%;border-collapse:collapse;font-size:14px;background:#fff;border:1px solid var(--rule)}
+.phen th,.phen td{padding:3px 6px;border-bottom:1px solid var(--rule)}
+.phen th{text-align:left;font-weight:700;position:sticky;top:68px;background:#fff;z-index:2}
+.phen td.c{padding:2px;width:44px}
+.phen td.c i{display:block;height:20px;border-radius:3px}
+.phen td.now i{outline:2px solid var(--ink)}
+.phen a{color:inherit}
+/* ---------- quick ---------- */
+.qboard{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.qside{background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);padding:14px}
+.qside h3{display:flex;gap:10px;align-items:center}
+.qside h3 img{width:56px}
+.qkinds{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.qkind{border:2px solid var(--rule);border-radius:var(--r-sm);background:#fff;padding:4px;cursor:pointer;text-align:left;font-size:13px}
+.qkind img{width:100%;height:56px;object-fit:cover;border-radius:4px;margin-bottom:4px}
+.qkind.sel{border-color:var(--marigold);background:var(--marigold-soft)}
+.qkind.used{border-color:var(--leaf)}
+.swatches{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.swatch{width:46px;height:46px;border-radius:50%;border:2px solid var(--rule);cursor:pointer}
+.swatch:disabled{opacity:.3;cursor:default}
+.lines{display:flex;flex-direction:column;gap:6px;margin:6px 0 0}
+/* ---------- misc ---------- */
+.lightbox{position:fixed;inset:0;background:rgba(15,20,15,.88);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px;flex-direction:column;gap:10px;color:#fff}
+.lightbox img{max-height:84vh;width:auto;border-radius:6px}
+.lightbox button{position:absolute;top:14px;right:18px;background:none;border:0;color:#fff;font-size:30px;cursor:pointer}
+footer{border-top:1px solid var(--rule);padding:18px 0 40px;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+table.names{width:100%;border-collapse:collapse;background:#fff;font-size:14px}
+table.names th,table.names td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--rule);vertical-align:top}
+.prose{max-width:760px}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 18px}
+.filters button{border:1px solid var(--rule);background:#fff;border-radius:999px;padding:5px 12px;cursor:pointer}
+.filters button.sel{background:var(--ink);color:#fff;border-color:var(--ink)}
+@media (max-width:900px){
+  .idgrid,.spgrid,.qboard{grid-template-columns:minmax(0,1fr)}
+  .find{margin-left:0;width:100%}.find input{width:100%}.find .res{width:100%}
+  header.top{position:static}
+  .phen th{top:0}
+  h1{font-size:32px}
+  .opt{grid-template-columns:90px 1fr auto}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .hosts{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="#/identify"><img src="img/ui/icon_magnifier.png" alt=""><span><b>Pathanga Sūchya</b><small>Butterflies of Bangalore</small></span></a>
+  <nav class="main" aria-label="Sections">
+    <a href="#/identify">Identify</a><a href="#/quick">Quick find</a><a href="#/butterflies">Butterflies</a><a href="#/seasons">Seasons</a><a href="#/about">About</a>
+  </nav>
+  <div class="find"><input id="q" type="search" placeholder="Search a name" aria-label="Search butterflies by common or scientific name" autocomplete="off"><div class="res" id="qres" hidden></div></div>
+</div></header>
+<main><div class="wrap" id="app"></div></main>
+<footer><div class="wrap">
+  <span>Proprietary right holder: Dr. K.N. Ganeshaiah. Updated in 2026 by Dr. Sachin A. Rosario.</span>
+  <span>Pathanga Suchya <span id="fver"></span> · <a href="#/about">About and sources</a></span>
+</div></footer>
+<script src="data/kit.js"></script>
+<script>
+"use strict";
+const K = window.KIT_DATA;
+document.getElementById('fver').textContent = 'Version ' + K.version;
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const byId = Object.fromEntries(K.species.map(s => [s.id, s]));
+const cmp = (a, b) => a.localeCompare(b, 'en', { sensitivity: 'base', ignorePunctuation: true });
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const NOW = new Date().getMonth();
+const LV = ['var(--s0)', 'var(--s1)', 'var(--s2)', 'var(--s3)', 'var(--s4)'];
+// old common names are shown in brackets, except one 2007 name now considered offensive
+const showOld = s => s.oldName && s.oldName !== 'Nigger';
+const cover = s => s.photos[0] ? s.photos[0].src : '';
+const sciLine = s => `<span class="sci">${esc(s.sci)}</span>${s.oldSci ? ` <span class="muted">(${esc(s.oldSci)})</span>` : ''}`;
+function card(s) {
+  return `<a class="card" href="#/butterfly/${s.id}"><div class="ph" style="background-image:url('${cover(s)}')"></div>
+    <div class="tx"><b>${esc(s.name)}</b><div class="sci">${esc(s.sci)}</div>${s.oldSci ? `<div class="old">(${esc(s.oldSci)})</div>` : ''}</div></a>`;
+}
+
+/* ===================== characters (from the 2007 key) ===================== */
+const CH = {
+  antenna: { label: 'Antenna', help: 'Look at the tip of the feelers.', opts: [['Plain', 'Plain', 'Even, thin all along', 'ant_plain.png'], ['Rings', 'Ringed', 'Black and white rings', 'ant_rings.jpg'], ['Thick', 'Thick at the tip', 'Clubbed or hooked end', 'ant_thick.jpg']] },
+  dorsal: { label: 'Upper-side colours', help: 'Wings open: tick every colour you see on the upper side.', colours: true, prefix: 'd_' },
+  ventral: { label: 'Under-side colours', help: 'Wings closed: tick every colour you see underneath.', colours: true, prefix: 'v_' },
+  size: { label: 'Size', help: 'Compared with a one-rupee coin, a matchbox and a floppy disk.', opts: [['Small', 'Small', 'Coin to matchbox', 'size_small.jpg'], ['Medium', 'Medium', 'Matchbox to floppy disk', 'size_medium.jpg'], ['Large', 'Large', 'Floppy disk to CD', 'size_large.jpg']] },
+  tail: { label: 'Tail', help: 'Look at the back edge of the hindwing.', opts: [['Absent', 'No tail', '', 'tail_absent.png'], ['smPresent', 'Thread-like tail', 'Short and thin', 'tail_simple.png'], ['shPresent', 'Sharp tail', 'Pointed lobes', 'tail_sharp.png'], ['exPresent', 'Extended tail', 'Long, broad tail', 'tail_extended.png']] },
+  margin: { label: 'Wing margin', help: 'Look at the outer edge of the wings.', opts: [['Not Present', 'Plain margin', 'No pattern along the edge', 'mar_absent.jpg'], ['Patchy Margin', 'Patchy margin', 'Spots or patches along the edge', 'mar_patchy.jpg'], ['Wavy Margin', 'Wavy margin', 'Wavy lines along the edge', 'mar_wavy.png']] },
+  pattern: { label: 'Wing pattern', help: 'Answer any of these that you can see.', pattern: true },
+};
+const PAT = [['eyespot', 'Eye spots', 'pat_eyespots.jpg'], ['patches', 'Patches', 'pat_patches.jpg'], ['bands', 'Bands', 'pat_bands.jpg'], ['stripes', 'Stripes', 'pat_stripes.jpg'], ['wavy', 'Wavy markings', 'pat_wavy.jpg']];
+const SINGLE = ['antenna', 'size', 'tail', 'margin', 'eyespot', 'patches', 'bands', 'stripes', 'wavy'];
+const COLOURS = ['Black', 'Brown', 'Blue', 'Green', 'Grey', 'Orange', 'Red', 'White', 'Yellow'];
+const VALTXT = {
+  antenna: { Plain: 'Plain antenna', Rings: 'Ringed antenna', Thick: 'Antenna thick at tip' }, size: { Small: 'Small', Medium: 'Medium', Large: 'Large' },
+  tail: { Absent: 'No tail', smPresent: 'Thread-like tail', shPresent: 'Sharp tail', exPresent: 'Extended tail' },
+  margin: { 'Not Present': 'Plain margin', 'Patchy Margin': 'Patchy margin', 'Wavy Margin': 'Wavy margin' },
+};
+const PATTXT = { eyespot: 'eye spots', patches: 'patches', bands: 'bands', stripes: 'stripes', wavy: 'wavy markings' };
+function valueText(k, v) {
+  if (k === 'dorsal' || k === 'ventral') return (k === 'dorsal' ? 'Upper side: ' : 'Under side: ') + v.join(', ');
+  if (PATTXT[k]) return (v === '1' ? '' : 'No ') + PATTXT[k];
+  return VALTXT[k][v];
+}
+// hotspot rings on the 2007 butterfly picture (coordinates of the original screen, relative to the 691x506 picture)
+const RINGS = {
+  antenna: [295, 8, 138, 57, '#2F55D4'], dorsal: [95, 104, 106, 65, '#D22B2B'], ventral: [455, 152, 106, 65, '#E07B00'],
+  pattern: [223, 200, 82, 121, '#2F9E44'], size: [95, 232, 34, 209, '#11A3B5'], tail: [183, 360, 66, 97, '#C9A800'], margin: [407, 263, 66, 122, '#B5179E', 'rr'],
+};
+
+/* ===================== identification state ===================== */
+const ID = { sel: {}, hist: [], cur: null, landed: false };
+function test(s, sel) {
+  for (const k of SINGLE) if (sel[k] != null && s.chars[k] !== sel[k]) return false;
+  for (const k of ['dorsal', 'ventral']) if (sel[k]) for (const c of sel[k]) if (!s.chars[k].includes(c)) return false;
+  return true;
+}
+const matches = (sel = ID.sel) => K.species.filter(s => test(s, sel));
+function known(list) {   // characters every remaining butterfly shares (the 2007 program wrote these in automatically)
+  const out = {};
+  if (!list.length) return out;
+  for (const k of SINGLE) { if (ID.sel[k] != null) continue; const v = new Set(list.map(s => s.chars[k])); if (v.size === 1) out[k] = [...v][0]; }
+  return out;
+}
+function bestNext(list) {  // the character whose answer leaves the fewest butterflies on average
+  let best = null, score = Infinity;
+  const cands = ['antenna', 'size', 'tail', 'margin', 'pattern'];   // single-answer characters make the clearest next question
+  for (const k of cands) {
+    if (k === 'pattern') {
+      for (const [p] of PAT) { if (ID.sel[p] != null) continue; const sc = splitScore(list, s => s.chars[p]); if (sc < score) { score = sc; best = 'pattern'; } }
+      continue;
+    }
+    if (ID.sel[k] != null) continue;
+    const sc = k === 'dorsal' || k === 'ventral' ? splitScore(list, s => s.chars[k].length ? s.chars[k][0] : '-') : splitScore(list, s => s.chars[k]);
+    if (sc < score) { score = sc; best = k; }
+  }
+  return list.length > 1 && score < list.length ? best : null;
+}
+function splitScore(list, f) { const g = {}; list.forEach(s => g[f(s)] = (g[f(s)] || 0) + 1); return Object.values(g).reduce((a, n) => a + n * n, 0) / list.length; }
+function setSel(k, v) {
+  ID.hist.push([k, ID.sel[k]]);
+  if (v == null || (Array.isArray(v) && !v.length)) delete ID.sel[k]; else ID.sel[k] = v;
+  renderIdentify();
+}
+function undo() { const h = ID.hist.pop(); if (!h) return; if (h[1] == null) delete ID.sel[h[0]]; else ID.sel[h[0]] = h[1]; renderIdentify(); }
+function startOver() { ID.sel = {}; ID.hist = []; ID.cur = null; renderIdentify(); }
+
+function renderIdentify() {
+  const list = matches(), kn = known(list), best = bestNext(list);
+  if (!ID.cur) ID.cur = best || 'antenna';
+  const answered = k => k === 'pattern' ? PAT.some(([p]) => ID.sel[p] != null) : ID.sel[k] != null;
+  const isKnown = k => k === 'pattern' ? PAT.every(([p]) => ID.sel[p] != null || p in kn) && !answered(k) : k in kn;
+  const tags = [];
+  for (const [k, [x, y, w, h]] of Object.entries(RINGS)) {
+    let txt = '', kcls = '';
+    if (k === 'pattern') { const a = PAT.filter(([p]) => ID.sel[p] != null).map(([p]) => valueText(p, ID.sel[p])); txt = a.join(', '); }
+    else if (ID.sel[k] != null) txt = valueText(k, ID.sel[k]);
+    else if (k in kn) { txt = valueText(k, kn[k]); kcls = ' known'; }
+    if (txt) tags.push(`<span class="tag${kcls}" style="left:${(x + w / 2) / 6.91}%;top:${(y + h / 2) / 5.06}%">${esc(txt)}</span>`);
+  }
+  const rings = Object.entries(RINGS).map(([k, [x, y, w, h, c, rr]]) =>
+    `<button class="ring${rr ? ' rr' : ''}${answered(k) ? ' done' : ''}${isKnown(k) ? ' known' : ''}${ID.cur === k ? ' cur' : ''}" style="--c:${c};left:${x / 6.91}%;top:${y / 5.06}%;width:${w / 6.91}%;height:${h / 5.06}%" data-k="${k}" aria-label="${esc(CH[k].label)}" title="${esc(CH[k].label)}"></button>`).join('');
+  const chips = [];
+  for (const k of [...SINGLE, 'dorsal', 'ventral']) if (ID.sel[k] != null) chips.push(`<span class="chip">${esc(valueText(k, ID.sel[k]))}<button data-clear="${k}" aria-label="Remove ${esc(valueText(k, ID.sel[k]))}">×</button></span>`);
+  $('#app').innerHTML = `
+  <h1>Which butterfly did you see?</h1>
+  <p class="muted" style="margin:0 0 20px">Tap a part of the butterfly, then pick what your butterfly shows. Answer in any order and skip what you did not notice.</p>
+  <div class="idgrid">
+    <div class="board">
+      <div class="wing${ID.landed ? '' : ' landing'}"><img src="img/ui/ident_butterfly.png" alt="Crimson Rose butterfly with the parts you can describe circled">${rings}${tags.join('')}</div>
+      <div class="answers">${chips.length ? chips.join('') : '<span class="muted">Your answers will appear here.</span>'}</div>
+      <div class="actions"><button class="btn" id="undo" ${ID.hist.length ? '' : 'disabled'}>Undo</button><button class="btn" id="over" ${Object.keys(ID.sel).length ? '' : 'disabled'}>Start over</button></div>
+    </div>
+    <div class="qpanel" id="qp"></div>
+  </div>
+  <section class="results" id="results"></section>`;
+  ID.landed = true;
+  $('#app').querySelectorAll('.ring').forEach(b => b.onclick = () => { ID.cur = b.dataset.k; renderIdentify(); });
+  $('#app').querySelectorAll('[data-clear]').forEach(b => b.onclick = () => setSel(b.dataset.clear, null));
+  $('#undo').onclick = undo; $('#over').onclick = startOver;
+  renderQuestion(list, kn, best);
+  renderResults(list);
+}
+function countIf(k, v) { return matches({ ...ID.sel, [k]: v }).length; }
+function renderQuestion(list, kn, best) {
+  const k = ID.cur, C = CH[k];
+  const charBtns = Object.keys(CH).map(c => {
+    const ans = c === 'pattern' ? PAT.some(([p]) => ID.sel[p] != null) : ID.sel[c] != null;
+    return `<button class="${c === k ? 'cur' : ''}${ans ? ' answered' : ''}" data-c="${c}">${esc(CH[c].label)}${c === best && !ans ? '<span class="best">best next</span>' : ''}</button>`;
+  }).join('');
+  let body = '';
+  if (C.opts) {
+    body = '<div class="opts">' + C.opts.map(([v, t, sub, img]) => {
+      const n = countIf(k, v), sel = ID.sel[k] === v;
+      return `<button class="opt${sel ? ' sel' : ''}${n ? '' : ' none'}" data-v="${esc(v)}" aria-pressed="${sel}"><span class="pic" style="background-image:url('img/ui/${img}')"></span><span><b>${esc(t)}</b>${sub ? `<small>${esc(sub)}</small>` : ''}</span><span class="n">${n} left</span></button>`;
+    }).join('') + `<button class="opt skip" data-v=""><span><b>Can't say</b><small>Leave this out</small></span><span class="n">${list.length} left</span></button></div>`;
+    if (k in kn) body = `<p class="muted">All ${list.length} remaining butterflies have <b>${esc(valueText(k, kn[k]).toLowerCase())}</b>, so this will not narrow it down.</p>` + body;
+  } else if (C.colours) {
+    const cur = ID.sel[k] || [];
+    body = '<div class="cols">' + COLOURS.map(c => {
+      const on = cur.includes(c), next = on ? cur.filter(x => x !== c) : [...cur, c];
+      const n = matches({ ...ID.sel, [k]: next.length ? next : undefined }).length;
+      return `<button class="col${on ? ' sel' : ''}${!on && !n ? ' none' : ''}" data-c="${c}" aria-pressed="${on}"><span class="sw" style="display:block;background-image:url('img/ui/${C.prefix}${c}.jpg')"></span><div><b>${c}</b><span class="muted">${on ? 'ticked' : n + ' left'}</span></div></button>`;
+    }).join('') + '</div>';
+  } else if (C.pattern) {
+    body = PAT.map(([p, t, img]) => {
+      const segs = [['1', 'Present'], ['0', 'Absent']].map(([v, tt]) => { const n = countIf(p, v), sel = ID.sel[p] === v; return `<button class="seg${sel ? ' sel' : ''}${n ? '' : ' none'}" data-p="${p}" data-v="${v}" aria-pressed="${sel}">${tt}<span class="n">${n} left</span></button>`; }).join('');
+      const note = p in kn ? `<span class="muted"> · all remaining: ${esc(valueText(p, kn[p]))}</span>` : '';
+      return `<div class="patq"><h3>${esc(t)}${note}</h3><img src="img/ui/${img}" alt="" style="width:100%;max-width:422px;border-radius:6px"><div class="row">${segs}<button class="seg" data-p="${p}" data-v="">Can't say</button></div></div>`;
+    }).join('');
+  }
+  $('#qp').innerHTML = `<div class="chars" role="tablist" aria-label="Characters">${charBtns}</div><div class="qhead"><h2>${esc(C.label)}</h2></div><p class="muted" style="margin:4px 0 0">${esc(C.help)}</p>${body}`;
+  $('#qp').querySelectorAll('[data-c]').forEach(b => { if (b.closest('.chars')) b.onclick = () => { ID.cur = b.dataset.c; renderIdentify(); }; });
+  $('#qp').querySelectorAll('.opt').forEach(b => b.onclick = () => { setSel(k, b.dataset.v || null); });
+  $('#qp').querySelectorAll('.col').forEach(b => b.onclick = () => { const cur = ID.sel[k] || [], c = b.dataset.c; setSel(k, cur.includes(c) ? cur.filter(x => x !== c) : [...cur, c]); });
+  $('#qp').querySelectorAll('.seg').forEach(b => b.onclick = () => setSel(b.dataset.p, b.dataset.v || null));
+}
+function renderResults(list) {
+  const sorted = [...list].sort((a, b) => cmp(a.name, b.name));
+  const any = Object.keys(ID.sel).length;
+  $('#results').innerHTML = `<div class="head"><span class="count">${list.length}</span><span>${list.length === 1 ? 'butterfly matches' : 'butterflies match'}${any ? ' your answers' : ' – start answering to narrow this down'}</span></div>` +
+    (list.length ? `<div class="grid">${sorted.map(card).join('')}</div>` : `<div class="empty">No butterfly in the key has all of these. Undo the last answer, or remove one of the answers under the picture.</div>`);
+}
+
+/* ===================== butterflies ===================== */
+const BS = { fam: 'All' };
+function renderButterflies() {
+  const fams = ['All', ...[...new Set(K.species.map(s => s.family))].sort()];
+  const list = K.species.filter(s => BS.fam === 'All' || s.family === BS.fam).sort((a, b) => cmp(a.name, b.name));
+  $('#app').innerHTML = `<h1>All ${K.species.length} butterflies</h1>
+    <p class="muted" style="margin:0">Names checked against the Catalogue of Life (${esc(K.col.release)} release). Where a name changed, the 2007 name is shown in brackets.</p>
+    <div class="filters">${fams.map(f => `<button class="${f === BS.fam ? 'sel' : ''}" data-f="${f}">${f}${f === 'All' ? '' : ' · ' + K.species.filter(s => s.family === f).length}</button>`).join('')}</div>
+    <div class="grid">${list.map(card).join('')}</div>`;
+  $('#app').querySelectorAll('[data-f]').forEach(b => b.onclick = () => { BS.fam = b.dataset.f; renderButterflies(); });
+}
+
+/* ===================== one butterfly ===================== */
+function monthsHTML(sz) {
+  return `<div class="months">${MONTHS.map((m, i) => `<div class="${i === NOW ? 'now' : ''}"><i style="background:${sz[i] == null ? 'repeating-linear-gradient(45deg,#eee 0 4px,#fff 4px 8px)' : LV[sz[i]]}" title="${m}: ${sz[i] == null ? 'no data' : K.levels[sz[i]]}"></i>${m}</div>`).join('')}</div>
+    <div class="legend">${K.levels.map((l, i) => `<span><i style="background:${LV[i]}"></i>${l}</span>`).join('')}</div>`;
+}
+function similar(s) {
+  const keys = ['antenna', 'size', 'tail', 'margin', 'eyespot', 'patches', 'bands', 'stripes', 'wavy'];
+  return K.species.filter(t => t !== s).map(t => {
+    let sc = keys.filter(k => t.chars[k] === s.chars[k]).length;
+    for (const side of ['dorsal', 'ventral']) { const a = new Set(s.chars[side]), b = new Set(t.chars[side]); const inter = [...a].filter(x => b.has(x)).length, uni = new Set([...a, ...b]).size; sc += uni ? 2 * inter / uni : 0; }
+    return [t, sc];
+  }).sort((a, b) => b[1] - a[1]).slice(0, 4).map(x => x[0]);
+}
+function renderSpecies(id) {
+  const s = byId[id]; if (!s) return go('#/butterflies');
+  let pi = 0;
+  const ch = s.chars;
+  const facts = [['Family', s.family], ['Antenna', VALTXT.antenna[ch.antenna]], ['Size', ch.size], ['Tail', VALTXT.tail[ch.tail]], ['Wing margin', VALTXT.margin[ch.margin]],
+    ['Upper-side colours', ch.dorsal.join(', ') || '–'], ['Under-side colours', ch.ventral.join(', ') || '–'],
+    ['Pattern', PAT.map(([p, t]) => ch[p] === '1' ? t.toLowerCase() : null).filter(Boolean).join(', ') || 'none recorded']];
+  $('#app').innerHTML = `<a href="#/butterflies" class="btn" style="margin-bottom:16px">All butterflies</a>
+  <div class="sp-head"><div><h1>${esc(s.name)}${showOld(s) ? ` <span class="muted" style="font-size:22px">(${esc(s.oldName)})</span>` : ''}</h1>
+    <div>${sciLine(s)} <span class="auth">${esc(s.author)}</span></div>
+    ${s.nameNote ? `<div class="muted" style="font-size:14px;margin-top:4px">Name check: ${esc(s.nameNote)}.</div>` : ''}</div>
+    ${s.colId ? `<a class="btn" href="https://www.catalogueoflife.org/data/taxon/${esc(s.colId)}" target="_blank" rel="noopener">Catalogue of Life entry</a>` : ''}</div>
+  <div class="spgrid">
+    <div class="viewer">${s.photos.length ? `<div class="main"><img id="pmain" alt="${esc(s.name)}"></div><div class="bar"><span id="pcred"></span><span><button class="btn" id="pprev" aria-label="Previous photo">‹</button> <span id="pnum"></span> <button class="btn" id="pnext" aria-label="Next photo">›</button></span></div><div class="thumbs" id="pthumbs">${s.photos.map((p, i) => `<button data-i="${i}" style="background-image:url('${p.src}')" aria-label="Photo ${i + 1}"></button>`).join('')}</div>` : '<div class="empty">No photographs of this butterfly came with the program.</div>'}</div>
+    <div><div class="facts"><h2>How to recognise it</h2><dl>${facts.map(([a, b]) => `<dt>${a}</dt><dd>${esc(b)}</dd>`).join('')}</dl></div>
+    ${s.season ? `<div class="block" style="margin-top:16px"><h2>When to look for it</h2>${monthsHTML(s.season)}${s.seasonImg ? `<details style="margin-top:10px"><summary>Original seasonality wheel</summary><img src="${s.seasonImg}" alt="Seasonality wheel" style="max-width:320px;margin-top:8px"></details>` : ''}</div>` : '<div class="block" style="margin-top:16px"><h2>When to look for it</h2><p class="muted">No seasonality record came with the program.</p></div>'}</div>
+  </div>
+  ${s.life ? `<div class="block"><h2>Life cycle</h2><img src="${s.life}" alt="Life cycle of the ${esc(s.name)}: egg, caterpillar, pupa and adult" style="max-width:560px"></div>` : ''}
+  ${s.hosts.length ? `<div class="block"><h2>Host plants (${s.hosts.length})</h2><p class="muted" style="margin-top:-6px">The caterpillars feed on these plants.</p><div class="hosts">${s.hosts.map(h => `<figure>${h.src ? `<img src="${h.src}" alt="${esc(h.genus + ' ' + h.species)}" loading="lazy" data-zoom="${h.src}">` : ''}<figcaption class="sci">${esc(h.genus)} ${esc(h.species)}</figcaption></figure>`).join('')}</div></div>` : ''}
+  <div class="block"><h2>Similar butterflies</h2><p class="muted" style="margin-top:-6px">These share most of the same characters. Compare them before you decide.</p><div class="grid">${similar(s).map(card).join('')}</div></div>`;
+  const show = i => { pi = (i + s.photos.length) % s.photos.length; const p = s.photos[pi]; $('#pmain').src = p.src; $('#pnum').textContent = `${pi + 1} of ${s.photos.length}`; $('#pcred').textContent = p.credit ? 'Photo: ' + p.credit : ''; $('#pthumbs').querySelectorAll('button').forEach((b, j) => b.classList.toggle('sel', j === pi)); };
+  if (s.photos.length) { show(0); $('#pprev').onclick = () => show(pi - 1); $('#pnext').onclick = () => show(pi + 1); $('#pthumbs').querySelectorAll('button').forEach(b => b.onclick = () => show(+b.dataset.i)); $('#pmain').onclick = () => zoom(s.photos[pi].src, s.name); }
+  $('#app').querySelectorAll('[data-zoom]').forEach(i => i.onclick = () => zoom(i.dataset.zoom, i.alt));
+}
+function zoom(src, cap) {
+  const d = document.createElement('div'); d.className = 'lightbox'; d.innerHTML = `<button aria-label="Close">×</button><img src="${src}" alt=""><div>${esc(cap)}</div>`;
+  d.onclick = () => d.remove(); document.body.append(d);
+}
+
+/* ===================== seasons ===================== */
+const SS = { m: NOW };
+function renderSeasons() {
+  const withData = K.species.filter(s => s.season);
+  const m = SS.m;
+  const rows = withData.map(s => [s, s.season[m] ?? -1]).sort((a, b) => b[1] - a[1] || cmp(a[0].name, b[0].name));
+  const flying = rows.filter(r => r[1] >= 2).length;
+  $('#app').innerHTML = `<h1>What flies when</h1>
+    <p class="muted" style="margin:0">Month-by-month abundance of ${withData.length} butterflies around Bangalore, read from the program's seasonality wheels.</p>
+    <div class="mbar">${MONTHS.map((x, i) => `<button class="${i === m ? 'sel' : ''}" data-m="${i}">${x}</button>`).join('')}</div>
+    <h2>${flying} butterflies are common or abundant in ${['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][m]}</h2>
+    <div style="overflow-x:auto"><table class="phen"><thead><tr><th>Butterfly</th>${MONTHS.map((x, i) => `<th style="text-align:center;${i === m ? 'text-decoration:underline' : ''}">${x}</th>`).join('')}</tr></thead><tbody>
+    ${rows.map(([s]) => `<tr><td><a href="#/butterfly/${s.id}">${esc(s.name)}</a></td>${s.season.map((v, i) => `<td class="c${i === m ? ' now' : ''}"><i style="background:${v == null ? '#eee' : LV[v]}" title="${MONTHS[i]}: ${v == null ? 'no data' : K.levels[v]}"></i></td>`).join('')}</tr>`).join('')}
+    </tbody></table></div>
+    <div class="legend">${K.levels.map((l, i) => `<span><i style="background:${LV[i]}"></i>${l}</span>`).join('')}</div>`;
+  $('#app').querySelectorAll('[data-m]').forEach(b => b.onclick = () => { SS.m = +b.dataset.m; renderSeasons(); });
+}
+
+/* ===================== quick find ===================== */
+const QS = { slot: 0, lines: [] };
+const qName = q => q.species != null ? byId[q.species] : null;
+function qMatches() {
+  let list = K.quick;
+  for (const L of QS.lines) list = list.filter(q => q.slots[L.slot].some(([c, n]) => L.colors.includes(c) && (!L.cnt || n === L.cnt)));
+  return list;
+}
+function renderQuick() {
+  const sides = [['Upper side (wings open)', 'diag_dorsal.png', [0, 3]], ['Under side (wings closed)', 'diag_ventral.png', [6, 9]]];
+  const KIND = ['Spot colour', 'Patch colours', 'Eye-spot rings'];
+  const used = new Set(QS.lines.map(l => l.slot));
+  const slot = K.slots[QS.slot];
+  const list = qMatches();
+  const lineTxt = L => `${K.slots[L.slot].side === 'DORSAL' ? 'Upper side' : 'Under side'}, ${K.slots[L.slot].wing === 'UPPERWING' ? 'forewing' : 'hindwing'} ${['spot', 'patch', 'eye-spot ring ' + (L.cnt || '')][['SPOT', 'PATCH', 'EYE SPOTS'].indexOf(K.slots[L.slot].kind)]}: ${L.colors.join(' or ')}`;
+  const names = [...new Set(list.map(q => q.name))].sort(cmp);
+  $('#app').innerHTML = `<h1>Quick find by spots and patches</h1>
+    <p class="muted" style="margin:0 0 18px">Pick a part of the wing, then the colour you see there. Patches can have two colours; eye spots are read ring by ring from the centre outwards.</p>
+    <div class="qboard">${sides.map(([t, img, starts]) => `<div class="qside"><h3><img src="img/ui/${img}" alt="">${t}</h3>
+      ${starts.map((st, w) => `<div style="margin-top:8px"><div class="muted" style="font-size:14px;margin-bottom:4px">${w ? 'Hindwing' : 'Forewing'}</div><div class="qkinds">${[0, 1, 2].map(j => { const k = st + j; return `<button class="qkind${k === QS.slot ? ' sel' : ''}${used.has(k) ? ' used' : ''}" data-s="${k}"><img src="img/ui/slot_${k}.png" alt="">${KIND[j]}</button>`; }).join('')}</div></div>`).join('')}</div>`).join('')}</div>
+    <div class="block"><h2>${esc((slot.side === 'DORSAL' ? 'Upper side' : 'Under side') + ', ' + (slot.wing === 'UPPERWING' ? 'forewing' : 'hindwing') + ': ' + KIND[['SPOT', 'PATCH', 'EYE SPOTS'].indexOf(slot.kind)].toLowerCase())}</h2>
+      <div class="swatches">${[['Black', '#000'], ['White', '#fff'], ['Blue', '#00B0F0'], ['Green', '#92D050'], ['Orange', '#FFC000'], ['Yellow', '#FFFF00']].map(([c, h]) => `<button class="swatch" data-c="${c}" style="background:${h}" title="${c}" aria-label="${c}"></button>`).join('')}</div>
+      <div class="lines">${QS.lines.length ? QS.lines.map((L, i) => `<span class="chip" style="align-self:flex-start">${esc(lineTxt(L))}<button data-rm="${i}" aria-label="Remove">×</button></span>`).join('') : '<span class="muted">Nothing chosen yet.</span>'}</div>
+      ${QS.lines.length ? '<button class="btn" id="qclear" style="margin-top:10px">Clear all</button>' : ''}</div>
+    <section class="results"><div class="head"><span class="count">${QS.lines.length ? names.length : '–'}</span><span>${QS.lines.length ? (names.length === 1 ? 'butterfly matches' : 'butterflies match') : 'Choose a colour to see matches'}</span></div>
+    ${QS.lines.length ? (names.length ? `<div class="grid">${names.map(n => { const q = K.quick.find(x => x.name === n), s = qName(q); return s ? card(s) : `<div class="card"><div class="ph" style="background-image:url('${q.photos && q.photos[0] ? q.photos[0].src : ''}')"></div><div class="tx"><b>${esc(n)}</b><div class="old">Not in the identification key</div></div></div>`; }).join('')}</div>` : '<div class="empty">No butterfly has this combination. Remove the last colour you added.</div>') : ''}</section>`;
+  $('#app').querySelectorAll('[data-s]').forEach(b => b.onclick = () => { QS.slot = +b.dataset.s; renderQuick(); });
+  $('#app').querySelectorAll('[data-rm]').forEach(b => b.onclick = () => { QS.lines.splice(+b.dataset.rm, 1); renderQuick(); });
+  if ($('#qclear')) $('#qclear').onclick = () => { QS.lines = []; renderQuick(); };
+  $('#app').querySelectorAll('.swatch').forEach(b => b.onclick = () => {
+    const c = b.dataset.c, kind = slot.kind;
+    if (kind === 'SPOT') { const L = QS.lines.find(l => l.slot === QS.slot); if (L) L.colors = [c]; else QS.lines.push({ slot: QS.slot, colors: [c] }); }
+    else if (kind === 'PATCH') { let L = QS.lines.find(l => l.slot === QS.slot); if (!L) QS.lines.push(L = { slot: QS.slot, colors: [] }); if (!L.colors.includes(c)) { L.colors.push(c); if (L.colors.length > 2) L.colors.shift(); } }
+    else { const n = QS.lines.filter(l => l.slot === QS.slot).length; if (n < 3) QS.lines.push({ slot: QS.slot, colors: [c], cnt: n + 1 }); }
+    renderQuick();
+  });
+}
+
+/* ===================== about ===================== */
+function renderAbout() {
+  const changed = K.species.filter(s => s.nameStatus !== 'same').sort((a, b) => cmp(a.name, b.name));
+  const lab = { spelling: 'Spelling corrected', changed: 'Name changed', notfound: 'Not in Catalogue of Life, kept', added: 'Added (missing in 2007 data)' };
+  $('#app').innerHTML = `<div class="prose"><h1>About Pathanga Suchya</h1>
+    <p>Pathanga Suchya is a guide to the butterflies of Bangalore by Dr. K.N. Ganeshaiah (GKVK). It first appeared in 2006–2007; this is the 2026 update by Dr. Sachin A. Rosario.</p>
+    <p><b>Version 4</b> keeps the 2007 identification key, colour-patch key, photographs, life cycles, host plants and seasonality. It adds:</p>
+    <ul><li>a new layout that works on phones;</li><li>a suggested best next question;</li><li>the number of butterflies left for every answer;</li><li>scientific names checked against the Catalogue of Life;</li><li>month-by-month seasonality and a "what flies when" chart;</li><li>similar butterflies on every page.</li></ul>
+    <p>The original program as it looked in 2018 is available as Version 3 from the IBIN Apps download page.</p>
+    <h2>Names checked against the Catalogue of Life</h2>
+    <p>${K.species.length} butterflies were checked against the ${esc(K.col.dataset)}, release ${esc(K.col.release)}:</p>
+    <ul><li>${K.species.filter(s => s.nameStatus === 'same').length} names are accepted as they were;</li><li>the ${changed.length} below differ. Where a name changed, the 2007 name is kept in brackets throughout the app.</li></ul></div>
+    <div style="overflow-x:auto"><table class="names"><thead><tr><th>Butterfly</th><th>Name used now</th><th>2007 name</th><th>What happened</th></tr></thead><tbody>
+    ${changed.map(s => `<tr><td><a href="#/butterfly/${s.id}">${esc(s.name)}</a></td><td><span class="sci">${esc(s.sci)}</span> ${esc(s.author)}</td><td class="sci">${esc(s.oldSci || '–')}</td><td>${esc(lab[s.nameStatus])}${s.nameNote ? ': ' + esc(s.nameNote) : ''}</td></tr>`).join('')}
+    </tbody></table></div>
+    <div class="prose"><h2>Photographs</h2><p>8,582 photographs, credited to their photographers where the file name records one.</p>
+    <h2>Sources</h2><p>2007/2018 Pathanga Suchya databases; Catalogue of Life Checklist (ChecklistBank dataset 3LR, ${esc(K.col.release)}).</p></div>`;
+}
+
+/* ===================== search & routing ===================== */
+const q = $('#q'), qres = $('#qres');
+const hay = K.species.map(s => [s, [s.name, s.sci, s.oldSci, showOld(s) ? s.oldName : ''].filter(Boolean).join(' ').toLowerCase()]);
+q.addEventListener('input', () => {
+  const t = q.value.trim().toLowerCase();
+  if (t.length < 2) { qres.hidden = true; return; }
+  const hits = hay.filter(([, h]) => h.includes(t)).slice(0, 12);
+  qres.innerHTML = hits.length ? hits.map(([s]) => `<a href="#/butterfly/${s.id}"><img src="${cover(s)}" alt="">${esc(s.name)}<small class="sci">${esc(s.sci)}${s.oldSci ? ' (' + esc(s.oldSci) + ')' : ''}</small></a>`).join('') : '<div style="padding:10px" class="muted">No butterfly with that name.</div>';
+  qres.hidden = false;
+});
+q.addEventListener('keydown', e => { if (e.key === 'Escape') { qres.hidden = true; q.blur(); } if (e.key === 'Enter') { const a = qres.querySelector('a'); if (a) { location.hash = a.getAttribute('href'); } } });
+document.addEventListener('click', e => { if (!e.target.closest('.find')) qres.hidden = true; });
+function go(h) { location.hash = h; }
+function route() {
+  const h = location.hash || '#/identify'; const [, page, arg] = h.split('/');
+  qres.hidden = true; q.value = '';
+  document.querySelectorAll('nav.main a').forEach(a => a.toggleAttribute('aria-current', a.getAttribute('href') === '#/' + (page === 'butterfly' ? 'butterflies' : page)));
+  ({ identify: renderIdentify, quick: renderQuick, butterflies: renderButterflies, butterfly: () => renderSpecies(+arg), seasons: renderSeasons, about: renderAbout }[page] || renderIdentify)();
+  scrollTo(0, 0);
+}
+addEventListener('hashchange', route); route();
+</script>
+</body>
+</html>
