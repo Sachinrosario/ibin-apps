@@ -23,3 +23,4 @@ Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A
 - **Butterfly View**: in the 2018 package this stops with "File not found", because the database lists photos named like `Baronet-1.jpg` that are not in the folders. Version 3 shows the photos that are actually in each species folder.
 - **Help**: the Help button opens the program's own guide page. The original `Patanga Suchya.doc` is not part of the package.
 - **Opening screen**: carries the credit lines and the version number.
+- **One butterfly name**: *Orsotriaena medus* appears as **Medus Brown**, its current common name. The 2007 database uses an old common name that is now considered offensive. Its photo folder already used the current name.
