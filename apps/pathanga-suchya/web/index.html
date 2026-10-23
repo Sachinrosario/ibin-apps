@@ -28,8 +28,8 @@
   --segoe:"Segoe UI",Tahoma,Arial,sans-serif;
 }
 html,body{margin:0;height:100%;background:#0f3d5c;overflow:hidden;font-family:var(--sans);}
-#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;}
-#stage{position:relative;width:1440px;height:900px;transform-origin:0 0;flex:none;
+#viewport{position:fixed;inset:0;}
+#stage{position:absolute;width:1440px;height:900px;transform-origin:0 0;flex:none;
   background:linear-gradient(160deg,#1f6fa8 0%,#17578a 45%,#0e3f6b 100%);overflow:hidden;user-select:none;-webkit-user-select:none;}
 #stage img{-webkit-user-drag:none;}
 [hidden]{display:none!important}
@@ -199,8 +199,8 @@ const stage = $('#stage');
 function fit() {
   const s = Math.min(innerWidth / 1440, innerHeight / 900);
   stage.style.transform = `scale(${s})`;
-  stage.parentElement.style.width = 1440 * s + 'px';
-  stage.style.marginRight = (1440 * s - 1440) + 'px'; stage.style.marginBottom = (900 * s - 900) + 'px';
+  stage.style.left = Math.max(0, (innerWidth - 1440 * s) / 2) + 'px';
+  stage.style.top = Math.max(0, (innerHeight - 900 * s) / 2) + 'px';
 }
 addEventListener('resize', fit); fit();
 

@@ -155,9 +155,9 @@
           "key": "v3",
           "label": "Version 3 (faithful rebuild)",
           "versionName": "Version 3",
-          "version": "3.0.0",
+          "version": "3.0.1",
           "released": "2026-10-23",
-          "published": true,
+          "published": false,
           "summary": "The 2018 program rebuilt screen for screen: identification keys, quick finding by patch, spot and eye-spot colours, butterfly photos, host plants, life cycles and seasonality wheels.",
           "facts": [
             "120 butterflies",
@@ -172,7 +172,7 @@
             {
               "os": "windows",
               "kind": "Installer",
-              "file": "PathangaSuchya_3.0.0_Setup.exe",
+              "file": "PathangaSuchya_3.0.1_Setup.exe",
               "size": "181 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password."
             },
@@ -186,26 +186,31 @@
             {
               "os": "mac",
               "kind": "App",
-              "file": "PathangaSuchya_3.0.0_universal.dmg",
+              "file": "PathangaSuchya_3.0.1_universal.dmg",
               "size": "365 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
-              "file": "PathangaSuchya_3.0.0_amd64.deb",
+              "file": "PathangaSuchya_3.0.1_amd64.deb",
               "size": "181 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
-              "file": "PathangaSuchya_3.0.0_offline.zip",
+              "file": "PathangaSuchya_3.0.1_offline.zip",
               "size": "183 MB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
           "changes": [
+            {
+              "version": "3.0.1",
+              "date": "2026-10-23",
+              "text": "The program's screen is now centred in wide browser windows and desktop windows. No other changes."
+            },
             {
               "version": "3.0.0",
               "date": "2026-10-23",
