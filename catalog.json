@@ -296,7 +296,7 @@
           "versionName": "Version 1 – Original",
           "version": "1.0.0",
           "released": "2026-10-23",
-          "published": false,
+          "published": true,
           "summary": "The 2015 field guide rebuilt screen for screen: choose characters on the tree, pick thumbnails, see the matching species, open their detail sheets, or look them up by family and genus.",
           "facts": [
             "101 threatened plants",
@@ -312,35 +312,35 @@
               "os": "windows",
               "kind": "Installer",
               "file": "ThreatenedPlants_1.0.0_Setup.exe",
-              "size": "",
+              "size": "33 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password."
             },
             {
               "os": "windows",
               "kind": "No-install",
               "file": "ThreatenedPlants.exe",
-              "size": "",
+              "size": "36 MB",
               "note": "Runs straight from a folder or pen drive."
             },
             {
               "os": "mac",
               "kind": "App",
               "file": "ThreatenedPlants_1.0.0_universal.dmg",
-              "size": "",
+              "size": "70 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
               "file": "ThreatenedPlants_1.0.0_amd64.deb",
-              "size": "",
+              "size": "32 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
               "file": "ThreatenedPlants_1.0.0_offline.zip",
-              "size": "",
+              "size": "31 MB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
