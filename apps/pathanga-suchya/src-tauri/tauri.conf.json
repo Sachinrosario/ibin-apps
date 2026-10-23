@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Pathanga Suchya",
+  "mainBinaryName": "pathanga-suchya",
+  "version": "3.0.0",
+  "identifier": "in.ibinapps.pathangasuchya",
+  "build": {
+    "frontendDist": "../web"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Pathanga Suchya",
+        "width": 1440,
+        "height": 930,
+        "minWidth": 960,
+        "minHeight": 620,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "publisher": "IBIN Apps",
+    "copyright": "Pathanga Suchya (c) 2006-2018 K.N. Ganeshaiah, GKVK. Rebuild 2026.",
+    "category": "Education",
+    "shortDescription": "Butterflies of Bangalore: identification keys, host plants, life cycle, seasonality",
+    "longDescription": "Version 3: a faithful rebuild of the Pathanga Suchya butterfly identification program (2018), with identification keys, quick finding by colour, photos, host plants, life cycles and seasonality for the butterflies of Bangalore.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    }
+  }
+}

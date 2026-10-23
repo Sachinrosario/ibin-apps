@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pathanga Suchya 3.0</title>
+<link rel="icon" href="img/ui/icon_monarch.png">
+<style>
+/* Pathanga Suchya - Version 3: faithful web rebuild of the 2018 Visual Basic program.
+   Every window keeps the original pixel geometry (measured on Windows) inside a 1440x900 stage
+   that is scaled to fit the browser. */
+/* Open, metric-compatible stand-ins are used only when the Windows fonts are missing (Mac/Linux):
+   Comic Relief for Comic Sans MS, Arimo for Arial, Tinos for Times New Roman (all SIL OFL / Apache). */
+@font-face{font-family:"PS Comic";src:local("Comic Sans MS"),local("ComicSansMS"),url(fonts/comic-relief-latin-400-normal.woff2) format("woff2");font-weight:400}
+@font-face{font-family:"PS Comic";src:local("Comic Sans MS Bold"),local("ComicSansMS-Bold"),url(fonts/comic-relief-latin-700-normal.woff2) format("woff2");font-weight:700}
+@font-face{font-family:"PS Arial";src:local("Arial"),local("ArialMT"),url(fonts/arimo-latin-400-normal.woff2) format("woff2");font-weight:400;font-style:normal}
+@font-face{font-family:"PS Arial";src:local("Arial Bold"),local("Arial-BoldMT"),url(fonts/arimo-latin-700-normal.woff2) format("woff2");font-weight:700;font-style:normal}
+@font-face{font-family:"PS Arial";src:local("Arial Italic"),local("Arial-ItalicMT"),url(fonts/arimo-latin-400-italic.woff2) format("woff2");font-weight:400;font-style:italic}
+@font-face{font-family:"PS Arial";src:local("Arial Bold Italic"),local("Arial-BoldItalicMT"),url(fonts/arimo-latin-700-italic.woff2) format("woff2");font-weight:700;font-style:italic}
+@font-face{font-family:"PS Times";src:local("Times New Roman"),local("TimesNewRomanPSMT"),url(fonts/tinos-latin-400-normal.woff2) format("woff2");font-weight:400}
+@font-face{font-family:"PS Times";src:local("Times New Roman Bold"),local("TimesNewRomanPS-BoldMT"),url(fonts/tinos-latin-700-normal.woff2) format("woff2");font-weight:700}
+:root{
+  --desk:#1d5f8f; --beige:#F4E7CA; --win-border:#1a5570; --btn:#E1E1E1; --btn-border:#ADADAD;
+  --sans:"Microsoft Sans Serif","MS Sans Serif","PS Arial",sans-serif;
+  --arial:"PS Arial",Arial,sans-serif;
+  --comic:"PS Comic","Comic Sans MS",cursive;
+  --times:"PS Times","Times New Roman",serif;
+  --segoe:"Segoe UI",Tahoma,Arial,sans-serif;
+}
+html,body{margin:0;height:100%;background:#0f3d5c;overflow:hidden;font-family:var(--sans);}
+#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;}
+#stage{position:relative;width:1440px;height:900px;transform-origin:0 0;flex:none;
+  background:linear-gradient(160deg,#1f6fa8 0%,#17578a 45%,#0e3f6b 100%);overflow:hidden;user-select:none;-webkit-user-select:none;}
+#stage img{-webkit-user-drag:none;}
+[hidden]{display:none!important}
+.abs{position:absolute}
+/* ---------- window chrome (Windows 10 look, as on the reference machine) ---------- */
+.win{position:absolute;background:#fff;border:1px solid var(--win-border);box-shadow:0 7px 24px rgba(0,0,0,.45);}
+.win .tb{position:absolute;left:0;top:0;right:0;height:25px;background:#fff;display:flex;align-items:center;font:12px var(--segoe);color:#000;}
+.win.inactive .tb{color:#999}
+.win .tb img{width:16px;height:16px;margin:0 6px 0 7px}
+.win .tb .x{position:absolute;right:0;top:0;width:45px;height:25px;display:flex;align-items:center;justify-content:center;font:14px var(--segoe);cursor:default}
+.win .tb .x:hover{background:#e81123;color:#fff}
+.win .tb .mm{position:absolute;top:0;width:45px;height:25px;display:flex;align-items:center;justify-content:center;font:12px var(--segoe);color:#000}
+.win .tb .mm.dis{color:#c5c5c5}
+.win .cl{position:absolute;left:0;top:26px;overflow:hidden}
+/* VB controls */
+.btn{position:absolute;box-sizing:border-box;background:var(--btn);border:1px solid var(--btn-border);font:bold 13px var(--sans);
+  display:flex;align-items:center;justify-content:center;text-align:center;line-height:16px;color:#000;cursor:default;padding:0 2px}
+.btn:hover{background:#E5F1FB;border-color:#0078D7}
+.btn:active{background:#CCE4F7;border-color:#005499}
+.btn.dis{color:#A0A0A0;background:#CCCCCC;border-color:#BFBFBF;pointer-events:none}
+.btn.def{border:2px solid #0078D7}
+.frame{position:absolute;box-sizing:border-box;border:1px solid #A0A0A0;}
+.opt,.chk{position:absolute;display:flex;align-items:center;gap:6px;cursor:default;white-space:nowrap}
+.opt i,.chk i{flex:none;width:11px;height:11px;border:1px solid #333;background:#fff;box-sizing:border-box;position:relative}
+.opt i{border-radius:50%}
+.opt.on i::after{content:"";position:absolute;left:2px;top:2px;width:5px;height:5px;border-radius:50%;background:#000}
+.chk.on i::after{content:"";position:absolute;left:3px;top:0;width:3px;height:6px;border:solid #000;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.lbl{position:absolute;white-space:nowrap;overflow:hidden}
+.listbox{position:absolute;box-sizing:border-box;border:1px solid #828790;background:#fff;overflow-y:scroll;overflow-x:hidden}
+.listbox div{white-space:nowrap;padding:0 2px;cursor:default}
+.listbox div.sel{background:#0078D7;color:#fff}
+.listbox::-webkit-scrollbar{width:17px}
+.listbox::-webkit-scrollbar-track{background:#F0F0F0}
+.listbox::-webkit-scrollbar-thumb{background:#CDCDCD;border:2px solid #F0F0F0}
+/* message box */
+.msg .cl{background:#fff}
+.msg .body{position:absolute;left:0;right:0;top:0;bottom:41px;display:flex;align-items:center;padding:0 28px;font:12px var(--segoe);gap:12px}
+.msg .foot{position:absolute;left:0;right:0;bottom:0;height:41px;background:#F0F0F0}
+.msg .foot .btn{right:10px;top:9px;width:88px;height:23px;font:12px var(--segoe)}
+.hand{cursor:url(img/ui/hand.png) 12 1,pointer}
+/* ---------- opening (Form1 + location.htm) ---------- */
+#open{position:absolute;inset:0;background:#FDEFC7 url(img/ui/opening_bg.png);border:2px inset #c0c0c0;box-sizing:border-box;overflow:hidden}
+#open .t1{position:absolute;left:420px;top:20px}
+#open .t2{position:absolute;left:0;right:0;top:128px;text-align:center;font:16px var(--comic);color:#800000;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{visibility:visible}}
+#open .mag{position:absolute;left:556px;top:267px}
+#open .copy{position:absolute;left:7px;top:716px;font:bold 11px var(--times);color:#800000}
+#open .credit{position:absolute;left:7px;top:740px;font:bold 11px var(--times);color:#800000;line-height:15px}
+#open .gbtn{position:absolute;top:830px;width:48px;height:56px;box-sizing:border-box;background:#E1E1E1;border:1px solid #ADADAD;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;font:9px var(--sans);color:#000;cursor:default}
+#open .gbtn:hover{background:#E5F1FB;border-color:#0078D7}
+#open .trail{position:absolute;width:33px;height:33px;pointer-events:none}
+/* ---------- Select the Module ---------- */
+#module .cl{background:var(--beige)}
+#module .big{position:absolute;top:72px;width:281px;height:217px;box-sizing:border-box;background:var(--beige);border:1px solid #ADADAD;
+  font:italic 48px var(--arial);line-height:53px;display:flex;align-items:center;justify-content:center;text-align:center;cursor:default}
+#module .big:hover{border-color:#0078D7}
+/* ---------- Identification Keys ---------- */
+#ident .cl{background:#fff}
+#ident .head{position:absolute;left:24px;top:0;width:736px;height:36px;font:italic 32px var(--arial);color:#C00000;text-align:center;white-space:normal;overflow:hidden;line-height:34px}
+#ident .shape{position:absolute;box-sizing:border-box;border:2px solid;cursor:url(img/ui/hand.png) 12 1,pointer}
+#ident .shape.ell{border-radius:50%}
+#ident .shape.rr{border-radius:6px}
+#ident .shape.hatch{background-image:repeating-linear-gradient(-45deg,var(--hc) 0 1px,transparent 1px 8px)}
+#ident .shape.off{pointer-events:none}
+#ident .plbl{position:absolute;font:16px/20px var(--comic);white-space:nowrap;pointer-events:none;text-align:center}
+#ident .sel-frame{position:absolute;left:40px;top:62px;width:656px;height:426px;border:1px solid #A0A0A0;box-sizing:border-box;background:#fff}
+#ident .copt{font:15px var(--comic)}
+#ident .backsel{position:absolute;left:712px;top:240px;width:73px;height:73px;box-sizing:border-box;background:#E1E1E1;border:2px solid #333;outline:1px dotted #000;outline-offset:-5px;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:3px;font:bold 14px var(--arial);line-height:15px;text-align:center;cursor:default}
+#ident .backsel:hover{background:#E5F1FB;border-color:#0078D7}
+#ident .colchk{font:12px var(--arial)!important}
+#ident .patbtn{position:absolute;left:8px;width:80px;height:48px}
+#ident .patpane{position:absolute;box-sizing:border-box}
+#ident .qp{position:absolute;left:824px;top:0}
+#ident .qhot{position:absolute;cursor:url(img/ui/hand.png) 12 1,pointer}
+#ident #mlist{position:absolute;left:600px;top:296px;width:186px}
+#ident #mlist .hdr{position:absolute;left:4px;top:0;font:12px var(--arial);white-space:nowrap}
+#ident #mlist .listbox{left:0;top:16px;width:186px;height:166px;background:var(--beige);color:#800000;font:13px var(--comic);line-height:18px}
+/* ---------- thumbnails & enlarge ---------- */
+#thumbs .cl{background:#F0F0F0;overflow-y:auto}
+#thumbs .th{position:absolute;width:100px;cursor:default}
+#thumbs .th .pic{width:100px;height:92px;box-sizing:border-box;border:2px solid;border-color:#A0A0A0 #696969 #696969 #A0A0A0;background:#fff;overflow:hidden;display:flex;align-items:center;justify-content:center}
+#thumbs .th .pic img{width:100%;height:100%;object-fit:cover}
+#thumbs .th .cap{height:28px;box-sizing:border-box;border:2px solid;border-color:#fff #A0A0A0 #A0A0A0 #fff;font:12px var(--sans);text-align:center;line-height:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#F0F0F0}
+#enlarge .cl{background:#F0F0F0}
+#enlarge .pic{position:absolute;left:0;right:0;top:0;bottom:60px;display:flex;align-items:center;justify-content:center}
+#enlarge .cr{position:absolute;left:0;right:0;bottom:62px;text-align:center;font:12px var(--sans);color:#333}
+/* ---------- Biology of Butterflies ---------- */
+#bio .cl{background:var(--beige)}
+#bio .combo{position:absolute;left:246px;top:8px;width:340px;height:25px;box-sizing:border-box;border:1px solid #ADADAD;background:#F0F0F0;color:#6D6D6D;font:17px var(--arial);display:flex;align-items:center;padding-left:3px;cursor:default}
+#bio .combo .arr{position:absolute;right:0;top:0;bottom:0;width:17px;border-left:1px solid #fff;background:#F0F0F0;display:flex;align-items:center;justify-content:center;font:8px var(--sans)}
+#bio .drop{position:absolute;left:246px;top:33px;width:340px;height:162px;box-sizing:border-box;border:1px solid #646464;background:#fff;overflow-y:scroll;font:16px var(--arial);line-height:20px;z-index:5}
+#bio .drop div{padding-left:3px;cursor:default}
+#bio .drop div:hover,#bio .drop div.sel{background:#0078D7;color:#fff}
+#bio .tabs{position:absolute;left:10px;top:47px;width:777px;height:22px}
+#bio .tab{position:absolute;top:0;height:21px;box-sizing:border-box;border:1px solid #A0A0A0;border-bottom:none;border-radius:6px 6px 0 0;background:#F0F0F0;
+  font:17px var(--arial);color:#000;text-align:center;line-height:20px;cursor:default}
+#bio .tab.dis{color:#A0A0A0}
+#bio .tab.on{top:-2px;height:24px;background:#F0F0F0;font-weight:normal;z-index:2}
+#bio .tab.on span{outline:1px dotted #000;outline-offset:0}
+#bio .pane{position:absolute;left:10px;top:67px;width:775px;height:478px;box-sizing:border-box;border:1px solid #A0A0A0;background:#F0F0F0;overflow:hidden}
+#bio .nav{position:absolute;left:12px;bottom:6px;height:20px;display:flex;align-items:center;gap:0}
+#bio .nav img{width:20px;height:20px;cursor:default}
+#bio .nav .box{height:18px;box-sizing:border-box;border:1px solid #7A7A7A;background:#fff;font:bold 10px var(--times);color:#555;display:flex;align-items:center;padding:0 3px;white-space:pre}
+#bio .scroll{position:absolute;left:4px;top:4px;right:4px;bottom:32px;overflow:scroll}
+/* ---------- Quick finding ---------- */
+#quick .cl{background:#fff}
+#quick .hd{position:absolute;font:bold 13px var(--arial);white-space:nowrap}
+#quick .box{position:absolute;border:2px solid #000;box-sizing:border-box}
+#quick .side{position:absolute;font:18px var(--arial)}
+#quick .colh{position:absolute;font:16px var(--arial);text-align:center;width:208px}
+#quick .slot{position:absolute;box-sizing:border-box;border:2px solid;border-color:#fff #555 #555 #fff;background:#F0F0F0;padding:1px;cursor:url(img/ui/hand.png) 12 1,pointer}
+#quick .slot img{display:block;object-fit:fill}
+#quick .slot.on{border-color:#555 #fff #fff #555;outline:1px dotted #000;outline-offset:-5px}
+#quick .sw{position:absolute;left:918px;width:40px;height:40px;box-sizing:border-box;border:2px solid #C8C8C8;cursor:default}
+#quick .sw.on{border:3px solid #0000FF}
+#quick .ql{position:absolute;box-sizing:border-box;border:1px solid #828790;background:#fff;overflow-y:auto;font:12px var(--arial);line-height:14px}
+#quick .ql div{padding:0 2px;white-space:nowrap;cursor:default}
+#quick .ql div.sel{background:#0078D7;color:#fff}
+#quick .qb{position:absolute;font:16px var(--arial);font-weight:normal}
+/* help */
+#help .cl{background:#fff;overflow-y:auto}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage">
+
+<!-- ======================= Form1 : opening page (html\location.htm) ======================= -->
+<div id="open">
+  <img class="t1" src="img/ui/title_anim.gif" width="600" height="125" alt="Pathanga Suchya">
+  <div class="t2">Identification Keys, Host plants, Life cycle, Seasonality for Butterflies of Bangalore</div>
+  <img class="mag" src="img/ui/magnifier_anim.gif" width="336" height="239" alt="">
+  <div class="copy">Copyright @ 2006 - 2007&nbsp; K. N. Ganeshiah</div>
+  <div class="credit" id="credit">Proprietary right holder - Dr. K.N. Ganeshaiah<br>Updated in 2026 by Dr. Sachin A. Rosario &nbsp;&middot;&nbsp; Version <span id="ver">3.0.0</span></div>
+  <div class="gbtn" style="left:649px" id="bHelp" title="Help"><img src="img/ui/btn_help.png" width="40" height="40" style="margin-top:2px" alt="">Help</div>
+  <div class="gbtn" style="left:701px" id="bNext" title="Next"><img src="img/ui/btn_next.png" width="34" height="33" style="margin-top:3px;margin-bottom:5px" alt="">Next</div>
+  <div class="gbtn" style="left:753px" id="bExit" title="Exit"><img src="img/ui/btn_exit.png" width="40" height="52" style="margin-top:1px" alt=""></div>
+</div>
+
+<div id="wins"></div>
+</div></div>
+
+<script src="data/kit.js"></script>
+<script>
+"use strict";
+const K = window.KIT_DATA;
+const $ = (s, r = document) => r.querySelector(s);
+const el = (tag, attrs = {}, kids = []) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'style' && typeof v === 'object') Object.assign(e.style, v);
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else if (k === 'html') e.innerHTML = v;
+    else if (k === 'text') e.textContent = v;
+    else if (v !== false && v != null) e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of [].concat(kids)) if (c != null) e.append(c.nodeType ? c : document.createTextNode(c));
+  return e;
+};
+const px = n => n + 'px';
+const pos = (e, x, y, w, h) => { Object.assign(e.style, { left: px(x), top: px(y) }); if (w != null) e.style.width = px(w); if (h != null) e.style.height = px(h); return e; };
+// Jet sorts text case-insensitively and ignores hyphens ("word sort")
+const jetCmp = (a, b) => a.localeCompare(b, 'en', { sensitivity: 'base', ignorePunctuation: true });
+
+/* ---------------- stage scaling ---------------- */
+const stage = $('#stage');
+function fit() {
+  const s = Math.min(innerWidth / 1440, innerHeight / 900);
+  stage.style.transform = `scale(${s})`;
+  stage.parentElement.style.width = 1440 * s + 'px';
+  stage.style.marginRight = (1440 * s - 1440) + 'px'; stage.style.marginBottom = (900 * s - 900) + 'px';
+}
+addEventListener('resize', fit); fit();
+
+/* ---------------- window manager ---------------- */
+const W = {};               // open windows by id
+let zTop = 10;
+function openWin(id, { title, icon, x, y, cw, ch, modal = false, minmax = false, onClose } = {}) {
+  closeWin(id, true);
+  const w = el('div', { class: 'win', id }); pos(w, x, y, cw + 2, ch + 27);
+  const tb = el('div', { class: 'tb' }, [icon ? el('img', { src: icon, alt: '' }) : el('span', { style: { width: '8px' } }), title]);
+  const x_ = el('div', { class: 'x', title: 'Close', onclick: () => closeWin(id) }, '✕');
+  tb.append(x_);
+  if (minmax) { tb.append(el('div', { class: 'mm', style: { right: '90px' } }, '—'), el('div', { class: 'mm dis', style: { right: '45px' } }, '☐')); }
+  const cl = el('div', { class: 'cl' }); pos(cl, 0, 26, cw, ch);
+  w.append(tb, cl);
+  w.addEventListener('mousedown', () => focusWin(id), true);
+  W[id] = { el: w, cl, onClose, modal };
+  $('#wins').append(w); focusWin(id);
+  if (modal) { const sh = el('div', { class: 'abs', id: id + '_shield', style: { inset: 0, zIndex: zTop - 1 } }); $('#wins').insertBefore(sh, w); }
+  return cl;
+}
+function focusWin(id) {
+  if (!W[id]) return;
+  for (const k in W) W[k].el.classList.toggle('inactive', k !== id);
+  W[id].el.style.zIndex = ++zTop;
+  const sh = document.getElementById(id + '_shield'); if (sh) sh.style.zIndex = zTop - 1;
+}
+function closeWin(id, silent) {
+  const w = W[id]; if (!w) return;
+  w.el.remove(); const sh = document.getElementById(id + '_shield'); if (sh) sh.remove();
+  delete W[id];
+  if (!silent && w.onClose) w.onClose();
+  const rest = Object.keys(W); if (rest.length) focusWin(rest[rest.length - 1]);
+}
+function msgBox(text, title = 'Project1', after) {
+  const cw = Math.max(176, Math.min(420, text.length * 6.5 + 90)), ch = 104;
+  const cl = openWin('msg', { title, x: Math.round((1440 - cw) / 2), y: Math.round((900 - ch) / 2) - 20, cw, ch, modal: true, onClose: after });
+  W.msg.el.classList.add('msg');
+  cl.append(el('div', { class: 'body' }, text), el('div', { class: 'foot' }, el('div', { class: 'btn def', onclick: () => closeWin('msg') }, 'OK')));
+}
+
+/* =========================================================================================
+   1. Opening screen (Form1): html\location.htm inside a browser control + Help / Next / Exit
+   ========================================================================================= */
+(function opening() {
+  const o = $('#open');
+  // "Elastic Trail" script of location.htm: 7 butterflies follow the mouse
+  const dots = [];
+  for (let i = 0; i < 7; i++) { const d = el('img', { class: 'trail', src: 'img/ui/bullet.gif', alt: '' }); d.dataset.x = 0; d.dataset.y = 12 + i * 22; if (i === 0) d.style.visibility = 'hidden'; o.append(d); dots.push({ e: d, x: 0, y: 30 + i * 33, dx: 0, dy: 0 }); }
+  let mx = 0, my = 0;
+  o.addEventListener('mousemove', ev => { const r = stage.getBoundingClientRect(), s = r.width / 1440; mx = (ev.clientX - r.left) / s; my = (ev.clientY - r.top) / s; });
+  const DELTAT = .01, SEGLEN = 10, SPRK = 10, MASS = 1, GRAV = 50, RES = 10, STOPV = .1, STOPA = .1, DOTSZ = 11, BOUNCE = .75;
+  function spring(i, j, s) { const dx = dots[i].x - dots[j].x, dy = dots[i].y - dots[j].y, len = Math.hypot(dx, dy); if (len > SEGLEN) { const sx = SPRK * (len - SEGLEN); s.x += (dx / len) * sx; s.y += (dy / len) * sx; } }
+  let started = false;
+  o.addEventListener('mousemove', () => started = true, { once: true });
+  setInterval(() => {
+    if (!started || o.hidden) return;
+    dots[0].x = mx; dots[0].y = my; dots[0].e.style.left = px(mx); dots[0].e.style.top = px(my);
+    for (let i = 1; i < 7; i++) {
+      const s = { x: 0, y: 0 }; spring(i - 1, i, s); if (i < 6) spring(i + 1, i, s);
+      const rx = -dots[i].dx * RES, ry = -dots[i].dy * RES;
+      const ax = (s.x + rx) / MASS, ay = (s.y + ry) / MASS + GRAV;
+      dots[i].dx += DELTAT * ax; dots[i].dy += DELTAT * ay;
+      if (Math.abs(dots[i].dx) < STOPV && Math.abs(dots[i].dy) < STOPV && Math.abs(ax) < STOPA && Math.abs(ay) < STOPA) { dots[i].dx = 0; dots[i].dy = 0; }
+      dots[i].x += dots[i].dx; dots[i].y += dots[i].dy;
+      const H = 900, Wd = 1440;
+      if (dots[i].y >= H - DOTSZ - 1) { if (dots[i].dy > 0) dots[i].dy = BOUNCE * -dots[i].dy; dots[i].y = H - DOTSZ - 1; }
+      if (dots[i].x >= Wd - DOTSZ) { if (dots[i].dx > 0) dots[i].dx = BOUNCE * -dots[i].dx; dots[i].x = Wd - DOTSZ - 1; }
+      if (dots[i].x < 0) { if (dots[i].dx < 0) dots[i].dx = BOUNCE * -dots[i].dx; dots[i].x = 0; }
+      dots[i].e.style.left = px(dots[i].x); dots[i].e.style.top = px(dots[i].y);
+    }
+  }, 20);
+  // before the mouse moves, the trail rests at the left edge as in the original
+  dots.forEach((d, i) => { d.e.style.left = '0px'; d.e.style.top = px(40 + (i - 1) * 27); });
+  $('#bNext').onclick = () => { o.hidden = true; showModule(); };
+  $('#bExit').onclick = () => exitProgram();
+  $('#bHelp').onclick = () => showHelp();
+  $('#ver').textContent = K.version;
+})();
+function exitProgram() {
+  for (const k of Object.keys(W)) closeWin(k, true);
+  $('#open').hidden = false;
+}
+function showHelp() {
+  // The original Help button opens "Patanga Suchya.doc", which is not part of the package.
+  // Its text survives inside the program as a picture; that page is shown here.
+  const cl = openWin('help', { title: 'Patanga Suchya - Help', icon: 'img/ui/icon_monarch.png', x: 420, y: 30, cw: 600, ch: 820 });
+  cl.append(el('img', { src: 'img/ui/help_page.jpg', width: 572, height: 1215, style: { display: 'block', margin: '6px auto' }, alt: 'Patanga Soochya - An amateur\'s guide to identification of common butterflies' }));
+}
+
+/* =========================================================================================
+   2. Select the Module
+   ========================================================================================= */
+function showModule() {
+  const cl = openWin('module', { title: 'Select the Module', icon: 'img/ui/icon_monarch.png', x: 393, y: 244, cw: 652, ch: 383, onClose: () => exitProgram() });
+  cl.append(
+    el('div', { class: 'big', style: { left: '24px' }, onclick: () => showIdent() }, ['Butterfly', el('br'), 'Identification']),
+    el('div', { class: 'big', style: { left: '344px' }, onclick: () => showBio() }, ['Biology of', el('br'), 'Butterflies'])
+  );
+  // the original draws the left button with the default-button focus border
+  cl.firstChild.style.border = '2px solid #000'; cl.firstChild.style.outline = '1px dotted #000'; cl.firstChild.style.outlineOffset = '-5px';
+}
+
+/* =========================================================================================
+   3. Identification Keys
+   ========================================================================================= */
+const PARAMS = {
+  antenna: { field: 'antenna', label: v => ({ Plain: 'Plain Antenna', Rings: 'Antenna with Rings', Thick: 'Antenna Thick at edge' })[v] },
+  size: { field: 'size', label: v => v + ' Size' },
+  tail: { field: 'tail', label: v => ({ Absent: 'Tail Absent', smPresent: 'Thread-like Tail', exPresent: 'Extended Tail', shPresent: 'Sharp Tail' })[v] },
+  margin: { field: 'margin', label: v => ({ 'Not Present': 'Margin Absent', 'Patchy Margin': 'Patchy Margin', 'Wavy Margin': 'Wavy Margin' })[v] },
+  eyespot: { field: 'eyespot', label: v => v === '1' ? 'Eyespots Present' : 'Eyespots Absent' },
+  patches: { field: 'patches', label: v => v === '1' ? 'Patches Present' : 'Patches Absent' },
+  bands: { field: 'bands', label: v => v === '1' ? 'Bands Present' : 'Bands Absent' },
+  stripes: { field: 'stripes', label: v => v === '1' ? 'Stripes Present' : 'Stripes Absent' },
+  wavy: { field: 'wavy', label: v => v === '1' ? 'Wavy Markings Present' : 'Wavy Markings Absent' },
+};
+const SINGLE = Object.keys(PARAMS);
+const PATTERN = ['eyespot', 'patches', 'bands', 'stripes', 'wavy'];
+// key state: user selections (value or 'nil' for Can't say) + history for "Previous Selection"
+const KS = { sel: {}, hist: [], view: 'main', pane: null, first: true };
+function matches(sel = KS.sel) {
+  return K.species.filter(s => {
+    for (const p of SINGLE) { const v = sel[p]; if (v != null && v !== 'nil' && s[PARAMS[p].field] !== v) return false; }
+    for (const side of ['dorsal', 'ventral']) { const v = sel[side]; if (v && v !== 'nil') for (const c of v) if (!s[side].includes(c)) return false; }
+    return true;
+  });
+}
+function autoValues(list) {
+  // the program asks "select distinct [x] ... where <selection>" for every unselected character;
+  // a character with a single remaining value is filled in and shown on the picture
+  const auto = {};
+  if (!list.length) return auto;
+  for (const p of SINGLE) {
+    if (KS.sel[p] != null) continue;
+    const vals = new Set(list.map(s => s[PARAMS[p].field]));
+    if (vals.size === 1) auto[p] = [...vals][0];
+  }
+  return auto;
+}
+const SHAPES = {   // client coordinates measured on the original
+  antenna: { x: 303, y: 48, w: 138, h: 57, c: '#0000FF', hc: '#E0E0E0', kind: 'ell', tip: 'Click here to select Antenna' },
+  dorsal: { x: 103, y: 144, w: 106, h: 65, c: '#FF0000', hc: '#C0C0C0', kind: 'ell', tip: 'Click here to select Dorsal Color' },
+  ventral: { x: 463, y: 192, w: 106, h: 65, c: '#FF8000', hc: '#C0C0C0', kind: 'ell', tip: 'Click here to select Ventral Color' },
+  pattern: { x: 231, y: 240, w: 82, h: 121, c: '#00FF00', hc: '#C0C0C0', kind: 'ell', tip: 'Click here to select Wing Pattern' },
+  size: { x: 103, y: 272, w: 34, h: 209, c: '#00FFFF', hc: '#C0C0C0', kind: 'ell', tip: 'Click here to select Size' },
+  tail: { x: 191, y: 400, w: 66, h: 97, c: '#FFFF00', hc: '#808080', kind: 'ell', tip: 'Click here to select Tail' },
+  margin: { x: 415, y: 303, w: 66, h: 122, c: '#FF00FF', hc: '#C0C0C0', kind: 'rr', tip: 'Click here to select Wing Margin' },
+};
+const LABELS = {   // centre x and top of the capital letters, measured on the original
+  antenna: { cx: 371.5, y: 69, c: '#800000' }, dorsal: { cx: 156.5, y: 165, c: '#FFFF00' }, ventral: { cx: 516.5, y: 213, c: '#FFFFFF' },
+  size: { cx: 115.5, y: 365, c: '#FF0000' }, tail: { cx: 220, y: 445, c: '#008000' }, margin: { cx: 444, y: 358, c: '#FFFF00' },
+  eyespot: { cx: 276, y: 246, c: '#FFFF00' }, patches: { cx: 276, y: 270, c: '#FFFFFF' }, bands: { cx: 276, y: 294, c: '#00FFFF' },
+  stripes: { cx: 276, y: 318, c: '#FF00FF' }, wavy: { cx: 276, y: 342, c: '#FFFF00' },
+};
+const CAPOFF = 5;   // distance from the label box top to the top of the capitals (16px Comic)
+function showIdent() {
+  closeWin('module', true);
+  KS.sel = {}; KS.hist = []; KS.view = 'main'; KS.first = true; KS.listSel = null;
+  const cl = openWin('ident', { title: 'Identification Keys', icon: 'img/ui/icon_magnifier.png', x: 76, y: 74, cw: 1286, ch: 723, onClose: () => showModule() });
+  cl.append(el('div', { class: 'head', id: 'ihead' }));
+  cl.append(el('div', { id: 'iview', class: 'abs', style: { left: 0, top: 0, width: '820px', height: '723px' } }));
+  // right panel: "QUICK FINDING WITH PATCHES AND SPOTS"
+  const qp = el('div', { class: 'qp' }, [el('img', { src: 'img/ui/quick_panel.png', width: 462, height: 736, alt: '' }),
+    pos(el('div', { class: 'abs', style: { background: '#D9D9D9', font: '16px var(--arial)', textAlign: 'center', lineHeight: '24px' } }, 'QUICK FINDING WITH PATCHES AND SPOTS'), 5, 5, 452, 24)]);
+  for (const [x, y, w, h] of [[2, 28, 230, 162], [2, 192, 230, 154], [2, 348, 228, 182], [2, 532, 230, 186]])
+    qp.append(pos(el('div', { class: 'qhot', title: 'Quick finding with patches and spots', onclick: () => showQuick() }), x, y, w, h));
+  cl.append(qp);
+  renderIdent();
+}
+function setHead(t) { $('#ihead').textContent = t; }
+function renderIdent() {
+  const v = $('#iview'); v.textContent = '';
+  if (KS.view === 'main') {
+    setHead(KS.first ? 'Start with the parameters which you are more confident of.........' : 'Continue with the parameters which you are more confident of......');
+    v.append(pos(el('img', { src: 'img/ui/ident_butterfly.png', class: 'abs', alt: '' }), 8, 40, 691, 506));
+    v.append(pos(el('img', { src: 'img/ui/ruler.png', class: 'abs', alt: '' }), 113, 280, 14, 194));
+    const list = matches(), auto = autoValues(list);
+    for (const [k, s] of Object.entries(SHAPES)) {
+      const chosen = k === 'pattern' || k === 'size' ? false : (KS.sel[k] != null && KS.sel[k] !== 'nil') || k in auto;
+      const disabled = k !== 'pattern' && k in auto;
+      const sh = el('div', { class: `shape ${s.kind}${chosen ? ' hatch' : ''}${disabled ? ' off' : ''}`, title: s.tip, onclick: () => openSelector(k) });
+      sh.style.borderColor = s.c; sh.style.setProperty('--hc', s.hc);
+      v.append(pos(sh, s.x, s.y, s.w, s.h));
+    }
+    // labels for chosen and auto-filled characters
+    for (const [k, L] of Object.entries(LABELS)) {
+      let text = '';
+      if (k === 'dorsal' || k === 'ventral') { const c = KS.sel[k]; if (c && c !== 'nil') text = (k === 'dorsal' ? 'Dorsal:  ' : 'Ventral:  ') + c.join(' '); }
+      else { const val = KS.sel[k] != null ? KS.sel[k] : auto[k]; if (val != null && val !== 'nil') text = PARAMS[k].label(val); }
+      if (text) v.append(pos(el('div', { class: 'plbl', style: { color: L.c, width: '300px' } }, text), L.cx - 150, L.y - CAPOFF));
+    }
+    v.append(pos(el('div', { class: 'btn', title: 'Click here to Clear all the selections made', onclick: clearKey }, 'Clear'), 704, 104, 80, 32));
+    v.append(pos(el('div', { class: 'btn', title: 'Click here to move for previous selection (Present selection will be cancelled)', onclick: prevKey }, ['Previous', el('br'), 'Selection']), 704, 216, 80, 40));
+    if (Object.keys(KS.sel).length) {
+      const names = [...new Set(list.map(s => s.name))].sort(jetCmp);
+      const box = el('div', { id: 'mlist' });
+      box.append(el('div', { class: 'hdr' }, `List of Butterflies matched  (${names.length})`));
+      const lb = el('div', { class: 'listbox' });
+      names.forEach(n => lb.append(el('div', { class: n === KS.listSel ? 'sel' : '', onclick: e => { KS.listSel = n; [...lb.children].forEach(c => c.classList.toggle('sel', c === e.currentTarget)); } }, n)));
+      box.append(lb);
+      box.append(pos(el('div', { class: 'btn', title: 'Click here to view the photos of Selected Butterflies that are matched with the Parameters', onclick: () => KS.listSel ? showThumbs(KS.listSel) : msgBox('Please select a Butterfly from the list') }, ['Butterfly', el('br'), 'View']), 0, 184, 80, 38));
+      box.append(pos(el('div', { class: 'btn', onclick: () => KS.listSel ? showBio(KS.listSel) : msgBox('Please select a species') }, ['Biology of', el('br'), 'Butterfly']), 88, 184, 89, 38));
+      v.append(box);
+    }
+  } else renderSelector(v);
+}
+function commit(p, val) {   // a user choice made in a selector
+  const before = KS.sel[p];
+  if (JSON.stringify(before) === JSON.stringify(val)) return;
+  KS.hist.push({ p, before });
+  if (val == null) delete KS.sel[p]; else KS.sel[p] = val;
+  KS.first = false; KS.listSel = null;
+}
+function clearKey() { KS.sel = {}; KS.hist = []; KS.first = true; KS.listSel = null; renderIdent(); }
+function prevKey() {
+  const h = KS.hist.pop(); if (!h) return;
+  if (h.before == null) delete KS.sel[h.p]; else KS.sel[h.p] = h.before;
+  KS.listSel = null; renderIdent();
+}
+function openSelector(k) { KS.view = k; KS.pane = k === 'pattern' ? null : k; renderIdent(); }
+function backSel() { KS.view = 'main'; renderIdent(); }
+// option controls drawn like the Windows 10 radio button / check box, positioned by their centre
+function radioCtl(cx, cy, caption, on, f, { font = 'bold 16px var(--comic)', check = false, gap = 15, color = '#000', bg = null, pad = null } = {}) {
+  const box = el('div', { class: 'abs', style: { left: px(cx - 7), top: px(cy - 7), display: 'flex', alignItems: 'center', cursor: 'default', whiteSpace: 'pre', font, color, lineHeight: '20px' }, onclick: f });
+  const mark = el('i', { style: { flex: 'none', width: check ? '13px' : '12px', height: check ? '13px' : '12px', boxSizing: 'border-box', border: '1px solid #333', background: '#fff', borderRadius: check ? '0' : '50%', position: 'relative', marginRight: px(gap - 6) } });
+  if (on) mark.append(el('b', { style: check
+    ? { position: 'absolute', left: '3px', top: '0px', width: '3px', height: '7px', border: 'solid #000', borderWidth: '0 2px 2px 0', transform: 'rotate(45deg)' }
+    : { position: 'absolute', left: '2.5px', top: '2.5px', width: '5px', height: '5px', borderRadius: '50%', background: '#000' } }));
+  const cap = el('span', {}, caption);
+  box.append(mark, cap);
+  if (bg) { box.style.background = bg; if (pad) box.style.padding = pad; }
+  // keep the mark's centre on (cx, cy) even for two-line captions
+  requestAnimationFrame(() => { const h = box.offsetHeight; box.style.top = px(cy - h / 2 - (bg && pad ? 0 : 0)); });
+  return box;
+}
+const STRIPS = {   // measured on the original: frame, strip pictures, radio centres
+  antenna: { head: "Select the kind of your Butterfly's Antenna", frame: [40, 62, 656, 426], opts: [
+    ['Plain', 'Plain', 'ant_plain.png', 120, 80, 513, 103, 54, 118.5], ['Rings', 'Rings', 'ant_rings.jpg', 120, 208, 513, 89, 54, 246.5],
+    ['Thick', 'Thick', 'ant_thick.jpg', 120, 328, 513, 89, 54, 366.5], ['nil', "Can't say", null, 0, 0, 0, 0, 54, 466.5]] },
+  size: { head: "Select your Butterfly's Size", frame: [40, 62, 664, 426], opts: [
+    ['Small', 'Small', 'size_small.jpg', 136, 72, 532, 119, 54, 126.5], ['Medium', 'Medium', 'size_medium.jpg', 136, 208, 532, 111, 54, 262.5],
+    ['Large', 'Large', 'size_large.jpg', 136, 336, 532, 111, 54, 382.5], ['nil', "Can't say", null, 0, 0, 0, 0, 54, 468.5]] },
+  tail: { head: "Select the kind of your Butterfly's Tail", frame: [48, 62, 648, 426], opts: [
+    ['Absent', 'Absent', 'tail_absent.png', 152, 72, 516, 74, 62, 102.5], ['smPresent', 'Simple\nTail', 'tail_simple.png', 152, 168, 515, 79, 62, 194.5],
+    ['shPresent', 'Sharp\nTail', 'tail_sharp.png', 152, 264, 520, 85, 62, 302.5], ['exPresent', 'Extended\nTail', 'tail_extended.png', 152, 368, 516, 79, 62, 402.5],
+    ['nil', "Can't say", null, 0, 0, 0, 0, 62, 470.5]] },
+  margin: { head: "Select the kind of your Butterfly's Wing Margin", frame: [40, 62, 664, 426], opts: [
+    ['Not Present', 'Absent', 'mar_absent.jpg', 128, 80, 513, 83, 54, 118.5], ['Patchy Margin', 'Patchy\nMargin', 'mar_patchy.jpg', 128, 192, 513, 83, 54, 226.5],
+    ['Wavy Margin', 'Wavy\nMargin', 'mar_wavy.png', 128, 304, 515, 79, 54, 330.5], ['nil', "Can't say", null, 0, 0, 0, 0, 54, 430.5]] },
+};
+function frameBox(v, [x, y, w, h], bg = '#fff') { v.append(pos(el('div', { class: 'frame', style: { background: bg } }), x, y, w, h)); }
+function backButton(v) {
+  v.append(pos(el('div', { class: 'backsel', title: 'Click here to go for Previous Screen', onclick: backSel }, [el('img', { src: 'img/ui/back_selection.png', width: 32, height: 32, alt: '' }), 'Back to', el('br'), 'Selection']), 712, 240));
+}
+function renderSelector(v) {
+  const k = KS.view;
+  if (STRIPS[k]) {
+    const S = STRIPS[k]; setHead(S.head); frameBox(v, S.frame);
+    for (const [val, text, img, x, y, w, h, cx, cy] of S.opts) {
+      if (img) v.append(pos(el('img', { src: 'img/ui/' + img, class: 'abs', alt: '' }), x, y, w, h));
+      v.append(radioCtl(cx, cy, text, KS.sel[k] === val, () => { commit(k, val); renderIdent(); }));
+    }
+    backButton(v);
+  } else if (k === 'dorsal' || k === 'ventral') {
+    setHead(`Select your Butterfly's ${k === 'dorsal' ? 'Dorsal' : 'Ventral'} Wing Color`);
+    frameBox(v, [40, 62, 664, 426]);
+    v.append(pos(el('div', { class: 'lbl', style: { font: 'bold 15px var(--arial)' } }, k === 'dorsal' ? 'Dorsal Side' : 'Ventral Side'), k === 'dorsal' ? 184 : 176, 95));
+    v.append(pos(el('img', { src: `img/ui/${k}_side.jpg`, class: 'abs', alt: '' }), k === 'dorsal' ? 288 : 280, 72, 113, 85));
+    const pre = k === 'dorsal' ? 'd_' : 'v_';
+    const cur = Array.isArray(KS.sel[k]) ? KS.sel[k] : [];
+    const yl = k === 'dorsal' ? 49.5 : 53.5, cs = k === 'dorsal' ? 389.5 : 381.5;
+    const L = [['Black', 53.5, 179.5, 96, 168], ['Brown', 381.5, 183.5, 432, 168], ['Blue', 53.5, 239.5, 96, 224], ['Green', 381.5, 239.5, 432, 224], ['Grey', 53.5, 303.5, 96, 296],
+      ['Orange', 381.5, 303.5, 432, 288], ['Red', 53.5, 375.5, 96, 360], ['White', 381.5, 375.5, 434, 362], ['Yellow', yl, 447.5, 100, 437]];
+    for (const [c, cx, cy, ix, iy] of L) {
+      v.append(pos(el('img', { src: `img/ui/${pre}${c}.jpg`, class: 'abs', alt: '' }), ix, iy, 265, c === 'Black' || c === 'Blue' || c === 'Green' || c === 'Yellow' ? 26 : 27));
+      v.append(radioCtl(cx, cy, c, cur.includes(c), () => {
+        const now = Array.isArray(KS.sel[k]) ? [...KS.sel[k]] : [];
+        const i = now.indexOf(c); if (i >= 0) now.splice(i, 1); else now.push(c);
+        commit(k, now.length ? now : null); renderIdent();
+      }, { check: true, font: '11px var(--sans)', gap: 14 }));
+    }
+    v.append(radioCtl(cs, 447.5, "Can't Say", KS.sel[k] === 'nil', () => { commit(k, KS.sel[k] === 'nil' ? null : 'nil'); renderIdent(); }, { check: true, font: '11px var(--sans)', gap: 14 }));
+    backButton(v);
+  } else if (k === 'pattern') {
+    setHead("Select your Butterfly's Wing Pattern like Bands,Eyespots,Stripes....");
+    frameBox(v, [56, 62, 640, 426]);
+    const auto = autoValues(matches());
+    const B = [['eyespot', 'Eye Spots', 120], ['patches', 'Patches', 184], ['bands', 'Bands', 248], ['stripes', 'Stripes', 312], ['wavy', 'Wavy\nMarkings', 376]];
+    for (const [p, t, y] of B) {
+      const b = el('div', { class: 'btn' + (p in auto ? ' dis' : ''), title: `Click here to select whether ${t.replace('\n', ' ')} are present or not`, style: { whiteSpace: 'pre', font: 'bold 14px var(--arial)' }, onclick: () => { KS.pane = p; renderIdent(); } }, t);
+      v.append(pos(b, 64, y, 80, 48));
+      if (KS.pane === p) { b.style.border = '2px solid #333'; b.style.outline = '1px dotted #000'; b.style.outlineOffset = '-5px'; }
+    }
+    if (KS.pane) renderPatternPane(v, KS.pane);
+    backButton(v);
+  }
+}
+const PANES = {   // P = Present, A = Absent, C = Can't Say (radio centres)
+  eyespot: { head: 'Do the wings have Eyespots ?', img: 'pat_eyespots.jpg', ix: 200, iy: 144, iw: 422, ih: 98, black: true, P: [360, 269], A: [232, 369], C: [456, 369] },
+  patches: { head: 'Are there any Patches on the wings ?', img: 'pat_patches.jpg', ix: 208, iy: 136, iw: 422, ih: 98, black: false, P: [366, 254.5], A: [214, 378.5], C: [494, 378.5] },
+  bands: { head: 'Is there any Bands present on the Butterfly ?', img: 'pat_bands.jpg', ix: 208, iy: 136, iw: 422, ih: 98, black: true, boxed: true, P: [350, 258.5], A: [230, 386.5], C: [478, 378.5] },
+  stripes: { head: 'Are there any Stripes on the wings ?', img: 'pat_stripes.jpg', ix: 208, iy: 128, iw: 422, ih: 101, black: true, P: [360, 257], A: [208, 381], C: [456, 381] },
+  wavy: { head: 'Do wings have wavy markings ?', img: 'pat_wavy.jpg', ix: 208, iy: 136, iw: 422, ih: 101, black: true, P: [360, 261], A: [216, 373], C: [456, 373] },
+};
+function renderPatternPane(v, p) {
+  const D = PANES[p]; setHead(D.head);
+  if (D.black) { v.append(pos(el('div', { class: 'abs', style: { background: '#000' } }), 157, 104, 484, 6), pos(el('div', { class: 'abs', style: { background: '#000', borderLeft: '1px solid #A0A0A0', borderBottom: '2px solid #A0A0A0', boxSizing: 'border-box' } }), 152, 110, 520, 340)); }
+  else frameBox(v, [152, 110, 520, 338]);
+  v.append(pos(el('img', { src: 'img/ui/' + D.img, class: 'abs', alt: '' }), D.ix, D.iy, D.iw, D.ih));
+  const cur = KS.sel[p];
+  for (const [val, key, text] of [['1', 'P', 'Present'], ['0', 'A', 'Absent'], ['nil', 'C', "Can't Say"]]) {
+    const [x, y] = D[key];
+    // on the original the captions of the black frames are black on black (only Bands has white caption boxes)
+    const o = radioCtl(x, y, text, cur === val, () => { commit(p, val); renderIdent(); }, { font: '18px var(--comic)', gap: 16,
+      color: D.black && !D.boxed ? '#000' : '#000', bg: D.boxed ? '#fff' : null, pad: D.boxed ? '4px 28px 4px 3px' : null });
+    o.title = text;
+    v.append(o);
+  }
+}
+
+/* =========================================================================================
+   4. Butterfly View (thumbnails) and the enlarged picture
+   ========================================================================================= */
+function photosOf(name) {
+  const s = K.species.find(x => x.name === name);
+  if (s) return { name, photos: s.photos };
+  const q = K.quick.find(x => x.name === name);
+  if (q) { if (q.species != null) { const t = K.species.find(x => x.id === q.species); return { name, photos: t.photos }; } return { name, photos: q.photos || [] }; }
+  return { name, photos: [] };
+}
+function showThumbs(name) {
+  const P = photosOf(name);
+  if (!P.photos.length) return msgBox('Run-time error \'53\':\n\nFile not found'.replace(/\n/g, ' '), 'Project1');
+  const cl = openWin('thumbs', { title: 'Click on the image to enlarge', icon: 'img/ui/icon_vb.png', x: 323, y: 168, cw: 792, ch: 529 });
+  P.photos.forEach((ph, i) => {
+    const t = el('div', { class: 'th', title: ph.credit ? 'Photo: ' + ph.credit : '', onclick: () => showEnlarge(P, i) }, [
+      el('div', { class: 'pic' }, el('img', { src: ph.src, alt: '', loading: 'lazy' })),
+      el('div', { class: 'cap' }, `${name}-${i + 1}`)]);
+    v_pos(t, 4 + (i % 7) * 102, 4 + Math.floor(i / 7) * 124);
+    cl.append(t);
+  });
+  function v_pos(e, x, y) { e.style.left = px(x); e.style.top = px(y); }
+}
+function showEnlarge(P, i) {
+  const ph = P.photos[i];
+  const cl = openWin('enlarge', { title: `${P.name}-${i + 1}`, icon: 'img/ui/icon_vb.png', x: 14, y: 4, cw: 1410, ch: 858 });
+  cl.append(el('div', { class: 'pic' }, el('img', { src: ph.src, width: ph.w, height: ph.h, alt: P.name })));
+  if (ph.credit) cl.append(el('div', { class: 'cr' }, 'Photo: ' + ph.credit));
+  const go = d => { const j = (i + d + P.photos.length) % P.photos.length; showEnlarge(P, j); };
+  cl.append(pos(el('img', { src: 'img/ui/arrow_left.jpg', class: 'abs hand', title: 'Previous', onclick: () => go(-1), alt: '' }), 683, 820, 24, 24));
+  cl.append(pos(el('img', { src: 'img/ui/arrow_right.jpg', class: 'abs hand', title: 'Next', onclick: () => go(1), alt: '' }), 710, 820, 24, 24));
+}
+
+/* =========================================================================================
+   5. Biology of Butterflies (Images / Life Cycle / Host Plants / Seasonality)
+   ========================================================================================= */
+const BS = { name: null, tab: 'images', idx: 0 };
+function showBio(name) {
+  if (name) { const q = K.quick.find(x => x.name === name); if (!K.species.find(s => s.name === name) && q && q.species != null) name = K.species.find(s => s.id === q.species).name; }
+  const cl = openWin('bio', { title: 'Biology of Butterflies', icon: 'img/ui/icon_monarch.png', x: 323, y: 160, cw: 792, ch: 551, onClose: () => { if (!W.ident) showModule(); } });
+  if (!W.ident) closeWin('module', true);
+  BS.name = name || null; BS.tab = 'images'; BS.idx = 0;
+  renderBio();
+}
+function bioSpecies() { return K.species.find(s => s.name === BS.name); }
+function renderBio() {
+  const cl = W.bio.cl; cl.textContent = '';
+  const sp = bioSpecies();
+  const combo = el('div', { class: 'combo', onclick: () => { const d = $('#bio .drop'); if (d) d.remove(); else openDrop(); } }, [BS.name || '', el('div', { class: 'arr' }, '▼')]);
+  cl.append(combo);
+  function openDrop() {
+    const d = el('div', { class: 'drop' });
+    const names = [...new Set(K.species.map(s => s.name))].sort(jetCmp);
+    names.forEach(n => d.append(el('div', { class: n === BS.name ? 'sel' : '', onclick: e => { e.stopPropagation(); BS.name = n; BS.tab = 'images'; BS.idx = 0; renderBio(); } }, n)));
+    cl.append(d); const s = d.querySelector('.sel'); if (s) d.scrollTop = s.offsetTop - 60;
+  }
+  const has = { images: !!sp && sp.photos.length > 0, life: !!(sp && sp.life), host: !!(sp && sp.hosts.length), season: !!(sp && sp.season) };
+  if (!has[BS.tab]) BS.tab = has.images ? 'images' : (Object.keys(has).find(k => has[k]) || 'images');
+  const tabs = el('div', { class: 'tabs' });
+  [['images', 'Images'], ['life', 'Life Cycle'], ['host', 'Host Plants'], ['season', 'Seasonality']].forEach(([k, t], i) => {
+    const on = sp && BS.tab === k;
+    const tb = el('div', { class: `tab${on ? ' on' : ''}${!has[k] ? ' dis' : ''}`, onclick: () => { if (has[k]) { BS.tab = k; BS.idx = 0; renderBio(); } } }, el('span', {}, t));
+    pos(tb, i * 194 + (on ? 0 : 0), on ? -2 : 0, 194 + (i === 3 ? 0 : 1)); tabs.append(tb);
+  });
+  cl.append(tabs);
+  const pane = el('div', { class: 'pane' }); cl.append(pane);
+  if (!sp) return;
+  if (BS.tab === 'images') {
+    const ph = sp.photos[BS.idx];
+    if (ph) {
+      pane.append(pos(el('img', { src: ph.src, class: 'abs', alt: sp.name, title: ph.credit ? 'Photo: ' + ph.credit : '' }), 12, 8, ph.w, ph.h));
+    }
+    pane.append(navBar(sp.photos.length, `[${BS.idx + 1}/${sp.photos.length} ]`, 130));
+  } else if (BS.tab === 'life') {
+    pane.append(pos(el('img', { src: sp.life.src, class: 'abs', alt: 'Life cycle of ' + sp.name }), 4, 6, sp.life.w, sp.life.h));
+  } else if (BS.tab === 'host') {
+    const h = sp.hosts[BS.idx];
+    const sc = el('div', { class: 'scroll' });
+    if (h.src) sc.append(el('img', { src: h.src, width: h.w, height: h.h, style: { display: 'block' }, alt: `${h.genus} ${h.species}` }));
+    else sc.append(el('div', { style: { padding: '20px', font: '13px var(--arial)' } }, 'Picture not available: ' + h.file));
+    pane.append(sc);
+    pane.append(navBar(sp.hosts.length, `[${BS.idx + 1}/${sp.hosts.length} ]        ${h.genus} ${h.species}`, 280));
+  } else if (BS.tab === 'season') {
+    pane.append(pos(el('img', { src: sp.season.src, class: 'abs', alt: 'Seasonality of ' + sp.name }), 6, 12, 460, 477));
+    pane.append(pos(el('img', { src: 'img/ui/season_scale.png', class: 'abs', alt: 'Scale: Abundant, Very Common, Common, Rare, Not Seen' }), 536, 92, 171, 314));
+  }
+}
+function navBar(n, text, w) {
+  const go = j => { BS.idx = Math.max(0, Math.min(n - 1, j)); renderBio(); };
+  const first = BS.idx === 0, last = BS.idx >= n - 1;
+  const b = (img, dis, f) => el('img', { src: `img/ui/${img}_${dis ? 'b' : 'a'}.png`, alt: '', onclick: () => !dis && f(), style: { opacity: dis ? .55 : 1 } });
+  return el('div', { class: 'nav' }, [b('nav_first', first, () => go(0)), b('nav_prev', first, () => go(BS.idx - 1)),
+    el('div', { class: 'box', style: { width: px(w) } }, text), b('nav_next', last, () => go(BS.idx + 1)), b('nav_last', last, () => go(n - 1))]);
+}
+
+/* =========================================================================================
+   6. QUICK FINDING WITH PATCHES AND SPOTS  (data\Butterfly.mdb, tables 0..11)
+   ========================================================================================= */
+const QS = { slot: null, lines: [], pick: null };
+const SLOT_POS = [[247, 57, 211, 105], [454, 59, 214, 102], [652, 58, 231, 104], [245, 158, 216, 94], [453, 159, 215, 93], [651, 158, 235, 94],
+  [246, 293, 218, 94], [447, 293, 226, 96], [655, 293, 226, 94], [235, 391, 236, 93], [447, 390, 227, 94], [655, 389, 226, 96]];   // measured
+const SW = [['Black', '#000000', 140], ['White', '#FFFFFF', 188], ['Blue', '#00B0F0', 236], ['Green', '#92D050', 284], ['Orange', '#FFC000', 332], ['Yellow', '#FFFF00', 380]];   // 43px buttons at x 919
+function showQuick() {
+  QS.slot = null; QS.lines = []; QS.pick = null;
+  const cl = openWin('quick', { title: 'QUICK FINDING WITH PATCHES AND SPOTS', icon: 'img/ui/icon_vb.png', x: 218, y: 84, cw: 1002, ch: 698, minmax: true });
+  renderQuick();
+}
+function quickMatches() {
+  // each line of "Characters Choosen" is one filter; a patch line lists its colours with "/" (either colour),
+  // an eye-spot line carries the position of the ring counted from the centre (CNT)
+  let list = K.quick;
+  for (const L of QS.lines) list = list.filter(q => q.slots[L.slot].some(([c, n]) => L.colors.includes(c) && (L.cnt ? n === L.cnt : true)));
+  return list;
+}
+function renderQuick() {
+  const cl = W.quick.cl; cl.textContent = '';
+  const T = (t, cx, cy, font, w = 300) => cl.append(pos(el('div', { class: 'abs', style: { font, width: px(w), textAlign: 'center', lineHeight: '20px', whiteSpace: 'nowrap' } }, t), cx - w / 2, cy - 10));
+  T('(1 COLOR)', 341, 12, 'bold 13px var(--arial)'); T('(2 PROMINENT COLOR)', 555, 12, 'bold 13px var(--arial)'); T('(3 COLORS FROM CENTRE)', 764, 12, 'bold 13px var(--arial)');
+  cl.append(pos(el('div', { class: 'box' }), 7, 28, 882, 213), pos(el('div', { class: 'box' }), 7, 268, 882, 226));
+  T('DORSAL', 117, 72, '18px var(--arial)'); T('VENTRAL', 115, 289, '18px var(--arial)');
+  cl.append(pos(el('img', { src: 'img/ui/diag_dorsal.png', class: 'abs', alt: '' }), 24, 93, 185, 144), pos(el('img', { src: 'img/ui/diag_ventral.png', class: 'abs', alt: '' }), 16, 309, 195, 156));
+  [['SPOT COLOR', 339, 47], ['PATCH COLOR', 553, 47], ['EYE SPOTS COLOR', 746, 47], ['SPOT COLOR', 331, 281], ['PATCH COLOR', 544, 281], ['EYE SPOTS COLOR', 755, 281]]
+    .forEach(([t, x, y]) => T(t, x, y, '16px var(--arial)', 220));
+  SLOT_POS.forEach(([x, y, w, h], k) => {
+    const s = el('div', { class: 'slot' + (QS.slot === k ? ' on' : ''), title: K.slots[k].label, onclick: () => { QS.slot = k; renderQuick(); } },
+      el('img', { src: `img/ui/slot_${k}.png`, alt: K.slots[k].label, style: { width: px(w - 6), height: px(h - 6) } }));
+    cl.append(pos(s, x, y, w, h));
+  });
+  T('Choose', 941, 86, '18px var(--arial)', 90); T('Color', 941, 110, '18px var(--arial)', 90);
+  const active = QS.slot != null ? QS.lines.find(l => l.slot === QS.slot && !l.cnt) : null;
+  const lastEye = QS.slot != null && K.slots[QS.slot].kind === 'EYE SPOTS' ? QS.lines.filter(l => l.slot === QS.slot).slice(-1)[0] : null;
+  SW.forEach(([c, hex, y]) => {
+    const on = (active && active.colors.includes(c)) || (lastEye && lastEye.colors[0] === c);
+    const b = el('div', { class: 'btn', title: c, onclick: () => pickColor(c), style: { padding: 0 } }, el('div', { style: { width: '37px', height: '37px', background: hex, boxSizing: 'border-box', border: on ? '3px solid #0000FF' : 'none' } }));
+    cl.append(pos(b, 919, y, 43, 43));
+  });
+  T('Characters Choosen', 87, 508, 'bold 12px var(--arial)', 140);
+  const lines = el('div', { class: 'ql' }); pos(lines, 24, 518, 400, 180);
+  QS.lines.forEach(L => lines.append(el('div', {}, `${K.slots[L.slot].label}: ${L.colors.join('/')}`)));
+  cl.append(lines);
+  const list = QS.lines.length ? quickMatches() : [];
+  cl.append(pos(el('div', { class: 'abs', style: { font: 'bold 12px var(--arial)', whiteSpace: 'nowrap' } }, 'Butterflies Matched : ' + (QS.lines.length ? list.length : '')), 464, 501));
+  const ml = el('div', { class: 'ql' }); pos(ml, 456, 518, 296, 180);
+  [...new Set(list.map(q => q.name))].sort(jetCmp).forEach(n => ml.append(el('div', { class: n === QS.pick ? 'sel' : '', onclick: () => { QS.pick = n; renderQuick(); } }, n)));
+  cl.append(ml);
+  const qbtn = (t, x, y, w, h, f) => cl.append(pos(el('div', { class: 'btn', style: { font: '16px var(--arial)' }, onclick: f }, t), x, y, w, h));
+  qbtn('IMAGES', 769, 573, 80, 40, () => QS.pick ? showThumbs(QS.pick) : msgBox('Please select a species', 'Images'));
+  qbtn('CLEAR', 920, 532, 72, 40, () => { QS.slot = null; QS.lines = []; QS.pick = null; renderQuick(); });
+  qbtn('BACK', 920, 589, 72, 40, () => closeWin('quick'));
+  qbtn('EXIT', 920, 645, 72, 40, () => exitProgram());
+}
+function pickColor(c) {
+  if (QS.slot == null) return msgBox('FIRST CHOOSE PATCH/SPOT/EYE SPOTS');
+  const kind = K.slots[QS.slot].kind;
+  if (kind === 'SPOT') {            // one colour: a new choice replaces the line
+    let L = QS.lines.find(l => l.slot === QS.slot);
+    if (!L) QS.lines.push(L = { slot: QS.slot, colors: [] });
+    L.colors = [c];
+  } else if (kind === 'PATCH') {    // two prominent colours on one line
+    let L = QS.lines.find(l => l.slot === QS.slot);
+    if (!L) QS.lines.push(L = { slot: QS.slot, colors: [] });
+    if (!L.colors.includes(c)) { L.colors.push(c); if (L.colors.length > 2) L.colors.shift(); }
+  } else {                          // eye spots: up to three rings, each its own line, counted from the centre
+    const n = QS.lines.filter(l => l.slot === QS.slot).length;
+    if (n >= 3) return;
+    QS.lines.push({ slot: QS.slot, colors: [c], cnt: n + 1 });
+  }
+  QS.pick = null; renderQuick();
+}
+</script>
+</body>
+</html>

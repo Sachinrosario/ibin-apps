@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-22",
+  "updated": "2026-10-23",
   "owner": "Sachinrosario",
   "releasesRepo": "ibin-apps",
   "apps": [
@@ -141,6 +141,77 @@
           "key": "v1",
           "label": "Version 1 – Original (2010)",
           "summary": "The 2010 program as it was: original names and data, with the 2026 credits."
+        }
+      ]
+    },
+    {
+      "name": "Pathanga Suchya",
+      "icon": "apps/pathanga-suchya.png",
+      "origin": "Butterfly identification program for the butterflies of Bangalore, K.N. Ganeshaiah, GKVK (2006–2007; Version 3.0 of 2018).",
+      "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
+      "editions": [
+        {
+          "id": "pathanga-suchya",
+          "key": "v3",
+          "label": "Version 3 (faithful rebuild)",
+          "versionName": "Version 3",
+          "version": "3.0.0",
+          "released": "2026-10-23",
+          "published": false,
+          "summary": "The 2018 program rebuilt screen for screen: identification keys, quick finding by patch, spot and eye-spot colours, butterfly photos, host plants, life cycles and seasonality wheels.",
+          "facts": [
+            "120 butterflies",
+            "8,582 photos",
+            "Host plants",
+            "Life cycles",
+            "Seasonality"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/pathanga-suchya/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "PathangaSuchya_3.0.0_Setup.exe",
+              "size": "",
+              "note": "Adds Start-menu and desktop shortcuts. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "PathangaSuchya.exe",
+              "size": "",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "PathangaSuchya_3.0.0_universal.dmg",
+              "size": "",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "PathangaSuchya_3.0.0_amd64.deb",
+              "size": "",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "PathangaSuchya_3.0.0_offline.zip",
+              "size": "",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "3.0.0",
+              "date": "2026-10-23",
+              "text": "Faithful rebuild of Pathanga Suchya 3.0 (2018) with the same screens and behaviour. Butterfly View shows the photos in each species folder (the original looked for file names that are not in the package)."
+            }
+          ]
         }
       ]
     }
