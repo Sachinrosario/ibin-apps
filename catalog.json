@@ -157,7 +157,7 @@
           "versionName": "Version 4 – Updated",
           "version": "4.0.0",
           "released": "2026-10-23",
-          "published": false,
+          "published": true,
           "summary": "New design that also works on phones: a guided key that suggests the best next question and shows how many butterflies each answer leaves, Catalogue of Life names (2007 names kept in brackets), month-by-month 'what flies when', similar butterflies on every page.",
           "facts": [
             "120 butterflies",
@@ -173,35 +173,35 @@
               "os": "windows",
               "kind": "Installer",
               "file": "PathangaSuchya4_4.0.0_Setup.exe",
-              "size": "",
+              "size": "181 MB",
               "note": "Installs beside Version 3. No administrator password."
             },
             {
               "os": "windows",
               "kind": "No-install",
               "file": "PathangaSuchya4.exe",
-              "size": "",
+              "size": "187 MB",
               "note": "Runs straight from a folder or pen drive."
             },
             {
               "os": "mac",
               "kind": "App",
               "file": "PathangaSuchya4_4.0.0_universal.dmg",
-              "size": "",
+              "size": "365 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
               "file": "PathangaSuchya4_4.0.0_amd64.deb",
-              "size": "",
+              "size": "181 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
               "file": "PathangaSuchya4_4.0.0_offline.zip",
-              "size": "",
+              "size": "183 MB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
