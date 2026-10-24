@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Birds Group Identification (with Prob)</title>
+<link rel="icon" href="img/ui/icon16.png">
+<style>
+/* Birds Group Identification (with Prob) - Version 1, faithful web rebuild.
+   Every window keeps the pixel geometry measured on Windows (1920x1080) inside a stage scaled to the browser. */
+@font-face{font-family:"PS Arial";src:local("Arial"),local("ArialMT"),url(fonts/arimo-latin-400-normal.woff2) format("woff2");font-weight:400;font-style:normal}
+@font-face{font-family:"PS Arial";src:local("Arial Bold"),local("Arial-BoldMT"),url(fonts/arimo-latin-700-normal.woff2) format("woff2");font-weight:700;font-style:normal}
+:root{--arial:"PS Arial",Arial,sans-serif;--sans:"Microsoft Sans Serif","MS Sans Serif","PS Arial",sans-serif;--segoe:"Segoe UI",Tahoma,"PS Arial",sans-serif;--verdana:Verdana,"DejaVu Sans","PS Arial",sans-serif}
+html,body{margin:0;height:100%;background:#0f3d5c;overflow:hidden;font-family:var(--sans)}
+#stage{position:absolute;width:1920px;height:1080px;transform-origin:0 0;overflow:hidden;user-select:none;-webkit-user-select:none;
+  background:linear-gradient(160deg,#1f8fe0 0%,#1673c8 45%,#0b4fa0 100%)}
+#stage img{-webkit-user-drag:none}
+[hidden]{display:none!important}
+.abs{position:absolute}
+.hot{position:absolute;cursor:pointer}
+/* window chrome (Windows 10) */
+.win{position:absolute;background:#fff;overflow:hidden}
+.win.normal{border:1px solid #1a6fd0;box-sizing:border-box;box-shadow:0 7px 24px rgba(0,0,0,.4)}
+.tb{position:absolute;left:0;top:0;right:0;height:24px;background:#fff;display:flex;align-items:center;font:12px var(--segoe);color:#000;white-space:pre;z-index:2}
+.tb img{width:16px;height:16px;margin:0 6px 0 5px}
+.tb .ctl{position:absolute;top:0;width:46px;height:100%;display:flex;align-items:center;justify-content:center;font:13px var(--segoe)}
+.tb .ctl.x:hover{background:#e81123;color:#fff}
+.tb .ctl.dis{color:#bbb}
+.win.inactive .tb{color:#999}
+/* VB controls */
+.btn{position:absolute;box-sizing:border-box;background:#fff;border:1px solid;border-color:#e3e3e3 #696969 #696969 #e3e3e3;box-shadow:inset -1px -1px #a0a0a0;
+  display:flex;align-items:center;justify-content:center;text-align:center;color:#000;cursor:default;line-height:1.15;padding:0 2px;font:16px var(--arial)}
+.btn:active{border-color:#696969 #e3e3e3 #e3e3e3 #696969;box-shadow:inset 1px 1px #a0a0a0}
+.btn.def{border:2px solid #000;box-shadow:inset -1px -1px #696969,inset 1px 1px #e3e3e3}
+.btn.def::after{content:"";position:absolute;inset:3px;border:1px dotted #000}
+.btn.dis{color:#a0a0a0;pointer-events:none}
+.sunk{position:absolute;box-sizing:border-box;border:2px solid;border-color:#a0a0a0 #fff #fff #a0a0a0;box-shadow:inset 1px 1px #696969;background:#fff}
+.lst{overflow-y:scroll;overflow-x:scroll}
+.lst.wide div{min-width:600px}
+.lst div{white-space:nowrap;padding:0 3px;cursor:default;width:max-content;min-width:calc(100% - 6px)}
+.lst div.sel{background:#0078d7;color:#fff}
+.lst::-webkit-scrollbar{width:17px;height:17px}
+.lst::-webkit-scrollbar-track{background:#f0f0f0}
+.lst::-webkit-scrollbar-thumb{background:#cdcdcd;border:2px solid #f0f0f0}
+.lst::-webkit-scrollbar-corner{background:#f0f0f0}
+.frame{position:absolute;box-sizing:border-box;border:1px solid #a0a0a0;box-shadow:inset 1px 1px #fff,1px 1px #fff}
+.frame>span{position:absolute;left:5px;top:-9px;background:#fff;padding:0 1px;font:14px var(--sans);color:#000;white-space:nowrap}
+.lbl{position:absolute;white-space:nowrap}
+/* thumbnails */
+.th{position:absolute;width:202px}
+.th .box{width:202px;height:202px;box-sizing:border-box;border:3px solid #c0c0c0;background:#fff;cursor:pointer;position:relative}
+.th .box img{width:196px;height:196px;display:block;object-fit:contain}
+.th.on .box{border-color:#0000ff}
+.th .blue{position:absolute;left:183px;top:183px;width:16px;height:16px;box-sizing:border-box;border:1px solid;border-color:#e3e3e3 #696969 #696969 #e3e3e3;background:#000080;cursor:pointer}
+.th .cap{font:bold 13px/15px var(--arial);text-align:center;margin:2px 0 0;width:202px}
+/* message box */
+.msg .body{position:absolute;left:0;right:0;top:30px;bottom:44px;display:flex;align-items:center;padding:0 12px;font:12px var(--segoe)}
+.msg .foot{position:absolute;left:0;right:0;bottom:0;height:44px;background:#f0f0f0}
+.msg .foot .btn{right:17px;top:10px;width:75px;height:23px;font:12px var(--segoe);border:1px solid #0078d7;box-shadow:none;background:#e1e1e1}
+/* radio buttons of the opening window */
+.radio{position:absolute;width:13px;height:13px;border-radius:50%;box-sizing:border-box;border:1px solid #333;background:#fff;cursor:pointer}
+.radio.on::after{content:"";position:absolute;left:3px;top:3px;width:5px;height:5px;border-radius:50%;background:#000}
+/* picture viewer (stands in for the Windows photo viewer the program opens) */
+.viewer .cl{position:absolute;left:0;right:0;top:32px;bottom:0;background:#202020;display:flex;align-items:center;justify-content:center}
+.viewer .cl img{max-width:100%;max-height:100%}
+.viewer .nav{position:absolute;top:50%;width:52px;height:76px;margin-top:-38px;background:rgba(0,0,0,.45);color:#fff;font:34px var(--segoe);display:flex;align-items:center;justify-content:center;cursor:pointer}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="wins"></div>
+</div>
+<script src="data/kit.js"></script>
+<script>
+"use strict";
+const K = window.KIT_DATA;
+const SW = 1920, SH = 1080;
+const $ = (s, r = document) => r.querySelector(s);
+const el = (tag, attrs = {}, kids = []) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'style' && typeof v === 'object') Object.assign(e.style, v);
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of [].concat(kids)) if (c != null) e.append(c.nodeType ? c : document.createTextNode(c));
+  return e;
+};
+const px = n => n + 'px';
+const pos = (e, x, y, w, h) => { e.style.left = px(x); e.style.top = px(y); if (w != null) e.style.width = px(w); if (h != null) e.style.height = px(h); return e; };
+const lc = s => String(s).trim().toLowerCase();
+
+/* ---------- stage scaling ---------- */
+const stage = $('#stage');
+function fit() {
+  const s = Math.min(innerWidth / SW, innerHeight / SH);
+  stage.style.transform = `scale(${s})`;
+  stage.style.left = Math.max(0, (innerWidth - SW * s) / 2) + 'px';
+  stage.style.top = Math.max(0, (innerHeight - SH * s) / 2) + 'px';
+}
+addEventListener('resize', fit); fit();
+
+/* ---------- window manager ---------- */
+const W = {}; let zTop = 10;
+function openWin(id, { title = '', icon = 'img/ui/icon16.png', x = 0, y = 0, w = SW, h = SH, normal = false, max = true, maxDis = false, modal = false, onClose, cls = '' } = {}) {
+  closeWin(id, true);
+  const win = el('div', { class: `win${normal ? ' normal' : ''} ${cls}`, id }); pos(win, x, y, w, h);
+  const bar = el('div', { class: 'tb' }, [icon ? el('img', { src: icon, alt: '' }) : el('span', { style: { width: '8px' } }), title]);
+  if (max) bar.append(el('div', { class: 'ctl', title: 'Minimise', style: { right: '92px' }, onclick: () => minimiseWin(id, title) }, '—'),
+    el('div', { class: 'ctl' + (maxDis ? ' dis' : ''), title: maxDis ? '' : 'Full screen on / off', style: { right: '46px' }, onclick: () => maxDis || toggleFull() }, normal ? '☐' : '❐'));
+  bar.append(el('div', { class: 'ctl x', title: 'Close', style: { right: '0' }, onclick: () => closeWin(id) }, '✕'));
+  win.append(bar);
+  win.addEventListener('mousedown', () => focusWin(id), true);
+  W[id] = { el: win, bar, onClose };
+  if (modal) $('#wins').append(el('div', { class: 'abs', id: id + '_sh', style: { inset: 0, zIndex: zTop + 1 } }));
+  $('#wins').append(win); focusWin(id);
+  return win;
+}
+// Minimise hides the window behind a button at the bottom of the screen; maximise switches full screen
+function minimiseWin(id, title) {
+  const w = W[id]; if (!w) return;
+  w.el.style.display = 'none';
+  const chip = el('div', { class: 'btn minchip', 'data-for': id, title: 'Restore', style: { left: '8px', bottom: '8px', top: 'auto', padding: '6px 12px', font: '14px var(--sans)', zIndex: 99999 }, onclick: () => { chip.remove(); w.el.style.display = ''; focusWin(id); } }, '▣ ' + String(title).split('   ')[0].trim());
+  $('#wins').append(chip);
+}
+function toggleFull() { try { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); } catch (e) {} }
+function focusWin(id) { if (!W[id]) return; for (const k in W) W[k].el.classList.toggle('inactive', k !== id); W[id].el.style.zIndex = ++zTop + 1; const sh = $('#' + id + '_sh'); if (sh) sh.style.zIndex = zTop; }
+function closeWin(id, silent) {
+  document.querySelectorAll(`.minchip[data-for="${id}"]`).forEach(c => c.remove());
+  const w = W[id]; if (!w) return; w.el.remove(); const sh = $('#' + id + '_sh'); if (sh) sh.remove(); delete W[id];
+  if (!silent && w.onClose) w.onClose();
+}
+function msgBox(text, title = 'Project1') {
+  const w = 203, h = 128;
+  const win = openWin('msg', { title, icon: null, x: Math.round((SW - w) / 2), y: 504, w, h, normal: true, max: false, modal: true, cls: 'msg' });
+  win.append(el('div', { class: 'body' }, text), el('div', { class: 'foot' }, el('div', { class: 'btn', onclick: () => closeWin('msg') }, 'OK')));
+}
+addEventListener('keydown', e => { if (W.msg && ['Enter', 'Escape', ' '].includes(e.key)) { e.preventDefault(); closeWin('msg'); } });
+// A web page cannot always close its own window, so after trying, show a "closed" screen with a way back in.
+function quitApp() {
+  for (const k of Object.keys(W)) closeWin(k, true);
+  try { window.close(); } catch (e) {}
+  setTimeout(() => {
+    if ($('#quit')) return;
+    const q = el('div', { id: 'quit', style: { position: 'fixed', inset: 0, zIndex: 100000, background: '#0f3d5c', color: '#fff', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px', font: '20px var(--arial)' } },
+      [el('div', {}, 'Birds Group Identification is closed. You can close this window.'), el('div', { class: 'btn', style: { position: 'static', padding: '8px 18px' }, onclick: () => { q.remove(); showStart(); } }, 'Open it again')]);
+    document.body.append(q);
+  }, 300);
+}
+// picture viewer: the original hands pictures to the Windows photo viewer
+function openPics(title, pics) {
+  if (!pics || !pics.length) return;
+  let i = 0;
+  const win = openWin('viewer', { title: '', icon: null, x: 260, y: 60, w: 1400, h: 960, normal: true, cls: 'viewer' });
+  const cl = el('div', { class: 'cl' }); win.append(cl);
+  const draw = () => { W.viewer.bar.childNodes[1].textContent = `${pics[i].file} - Photos`; cl.replaceChildren(el('img', { src: pics[i].src, alt: title }));
+    if (pics.length > 1) cl.append(el('div', { class: 'nav', style: { left: '8px' }, onclick: () => { i = (i + pics.length - 1) % pics.length; draw(); } }, '‹'), el('div', { class: 'nav', style: { right: '8px' }, onclick: () => { i = (i + 1) % pics.length; draw(); } }, '›')); };
+  draw();
+}
+
+/* ---------- the identification state, as the program keeps it ---------- */
+// S.mode: 'sit' or 'fly'; S.sel: {idx: [value keys, click order]}; S.dk: idx shown as "Don't Know" on the open screen
+const S = { mode: 'sit', sel: {}, used: false, listSel: null, groupSel: null };
+const CH = () => Object.fromEntries(K[S.mode].map(c => [c.idx, c]));
+const T = idx => K.tables[CH()[idx].table];
+const YESNO = ['crown', 'is there neck marking', 'is there eye marking'];
+const isYesNo = idx => YESNO.includes(lc(CH()[idx].caption));
+const valLabel = (idx, k) => (T(idx).values.find(v => v.key === k) || { label: k }).label;
+// temp: rows {g, per}.  Each chosen character is applied in button-index order:
+//   temp1 = temp joined with the character's rows whose value is one of the chosen ones, per = per + character per,
+//   grouped by (sum, group, value), so a group having two chosen values gives two rows.
+function temp() {
+  let rows = K.groups.map(g => ({ g: g.id, per: 0 }));
+  for (const idx of Object.keys(S.sel).map(Number).sort((a, b) => a - b)) {
+    const vals = S.sel[idx]; if (!vals || !vals.length) continue;
+    const data = T(idx).data, out = new Map();
+    for (const r of rows) for (const [k, p] of data[r.g] || []) if (vals.includes(k)) { const per = r.per + p; const key = per + '|' + r.g + '|' + k; if (!out.has(key)) out.set(key, { g: r.g, per }); }
+    rows = [...out.values()];
+  }
+  return rows;
+}
+const GNAME = Object.fromEntries(K.groups.map(g => [g.id, g.name]));
+function matchedList() {        // one line per group, at its highest score, best first; ties in name order (checked on Windows)
+  const seen = new Map();
+  for (const r of temp()) { const o = seen.get(r.g); if (!o || r.per > o.per) seen.set(r.g, { per: r.per, name: GNAME[r.g], g: r.g }); }
+  return [...seen.values()].sort((a, b) => b.per - a.per || (lc(a.name) < lc(b.name) ? -1 : lc(a.name) > lc(b.name) ? 1 : 0));
+}
+function pickedLines() {        // one line per chosen character, in button-index order
+  return Object.keys(S.sel).map(Number).sort((a, b) => a - b).filter(i => S.sel[i] && S.sel[i].length)
+    .map(i => ({ idx: i, text: `${CH()[i].caption}: ${S.sel[i].map(k => valLabel(i, k)).join('/')}` }));
+}
+function choose(idx, key) {
+  const cur = S.sel[idx] || [];
+  if (key === null) { delete S.sel[idx]; }                                  // Don't Know clears the character
+  else if (cur.includes(key)) { S.sel[idx] = cur.filter(k => k !== key); if (!S.sel[idx].length) delete S.sel[idx]; }
+  else S.sel[idx] = isYesNo(idx) ? [key] : [...cur, key];                  // Yes/No characters take one answer
+  S.used = true; S.listSel = null; S.groupSel = null;
+}
+
+/* ---------- right-hand panel shared by the character windows ---------- */
+function rightPanel(win, dx, dy, opts) {
+  const p = el('div', { class: 'abs', style: { left: 0, top: 0 } });
+  const lines = pickedLines(), list = lines.length ? matchedList() : [];
+  p.append(pos(el('div', { class: 'lbl', style: { font: '15px var(--arial)', width: '220px', textAlign: 'center' } }, 'List of Characters Picked'), 1696 + dx, 63 + dy));
+  const l1 = el('div', { class: 'sunk lst', style: { font: '13px/16px var(--sans)', padding: '1px 0', overflow: 'hidden' } }); pos(l1, 1699 + dx, 84 + dy, 209, 212);
+  lines.forEach(L => l1.append(el('div', { class: S.listSel === L.idx ? 'sel' : '', onclick: e => { S.listSel = L.idx; [...l1.children].forEach(c => c.classList.toggle('sel', c === e.currentTarget)); } }, L.text)));
+  p.append(l1);
+  const delOn = opts.freshDelete || lines.length > 0;
+  p.append(pos(el('div', { class: 'btn' + (opts.back ? '' : ' dis'), title: 'Previous Screen', onclick: () => opts.back && opts.back() }, 'Back'), 1705 + dx, 310 + dy, 67, 43));
+  p.append(pos(el('div', { class: 'btn' + (delOn ? '' : ' dis'), title: 'Previous Screen', onclick: () => {
+    if (S.listSel == null) return msgBox('Select the parameter to delete');
+    delete S.sel[S.listSel]; S.listSel = null; S.groupSel = null; opts.redraw(false);
+  } }, 'Delete'), 1777 + dx, 310 + dy, 67, 43));
+  p.append(pos(el('div', { class: 'btn', title: 'Click here to Clear all the selections made', onclick: () => { S.sel = {}; S.listSel = null; S.groupSel = null; opts.redraw(false, true); } }, 'Clear'), 1849 + dx, 310 + dy, 59, 43));
+  p.append(pos(el('div', { class: 'lbl', style: { font: 'bold 15px var(--arial)', color: '#0000ff' } }, `Total Groups Present : ${K.groups.length}`), 1710 + dx, 363 + dy));
+  p.append(pos(el('div', { class: 'lbl', style: { font: 'bold 15px var(--arial)', whiteSpace: 'pre' } }, 'Groups Matched:' + (lines.length ? '  ' + list.length : '')), 1714 + dx, 390 + dy));
+  const l3 = el('div', { class: 'sunk lst wide', style: { font: '16px/18px var(--verdana)', color: '#800000', padding: '1px 0' } }); pos(l3, 1699 + dx, 418 + dy, 209, 581);
+  list.forEach((r, i) => l3.append(el('div', { class: S.groupSel === i ? 'sel' : '', onclick: e => { S.groupSel = i; [...l3.children].forEach(c => c.classList.toggle('sel', c === e.currentTarget)); } }, r.name)));
+  p.append(l3);
+  const imgOn = opts.imagesAlways || S.used;
+  p.append(pos(el('div', { class: 'btn' + (imgOn ? '' : ' dis'), style: { font: '18px var(--arial)' }, title: 'Click here to view the Images of Selected Species that are matched with the Parameters', onclick: () => {
+    if (S.groupSel == null || !list[S.groupSel]) return msgBox('Please Choose a Bird Group');
+    const r = list[S.groupSel]; openPics(r.name, K.groupPics[r.g]);
+  } }, 'Images'), 1721 + dx, 1014 + dy, 107, 51));
+  p.append(pos(el('div', { class: 'btn', style: { padding: 0 }, title: 'Click here for Home Page', onclick: showStart }, el('img', { src: 'img/ui/home.png', width: 55, height: 47, alt: 'Home' })), 1841 + dx, 1014 + dy, 59, 51));
+  win.append(p);
+}
+
+/* ---------- opening window ---------- */
+function showStart() {
+  for (const k of Object.keys(W)) closeWin(k, true);
+  S.sel = {}; S.used = false; S.listSel = null; S.groupSel = null; mainTitle = 'Choose Characters'; markShown = {};
+  const win = openWin('start', { title: 'Bird Group Identification', x: 434, y: 215, w: 1051, h: 650, normal: true, maxDis: true, onClose: quitApp });
+  win.append(pos(el('img', { src: 'img/ui/start.png', class: 'abs', alt: '' }), -1, -1, 1051, 650));
+  win.firstChild.style.display = 'none';
+  win.append(pos(el('div', { class: 'hot', title: 'Close', onclick: quitApp }), 1004, 0, 46, 28));
+  const rs = el('div', { class: 'radio' + (S.mode === 'sit' ? ' on' : ''), title: 'SITTING/STANDING' }), rf = el('div', { class: 'radio' + (S.mode === 'fly' ? ' on' : ''), title: 'IN FLIGHT/FLYING' });
+  const set = m => { S.mode = m; rs.classList.toggle('on', m === 'sit'); rf.classList.toggle('on', m === 'fly'); };
+  win.append(pos(el('div', { class: 'abs', style: { background: '#fff' } }), 86, 541, 16, 16), pos(rs, 88, 543),
+    pos(el('div', { class: 'abs', style: { background: '#fff' } }), 686, 541, 16, 16), pos(rf, 688, 543),
+    pos(el('div', { class: 'hot', onclick: () => set('sit') }), 84, 534, 200, 28), pos(el('div', { class: 'hot', onclick: () => set('fly') }), 684, 534, 200, 28),
+    pos(el('div', { class: 'hot', title: 'Next', onclick: showMain }), 411, 586, 68, 37), pos(el('div', { class: 'hot', title: 'Exit', onclick: quitApp }), 482, 585, 70, 38),
+    pos(el('div', { class: 'lbl', style: { font: '12px/16px var(--arial)', color: '#333' } }, [el('div', {}, 'Proprietary right holder - Dr. K.N. Ganeshaiah'), el('div', {}, `Updated in 2026 by Dr. Sachin A. Rosario  ·  Version ${K.version}`)]), 12, 596));
+}
+
+/* ---------- the bird picture: choose a part ---------- */
+const LABELS = {
+  sit: { crown: [15, 166, 76, 90, 27], eye: [19, 857, 79, 44, 27], beak: [0, 885, 124, 62, 27], neck: [7, 828, 196, 63, 27], size: [8, 130, 260, 179, 27],
+    body: [11, 781, 372, 157, 42], tail: [1, 121, 508, 54, 27], leg: [17, 797, 581, 45, 27], feet: [2, 776, 700, 56, 27] },
+  fly: { size: [8, 514, 107, 178, 28], wings: [9, 716, 394, 222, 46], tail: [1, 56, 516, 54, 28], crown: [15, 862, 532, 90, 28], beak: [0, 907, 595, 65, 28],
+    body: [11, 409, 652, 162, 48], leg: [17, 308, 687, 48, 28], neck: [7, 624, 711, 63, 28], feet: [2, 146, 713, 58, 28] },
+};
+// the frames of buttons shown left of the pictures: [caption, [idx, top, height, condition]...]
+const PANELS = {
+  sit: { beak: ['BEAK', [[0, 166, 71], [4, 302, 71], [6, 430, 71], [14, 550, 71]]], eye: ['EYE', [[19, 222, 79], [20, 406, 79, 'eye']]],
+    neck: ['NECK', [[7, 150, 71], [9, 302, 79], [5, 462, 79, 'neck']]], body: ['BODY', [[11, 158, 71], [12, 294, 71], [10, 422, 71], [13, 550, 71]]],
+    tail: ['TAIL', [[1, 190, 71], [3, 374, 71]]], leg: ['LEG', [[17, 230, 79], [18, 430, 79]]] },
+  fly: { beak: ['BEAK', [[0, 166, 71], [4, 302, 71], [6, 430, 71], [14, 550, 71]]], wings: ['WINGS', [[9, 230, 79], [5, 430, 79]]],
+    body: ['BODY', [[11, 158, 71], [12, 294, 71], [10, 422, 71], [13, 550, 71]]], tail: ['TAIL', [[1, 190, 71], [3, 374, 71]]], leg: ['LEG', [[17, 230, 79], [18, 430, 79]]] },
+};
+let mainTitle = 'Choose Characters';
+function showMain() {
+  for (const k of Object.keys(W)) closeWin(k, true);
+  const win = openWin('main', { title: mainTitle, onClose: quitApp });
+  win.append(pos(el('img', { src: `img/ui/${S.mode}_main.png`, class: 'abs', alt: S.mode === 'sit' ? 'Sitting bird: crown, eye, beak, neck, size, body, tail, leg, feet' : 'Flying bird: size, wings, tail, crown, beak, body, leg, neck, feet' }), 0, 24, 1690, 1016));
+  for (const [k, [idx, x, y, w, h]] of Object.entries(LABELS[S.mode])) win.append(pos(el('div', { class: 'hot', title: k.toUpperCase(), onclick: () => { markShown = {}; showChoose(idx, k); } }), x, y, w, h));
+  const dy = S.mode === 'sit' ? 3 : -5;
+  rightPanel(win, 3, dy, { back: null, imagesAlways: true, redraw: () => showMain() });
+}
+let dkShown = null, markShown = {};
+function showChoose(idx, sec, keepDk) {
+  const c = CH()[idx], t = T(idx), panel = sec && PANELS[S.mode][sec];
+  if (!keepDk) dkShown = null;
+  for (const k of Object.keys(W)) closeWin(k, true);
+  const title = `Choose ${c.caption}               * Click on the Thumbnail to Select / Unselect the Character.   Click on the Blue Button to view Images of the Character.`;
+  const win = openWin('choose', { title, onClose: quitApp });
+  win.append(pos(el('div', { class: 'lbl', style: { font: '23.6px var(--arial)', color: '#c00000', width: '1304px', textAlign: 'center' } }, c.heading), 0, 22));
+  const x0 = panel ? 145 : 0;
+  win.append(pos(el('div', { class: 'sunk' }), x0, 56, 1691 - x0, 1016));
+  if (panel) {
+    const f = el('div', { class: 'frame' }, el('span', {}, panel[0])); pos(f, 0, 57, 145, 646); win.append(f);
+    const yesKey = i => (S.sel[i] || []).includes('yes');
+    for (const [bi, top, h, cond] of panel[1]) {
+      if (cond === 'eye' && !(yesKey(19) || markShown.eye)) continue;
+      if (cond === 'neck' && !(yesKey(9) || markShown.neck)) continue;
+      const b = el('div', { class: 'btn' + (bi === idx ? ' def' : ''), style: { whiteSpace: 'normal', padding: '0 6px', font: '18px/21px var(--arial)' }, onclick: () => showChoose(bi, sec) }, CH()[bi].caption);
+      win.append(pos(b, 7, top, 131, h));
+    }
+  }
+  // thumbnails: the values found among the groups still matched, then Don't Know
+  const have = new Set(); for (const r of temp()) for (const [k] of t.data[r.g] || []) have.add(k);
+  const vals = t.values.filter(v => have.has(v.key));
+  const chosen = S.sel[idx] || [];
+  const tx = panel ? 150 : 5, per = Math.floor((1690 - tx - 202) / 220) + 1;
+  const items = [...vals.map(v => ({ v })), { dk: true }];
+  items.forEach((it, i) => {
+    const on = it.dk ? dkShown === idx : chosen.includes(it.v.key);
+    const th = el('div', { class: 'th' + (on ? ' on' : '') });
+    const box = el('div', { class: 'box', title: it.dk ? "Don't Know" : it.v.label, onclick: () => {
+      choose(idx, it.dk ? null : it.v.key);
+      if (it.dk) dkShown = idx; else dkShown = null;
+      if (!it.dk && lc(c.caption) === 'is there eye marking') markShown.eye = it.v.key === 'yes' ? true : it.v.key === 'no' ? false : markShown.eye;
+      if (!it.dk && lc(c.caption) === 'is there neck marking') markShown.neck = it.v.key === 'yes' ? true : it.v.key === 'no' ? false : markShown.neck;
+      redraw();
+    } }, el('img', { src: it.dk ? 'img/icons/dont-know.webp' : it.v.icon, alt: '' }));
+    if (!it.dk && t.blue) box.append(el('div', { class: 'blue', title: 'Click here to view Images of the Character', onclick: e => { e.stopPropagation(); openPics(it.v.label, it.v.pics); } }));
+    th.append(box, el('div', { class: 'cap' }, it.dk ? "Don't Know" : it.v.label));
+    win.append(pos(th, tx + 220 * (i % per), 77 + 230 * Math.floor(i / per)));
+  });
+  // a click keeps the same thumbnails on screen; only the selection marks and the right-hand panel change
+  const redraw = () => {
+    win.querySelectorAll('.th').forEach((th, i) => { const it = items[i]; th.classList.toggle('on', it.dk ? dkShown === idx : (S.sel[idx] || []).includes(it.v.key)); });
+    drawRight(false);
+  };
+  const drawRight = fresh => {
+    const old = win.querySelector('.rpanel'); if (old) old.remove();
+    const holder = el('div', { class: 'abs rpanel', style: { left: 0, top: 0 } }); win.append(holder);
+    rightPanel(holder, 0, 0, { back: () => { mainTitle = 'Choose Parameters'; showMain(); }, freshDelete: fresh, redraw: () => redraw() });
+    if (panel) {   // keep the marking buttons in step with the Yes / No answer
+      const need = { eye: (S.sel[19] || []).includes('yes') || markShown.eye, neck: (S.sel[9] || []).includes('yes') || markShown.neck };
+      for (const [bi, top, h, cond] of panel[1]) if (cond) {
+        const exists = [...win.querySelectorAll('.btn')].some(b => b.textContent === CH()[bi].caption);
+        if (need[cond] && !exists) win.append(pos(el('div', { class: 'btn', style: { whiteSpace: 'normal', padding: '0 6px', font: '18px/21px var(--arial)' }, onclick: () => showChoose(bi, sec) }, CH()[bi].caption), 7, top, 131, h));
+        if (!need[cond] && exists) [...win.querySelectorAll('.btn')].filter(b => b.textContent === CH()[bi].caption).forEach(b => b.remove());
+      }
+    }
+  };
+  drawRight(true);
+}
+
+/* ---------- start ---------- */
+showStart();
+</script>
+</body>
+</html>

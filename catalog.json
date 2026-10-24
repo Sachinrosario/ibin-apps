@@ -353,6 +353,77 @@
           ]
         }
       ]
+    },
+    {
+      "name": "Birds Group Identification (with Prob)",
+      "icon": "apps/birds-group-identification.png",
+      "origin": "Bird group identification key with probability ranking, by K.N. Ganeshaiah (database of 2019).",
+      "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
+      "editions": [
+        {
+          "id": "birds-group-identification",
+          "key": "v1",
+          "label": "Version 1 – Original",
+          "versionName": "Version 1 – Original",
+          "version": "1.0.0",
+          "released": "2026-10-24",
+          "published": false,
+          "summary": "The original program rebuilt screen for screen: describe a sitting or flying bird by clicking its parts, and see 222 bird groups ranked by probability, with pictures.",
+          "facts": [
+            "222 bird groups",
+            "Sitting or flying",
+            "21 characters",
+            "Ranked by probability",
+            "Group pictures"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/birds-group-identification/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "BirdsGroupIdentification_1.0.0_Setup.exe",
+              "size": "",
+              "note": "Adds Start-menu and desktop shortcuts. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "BirdsGroupIdentification.exe",
+              "size": "",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "BirdsGroupIdentification_1.0.0_universal.dmg",
+              "size": "",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "BirdsGroupIdentification_1.0.0_amd64.deb",
+              "size": "",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "BirdsGroupIdentification_1.0.0_offline.zip",
+              "size": "",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "1.0.0",
+              "date": "2026-10-24",
+              "text": "Faithful rebuild with the same screens, thumbnails and probability ranking, checked against the original on Windows. Pictures open in the program's own viewer; the Images and Home buttons are no longer hidden under the taskbar."
+            }
+          ]
+        }
+      ]
     }
   ],
   "upcoming": [

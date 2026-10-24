@@ -1,0 +1,12 @@
+{
+  "name": "birds-group-identification",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Birds Group Identification (with Prob) Version 1 (faithful rebuild)",
+  "scripts": {
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "2.12.4"
+  }
+}

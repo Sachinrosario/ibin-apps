@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Birds Group Identification",
+  "mainBinaryName": "birds-group-identification",
+  "version": "1.0.0",
+  "identifier": "in.ibinapps.birdsgroupidentification",
+  "build": {
+    "frontendDist": "../web"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Birds Group Identification",
+        "width": 1600,
+        "height": 930,
+        "minWidth": 960,
+        "minHeight": 620,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "publisher": "IBIN Apps",
+    "copyright": "Birds Group Identification (with Prob) (c) K.N. Ganeshaiah. Rebuild 2026.",
+    "category": "Education",
+    "shortDescription": "Identify the group of a bird from what you see, ranked by probability",
+    "longDescription": "Version 1: a faithful rebuild of Birds Group Identification (with Prob): choose characters of a sitting or flying bird (size, crown, eye, beak, neck, body, wings, tail, legs, feet) and see the 222 bird groups ranked by probability, with pictures.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    }
+  }
+}
