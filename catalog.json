@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-23",
+  "updated": "2026-10-24",
   "owner": "Sachinrosario",
   "releasesRepo": "ibin-apps",
   "apps": [
@@ -367,7 +367,7 @@
           "versionName": "Version 1 – Original",
           "version": "1.0.0",
           "released": "2026-10-24",
-          "published": false,
+          "published": true,
           "summary": "The original program rebuilt screen for screen: describe a sitting or flying bird by clicking its parts, and see 222 bird groups ranked by probability, with pictures.",
           "facts": [
             "222 bird groups",
@@ -383,35 +383,35 @@
               "os": "windows",
               "kind": "Installer",
               "file": "BirdsGroupIdentification_1.0.0_Setup.exe",
-              "size": "",
+              "size": "46 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password."
             },
             {
               "os": "windows",
               "kind": "No-install",
               "file": "BirdsGroupIdentification.exe",
-              "size": "",
+              "size": "50 MB",
               "note": "Runs straight from a folder or pen drive."
             },
             {
               "os": "mac",
               "kind": "App",
               "file": "BirdsGroupIdentification_1.0.0_universal.dmg",
-              "size": "",
+              "size": "91 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
               "file": "BirdsGroupIdentification_1.0.0_amd64.deb",
-              "size": "",
+              "size": "45 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
               "file": "BirdsGroupIdentification_1.0.0_offline.zip",
-              "size": "",
+              "size": "45 MB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
