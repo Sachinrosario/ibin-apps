@@ -75,6 +75,7 @@ html,body{margin:0;height:100%;background:#0f3d5c;overflow:hidden;font-family:va
   <div id="splash" class="abs" style="left:0;top:0;width:1440px;height:900px">
     <img src="img/ui/splash.png" width="1440" height="860" alt="A Field Guide to Threatened Plants of Western Ghats">
     <div class="hot" id="sArrow" title="Click here to Continue" style="left:1335px;top:447px;width:80px;height:80px"></div>
+    <div class="hot" id="sClose" title="Close" style="left:1394px;top:0;width:46px;height:24px"></div>
     <div class="abs" style="left:16px;top:745px;font:11px/15px var(--arial);color:#fff">Proprietary right holder - Dr. K.N. Ganeshaiah<br>Updated in 2026 by Dr. Sachin A. Rosario &nbsp;·&nbsp; Version <span id="ver"></span></div>
   </div>
   <div id="wins"></div>
@@ -119,7 +120,7 @@ function openWin(id, { title = '', icon, x = 0, y = 0, w = 1440, h = 900, tb = 2
   closeWin(id, true);
   const win = el('div', { class: `win${normal ? ' normal' : ''} ${cls}`, id }); pos(win, x, y, w, h);
   const bar = el('div', { class: 'tb', style: { height: px(tb) } }, [icon ? el('img', { src: icon, alt: '' }) : el('span', { style: { width: '6px' } }), title]);
-  if (max) bar.append(el('div', { class: 'ctl', style: { right: '92px' } }, '—'), el('div', { class: 'ctl', style: { right: '46px' } }, normal ? '☐' : '❐'));
+  if (max) bar.append(el('div', { class: 'ctl', title: 'Minimise', style: { right: '92px' }, onclick: () => minimiseWin(id, title) }, '—'), el('div', { class: 'ctl', title: 'Full screen on / off', style: { right: '46px' }, onclick: toggleFull }, normal ? '☐' : '❐'));
   bar.append(el('div', { class: 'ctl x', style: { right: '0' }, onclick: () => closeWin(id) }, '✕'));
   win.append(bar);
   win.addEventListener('mousedown', () => focusWin(id), true);
@@ -128,8 +129,19 @@ function openWin(id, { title = '', icon, x = 0, y = 0, w = 1440, h = 900, tb = 2
   $('#wins').append(win); focusWin(id);
   return win;
 }
+// title-bar buttons: minimise hides the window behind a button at the bottom; maximise switches full screen
+function minimiseWin(id, title) {
+  const w = W[id]; if (!w) return;
+  w.el.style.display = 'none';
+  const chip = el('div', { class: 'btn minchip', 'data-for': id, title: 'Restore', style: { position: 'absolute', left: '8px', bottom: '8px', padding: '4px 10px', font: '13px var(--sans)', zIndex: 99999 }, onclick: () => { chip.remove(); w.el.style.display = ''; focusWin(id); } }, '▣ ' + String(title).split('   ')[0].trim());
+  $('#wins').append(chip);
+}
+function toggleFull() {
+  try { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); } catch (e) {}
+}
 function focusWin(id) { if (!W[id]) return; for (const k in W) W[k].el.classList.toggle('inactive', k !== id); W[id].el.style.zIndex = ++zTop + 1; const sh = $('#' + id + '_sh'); if (sh) sh.style.zIndex = zTop; }
 function closeWin(id, silent) {
+  document.querySelectorAll(`.minchip[data-for="${id}"]`).forEach(c => c.remove());
   const w = W[id]; if (!w) return; w.el.remove(); const sh = $('#' + id + '_sh'); if (sh) sh.remove(); delete W[id];
   if (!silent && w.onClose) w.onClose();
 }
@@ -202,6 +214,17 @@ function rightPanel(win, dx, dy, onBack, focusDetails = true) {
 let refresh = () => {};
 
 /* ---------- splash ---------- */
+$('#sClose').onclick = quitApp;
+// A web page cannot always close its own window, so after trying, show a "closed" screen with a way back in.
+function quitApp() {
+  try { window.close(); } catch (e) {}
+  setTimeout(() => {
+    if ($('#quit')) return;
+    const q = el('div', { id: 'quit', style: { position: 'fixed', inset: 0, zIndex: 100000, background: '#0f3d5c', color: '#fff', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px', font: '20px var(--arial)' } },
+      [el('div', {}, 'Threatened Plants of Western Ghats is closed. You can close this window.'), el('div', { class: 'btn', style: { position: 'static', padding: '8px 18px', color: '#000' }, onclick: () => q.remove() }, 'Open it again')]);
+    document.body.append(q);
+  }, 300);
+}
 $('#sArrow').onclick = () => { $('#splash').hidden = true; showMain('Choose Characters'); };
 function exitApp() { for (const k of Object.keys(W)) closeWin(k, true); S.sel = []; S.list = null; $('#splash').hidden = false; }
 
