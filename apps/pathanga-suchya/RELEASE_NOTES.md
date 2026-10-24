@@ -1,6 +1,8 @@
-## Pathanga Suchya – Version 3 (3.0.1)
+## Pathanga Suchya – Version 3 (3.0.2)
 
-3.0.1 centres the program's screen in wide windows; everything else is as in 3.0.0.
+Exit on the opening screen now closes the program, and the minimise button of the windows works.
+
+3.0.2 centres the program's screen in wide windows; everything else is as in 3.0.0.
 
 A faithful rebuild of **Pathanga Suchya 3.0** (2018), the butterfly identification program for the butterflies of Bangalore by Dr. K.N. Ganeshaiah (GKVK). The screens, wording, pictures and matching rules are taken from the original program.
 
@@ -15,11 +17,11 @@ Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A
 ### Downloads
 | File | For |
 |---|---|
-| `PathangaSuchya_3.0.1_Setup.exe` | Windows 10/11: installs with Start-menu and desktop shortcuts, no administrator password |
+| `PathangaSuchya_3.0.2_Setup.exe` | Windows 10/11: installs with Start-menu and desktop shortcuts, no administrator password |
 | `PathangaSuchya.exe` | Windows: runs without installing |
-| `PathangaSuchya_3.0.1_universal.dmg` | macOS (Intel and Apple silicon) |
-| `PathangaSuchya_3.0.1_amd64.deb` | Ubuntu 22.04 or newer |
-| `PathangaSuchya_3.0.1_offline.zip` | Any computer: extract, then open `Open Kit.html` |
+| `PathangaSuchya_3.0.2_universal.dmg` | macOS (Intel and Apple silicon) |
+| `PathangaSuchya_3.0.2_amd64.deb` | Ubuntu 22.04 or newer |
+| `PathangaSuchya_3.0.2_offline.zip` | Any computer: extract, then open `Open Kit.html` |
 
 ### Differences from the 2018 program
 - **Butterfly View**: in the 2018 package this stops with "File not found", because the database lists photos named like `Baronet-1.jpg` that are not in the folders. Version 3 shows the photos that are actually in each species folder.
