@@ -61,11 +61,15 @@ h1{font-size:clamp(30px,5vw,44px)}
 .os.mine{border-color:var(--leaf);box-shadow:inset 0 0 0 1px var(--leaf)}
 .os h4{margin:0 0 8px;font-size:15px;display:flex;justify-content:space-between;gap:8px}
 .os h4 small{font-weight:600;color:var(--leaf);font-size:12px}
-.file{display:flex;flex-direction:column;gap:2px;padding:8px 0;border-top:1px solid var(--rule)}
-.file:first-of-type{border-top:0;padding-top:0}
-.file a,.file span.name{font-weight:600;color:var(--leaf);overflow-wrap:anywhere}
-.file span.name{color:var(--muted)}
-.file small{color:var(--muted);font-size:13px}
+.os{display:flex;flex-direction:column}
+.file{display:flex;flex-direction:column;gap:6px;margin-top:8px;text-decoration:none;color:inherit;border-radius:8px}
+.file .get{display:flex;align-items:center;justify-content:center;gap:8px;padding:9px 10px;border-radius:8px;background:var(--leaf);color:var(--sheet);font-weight:700;text-align:center;overflow-wrap:anywhere}
+.file .get svg{flex:none}
+a.file:hover .get{filter:brightness(1.12)}
+a.file:focus-visible{outline:3px solid var(--cane);outline-offset:2px}
+.file.off .get{background:var(--rule);color:var(--muted)}
+.file small{color:var(--muted);font-size:13px;overflow-wrap:anywhere}
+.file small.fn{font-size:12px;font-family:ui-monospace,Consolas,monospace}
 .vswitch{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .vswitch button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:10px;padding:8px 14px;cursor:pointer;text-align:left;font:inherit}
 .vswitch button small{color:var(--muted);font-size:12px}
@@ -139,7 +143,9 @@ function render(){
         files.map(d=>{
           const ok=e.published&&d.live!==false;
           const name=`${esc(d.kind)}${d.size?' · '+esc(d.size):''}`;
-          return `<div class="file">${ok?`<a href="${base}/download/${tag}/${encodeURIComponent(d.file)}" rel="noopener">${name}</a>`:`<span class="name">${name}</span>`}<small>${esc(d.note)}</small></div>`;
+          const icon=`<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1v9M4 6.5 8 10.5 12 6.5M2 14h12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+          return ok?`<a class="file" href="${base}/download/${tag}/${encodeURIComponent(d.file)}" download="${esc(d.file)}" title="Download ${esc(d.file)}"><span class="get">${icon}Download ${name}</span><small>${esc(d.note)}</small><small class="fn">${esc(d.file)}</small></a>`
+                   :`<div class="file off"><span class="get">${name} – not ready yet</span><small>${esc(d.note)}</small></div>`;
         }).join('')+`</div>`;
     }).join('');
     const sw=eds.length>1?`<div class="vswitch" role="tablist" aria-label="Choose a version">${eds.map(x=>`<button type="button" role="tab" aria-selected="${x===e}" class="${x===e?'on':''}" data-app="${ai}" data-ed="${esc(x.key)}"><b>${esc(x.label)}</b><small>${esc(x.version)}</small></button>`).join('')}</div>`:'';

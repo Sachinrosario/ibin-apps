@@ -213,7 +213,7 @@ function openWin(id, { title, icon, x, y, cw, ch, modal = false, minmax = false,
   const tb = el('div', { class: 'tb' }, [icon ? el('img', { src: icon, alt: '' }) : el('span', { style: { width: '8px' } }), title]);
   const x_ = el('div', { class: 'x', title: 'Close', onclick: () => closeWin(id) }, '✕');
   tb.append(x_);
-  if (minmax) { tb.append(el('div', { class: 'mm', style: { right: '90px' } }, '—'), el('div', { class: 'mm dis', style: { right: '45px' } }, '☐')); }
+  if (minmax) { tb.append(el('div', { class: 'mm', title: 'Minimise', style: { right: '90px' }, onclick: () => minimiseWin(id, title) }, '—'), el('div', { class: 'mm dis', style: { right: '45px' } }, '☐')); }
   const cl = el('div', { class: 'cl' }); pos(cl, 0, 26, cw, ch);
   w.append(tb, cl);
   w.addEventListener('mousedown', () => focusWin(id), true);
@@ -229,6 +229,7 @@ function focusWin(id) {
   const sh = document.getElementById(id + '_shield'); if (sh) sh.style.zIndex = zTop - 1;
 }
 function closeWin(id, silent) {
+  document.querySelectorAll(`.minchip[data-for="${id}"]`).forEach(c => c.remove());
   const w = W[id]; if (!w) return;
   w.el.remove(); const sh = document.getElementById(id + '_shield'); if (sh) sh.remove();
   delete W[id];
@@ -281,8 +282,27 @@ function msgBox(text, title = 'Project1', after) {
   $('#ver').textContent = K.version;
 })();
 function exitProgram() {
+  const atStart = !$('#open').hidden && !Object.keys(W).length;
   for (const k of Object.keys(W)) closeWin(k, true);
   $('#open').hidden = false;
+  if (atStart) quitApp();          // Exit on the opening screen closes the program, as in the original
+}
+// A web page cannot always close its own window, so after trying, show a "closed" screen with a way back in.
+function quitApp() {
+  try { window.close(); } catch (e) {}
+  setTimeout(() => {
+    if ($('#quit')) return;
+    const q = el('div', { id: 'quit', style: { position: 'fixed', inset: 0, zIndex: 100000, background: '#0f3d5c', color: '#fff', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px', font: '20px var(--arial)' } },
+      [el('div', {}, 'Pathanga Suchya is closed. You can close this window.'), el('div', { class: 'btn', style: { position: 'static', padding: '8px 18px', color: '#000' }, onclick: () => q.remove() }, 'Open it again')]);
+    document.body.append(q);
+  }, 300);
+}
+// Minimise hides the window behind a button at the bottom of the screen; clicking it brings the window back.
+function minimiseWin(id, title) {
+  const w = W[id]; if (!w) return;
+  w.el.style.display = 'none';
+  const chip = el('div', { class: 'btn minchip', 'data-for': id, title: 'Restore', style: { position: 'absolute', left: '8px', bottom: '8px', width: 'auto', height: 'auto', padding: '4px 10px', zIndex: 99999 }, onclick: () => { chip.remove(); w.el.style.display = ''; focusWin(id); } }, '▣ ' + String(title));
+  $('#wins').append(chip);
 }
 function showHelp() {
   // The original Help button opens "Patanga Suchya.doc", which is not part of the package.
