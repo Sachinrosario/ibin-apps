@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-24",
+  "updated": "2026-10-27",
   "owner": "Sachinrosario",
   "releasesRepo": "ibin-apps",
   "apps": [
@@ -294,6 +294,69 @@
       "origin": "RET Kit: A Field Guide to Threatened Plants of Western Ghats, Prof. K.N. Ganeshaiah, School of Ecology and Conservation, UAS Bangalore (2015–2016).",
       "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
       "editions": [
+        {
+          "id": "threatened-plants-2",
+          "key": "v2",
+          "label": "Version 2 – Updated (2026)",
+          "versionName": "Version 2 – Updated",
+          "version": "2.0.0",
+          "released": "2026-10-27",
+          "published": true,
+          "summary": "New design that also works on phones: 178 threatened plants (77 added in 2026), Catalogue of Life names (2015 names kept in brackets), current IUCN status with year, FRLHT/TDU status by state, close matches and best next question, credited field photos and a 'What's changed' page.",
+          "facts": [
+            "178 threatened plants",
+            "77 added in 2026",
+            "Catalogue of Life names",
+            "IUCN status updated",
+            "Works on phones"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/threatened-plants-2/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "ThreatenedPlants2_2.0.0_Setup.exe",
+              "size": "32 MB",
+              "note": "Installs beside Version 1. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "ThreatenedPlants2.exe",
+              "size": "36 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "ThreatenedPlants2_2.0.0_universal.dmg",
+              "size": "68 MB",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "ThreatenedPlants2_2.0.0_amd64.deb",
+              "size": "31 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "ThreatenedPlants2_2.0.0_offline.zip",
+              "size": "30 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "2.0.0",
+              "date": "2026-10-27",
+              "text": "New design; names checked in Catalogue of Life (12 renamed, old names in brackets); IUCN status updated with year (60 changes); FRLHT/TDU status by state; 77 threatened species added with characters from published descriptions; 11 species marked no longer threatened; credited photos; What's changed page."
+            }
+          ]
+        },
         {
           "id": "threatened-plants",
           "key": "v1",

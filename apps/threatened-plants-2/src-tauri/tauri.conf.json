@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Threatened Plants of Western Ghats 2",
+  "mainBinaryName": "threatened-plants-2",
+  "version": "2.0.0",
+  "identifier": "in.ibinapps.threatenedplants2",
+  "build": {
+    "frontendDist": "../web"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Threatened Plants of Western Ghats 2",
+        "width": 1360,
+        "height": 900,
+        "minWidth": 960,
+        "minHeight": 620,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "publisher": "IBIN Apps",
+    "copyright": "Threatened Plants of Western Ghats (c) 2015-2016 K.N. Ganeshaiah, UAS Bangalore. Rebuild 2026.",
+    "category": "Education",
+    "shortDescription": "Field guide to the threatened plants of the Western Ghats",
+    "longDescription": "Version 2 – Updated of the RET Kit, A Field Guide to Threatened Plants of Western Ghats (Prof. K.N. Ganeshaiah, UAS Bangalore, 2015-2016): identify 178 threatened plants (101 original and 77 added in 2026) from their characters, with current names (Catalogue of Life) and conservation status (IUCN, BSI, FRLHT/TDU), species sheets and credited photos.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    }
+  }
+}
