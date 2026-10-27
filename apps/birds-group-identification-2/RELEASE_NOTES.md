@@ -11,7 +11,7 @@ Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A
 - **Why?** Each group lists which of your answers fit it and which do not.
 - **Group pages** for all 222 groups, each with:
   - credited photographs from iNaturalist and Wikimedia Commons;
-  - the group's species recorded in India, with Catalogue of Life names (the older name shown in brackets where it has changed) and IUCN status;
+  - the group's species recorded in India (1,432 species across the 222 groups), with Catalogue of Life names (the older name shown in brackets where it has changed) and IUCN status;
   - records by state and by month;
   - similar groups.
 - **Where and when filters.** Choose a state and a month to favour the groups recorded there.

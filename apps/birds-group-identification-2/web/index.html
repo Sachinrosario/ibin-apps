@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Birds Group Identification 2</title>
+<meta name="theme-color" content="#1F5F73">
+<link rel="icon" href="img/ui/icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+@font-face{font-family:"Kalam";src:url(fonts/kalam-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"Atkinson";src:url(fonts/atkinson-hyperlegible-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Atkinson";src:url(fonts/atkinson-hyperlegible-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"Atkinson";src:url(fonts/atkinson-hyperlegible-latin-400-italic.woff2) format("woff2");font-weight:400;font-style:italic;font-display:swap}
+:root{
+  --paper:#F5F8F8; --panel:#FFFFFF; --ink:#18282C; --muted:#56676B; --rule:#D7E1E3;
+  --sky:#1F5F73; --sky-soft:#DDEBEF; --marigold:#E89A12; --marigold-soft:#FCEFD2; --red:#B3264D; --green:#2E7D4F;
+  --hand:"Kalam","Segoe Print",cursive; --ui:"Atkinson",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r-sm:6px; --r-md:12px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 var(--ui)}
+img{max-width:100%;display:block}
+a{color:var(--sky)}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--marigold);outline-offset:2px}
+[hidden]{display:none!important}
+.sci{font-style:italic}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+.wrap{max-width:1280px;margin:0 auto;padding:0 18px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+/* header */
+header.top{background:var(--panel);border-bottom:1px solid var(--rule);position:sticky;top:0;z-index:20}
+header.top .wrap{display:flex;align-items:center;gap:22px;min-height:64px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.brand img{width:40px;height:40px;border-radius:8px}
+.brand b{display:block;font:700 24px/1 var(--hand);color:var(--sky)}
+.brand small{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+nav.main{display:flex;gap:4px;flex-wrap:wrap}
+nav.main a{padding:7px 12px;border-radius:var(--r-sm);text-decoration:none;color:var(--ink);font-weight:700}
+nav.main a:hover{background:var(--sky-soft)}
+nav.main a[aria-current]{background:var(--ink);color:#fff}
+.find{margin-left:auto;position:relative}
+.find input{width:240px;padding:8px 12px;border:1px solid var(--rule);border-radius:var(--r-sm);background:var(--paper)}
+.find .res{position:absolute;right:0;top:42px;width:340px;background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);box-shadow:0 12px 32px rgba(0,0,0,.16);max-height:420px;overflow:auto;z-index:30}
+.find .res a{display:flex;gap:10px;align-items:center;padding:7px 10px;text-decoration:none;color:inherit;border-bottom:1px solid var(--rule)}
+.find .res a:hover,.find .res a.sel{background:var(--marigold-soft)}
+.find .res img{width:52px;height:40px;object-fit:cover;border-radius:4px;flex:none;background:var(--sky-soft)}
+.find .res small{display:block;color:var(--muted)}
+main{padding:22px 0 60px}
+h1{font:700 38px/1.1 var(--hand);color:var(--sky);margin:0 0 6px}
+h2{font-size:20px;margin:0 0 10px}
+h3{font-size:17px;margin:0 0 8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--r-sm);border:1px solid var(--rule);background:#fff;font-weight:700;cursor:pointer;text-decoration:none;color:var(--ink)}
+.btn:hover{border-color:var(--sky)}
+.btn.primary{background:var(--sky);border-color:var(--sky);color:#fff}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.small{padding:4px 10px;font-size:14px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 6px 3px 11px;border-radius:999px;background:var(--marigold-soft);border:1px solid var(--marigold);font-size:14px;cursor:pointer}
+.chip button{border:0;background:none;cursor:pointer;padding:0 4px;font-weight:700;color:var(--muted)}
+/* identify */
+.idgrid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:22px;align-items:start}
+.panel{background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);padding:16px}
+.modes{display:inline-flex;border:1px solid var(--rule);border-radius:999px;overflow:hidden;margin-bottom:10px}
+.modes button{border:0;background:#fff;padding:7px 16px;cursor:pointer;font-weight:700;display:flex;gap:8px;align-items:center}
+.modes button img{height:26px;width:auto}
+.modes button[aria-pressed=true]{background:var(--ink);color:#fff}
+.modes button[aria-pressed=true] img{filter:invert(1)}
+.board{position:relative;width:100%}
+.board>img{width:100%;height:auto;user-select:none}
+.part{position:absolute;border:2px solid transparent;border-radius:8px;background:transparent;cursor:pointer;padding:0}
+.part:hover,.part:focus-visible{border-color:var(--sky);background:rgba(31,95,115,.10)}
+.part.cur{border-color:var(--ink);background:rgba(24,40,44,.10)}
+.part.done::after{content:"✓";position:absolute;right:-12px;top:-12px;width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font:700 14px/22px var(--ui);text-align:center}
+.part.next{border-color:var(--marigold);border-style:dashed;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{background:rgba(232,154,18,.18)}}
+@media (prefers-reduced-motion:reduce){.part.next{animation:none}}
+.answers{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;min-height:30px;align-items:center}
+.actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.filters label{font-size:14px;color:var(--muted);display:flex;flex-direction:column;gap:3px}
+.filters select{padding:6px 8px;border:1px solid var(--rule);border-radius:var(--r-sm);background:#fff;color:var(--ink)}
+.next-tip{display:flex;gap:12px;align-items:center;justify-content:space-between;background:var(--marigold-soft);border:1px solid var(--marigold);border-radius:var(--r-md);padding:10px 14px;margin:14px 0}
+.next-tip b{color:var(--ink)}
+.qpanel{margin-top:14px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.tabs button{border:1px solid var(--rule);background:#fff;border-radius:999px;padding:5px 12px;cursor:pointer;font-size:14px}
+.tabs button.cur{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tabs button.answered{background:var(--marigold-soft);border-color:var(--marigold)}
+.tabs button.cur.answered{background:var(--ink);color:#fff;border-color:var(--marigold)}
+.qhead h2{font:700 24px/1.25 var(--hand);color:var(--sky);margin:0}
+.qhead p{margin:2px 0 0;color:var(--muted);font-size:14px}
+.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:12px}
+.opt{position:relative;border:1px solid var(--rule);border-radius:var(--r-md);background:#fff;padding:6px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:6px}
+.opt:hover{border-color:var(--sky)}
+.opt.sel{border:2px solid var(--marigold);background:var(--marigold-soft);padding:5px}
+.opt .pic{aspect-ratio:1;border-radius:var(--r-sm);background:#fff center/contain no-repeat;border:1px solid var(--rule)}
+.opt b{font-size:15px;line-height:1.2}
+.opt small{color:var(--muted);font-size:13px}
+.opt.none{opacity:.5}
+.opt .ex{position:absolute;right:10px;top:10px;border:0;border-radius:999px;background:rgba(24,40,44,.75);color:#fff;font-size:12px;padding:2px 8px;cursor:pointer}
+.opt.dk .pic{display:flex;align-items:center;justify-content:center;font:700 60px/1 var(--hand);color:var(--muted);background:var(--paper)}
+/* results */
+.results h2{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.rlist{display:flex;flex-direction:column;gap:8px}
+.res{display:grid;grid-template-columns:72px 1fr;gap:12px;border:1px solid var(--rule);border-radius:var(--r-md);background:#fff;padding:8px;align-items:center}
+.res .ph{width:72px;height:56px;border-radius:6px;background:var(--sky-soft) center/cover}
+.res a.nm{font-weight:700;text-decoration:none;color:var(--ink)}
+.res a.nm:hover{text-decoration:underline}
+.bar{height:8px;border-radius:99px;background:var(--sky-soft);overflow:hidden;margin:4px 0 2px}
+.bar i{display:block;height:100%;background:var(--sky);border-radius:99px}
+.res .pct{font-variant-numeric:tabular-nums;font-weight:700}
+.res details{grid-column:1/-1;font-size:14px}
+.res details summary{cursor:pointer;color:var(--sky)}
+.why{list-style:none;padding:0;margin:6px 0 0;display:grid;gap:3px}
+.why li::before{display:inline-block;width:20px;font-weight:700}
+.why .y::before{content:"✓";color:var(--green)}
+.why .s::before{content:"~";color:var(--marigold)}
+.why .n::before{content:"✗";color:var(--red)}
+.why .u::before{content:"?";color:var(--muted)}
+.mobilebar{display:none}
+/* lists, cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+.card{background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column}
+.card:hover{border-color:var(--sky)}
+.card .ph{aspect-ratio:4/3;background:var(--sky-soft) center/cover}
+.card .tx{padding:8px 11px 11px}
+.card b{display:block;line-height:1.25}
+.card small{color:var(--muted)}
+.filterbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0 16px}
+.filterbar input,.filterbar select{padding:7px 10px;border:1px solid var(--rule);border-radius:var(--r-sm);background:#fff}
+/* group page */
+.ghead{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px}
+.ggrid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:22px;align-items:start}
+.viewer{background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);padding:12px}
+.viewer .main{background:#111;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;aspect-ratio:4/3;overflow:hidden}
+.viewer .main img{width:100%;height:100%;object-fit:contain;cursor:zoom-in}
+.viewer .credit{font-size:13px;color:var(--muted);margin:8px 2px}
+.thumbs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px}
+.thumbs button{flex:none;width:78px;height:60px;border:2px solid transparent;border-radius:5px;padding:0;background:var(--sky-soft) center/cover;cursor:pointer}
+.thumbs button.sel{border-color:var(--marigold)}
+.block{background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);padding:16px;margin-top:20px}
+table.t{width:100%;border-collapse:collapse;font-size:14px}
+table.t th,table.t td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--rule);vertical-align:top}
+table.t th{background:var(--paper)}
+.iucn{display:inline-block;font-size:12px;font-weight:700;border-radius:4px;padding:0 6px;color:#fff;background:#6b7b7f}
+.iucn.CR{background:#c0182b}.iucn.EN{background:#e0571b}.iucn.VU{background:#d39b0b}.iucn.NT{background:#7a9a2a}.iucn.LC{background:#2e7d4f}.iucn.DD{background:#888}
+.months{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;align-items:end;height:90px;margin-top:6px}
+.months div{display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;height:100%;font-size:11px;text-align:center}
+.months i{display:block;background:var(--sky);border-radius:3px 3px 0 0;min-height:2px}
+.states{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:4px 16px;font-size:14px}
+.states div{display:grid;grid-template-columns:1fr 70px;gap:8px;align-items:center}
+.states i{display:block;height:8px;background:var(--sky);border-radius:99px}
+.profile{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px 18px;font-size:14px}
+.profile h4{margin:0 0 3px;font-size:14px}
+.pv{display:grid;grid-template-columns:1fr 46px;gap:6px;align-items:center}
+.pv i{display:block;height:7px;background:var(--marigold);border-radius:99px}
+.cmp{display:grid;grid-template-columns:200px 1fr 1fr;gap:0;font-size:14px;background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);overflow:hidden}
+.cmp>div{padding:6px 10px;border-bottom:1px solid var(--rule)}
+.cmp .h{background:var(--paper);font-weight:700}
+.cmp .diff{background:var(--marigold-soft)}
+/* dialogs */
+dialog{border:0;border-radius:var(--r-md);padding:0;max-width:560px;width:calc(100% - 30px);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(10,20,22,.55)}
+dialog .in{padding:18px}
+dialog .foot{display:flex;justify-content:flex-end;gap:8px;padding:12px 18px;background:var(--paper)}
+dialog select,dialog textarea{width:100%;padding:8px;border:1px solid var(--rule);border-radius:var(--r-sm);margin-top:6px}
+.lightbox{position:fixed;inset:0;background:rgba(10,15,15,.9);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px;flex-direction:column;gap:10px;color:#fff}
+.lightbox img{max-height:80vh;width:auto;border-radius:6px}
+.lightbox .x{position:absolute;top:14px;right:18px;background:none;border:0;color:#fff;font-size:30px;cursor:pointer}
+.lightbox .nav{position:absolute;top:50%;border:0;background:rgba(255,255,255,.15);color:#fff;font-size:34px;width:48px;height:70px;cursor:pointer;margin-top:-35px}
+.lightbox p{max-width:900px;text-align:center;font-size:14px;margin:0}
+.lightbox a{color:#bfe6f2}
+footer{border-top:1px solid var(--rule);padding:18px 0 40px;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.prose{max-width:780px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:var(--r-md);z-index:60}
+@media (max-width:900px){
+  .idgrid,.ggrid{grid-template-columns:minmax(0,1fr)}
+  .find{margin-left:0;width:100%}.find input{width:100%}.find .res{width:100%}
+  header.top{position:static}
+  h1{font-size:30px}
+  .opts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .cmp{grid-template-columns:110px 1fr 1fr}
+  .mobilebar{display:flex;position:sticky;bottom:0;z-index:15;background:var(--ink);color:#fff;padding:10px 14px;gap:10px;align-items:center;justify-content:space-between;border-radius:var(--r-md) var(--r-md) 0 0}
+  .mobilebar a{color:#fff;font-weight:700}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="#/"><img src="img/ui/icon.png" alt=""><span><b>Birds Group Identification</b><small>Version 2 – Updated · IBIN Apps</small></span></a>
+  <nav class="main" aria-label="Main">
+    <a href="#/">Identify</a><a href="#/groups">All groups</a><a href="#/compare">Compare</a><a href="#/about">About</a>
+  </nav>
+  <div class="find"><label class="sr" for="q">Search bird groups</label><input id="q" type="search" placeholder="Search groups or species…" autocomplete="off"><div class="res" hidden></div></div>
+</div></header>
+<main id="main" class="wrap" tabindex="-1"></main>
+<footer><div class="wrap">
+  <span>Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario · Version <span id="ver"></span></span>
+  <span>Names: Catalogue of Life · Records: GBIF · Photos: iNaturalist and Wikimedia Commons contributors (credited on each picture)</span>
+</div></footer>
+<dialog id="dlg"></dialog>
+<script src="data/birds2.js"></script>
+<script>
+"use strict";
+const B = window.BIRD;
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const G = Object.fromEntries(B.groups.map(g => [g.id, g]));
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+$('#ver').textContent = B.version;
+function store(k, v) { try { if (v === undefined) return JSON.parse(localStorage.getItem('bgi2.' + k)); localStorage.setItem('bgi2.' + k, JSON.stringify(v)); } catch (e) { return undefined; } }
+function toast(t) { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.append(d); setTimeout(() => d.remove(), 2600); }
+
+/* ---------------- state ---------------- */
+const S = store('state') || {};
+S.mode = S.mode || 'sit'; S.ans = S.ans || {}; S.dk = S.dk || []; S.region = S.region || ''; S.month = S.month || ''; S.cur = S.cur ?? null;
+let HIST = [], SHOW = 8;
+const save = () => store('state', S);
+const M = () => B.modes[S.mode];
+const CHAR = idx => M().chars[idx];
+const TAB = idx => B.tables[CHAR(idx).table];
+const label = (idx, k) => (TAB(idx).values.find(v => v.key === k) || { label: k }).label;
+const isYesNo = idx => ['crown', 'is there neck marking', 'is there eye marking'].includes(CHAR(idx).caption.toLowerCase());
+function visible(idx) {           // the marking questions appear only after "Yes" to "Is there ... Marking"
+  const c = CHAR(idx).caption.toLowerCase();
+  if (c === 'eye markings') return (S.ans[19] || []).includes('yes');
+  if (c === 'neck markings' && S.mode === 'sit') return (S.ans[9] || []).includes('yes');
+  return true;
+}
+function push() { HIST.push(JSON.stringify({ ans: S.ans, dk: S.dk })); if (HIST.length > 60) HIST.shift(); }
+
+/* ---------------- the probability model ----------------
+   Original program: a group is dropped as soon as one answer does not fit it, and the ranking score is hidden.
+   Version 2: P(answer | group) = the share of the group's species showing the value (the original "per" column),
+   softened so that one wrong or unsure answer lowers a group instead of removing it. Unknown data counts as neutral.
+   Region and month (optional) weight groups by their records in GBIF. Probabilities add up to 100 %. */
+const EPS = 0.04, NEUTRAL = 0.35;
+function like(gid, idx, keys) {
+  const rows = TAB(idx).data[gid];
+  if (!rows || !rows.length) return NEUTRAL;
+  let p = 0; for (const [k, per] of rows) if (keys.includes(k)) p += per / 100;
+  p = Math.min(1, p);
+  return EPS + (1 - 2 * EPS) * p;
+}
+function prior(g) {
+  let f = 1;
+  if (S.region) { const n = (g.geo.states || {})[S.region] || 0; f *= n > 0 ? 1 : 0.12; }
+  if (S.month) { const m = +S.month - 1, tot = g.geo.months.reduce((a, b) => a + b, 0); f *= !tot ? 1 : (g.geo.months[m] > 0 ? 1 : 0.15); }
+  return f;
+}
+function posterior(ans = S.ans) {
+  const out = B.groups.map(g => { let p = prior(g); for (const [i, keys] of Object.entries(ans)) if (keys.length) p *= like(g.id, +i, keys); return { g, p }; });
+  const tot = out.reduce((a, r) => a + r.p, 0) || 1;
+  out.forEach(r => r.p /= tot);
+  return out.sort((a, b) => b.p - a.p || a.g.name.localeCompare(b.g.name));
+}
+const entropy = post => -post.reduce((a, r) => a + (r.p > 0 ? r.p * Math.log2(r.p) : 0), 0);
+function bestNext(post) {     // the unanswered character whose answer is expected to narrow the list most
+  const H0 = entropy(post); let best = null;
+  for (const idx of Object.keys(M().chars).map(Number)) {
+    if (S.ans[idx] || S.dk.includes(idx) || !visible(idx)) continue;
+    const t = TAB(idx); let exp = 0, mass = 0;
+    for (const v of t.values) {
+      let pv = 0; const cond = post.map(r => { const rows = t.data[r.g.id] || []; const q = (rows.find(x => x[0] === v.key) || [0, 0])[1] / 100; const w = r.p * q; pv += w; return w; });
+      if (pv <= 0) continue;
+      exp += pv * -cond.reduce((a, w) => a + (w > 0 ? (w / pv) * Math.log2(w / pv) : 0), 0); mass += pv;
+    }
+    if (!mass) continue;
+    const gain = H0 - exp / mass;
+    if (!best || gain > best.gain) best = { idx, gain };
+  }
+  return best;
+}
+function partOf(idx) { for (const [k, list] of Object.entries(M().sections)) if (list.includes(idx)) return k; return null; }
+
+/* ---------------- router ---------------- */
+const routes = { '': identify, 'groups': groupsPage, 'group': groupPage, 'compare': comparePage, 'about': about };
+function go() {
+  const [p, ...rest] = location.hash.replace(/^#\/?/, '').split('/');
+  $$('nav.main a').forEach(a => a.toggleAttribute('aria-current', a.getAttribute('href') === '#/' + (p === 'group' ? 'groups' : p)));
+  (routes[p] || identify)(...rest.map(decodeURIComponent));
+  if (p) window.scrollTo(0, 0);
+}
+addEventListener('hashchange', go);
+
+/* ---------------- Identify ---------------- */
+function identify() {
+  const post = posterior(), nxt = bestNext(post);
+  if (S.cur == null || !CHAR(S.cur) || !visible(S.cur)) S.cur = nxt ? nxt.idx : Number(Object.keys(M().chars)[0]);
+  const answered = Object.keys(S.ans).length;
+  const top = post.slice(0, SHOW);
+  const main = $('#main');
+  main.innerHTML = `
+  <h1>Which bird group is it?</h1>
+  <p class="muted" style="margin-top:0">Click a part of the bird, choose what you see — or “Don't know”. The list on the right shows how likely each of the ${B.groups.length} groups is.</p>
+  <div class="idgrid">
+    <div>
+      <div class="panel">
+        <div class="modes" role="group" aria-label="How do you see the bird?">
+          <button data-mode="sit" aria-pressed="${S.mode === 'sit'}"><img src="img/ui/sit.png" alt="">Sitting / standing</button>
+          <button data-mode="fly" aria-pressed="${S.mode === 'fly'}"><img src="img/ui/fly.png" alt="">Flying</button>
+        </div>
+        <div class="board"><img src="${M().board.src}" alt="Bird picture with its parts labelled" width="${M().board.w}" height="${M().board.h}">
+          ${M().parts.map(p => { const list = M().sections[p.key]; const done = list.some(i => S.ans[i] || S.dk.includes(i)); const cur = list.includes(S.cur); const isNext = nxt && list.includes(nxt.idx);
+            return `<button class="part ${done ? 'done' : ''} ${cur ? 'cur' : ''} ${isNext && !cur ? 'next' : ''}" data-part="${p.key}" style="left:${p.x}%;top:${p.y}%;width:${p.w}%;height:${p.h}%" aria-label="${esc(p.label)}${done ? ' (answered)' : ''}"></button>`; }).join('')}
+        </div>
+        <div class="answers">${answered ? Object.entries(S.ans).map(([i, ks]) => `<span class="chip" data-edit="${i}" title="Change">${esc(CHAR(+i).caption)}: <b>${ks.map(k => esc(label(+i, k))).join(' or ')}</b><button data-del="${i}" aria-label="Remove this answer">✕</button></span>`).join('') : '<span class="muted small">No answers yet.</span>'}</div>
+        <div class="actions">
+          <button class="btn small" id="undo" ${HIST.length ? '' : 'disabled'}>↶ Undo</button>
+          <button class="btn small" id="reset" ${answered || S.dk.length ? '' : 'disabled'}>Start over</button>
+        </div>
+        <div class="filters">
+          <label>Where? <select id="region"><option value="">Anywhere in India</option>${Object.entries(B.states).sort((a, b) => a[1].localeCompare(b[1])).map(([k, n]) => `<option value="${k}" ${S.region === k ? 'selected' : ''}>${esc(n)}</option>`).join('')}</select></label>
+          <label>When? <select id="month"><option value="">Any month</option>${MONTHS.map((m, i) => `<option value="${i + 1}" ${+S.month === i + 1 ? 'selected' : ''}>${m}</option>`).join('')}</select></label>
+        </div>
+      </div>
+      ${nxt && S.cur !== nxt.idx ? `<div class="next-tip"><span>Best next question: <b>${esc(CHAR(nxt.idx).caption)}</b> <span class="muted small">— it separates the likely groups most.</span></span><button class="btn small primary" data-goto="${nxt.idx}">Answer it</button></div>` : ''}
+      <div class="panel qpanel" id="qpanel"></div>
+    </div>
+    <section class="results" aria-labelledby="rh">
+      <h2 id="rh"><span>Most likely groups</span><span class="muted small">${answered ? `${answered} answer${answered > 1 ? 's' : ''}` : 'all groups equally likely'}</span></h2>
+      <div class="rlist">${top.map(r => resRow(r)).join('')}</div>
+      <div class="actions">${SHOW < 40 ? '<button class="btn small" id="more">Show more</button>' : ''}<a class="btn small" href="#/groups">See all groups</a>${answered ? '<button class="btn small" id="fb">Was this right? Tell us</button>' : ''}</div>
+    </section>
+  </div>
+  <div class="mobilebar"><span>Top: <b>${esc(top[0].g.name)}</b> ${pct(top[0].p)}</span><a href="#rh">See list ↑</a></div>`;
+  drawQuestion(post);
+  // events
+  $$('.modes button').forEach(b => b.onclick = () => { if (S.mode === b.dataset.mode) return; push(); S.mode = b.dataset.mode; S.ans = {}; S.dk = []; S.cur = null; save(); identify(); });
+  $$('.part').forEach(b => b.onclick = () => { const list = M().sections[b.dataset.part].filter(visible); const open = list.find(i => !S.ans[i] && !S.dk.includes(i)); S.cur = open ?? list[0]; save(); identify(); $('#qpanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); });
+  $$('[data-del]').forEach(b => b.onclick = e => { e.stopPropagation(); push(); delete S.ans[b.dataset.del]; cleanup(); save(); identify(); });
+  $$('[data-edit]').forEach(c => c.onclick = () => { S.cur = +c.dataset.edit; save(); identify(); });
+  $$('[data-goto]').forEach(b => b.onclick = () => { S.cur = +b.dataset.goto; save(); identify(); });
+  $('#undo').onclick = () => { const h = HIST.pop(); if (!h) return; Object.assign(S, JSON.parse(h)); save(); identify(); };
+  $('#reset').onclick = () => { push(); S.ans = {}; S.dk = []; S.cur = null; save(); identify(); };
+  $('#region').onchange = e => { S.region = e.target.value; save(); identify(); };
+  $('#month').onchange = e => { S.month = e.target.value; save(); identify(); };
+  const fb = $('#fb'); if (fb) fb.onclick = () => feedback(post);
+  const more = $('#more'); if (more) more.onclick = () => { SHOW += 16; identify(); };
+}
+const pct = p => p >= 0.995 ? '99%+' : p < 0.001 ? '<0.1%' : (p * 100).toFixed(p < 0.1 ? 1 : 0) + '%';
+function resRow(r) {
+  const g = r.g, ph = g.photos[0];
+  const why = Object.entries(S.ans).map(([i, ks]) => {
+    const rows = TAB(+i).data[g.id];
+    if (!rows || !rows.length) return `<li class="u">${esc(CHAR(+i).caption)}: no data for this group</li>`;
+    const p = Math.min(100, rows.filter(x => ks.includes(x[0])).reduce((a, x) => a + x[1], 0));
+    const cls = p >= 50 ? 'y' : p > 0 ? 's' : 'n';
+    const have = rows.filter(x => x[1] > 0).sort((a, b) => b[1] - a[1]).map(x => `${label(+i, x[0])} ${Math.round(x[1])}%`).join(', ');
+    return `<li class="${cls}">${esc(CHAR(+i).caption)}: you said ${esc(ks.map(k => label(+i, k)).join(' or '))} — ${p ? Math.round(p) + '% of its species' : 'none of its species'} <span class="muted">(${esc(have)})</span></li>`;
+  }).join('');
+  return `<div class="res"><div class="ph" style="background-image:url('${ph ? ph.thumb : ''}')" role="img" aria-label="${esc(g.name)}"></div>
+    <div><a class="nm" href="#/group/${g.id}">${esc(g.name)}</a> <span class="muted small">${esc(g.family)}</span>
+      <div class="bar" aria-hidden="true"><i style="width:${Math.max(1, r.p * 100).toFixed(1)}%"></i></div>
+      <span class="pct">${pct(r.p)}</span> <span class="muted small">${g.species.length ? g.species.length + ' species in India' : ''}</span></div>
+    ${why ? `<details><summary>Why?</summary><ul class="why">${why}</ul></details>` : ''}</div>`;
+}
+function cleanup() { for (const i of Object.keys(S.ans)) if (!visible(+i)) delete S.ans[i]; }
+function drawQuestion(post) {
+  const idx = S.cur, c = CHAR(idx), t = TAB(idx), part = partOf(idx), list = (M().sections[part] || [idx]).filter(visible);
+  const live = post.filter(r => r.p >= post[0].p * 0.02).map(r => r.g.id);
+  const chosen = S.ans[idx] || [];
+  const q = $('#qpanel');
+  q.innerHTML = `
+    ${list.length > 1 ? `<div class="tabs" role="tablist">${list.map(i => `<button role="tab" aria-selected="${i === idx}" class="${i === idx ? 'cur' : ''} ${S.ans[i] ? 'answered' : ''}" data-tab="${i}">${esc(CHAR(i).caption)}</button>`).join('')}</div>` : ''}
+    <div class="qhead"><h2>${esc(c.heading)}</h2><p>${isYesNo(idx) ? 'Choose one answer.' : 'Choose one or more. Several answers mean “either”.'} The number under each picture is how many of the likely groups have it.</p></div>
+    <div class="opts">${t.values.map(v => { const n = live.filter(gid => (t.data[gid] || []).some(x => x[0] === v.key && x[1] > 0)).length; const sel = chosen.includes(v.key);
+      return `<button class="opt ${sel ? 'sel' : ''} ${n ? '' : 'none'}" data-val="${esc(v.key)}" aria-pressed="${sel}"><span class="pic" style="background-image:url('${v.icon}')${t.color ? ';background-size:cover' : ''}"></span><b>${esc(v.label)}</b><small>${n} of ${live.length} likely groups</small>${v.pics && v.pics.length ? `<span class="ex" data-ex="${esc(v.key)}" role="button" tabindex="0">Examples</span>` : ''}</button>`; }).join('')}
+      <button class="opt dk ${S.dk.includes(idx) ? 'sel' : ''}" data-val=""><span class="pic">?</span><b>Don't know</b><small>Skip this question</small></button></div>`;
+  $$('[data-tab]', q).forEach(b => b.onclick = () => { S.cur = +b.dataset.tab; save(); identify(); });
+  $$('.opt', q).forEach(b => b.onclick = e => {
+    if (e.target.dataset.ex !== undefined) { const v = t.values.find(x => x.key === e.target.dataset.ex); return lightbox(v.pics.map(p => ({ src: p.src, cap: `${v.label} — example from the original program (${p.file})` })), 0); }
+    push(); const k = b.dataset.val;
+    if (!k) { delete S.ans[idx]; if (!S.dk.includes(idx)) S.dk.push(idx); }
+    else { S.dk = S.dk.filter(i => i !== idx); const cur = S.ans[idx] || []; S.ans[idx] = cur.includes(k) ? cur.filter(x => x !== k) : isYesNo(idx) ? [k] : [...cur, k]; if (!S.ans[idx].length) delete S.ans[idx]; }
+    cleanup();
+    // move on to the best next question once a single-answer question is answered
+    if (k && isYesNo(idx) && !(k === 'yes' && /is there/.test(c.caption.toLowerCase()))) S.cur = null;
+    if (!k) S.cur = null;
+    if (k === 'yes' && /is there (eye|neck)/.test(c.caption.toLowerCase())) S.cur = list.find(i => CHAR(i).caption.toLowerCase().endsWith('markings') && i !== idx) ?? Object.keys(M().chars).map(Number).find(i => visible(i) && CHAR(i).caption.toLowerCase() === (/eye/.test(c.caption.toLowerCase()) ? 'eye markings' : 'neck markings'));
+    save(); identify();
+  });
+}
+
+/* ---------------- feedback ---------------- */
+function feedback(post) {
+  const d = $('#dlg');
+  d.innerHTML = `<form method="dialog"><div class="in"><h2>Was the identification right?</h2>
+    <p class="muted small">Your e-mail app opens with your answers and the group you choose, addressed to the maintainer. You can read everything before sending.</p>
+    <label>The bird was in this group<select id="fbg"><option value="">— choose —</option><option value="0">None of these / not sure</option>${post.slice(0, 15).map(r => `<option value="${r.g.id}">${esc(r.g.name)} (${pct(r.p)})</option>`).join('')}<option disabled>──────────</option>${[...B.groups].sort((a, b) => a.name.localeCompare(b.name)).map(g => `<option value="${g.id}">${esc(g.name)}</option>`).join('')}</select></label>
+    <label style="display:block;margin-top:10px">Anything else? (optional)<textarea id="fbn" rows="3" maxlength="500" placeholder="e.g. species name, place, photo link"></textarea></label></div>
+    <div class="foot"><button class="btn" value="cancel">Cancel</button><button class="btn primary" value="send" id="fbs">Send</button></div></form>`;
+  d.showModal();
+  d.onclose = () => {
+    if (d.returnValue !== 'send') return;
+    const rec = { when: new Date().toISOString(), version: B.version, mode: S.mode, region: B.states[S.region] || '', month: S.month, answers: Object.entries(S.ans).map(([i, ks]) => `${CHAR(+i).caption}=${ks.map(k => label(+i, k)).join('/')}`).join('; '),
+      top: post.slice(0, 3).map(r => `${r.g.name} ${pct(r.p)}`).join('; '), actual: $('#fbg').value === '0' ? 'none of these' : (G[$('#fbg').value] || {}).name || '', note: $('#fbn').value };
+    const all = store('feedback') || []; all.push(rec); store('feedback', all);
+    // sent by e-mail to the program's maintainer: the user's own e-mail app opens with everything filled in
+    const text = `Bird group identification feedback\n\nThe bird was: ${rec.actual || '(not chosen)'}\nTop 3 shown: ${rec.top}\nMy answers (${rec.mode === 'sit' ? 'sitting' : 'flying'} bird): ${rec.answers}\nPlace: ${rec.region || 'not given'}   Month: ${rec.month ? MONTHS[rec.month - 1] : 'not given'}\nNote: ${rec.note}\n\nApp version ${rec.version}, ${rec.when}`;
+    location.href = `mailto:${B.feedbackEmail}?subject=${encodeURIComponent('Bird group feedback: ' + (rec.actual || 'identification'))}&body=${encodeURIComponent(text)}`;
+    toast('Your e-mail app opens with the feedback — please press Send there.');
+  };
+}
+
+/* ---------------- lightbox ---------------- */
+function lightbox(items, i) {
+  const lb = document.createElement('div'); lb.className = 'lightbox'; lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-label', 'Picture');
+  const draw = () => { lb.innerHTML = `<button class="x" aria-label="Close">✕</button>${items.length > 1 ? '<button class="nav" style="left:12px" aria-label="Previous">‹</button><button class="nav" style="right:12px" aria-label="Next">›</button>' : ''}<img src="${items[i].src}" alt=""><p>${items[i].cap}</p>`;
+    $('.x', lb).onclick = close; $$('.nav', lb).forEach((b, k) => b.onclick = e => { e.stopPropagation(); i = (i + (k ? 1 : items.length - 1)) % items.length; draw(); }); };
+  const close = () => { lb.remove(); removeEventListener('keydown', key); };
+  const key = e => { if (e.key === 'Escape') close(); if (e.key === 'ArrowRight' && items.length > 1) { i = (i + 1) % items.length; draw(); } if (e.key === 'ArrowLeft' && items.length > 1) { i = (i + items.length - 1) % items.length; draw(); } };
+  lb.onclick = e => { if (e.target === lb) close(); };
+  addEventListener('keydown', key); draw(); document.body.append(lb);
+}
+const credit = p => p.site === 'Original program' ? 'Picture from the original program' :
+  `${esc(p.species ? p.species : '')}${p.en ? ' (' + esc(p.en) + ')' : ''} · Photo: ${esc(p.credit || 'unknown')} · <a href="${esc(p.licenseUrl || '#')}" target="_blank" rel="noopener">${esc(p.license)}</a> · <a href="${esc(p.source)}" target="_blank" rel="noopener">${esc(p.site)}</a>`;
+
+/* ---------------- group page ---------------- */
+function groupPage(id) {
+  const g = G[id]; if (!g) return groupsPage();
+  const sim = similar(g).slice(0, 6);
+  const months = g.geo.months, mx = Math.max(1, ...months);
+  const st = Object.entries(g.geo.states || {}).sort((a, b) => b[1] - a[1]), smx = Math.max(1, ...st.map(s => s[1]));
+  $('#main').innerHTML = `
+  <div class="ghead"><div><h1>${esc(g.name)}</h1><div>${esc(g.family)}${g.familyNote ? ` <span class="muted small">(${esc(g.familyNote)})</span>` : ''} · ${g.species.length} species recorded in India</div></div>
+    <div class="actions"><a class="btn" href="#/">← Identify</a><a class="btn" href="#/compare/${g.id}/${sim[0] ? sim[0].g.id : ''}">Compare</a></div></div>
+  <div class="ggrid">
+    <div class="viewer">${g.photos.length ? `<div class="main"><img id="gimg" src="${g.photos[0].src}" alt="${esc(g.name)}"></div><div class="credit" id="gcap">${credit(g.photos[0])}</div>
+      <div class="thumbs">${g.photos.map((p, i) => `<button class="${i ? '' : 'sel'}" data-i="${i}" style="background-image:url('${p.thumb}')" aria-label="Photo ${i + 1}"></button>`).join('')}</div>` : '<p class="muted">No photograph yet.</p>'}</div>
+    <div>
+      <div class="block" style="margin-top:0"><h2>When is it recorded? <span class="muted small">(GBIF records in India)</span></h2>
+        <div class="months">${months.map((n, i) => `<div title="${MONTHS[i]}: ${n} records"><i style="height:${(n / mx * 100).toFixed(0)}%"></i>${MONTHS[i][0]}</div>`).join('')}</div></div>
+      <div class="block"><h2>Where? <span class="muted small">(states with records)</span></h2>
+        <div class="states">${st.slice(0, 40).map(([k, n]) => `<div><span>${esc(B.states[k] || k)}</span><i style="width:${(n / smx * 100).toFixed(0)}%" title="${n} records"></i></div>`).join('') || '<span class="muted">No records.</span>'}</div></div>
+    </div>
+  </div>
+  <div class="block"><h2>Species in India <span class="muted small">— names as accepted by the Catalogue of Life</span></h2>
+    ${g.species.length ? `<div style="overflow-x:auto"><table class="t"><thead><tr><th>Scientific name</th><th>English name</th><th>IUCN</th><th>Records</th></tr></thead><tbody>
+    ${g.species.map(s => `<tr><td><span class="sci">${esc(s.name)}</span> <span class="muted small">${esc(s.author || '')}</span>${s.was ? `<br><span class="muted small">(was <span class="sci">${esc(s.was)}</span>)</span>` : ''}</td><td>${esc(s.en || '')}</td><td>${s.iucn ? `<span class="iucn ${s.iucn}" title="${esc(IUCN[s.iucn] || s.iucn)}">${s.iucn}</span>` : ''}</td><td>${s.rec.toLocaleString('en-IN')}</td></tr>`).join('')}</tbody></table></div>` : '<p class="muted">No species list.</p>'}</div>
+  <div class="block"><h2>What it looks like <span class="muted small">— share of its species showing each feature (original data)</span></h2>
+    <div class="profile">${profile(g)}</div></div>
+  <div class="block"><h2>Similar groups</h2><div class="grid">${sim.map(r => card(r.g, `<a href="#/compare/${g.id}/${r.g.id}">Compare</a>`)).join('')}</div></div>`;
+  $$('.thumbs button').forEach(b => b.onclick = () => { const p = g.photos[+b.dataset.i]; $('#gimg').src = p.src; $('#gcap').innerHTML = credit(p); $$('.thumbs button').forEach(x => x.classList.toggle('sel', x === b)); });
+  const gi = $('#gimg'); if (gi) gi.onclick = () => lightbox(g.photos.map(p => ({ src: p.src, cap: credit(p) })), $$('.thumbs button').findIndex(b => b.classList.contains('sel')));
+}
+const IUCN = { CR: 'Critically Endangered', EN: 'Endangered', VU: 'Vulnerable', NT: 'Near Threatened', LC: 'Least Concern', DD: 'Data Deficient', NE: 'Not Evaluated', EX: 'Extinct', EW: 'Extinct in the Wild' };
+function allChars() { const seen = new Map(); for (const m of ['sit', 'fly']) for (const [i, c] of Object.entries(B.modes[m].chars)) if (!seen.has(c.table)) seen.set(c.table, c); return [...seen.values()]; }
+function profile(g) {
+  return allChars().map(c => { const t = B.tables[c.table], rows = (t.data[g.id] || []).filter(x => x[1] > 0).sort((a, b) => b[1] - a[1]);
+    return `<div><h4>${esc(c.caption)}</h4>${rows.length ? rows.map(([k, p]) => `<div class="pv"><span>${esc((t.values.find(v => v.key === k) || { label: k }).label)}</span><span title="${Math.round(p)}%"><i style="width:${Math.max(4, p)}%"></i></span></div>`).join('') : '<span class="muted">no data</span>'}</div>`; }).join('');
+}
+function vec(g) { const v = {}; for (const c of allChars()) for (const [k, p] of B.tables[c.table].data[g.id] || []) v[c.table + '|' + k] = p / 100; return v; }
+function similar(g) {
+  const a = vec(g);
+  return B.groups.filter(x => x !== g).map(x => { const b = vec(x); let d = 0; for (const k of new Set([...Object.keys(a), ...Object.keys(b)])) d += Math.abs((a[k] || 0) - (b[k] || 0)); return { g: x, d }; }).sort((p, q) => p.d - q.d);
+}
+function card(g, extra = '') {
+  const p = g.photos[0];
+  return `<div class="card"><a href="#/group/${g.id}" style="color:inherit;text-decoration:none"><div class="ph" style="background-image:url('${p ? p.thumb : ''}')"></div><div class="tx"><b>${esc(g.name)}</b><small>${esc(g.family)} · ${g.species.length} spp.</small></div></a>${extra ? `<div class="tx" style="padding-top:0">${extra}</div>` : ''}</div>`;
+}
+
+/* ---------------- all groups ---------------- */
+function groupsPage() {
+  const fams = [...new Set(B.groups.map(g => g.family))].sort();
+  $('#main').innerHTML = `<h1>All ${B.groups.length} bird groups</h1>
+    <div class="filterbar"><input id="gf" type="search" placeholder="Filter by name…" aria-label="Filter by name"><select id="ff" aria-label="Family"><option value="">All families</option>${fams.map(f => `<option>${esc(f)}</option>`).join('')}</select><span class="muted small" id="gn"></span></div>
+    <div class="grid" id="gl"></div>`;
+  const draw = () => { const q = $('#gf').value.toLowerCase(), f = $('#ff').value;
+    const list = B.groups.filter(g => (!f || g.family === f) && (!q || g.name.toLowerCase().includes(q) || g.species.some(s => (s.en || '').toLowerCase().includes(q) || s.name.toLowerCase().includes(q)))).sort((a, b) => a.name.localeCompare(b.name));
+    $('#gl').innerHTML = list.map(g => card(g)).join(''); $('#gn').textContent = `${list.length} shown`; };
+  $('#gf').oninput = draw; $('#ff').onchange = draw; draw();
+}
+
+/* ---------------- compare ---------------- */
+function comparePage(a, b) {
+  const opts = sel => [...B.groups].sort((x, y) => x.name.localeCompare(y.name)).map(g => `<option value="${g.id}" ${g.id === sel ? 'selected' : ''}>${esc(g.name)}</option>`).join('');
+  a = G[a] ? a : B.groups[0].id; b = G[b] ? b : similar(G[a])[0].g.id;
+  const A = G[a], Bg = G[b];
+  const rows = allChars().map(c => { const t = B.tables[c.table];
+    const f = g => (t.data[g.id] || []).filter(x => x[1] > 0).sort((p, q) => q[1] - p[1]).map(([k, p]) => `${esc((t.values.find(v => v.key === k) || { label: k }).label)} <span class="muted">${Math.round(p)}%</span>`).join('<br>') || '<span class="muted">no data</span>';
+    const ka = new Set((t.data[A.id] || []).filter(x => x[1] >= 50).map(x => x[0])), kb = new Set((t.data[Bg.id] || []).filter(x => x[1] >= 50).map(x => x[0]));
+    const diff = [...ka].some(k => !kb.has(k)) || [...kb].some(k => !ka.has(k));
+    return `<div class="h">${esc(c.caption)}</div><div class="${diff ? 'diff' : ''}">${f(A)}</div><div class="${diff ? 'diff' : ''}">${f(Bg)}</div>`; }).join('');
+  $('#main').innerHTML = `<h1>Compare two groups</h1><p class="muted">Rows in yellow are where the two groups usually differ — the best features to look for.</p>
+    <div class="filterbar"><select id="ca" aria-label="First group">${opts(a)}</select><span>and</span><select id="cb" aria-label="Second group">${opts(b)}</select></div>
+    <div class="cmp"><div class="h"></div><div class="h"><a href="#/group/${A.id}">${esc(A.name)}</a></div><div class="h"><a href="#/group/${Bg.id}">${esc(Bg.name)}</a></div>
+    <div></div><div>${A.photos[0] ? `<img src="${A.photos[0].thumb}" alt="" style="border-radius:6px">` : ''}</div><div>${Bg.photos[0] ? `<img src="${Bg.photos[0].thumb}" alt="" style="border-radius:6px">` : ''}</div>${rows}</div>`;
+  $('#ca').onchange = $('#cb').onchange = () => location.hash = `#/compare/${$('#ca').value}/${$('#cb').value}`;
+}
+
+/* ---------------- about ---------------- */
+function about() {
+  const nPh = B.groups.reduce((a, g) => a + g.photos.filter(p => p.site !== 'Original program').length, 0), nSp = B.groups.reduce((a, g) => a + g.species.length, 0);
+  $('#main').innerHTML = `<div class="prose"><h1>About this version</h1>
+  <p><b>Birds Group Identification – Version 2 (Updated, ${esc(B.version)}).</b> Proprietary right holder: Dr. K.N. Ganeshaiah. Updated in 2026 by Dr. Sachin A. Rosario. Version 1 keeps the original program screen for screen.</p>
+  <h2>What is new</h2><ul>
+   <li><b>Probabilities you can see.</b> Each group shows its chance in per cent. The original only sorted the list.</li>
+   <li><b>Forgiving ranking.</b> One wrong or unsure answer now lowers a group instead of removing it. “Don't know” really skips a question.</li>
+   <li><b>Best next question</b>, and <b>Why?</b> for every group: which of your answers fit it and which do not.</li>
+   <li><b>Group pages</b> with credited photos, the Indian species of the group (${nSp} in all) with Catalogue of Life names and IUCN status, records by month and state, and similar groups.</li>
+   <li><b>Where and when</b> filters (state and month), based on GBIF records in India.</li>
+   <li><b>Compare</b> two groups side by side; <b>search</b>; <b>Undo</b>; works on phones and offline once opened.</li>
+   <li>The <b>Feet Color</b> question, never reachable in the original, is now asked. The 15 blank thumbnails of the original are redrawn.</li></ul>
+  <h2>How the percentages are worked out</h2>
+  <p>For every group the original database stores, for each feature, the share of its species that show it (for example, 75% of its species have a grey beak). Version 2 multiplies, over your answers, the share of the group's species that match (with a small allowance for mistakes, ${EPS * 100}%), and scales the result so all groups add up to 100%. If a state or month is chosen, groups never recorded there in GBIF are given lower weight. Choosing several values for one feature means “either”.</p>
+  <h2>Sources and credits</h2><ul>
+   <li><b>Original program and data:</b> Birds Group Identification (with Prob), Dr. K.N. Ganeshaiah.</li>
+   <li><b>Names:</b> Catalogue of Life (${esc(B.sources.col)}), via ChecklistBank. Species where the name used by GBIF differs are shown with the older name in brackets.</li>
+   <li><b>Species lists, records, IUCN categories:</b> GBIF.org occurrence data for India (${esc(B.sources.gbif)}). A species is listed when GBIF holds at least five records of it from India.</li>
+   <li><b>Photographs:</b> ${nPh} photographs from iNaturalist and Wikimedia Commons contributors under Creative Commons licences; photographer, licence and link are shown under every photo. Non-commercial (NC) licences allow this educational, free use only.</li>
+   <li><b>Fonts:</b> Kalam and Atkinson Hyperlegible (SIL Open Font License).</li></ul>
+  <h2>Feedback</h2><p>Use “Was this right? Tell us” after an identification. It opens your e-mail app with your answers filled in, addressed to <a href="mailto:${esc(B.feedbackEmail)}">${esc(B.feedbackEmail)}</a>.</p>
+  <p><a class="btn" href="#/">Start identifying</a></p></div>`;
+}
+
+/* ---------------- search ---------------- */
+(() => {
+  const inp = $('#q'), res = $('.find .res'); let sel = -1, items = [];
+  const idx = B.groups.map(g => ({ g, text: [g.name, g.family, ...g.species.flatMap(s => [s.name, s.en || '', s.was || ''])].join(' | ').toLowerCase() }));
+  inp.oninput = () => { const q = inp.value.trim().toLowerCase(); sel = -1;
+    if (q.length < 2) { res.hidden = true; return; }
+    items = idx.filter(x => x.text.includes(q)).slice(0, 12).map(x => { const sp = x.g.species.find(s => (s.en || '').toLowerCase().includes(q) || s.name.toLowerCase().includes(q)); return { g: x.g, sub: sp ? `${sp.en || ''} (${sp.name})` : x.g.family }; });
+    res.innerHTML = items.length ? items.map((it, i) => `<a href="#/group/${it.g.id}" data-i="${i}"><img src="${it.g.photos[0] ? it.g.photos[0].thumb : ''}" alt=""><span><b>${esc(it.g.name)}</b><small>${esc(it.sub)}</small></span></a>`).join('') : '<a>No match</a>';
+    res.hidden = false; };
+  inp.onkeydown = e => { const as = $$('a[data-i]', res); if (e.key === 'ArrowDown') { sel = Math.min(as.length - 1, sel + 1); } else if (e.key === 'ArrowUp') { sel = Math.max(0, sel - 1); } else if (e.key === 'Enter' && as[Math.max(0, sel)]) { location.hash = as[Math.max(0, sel)].getAttribute('href'); res.hidden = true; inp.blur(); return; } else if (e.key === 'Escape') { res.hidden = true; return; } else return; e.preventDefault(); as.forEach((a, i) => a.classList.toggle('sel', i === sel)); };
+  res.onclick = () => { res.hidden = true; inp.value = ''; };
+  document.addEventListener('click', e => { if (!e.target.closest('.find')) res.hidden = true; });
+})();
+
+/* ---------------- offline ---------------- */
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+go();
+</script>
+</body>
+</html>

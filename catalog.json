@@ -434,6 +434,69 @@
       "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
       "editions": [
         {
+          "id": "birds-group-identification-2",
+          "key": "v2",
+          "label": "Version 2 – Updated (2026)",
+          "versionName": "Version 2 – Updated",
+          "version": "2.0.0",
+          "released": "2026-10-27",
+          "published": false,
+          "summary": "New design that also works on phones: each bird group with its chance in percent, a forgiving ranking, the best next question, Why? for every group, where-and-when filters, group pages with Indian species (Catalogue of Life names, IUCN status), records by state and month, credited photos, compare, and 47 new drawings.",
+          "facts": [
+            "222 bird groups",
+            "1,432 Indian species",
+            "Chance in %",
+            "Best next question",
+            "Works on phones"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/birds-group-identification-2/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "BirdsGroupIdentification2_2.0.0_Setup.exe",
+              "size": "",
+              "note": "Installs beside Version 1. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "BirdsGroupIdentification2.exe",
+              "size": "",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "BirdsGroupIdentification2_2.0.0_universal.dmg",
+              "size": "",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "BirdsGroupIdentification2_2.0.0_amd64.deb",
+              "size": "",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "BirdsGroupIdentification2_2.0.0_offline.zip",
+              "size": "",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "2.0.0",
+              "date": "2026-10-27",
+              "text": "New design; chance in percent with a forgiving ranking; best next question; Why?; where and when filters; group pages with 1,432 Indian species, Catalogue of Life names, IUCN status, records by state and month, credited photos; compare; search; Feet Color question; 47 new drawings; feedback by e-mail."
+            }
+          ]
+        },
+        {
           "id": "birds-group-identification",
           "key": "v1",
           "label": "Version 1 – Original",
