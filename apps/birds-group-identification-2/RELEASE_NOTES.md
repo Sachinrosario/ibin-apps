@@ -19,7 +19,7 @@ Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A
 - **Search** by group, species or English name, plus **Undo** and **Start over**.
 - **Works on phones**, and keeps working offline once opened.
 - **Feet Color** can now be chosen; the original never showed this question.
-- **New drawings** replace the 15 blank thumbnails of the original.
+- **New drawings:** 47 clean drawings replace the original's blank, blurred, watermarked or photo thumbnails. The asked-about part is shown in marigold, for example beak thickness, neck length, size against a sparrow, plain or patterned body and wings, and eye markings. Where a photo was replaced, it is still shown under Examples.
 - **Feedback.** "Was this right? Tell us" opens an e-mail with your answers filled in.
 
 ### Downloads
