@@ -440,7 +440,7 @@
      "versionName": "Version 3 – Species",
      "version": "3.0.0",
      "released": "2026-10-27",
-     "published": false,
+     "published": true,
      "summary": "Identifies the species, not only the group: 1,326 birds of India with eBird/Clements 2025 names. Answer simple questions in any order (kind, size, colours, markings, bill, legs, tail, habitat), follow the best next question, and use place and month as a backup. Species pages with credited photos, records by state and month, similar birds and compare.",
      "facts": [
       "1,326 species",
@@ -456,35 +456,35 @@
        "os": "windows",
        "kind": "Installer",
        "file": "BirdIdentification3_3.0.0_Setup.exe",
-       "size": "",
+       "size": "96 MB",
        "note": "Installs beside Versions 1 and 2. No administrator password."
       },
       {
        "os": "windows",
        "kind": "No-install",
        "file": "BirdIdentification3.exe",
-       "size": "",
+       "size": "101 MB",
        "note": "Runs straight from a folder or pen drive."
       },
       {
        "os": "mac",
        "kind": "App",
        "file": "BirdIdentification3_3.0.0_universal.dmg",
-       "size": "",
+       "size": "192 MB",
        "note": "Intel and Apple-silicon Macs."
       },
       {
        "os": "ubuntu",
        "kind": "Package",
        "file": "BirdIdentification3_3.0.0_amd64.deb",
-       "size": "",
+       "size": "95 MB",
        "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
       },
       {
        "os": "any",
        "kind": "Offline folder",
        "file": "BirdIdentification3_3.0.0_offline.zip",
-       "size": "",
+       "size": "95 MB",
        "note": "Any computer. Extract, then double-click Open Kit.html."
       }
      ],
