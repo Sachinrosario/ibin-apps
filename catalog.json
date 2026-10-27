@@ -317,35 +317,35 @@
               "os": "windows",
               "kind": "Installer",
               "file": "ThreatenedPlants2_2.0.0_Setup.exe",
-              "size": "32 MB",
+              "size": "56 MB",
               "note": "Installs beside Version 1. No administrator password."
             },
             {
               "os": "windows",
               "kind": "No-install",
               "file": "ThreatenedPlants2.exe",
-              "size": "36 MB",
+              "size": "59 MB",
               "note": "Runs straight from a folder or pen drive."
             },
             {
               "os": "mac",
               "kind": "App",
               "file": "ThreatenedPlants2_2.0.0_universal.dmg",
-              "size": "68 MB",
+              "size": "116 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
               "file": "ThreatenedPlants2_2.0.0_amd64.deb",
-              "size": "31 MB",
+              "size": "55 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
               "file": "ThreatenedPlants2_2.0.0_offline.zip",
-              "size": "30 MB",
+              "size": "54 MB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
@@ -440,7 +440,7 @@
           "versionName": "Version 2 – Updated",
           "version": "2.0.0",
           "released": "2026-10-27",
-          "published": false,
+          "published": true,
           "summary": "New design that also works on phones: each bird group with its chance in percent, a forgiving ranking, the best next question, Why? for every group, where-and-when filters, group pages with Indian species (Catalogue of Life names, IUCN status), records by state and month, credited photos, compare, and 47 new drawings.",
           "facts": [
             "222 bird groups",
@@ -456,35 +456,35 @@
               "os": "windows",
               "kind": "Installer",
               "file": "BirdsGroupIdentification2_2.0.0_Setup.exe",
-              "size": "",
+              "size": "104 MB",
               "note": "Installs beside Version 1. No administrator password."
             },
             {
               "os": "windows",
               "kind": "No-install",
               "file": "BirdsGroupIdentification2.exe",
-              "size": "",
+              "size": "107 MB",
               "note": "Runs straight from a folder or pen drive."
             },
             {
               "os": "mac",
               "kind": "App",
               "file": "BirdsGroupIdentification2_2.0.0_universal.dmg",
-              "size": "",
+              "size": "206 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
               "file": "BirdsGroupIdentification2_2.0.0_amd64.deb",
-              "size": "",
+              "size": "102 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
               "file": "BirdsGroupIdentification2_2.0.0_offline.zip",
-              "size": "",
+              "size": "103 MB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
