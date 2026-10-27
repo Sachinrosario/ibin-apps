@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bird Identification 3 – Species</title>
+<meta name="theme-color" content="#1F5F73">
+<link rel="icon" href="img/ui/icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+@font-face{font-family:"Kalam";src:url(fonts/kalam-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"Atkinson";src:url(fonts/atkinson-hyperlegible-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Atkinson";src:url(fonts/atkinson-hyperlegible-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"Atkinson";src:url(fonts/atkinson-hyperlegible-latin-400-italic.woff2) format("woff2");font-weight:400;font-style:italic;font-display:swap}
+:root{
+  --paper:#F5F8F8; --panel:#FFFFFF; --ink:#18282C; --muted:#56676B; --rule:#D7E1E3;
+  --sky:#1F5F73; --sky-soft:#DDEBEF; --marigold:#E89A12; --marigold-soft:#FCEFD2; --red:#B3264D; --green:#2E7D4F;
+  --hand:"Kalam","Segoe Print",cursive; --ui:"Atkinson",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r-sm:6px; --r-md:12px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 var(--ui)}
+img{max-width:100%;display:block}
+a{color:var(--sky)}
+button,select,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--marigold);outline-offset:2px}
+[hidden]{display:none!important}
+.sci{font-style:italic}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+.wrap{max-width:1280px;margin:0 auto;padding:0 16px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+header.top{background:var(--panel);border-bottom:1px solid var(--rule);position:sticky;top:0;z-index:20}
+header.top .wrap{display:flex;align-items:center;gap:22px;min-height:64px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.brand img{width:40px;height:40px;border-radius:8px}
+.brand b{display:block;font:700 24px/1 var(--hand);color:var(--sky)}
+.brand small{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+nav.main{display:flex;gap:4px;flex-wrap:wrap}
+nav.main a{padding:7px 12px;border-radius:var(--r-sm);text-decoration:none;color:var(--ink);font-weight:700}
+nav.main a:hover{background:var(--sky-soft)}
+nav.main a[aria-current]{background:var(--ink);color:#fff}
+.find{margin-left:auto;position:relative}
+.find input{width:250px;padding:8px 12px;border:1px solid var(--rule);border-radius:var(--r-sm);background:var(--paper)}
+.find .res{position:absolute;right:0;top:42px;width:360px;background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);box-shadow:0 12px 32px rgba(0,0,0,.16);max-height:440px;overflow:auto;z-index:30}
+.find .res a{display:flex;gap:10px;align-items:center;padding:7px 10px;text-decoration:none;color:inherit;border-bottom:1px solid var(--rule)}
+.find .res a:hover,.find .res a.sel{background:var(--marigold-soft)}
+.find .res img{width:52px;height:40px;object-fit:cover;border-radius:4px;flex:none;background:var(--sky-soft)}
+.find .res small{display:block;color:var(--muted)}
+main{padding:20px 0 60px}
+h1{font:700 36px/1.1 var(--hand);color:var(--sky);margin:0 0 6px}
+h2{font-size:20px;margin:0 0 10px}
+h3{font-size:17px;margin:0 0 8px}
+.credits{font-size:14px;color:var(--muted);margin:0 0 12px}
+.credits b{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--r-sm);border:1px solid var(--rule);background:#fff;font-weight:700;cursor:pointer;text-decoration:none;color:var(--ink)}
+.btn:hover{border-color:var(--sky)}
+.btn.primary{background:var(--sky);border-color:var(--sky);color:#fff}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.small{padding:4px 10px;font-size:14px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 6px 3px 11px;border-radius:999px;background:var(--marigold-soft);border:1px solid var(--marigold);font-size:14px;cursor:pointer}
+.chip button{border:0;background:none;cursor:pointer;padding:0 4px;font-weight:700;color:var(--muted)}
+.idgrid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:22px;align-items:start}
+.panel{background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);padding:16px}
+.qtabs{display:flex;flex-wrap:wrap;gap:6px}
+.qtabs button{border:1px solid var(--rule);background:#fff;border-radius:999px;padding:5px 12px;cursor:pointer;font-size:14px;display:inline-flex;gap:6px;align-items:center}
+.qtabs button.cur{background:var(--ink);color:#fff;border-color:var(--ink)}
+.qtabs button.answered{background:var(--marigold-soft);border-color:var(--marigold)}
+.qtabs button.cur.answered{background:var(--ink);color:#fff;border-color:var(--marigold)}
+.qtabs button.skip{color:var(--muted);text-decoration:line-through}
+.qtabs button.next{border-color:var(--marigold);border-style:dashed}
+.answers{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;min-height:30px;align-items:center}
+.actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center}
+.backup{margin-top:14px;border-top:1px dashed var(--rule);padding-top:12px}
+.backup h3{font-size:15px;margin:0 0 4px}
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.filters label{font-size:14px;color:var(--muted);display:flex;flex-direction:column;gap:3px}
+.filters select{padding:6px 8px;border:1px solid var(--rule);border-radius:var(--r-sm);background:#fff;color:var(--ink)}
+.next-tip{display:flex;gap:12px;align-items:center;justify-content:space-between;background:var(--marigold-soft);border:1px solid var(--marigold);border-radius:var(--r-md);padding:10px 14px;margin:14px 0}
+.qpanel{margin-top:14px}
+.qhead{display:flex;gap:14px;align-items:center}
+.qhead img{width:84px;height:84px;border:1px solid var(--rule);border-radius:var(--r-sm);flex:none}
+.qhead h2{font:700 24px/1.25 var(--hand);color:var(--sky);margin:0}
+.qhead p{margin:2px 0 0;color:var(--muted);font-size:14px}
+.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:12px}
+.opts.txt{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.opt{position:relative;border:1px solid var(--rule);border-radius:var(--r-md);background:#fff;padding:6px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:6px}
+.opt:hover{border-color:var(--sky)}
+.opt.sel{border:2px solid var(--marigold);background:var(--marigold-soft);padding:5px}
+.opt .pic{aspect-ratio:1;border-radius:var(--r-sm);background:#fff center/cover no-repeat;border:1px solid var(--rule)}
+.opt .pic.contain{background-size:contain}
+.opt .sw{aspect-ratio:2/1;border-radius:var(--r-sm);border:1px solid #b9c1c3}
+.opt b{font-size:15px;line-height:1.2}
+.opt small{color:var(--muted);font-size:13px}
+.opt.none{opacity:.5}
+.opt.dk .pic{display:flex;align-items:center;justify-content:center;font:700 54px/1 var(--hand);color:var(--muted);background:var(--paper)}
+.opts.txt .opt{flex-direction:row;align-items:center;padding:10px 12px}
+.opts.txt .opt.sel{padding:9px 11px}
+.results h2{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.rlist{display:flex;flex-direction:column;gap:8px}
+.res{display:grid;grid-template-columns:84px 1fr;gap:12px;border:1px solid var(--rule);border-radius:var(--r-md);background:#fff;padding:8px;align-items:center}
+.res .ph{width:84px;height:64px;border-radius:6px;background:var(--sky-soft) center/cover}
+.res a.nm{font-weight:700;text-decoration:none;color:var(--ink)}
+.res a.nm:hover{text-decoration:underline}
+.bar{height:8px;border-radius:99px;background:var(--sky-soft);overflow:hidden;margin:4px 0 2px}
+.bar i{display:block;height:100%;background:var(--sky);border-radius:99px}
+.res .pct{font-variant-numeric:tabular-nums;font-weight:700}
+.res details{grid-column:1/-1;font-size:14px}
+.res details summary{cursor:pointer;color:var(--sky)}
+.why{list-style:none;padding:0;margin:6px 0 0;display:grid;gap:3px}
+.why li::before{display:inline-block;width:20px;font-weight:700}
+.why .y::before{content:"✓";color:var(--green)}
+.why .s::before{content:"~";color:var(--marigold)}
+.why .n::before{content:"✗";color:var(--red)}
+.mobilebar{display:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+.card{background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column}
+.card:hover{border-color:var(--sky)}
+.card .ph{aspect-ratio:4/3;background:var(--sky-soft) center/cover}
+.card .tx{padding:8px 11px 11px}
+.card b{display:block;line-height:1.25}
+.card small{color:var(--muted)}
+.filterbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0 16px}
+.filterbar input,.filterbar select{padding:7px 10px;border:1px solid var(--rule);border-radius:var(--r-sm);background:#fff;max-width:100%}
+.ghead{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px}
+.ggrid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:22px;align-items:start}
+.viewer{background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);padding:12px}
+.viewer .main{background:#111;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;aspect-ratio:4/3;overflow:hidden}
+.viewer .main img{width:100%;height:100%;object-fit:contain;cursor:zoom-in}
+.viewer .credit{font-size:13px;color:var(--muted);margin:8px 2px}
+.thumbs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px}
+.thumbs button{flex:none;width:78px;height:60px;border:2px solid transparent;border-radius:5px;padding:0;background:var(--sky-soft) center/cover;cursor:pointer}
+.thumbs button.sel{border-color:var(--marigold)}
+.block{background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);padding:16px;margin-top:20px}
+table.t{width:100%;border-collapse:collapse;font-size:15px}
+table.t th,table.t td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--rule);vertical-align:top}
+table.t th{background:var(--paper);width:34%}
+.iucn{display:inline-block;font-size:12px;font-weight:700;border-radius:4px;padding:0 6px;color:#fff;background:#6b7b7f}
+.iucn.CR{background:#c0182b}.iucn.EN{background:#e0571b}.iucn.VU{background:#d39b0b}.iucn.NT{background:#7a9a2a}.iucn.LC{background:#2e7d4f}.iucn.DD{background:#888}
+.months{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;align-items:end;height:90px;margin-top:6px}
+.months div{display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;height:100%;font-size:11px;text-align:center}
+.months i{display:block;background:var(--sky);border-radius:3px 3px 0 0;min-height:2px}
+.states{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:4px 16px;font-size:14px}
+.states div{display:grid;grid-template-columns:1fr 70px;gap:8px;align-items:center}
+.states i{display:block;height:8px;background:var(--sky);border-radius:99px}
+.dots{display:inline-flex;gap:3px;vertical-align:middle}
+.dots i{width:14px;height:14px;border-radius:50%;border:1px solid #b9c1c3;display:inline-block}
+.cmp{display:grid;grid-template-columns:180px 1fr 1fr;font-size:14px;background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);overflow:hidden}
+.cmp>div{padding:6px 10px;border-bottom:1px solid var(--rule)}
+.cmp .h{background:var(--paper);font-weight:700}
+.cmp .diff{background:var(--marigold-soft)}
+dialog{border:0;border-radius:var(--r-md);padding:0;max-width:560px;width:calc(100% - 30px);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(10,20,22,.55)}
+dialog .in{padding:18px}
+dialog .foot{display:flex;justify-content:flex-end;gap:8px;padding:12px 18px;background:var(--paper)}
+dialog select,dialog textarea{width:100%;padding:8px;border:1px solid var(--rule);border-radius:var(--r-sm);margin-top:6px}
+.lightbox{position:fixed;inset:0;background:rgba(10,15,15,.92);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px;flex-direction:column;gap:10px;color:#fff}
+.lightbox img{max-height:80vh;width:auto;border-radius:6px}
+.lightbox .x{position:absolute;top:14px;right:18px;background:none;border:0;color:#fff;font-size:30px;cursor:pointer}
+.lightbox .nav{position:absolute;top:50%;border:0;background:rgba(255,255,255,.15);color:#fff;font-size:34px;width:48px;height:70px;cursor:pointer;margin-top:-35px}
+.lightbox p{max-width:900px;text-align:center;font-size:14px;margin:0}
+.lightbox a{color:#bfe6f2}
+footer{border-top:1px solid var(--rule);padding:18px 0 40px;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.prose{max-width:820px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:var(--r-md);z-index:60}
+.note{background:var(--sky-soft);border-radius:var(--r-md);padding:10px 14px;font-size:14px}
+@media (max-width:900px){
+  .idgrid,.ggrid{grid-template-columns:minmax(0,1fr)}
+  .find{margin-left:0;width:100%}.find input{width:100%}.find .res{width:100%}
+  header.top{position:static}
+  h1{font-size:29px}
+  .opts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .opts.txt{grid-template-columns:minmax(0,1fr)}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .cmp{grid-template-columns:100px 1fr 1fr}
+  .filters{grid-template-columns:1fr}
+  .mobilebar{display:flex;position:sticky;bottom:0;z-index:15;background:var(--ink);color:#fff;padding:10px 14px;gap:10px;align-items:center;justify-content:space-between;border-radius:var(--r-md) var(--r-md) 0 0}
+  .mobilebar a{color:#fff;font-weight:700}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="#/"><img src="img/ui/icon.png" alt=""><span><b>Bird Identification</b><small>Version 3 – Species level · IBIN Apps</small></span></a>
+  <nav class="main" aria-label="Main">
+    <a href="#/">Identify</a><a href="#/species">All species</a><a href="#/compare">Compare</a><a href="#/about">About</a>
+  </nav>
+  <div class="find"><label class="sr" for="q">Search birds</label><input id="q" type="search" placeholder="Search a bird by name…" autocomplete="off"><div class="res" hidden></div></div>
+</div></header>
+<main id="main" class="wrap" tabindex="-1"></main>
+<footer><div class="wrap">
+  <span>Proprietary right holder - Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario · Version <span id="ver"></span></span>
+  <span>Names: eBird/Clements 2025 · Records: GBIF · Measurements: AVONET · Photos: iNaturalist and Wikimedia Commons contributors (credited on each picture)</span>
+</div></footer>
+<dialog id="dlg"></dialog>
+<script src="data/birds3.js"></script>
+<script src="data/accuracy.js"></script>
+<script src="model.js"></script>
+<script>
+"use strict";
+const B = window.BIRD3, MD = window.BirdModel, ACC = window.BIRD3_ACCURACY || null;
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const HEX = { k: '#1b1b1b', w: '#ffffff', g: '#9aa0a6', b: '#7a5230', r: '#a0461e', f: '#e3c48f', y: '#f2d01c', l: '#7d8b3a', n: '#3c9a3c', u: '#2f6fd0', v: '#6b3fa0', m: '#6d1f2c', d: '#d32424', p: '#f29bb5', o: '#f28a1c' };
+const SP = Object.fromEntries(B.species.map(s => [s.c, s]));
+const KIND = Object.fromEntries(B.kinds.map(k => [k.id, k]));
+const QD = Object.fromEntries(MD.Q.map(q => [q.id, q]));
+const QPIC = { sz: 'size-3', h: 'part-head', u: 'part-upper', d: 'part-under', m: 'm-cr', bs: 'bs-th', bc: 'part-bill', lc: 'part-legs', lg: 'lg-2', tl: 'part-tail' };
+$('#ver').textContent = B.version;
+function store(k, v) { try { if (v === undefined) return JSON.parse(localStorage.getItem('bi3.' + k)); localStorage.setItem('bi3.' + k, JSON.stringify(v)); } catch (e) { return undefined; } }
+function toast(t) { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.append(d); setTimeout(() => d.remove(), 2800); }
+const thumb = s => s.ph[0] ? `img/photos/${s.ph[0].f}-t.webp` : '';
+// a typical photographed species for each kind of bird (the commonest one with a photo)
+const KPIC = {}; for (const s of [...B.species].sort((a, b) => b.rec - a.rec)) if (s.ph.length && !KPIC[s.k]) KPIC[s.k] = s;
+
+/* ---------------- state ---------------- */
+const S = store('state') || {};
+S.ans = S.ans || {}; S.skip = S.skip || []; S.place = S.place ?? ''; S.month = S.month || 0; S.cur = S.cur || null;
+let HIST = [], SHOW = 10;
+const save = () => store('state', S);
+function push() { HIST.push(JSON.stringify({ ans: S.ans, skip: S.skip })); if (HIST.length > 60) HIST.shift(); }
+const optLabel = (qid, v) => (MD.options(QD[qid], B.kinds).find(o => String(o.v) === String(v)) || { label: v }).label;
+
+/* ---------------- router ---------------- */
+const routes = { '': identify, 'species': speciesList, 'sp': speciesPage, 'compare': comparePage, 'about': about };
+function go() {
+  const [p, ...rest] = location.hash.replace(/^#\/?/, '').split('/');
+  $$('nav.main a').forEach(a => a.toggleAttribute('aria-current', a.getAttribute('href') === '#/' + (p === 'sp' ? 'species' : p)));
+  (routes[p] || identify)(...rest.map(decodeURIComponent));
+  if (p) window.scrollTo(0, 0);
+}
+addEventListener('hashchange', go);
+
+/* ---------------- Identify ---------------- */
+const pct = p => p >= 0.995 ? '99%+' : p < 0.001 ? '<0.1%' : (p * 100).toFixed(p < 0.1 ? 1 : 0) + '%';
+function identify() {
+  const post = MD.posterior(B.species, S.ans, S.place, +S.month);
+  const nxt = MD.bestNext(post, S.ans, S.skip, B.kinds);
+  if (!S.cur || !QD[S.cur]) S.cur = nxt ? nxt.q.id : 'k';
+  const answered = Object.keys(S.ans).length, top = post.slice(0, SHOW);
+  $('#main').innerHTML = `
+  <h1>Which bird is it?</h1>
+  <p class="credits"><b>Proprietary right holder - Dr. K.N. Ganeshaiah</b> · <b>Updated in 2026 by Dr. Sachin A. Rosario</b></p>
+  <p class="muted" style="margin-top:0">Answer what you can see — any order, any number of questions, or “Don't know”. The list shows how likely each of the ${B.species.length.toLocaleString('en-IN')} birds of India is. Follow the <b>best next question</b> to get there fastest.</p>
+  <div class="idgrid">
+    <div>
+      <div class="panel">
+        <div class="qtabs" role="tablist" aria-label="Questions">${MD.Q.map(q => `<button role="tab" data-q="${q.id}" aria-selected="${q.id === S.cur}" class="${q.id === S.cur ? 'cur' : ''} ${S.ans[q.id] ? 'answered' : ''} ${S.skip.includes(q.id) ? 'skip' : ''} ${nxt && nxt.q.id === q.id && q.id !== S.cur ? 'next' : ''}">${S.ans[q.id] ? '✓ ' : ''}${esc(short(q))}</button>`).join('')}</div>
+        <div class="answers">${answered ? Object.entries(S.ans).map(([q, vs]) => `<span class="chip" data-edit="${q}" title="Change">${esc(short(QD[q]))}: <b>${vs.map(v => esc(optLabel(q, v))).join(' or ')}</b><button data-del="${q}" aria-label="Remove this answer">✕</button></span>`).join('') : '<span class="muted small">No answers yet.</span>'}</div>
+        <div class="actions">
+          <button class="btn small" id="undo" ${HIST.length ? '' : 'disabled'}>↶ Undo</button>
+          <button class="btn small" id="reset" ${answered || S.skip.length ? '' : 'disabled'}>Start over</button>
+        </div>
+        <div class="backup"><h3>Backup: where and when <span class="muted small">(optional)</span></h3>
+          <p class="muted small" style="margin:0">Birds often recorded in that state or month move up. Birds never recorded there only move down — they are never removed.</p>
+          <div class="filters">
+            <label>Place <select id="place"><option value="">Anywhere in India</option>${B.states.map((n, i) => `<option value="${i}" ${String(S.place) === String(i) ? 'selected' : ''}>${esc(n)}</option>`).join('')}</select></label>
+            <label>Month <select id="month"><option value="0">Any month</option>${MONTHS.map((m, i) => `<option value="${i + 1}" ${+S.month === i + 1 ? 'selected' : ''}>${m}</option>`).join('')}</select></label>
+          </div></div>
+      </div>
+      ${nxt && S.cur !== nxt.q.id ? `<div class="next-tip"><span>Best next question: <b>${esc(nxt.q.title)}</b> <span class="muted small">— it separates the likely birds most.</span></span><button class="btn small primary" data-goto="${nxt.q.id}">Answer it</button></div>` : ''}
+      <div class="panel qpanel" id="qpanel"></div>
+    </div>
+    <section class="results" aria-labelledby="rh">
+      <h2 id="rh"><span>Most likely birds</span><span class="muted small">${answered ? `${answered} answer${answered > 1 ? 's' : ''}` : 'before any answer: commonest first'}</span></h2>
+      <div class="rlist">${top.map(resRow).join('')}</div>
+      <div class="actions">${SHOW < 60 ? '<button class="btn small" id="more">Show more</button>' : ''}${answered ? '<button class="btn small" id="fb">Was this right? Tell us</button>' : ''}${top.length > 1 ? `<a class="btn small" href="#/compare/${top[0].sp.c}/${top[1].sp.c}">Compare top two</a>` : ''}</div>
+    </section>
+  </div>
+  <div class="mobilebar"><span>Top: <b>${esc(top[0].sp.en)}</b> ${pct(top[0].p)}</span><a href="#rh">See list ↑</a></div>`;
+  drawQuestion(post);
+  $$('[data-q]').forEach(b => b.onclick = () => { S.cur = b.dataset.q; save(); identify(); });
+  $$('[data-del]').forEach(b => b.onclick = e => { e.stopPropagation(); push(); delete S.ans[b.dataset.del]; save(); identify(); });
+  $$('[data-edit]').forEach(c => c.onclick = () => { S.cur = c.dataset.edit; save(); identify(); });
+  $$('[data-goto]').forEach(b => b.onclick = () => { S.cur = b.dataset.goto; save(); identify(); });
+  $('#undo').onclick = () => { const h = HIST.pop(); if (!h) return; Object.assign(S, JSON.parse(h)); save(); identify(); };
+  $('#reset').onclick = () => { push(); S.ans = {}; S.skip = []; S.cur = null; SHOW = 10; save(); identify(); };
+  $('#place').onchange = e => { S.place = e.target.value; save(); identify(); };
+  $('#month').onchange = e => { S.month = +e.target.value; save(); identify(); };
+  const fb = $('#fb'); if (fb) fb.onclick = () => feedback(post);
+  const more = $('#more'); if (more) more.onclick = () => { SHOW += 15; identify(); };
+}
+function short(q) { return { k: 'Kind', sz: 'Size', h: 'Head', u: 'Back', d: 'Belly', m: 'Markings', bs: 'Bill shape', bc: 'Bill colour', lc: 'Leg colour', lg: 'Leg length', tl: 'Tail', hab: 'Habitat', beh: 'Doing' }[q.id]; }
+function resRow(r) {
+  const s = r.sp;
+  const why = Object.entries(S.ans).map(([q, vs]) => {
+    const l = ['h', 'u', 'd', 'm'].includes(q) ? Math.max(MD.plumageLike(s, q, vs), s.f ? MD.plumageLike({ h: s.f.h.length ? s.f.h : s.h, u: s.f.u.length ? s.f.u : s.u, d: s.f.d.length ? s.f.d : s.d, m: s.f.m }, q, vs) : 0) : MD.like(s, q, vs);
+    const cls = l >= 0.6 ? 'y' : l >= 0.2 ? 's' : 'n';
+    return `<li class="${cls}">${esc(short(QD[q]))}: you said ${esc(vs.map(v => optLabel(q, v)).join(' or '))} — this bird: ${esc(traitText(s, q))}</li>`;
+  }).join('');
+  return `<div class="res"><div class="ph" style="background-image:url('${thumb(s)}')" role="img" aria-label="${esc(s.en)}"></div>
+    <div><a class="nm" href="#/sp/${s.c}">${esc(s.en)}</a> <span class="muted small"><span class="sci">${esc(s.sci)}</span></span>
+      <div class="bar" aria-hidden="true"><i style="width:${Math.max(1, r.p * 100).toFixed(1)}%"></i></div>
+      <span class="pct">${pct(r.p)}</span> <span class="muted small">${esc(KIND[s.k].label.split(/[(:]/)[0])}${s.x ? ' · probably extinct' : ''}</span></div>
+    ${why ? `<details><summary>Why?</summary><ul class="why">${why}</ul></details>` : ''}</div>`;
+}
+const colourWords = cs => cs && cs.length ? cs.map(c => MD.COLOURS[c].toLowerCase()).join(', ') : 'not known';
+function traitText(s, q, fem) {
+  const P = fem && s.f ? { h: s.f.h.length ? s.f.h : s.h, u: s.f.u.length ? s.f.u : s.u, d: s.f.d.length ? s.f.d : s.d, m: s.f.m } : s;
+  switch (q) {
+    case 'k': return KIND[s.k].label;
+    case 'sz': return s.sz ? MD.SIZE[s.sz] + (s.mass ? ` — about ${s.mass >= 1000 ? (s.mass / 1000).toFixed(1) + ' kg' : Math.round(s.mass) + ' g'}` : '') : 'not known';
+    case 'h': case 'u': case 'd': case 'bc': case 'lc': return colourWords(P[q] || s[q]);
+    case 'm': return P.m.length ? P.m.map(m => MD.MARKS[m].toLowerCase()).join(', ') : 'no clear markings';
+    case 'bs': return (MD.BILLS[s.bs] || 'not known').toLowerCase();
+    case 'lg': return s.lg ? MD.LEN3[s.lg].toLowerCase() : 'not known';
+    case 'tl': return s.tl ? MD.LEN3[s.tl].toLowerCase() : 'not known';
+    case 'hab': return s.hab.map(h => MD.HAB[h].toLowerCase()).join('; ');
+    case 'beh': return s.beh.map(b => MD.BEH[b].toLowerCase()).join(', ');
+  }
+}
+function drawQuestion(post) {
+  const q = QD[S.cur], chosen = (S.ans[q.id] || []).map(String);
+  const live = post.filter(r => r.p >= post[0].p * 0.01).slice(0, 200);
+  const opts = MD.options(q, B.kinds);
+  const count = o => live.filter(r => (['h', 'u', 'd', 'm'].includes(q.id) ? Math.max(MD.plumageLike(r.sp, q.id, [o.v]), r.sp.f ? MD.plumageLike({ h: r.sp.f.h.length ? r.sp.f.h : r.sp.h, u: r.sp.f.u.length ? r.sp.f.u : r.sp.u, d: r.sp.f.d.length ? r.sp.f.d : r.sp.d, m: r.sp.f.m }, q.id, [o.v]) : 0) : MD.like(r.sp, q.id, [o.v])) >= 0.6).length;
+  const text = ['hab', 'beh'].includes(q.id);
+  const help = q.single ? 'Choose one. (Not sure between two? Choose one, then add the other — it then means “either”.)' : q.id === 'm' ? 'Choose every marking you can see. Leave out what you could not see.' : q.colour ? 'Choose one or more colours. Several colours mean “either” — pick the main colour(s).' : 'Choose one or more.';
+  const pic = o => q.id === 'k' ? (KPIC[o.v] ? `<span class="pic" style="background-image:url('img/photos/${KPIC[o.v].ph[0].f}-t.webp')"></span>` : '<span class="pic"></span>')
+    : q.colour ? `<span class="sw" style="background:${HEX[o.v]}"></span>`
+    : q.id === 'sz' ? `<span class="pic contain" style="background-image:url('img/q/size-${o.v}.svg')"></span>`
+    : q.id === 'm' ? `<span class="pic contain" style="background-image:url('img/q/m-${o.v}.svg')"></span>`
+    : q.id === 'bs' ? `<span class="pic contain" style="background-image:url('img/q/bs-${o.v}.svg')"></span>`
+    : q.id === 'lg' || q.id === 'tl' ? `<span class="pic contain" style="background-image:url('img/q/${q.id}-${o.v}.svg')"></span>` : '';
+  const qp = $('#qpanel');
+  qp.innerHTML = `<div class="qhead">${QPIC[q.id] ? `<img src="img/q/${QPIC[q.id]}.svg" alt="">` : ''}<div><h2>${esc(q.title)}</h2><p>${help} The small number is how many of the ${live.length} likely birds fit.</p></div></div>
+    <div class="opts ${text ? 'txt' : ''}">${opts.map(o => { const n = count(o), sel = chosen.includes(String(o.v));
+      return `<button class="opt ${sel ? 'sel' : ''} ${n ? '' : 'none'}" data-val="${esc(o.v)}" aria-pressed="${sel}">${pic(o)}<span><b>${esc(o.label)}</b><br><small>${n} of ${live.length}</small></span></button>`; }).join('')}
+      <button class="opt dk ${S.skip.includes(q.id) ? 'sel' : ''}" data-val="">${text ? '' : '<span class="pic">?</span>'}<span><b>Don't know</b><br><small>Skip this question</small></span></button></div>`;
+  $$('.opt', qp).forEach(b => b.onclick = () => {
+    push(); const v = b.dataset.val;
+    if (!v) { delete S.ans[q.id]; if (!S.skip.includes(q.id)) S.skip.push(q.id); S.cur = null; }
+    else {
+      S.skip = S.skip.filter(x => x !== q.id);
+      let cur = (S.ans[q.id] || []).map(String);
+      if (cur.includes(v)) cur = cur.filter(x => x !== v);
+      else if (q.id === 'm' && v === 'none') cur = ['none'];
+      else if (q.single && cur.length >= 2) cur = [v];
+      else cur = [...cur.filter(x => !(q.id === 'm' && x === 'none')), v];
+      if (cur.length) S.ans[q.id] = cur; else delete S.ans[q.id];
+      if (q.single && cur.length === 1) S.cur = null;      // a single answer given: move to the best next question
+    }
+    save(); identify();
+    if (innerWidth < 900) $('#qpanel').scrollIntoView({ block: 'start' });   // on phones keep the next question in view
+  });
+}
+
+/* ---------------- feedback ---------------- */
+function feedback(post) {
+  const d = $('#dlg');
+  d.innerHTML = `<form method="dialog"><div class="in"><h2>Was the identification right?</h2>
+    <p class="muted small">Your e-mail app opens with your answers and the bird you choose, addressed to the maintainer. You can read everything before sending.</p>
+    <label>The bird was<select id="fbs"><option value="">— choose —</option><option value="0">None of these / not sure</option>${post.slice(0, 15).map(r => `<option value="${r.sp.c}">${esc(r.sp.en)} (${pct(r.p)})</option>`).join('')}<option disabled>──────────</option>${[...B.species].sort((a, b) => a.en.localeCompare(b.en)).map(s => `<option value="${s.c}">${esc(s.en)}</option>`).join('')}</select></label>
+    <label style="display:block;margin-top:10px">Anything else? (optional)<textarea id="fbn" rows="3" maxlength="500" placeholder="e.g. place, photo link, which question was hard"></textarea></label></div>
+    <div class="foot"><button class="btn" value="cancel">Cancel</button><button class="btn primary" value="send">Send</button></div></form>`;
+  d.showModal();
+  d.onclose = () => {
+    if (d.returnValue !== 'send') return;
+    const v = $('#fbs').value, actual = v === '0' ? 'none of these' : SP[v] ? `${SP[v].en} (${SP[v].sci})` : '';
+    const text = `Bird identification feedback (Version 3)\n\nThe bird was: ${actual || '(not chosen)'}\nTop 3 shown: ${post.slice(0, 3).map(r => `${r.sp.en} ${pct(r.p)}`).join('; ')}\nMy answers: ${Object.entries(S.ans).map(([q, vs]) => `${short(QD[q])}=${vs.map(x => optLabel(q, x)).join('/')}`).join('; ')}\nPlace: ${S.place !== '' ? B.states[S.place] : 'not given'}   Month: ${S.month ? MONTHS[S.month - 1] : 'not given'}\nNote: ${$('#fbn').value}\n\nApp version ${B.version}, ${new Date().toISOString()}`;
+    location.href = `mailto:${B.feedbackEmail}?subject=${encodeURIComponent('Bird identification feedback: ' + (actual || 'identification'))}&body=${encodeURIComponent(text)}`;
+    toast('Your e-mail app opens with the feedback — please press Send there.');
+  };
+}
+
+/* ---------------- photos ---------------- */
+const LIC = { 'CC0': 'https://creativecommons.org/publicdomain/zero/1.0/', 'CC-BY': 'https://creativecommons.org/licenses/by/4.0/', 'CC-BY-SA': 'https://creativecommons.org/licenses/by-sa/4.0/', 'CC-BY-NC': 'https://creativecommons.org/licenses/by-nc/4.0/', 'CC-BY-NC-SA': 'https://creativecommons.org/licenses/by-nc-sa/4.0/', 'CC-BY-ND': 'https://creativecommons.org/licenses/by-nd/4.0/', 'CC-BY-NC-ND': 'https://creativecommons.org/licenses/by-nc-nd/4.0/' };
+const credit = p => `Photo: ${esc(p.cr || 'unknown')} · <a href="${esc(p.lu || LIC[p.li] || '#')}" target="_blank" rel="noopener">${esc(p.li)}</a> · <a href="${esc(p.so)}" target="_blank" rel="noopener">${esc(p.si)}</a>`;
+function lightbox(items, i) {
+  const lb = document.createElement('div'); lb.className = 'lightbox'; lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-label', 'Picture');
+  const draw = () => { lb.innerHTML = `<button class="x" aria-label="Close">✕</button>${items.length > 1 ? '<button class="nav" style="left:12px" aria-label="Previous">‹</button><button class="nav" style="right:12px" aria-label="Next">›</button>' : ''}<img src="${items[i].src}" alt=""><p>${items[i].cap}</p>`;
+    $('.x', lb).onclick = close; $$('.nav', lb).forEach((b, k) => b.onclick = e => { e.stopPropagation(); i = (i + (k ? 1 : items.length - 1)) % items.length; draw(); }); };
+  const close = () => { lb.remove(); removeEventListener('keydown', key); };
+  const key = e => { if (e.key === 'Escape') close(); if (e.key === 'ArrowRight' && items.length > 1) { i = (i + 1) % items.length; draw(); } if (e.key === 'ArrowLeft' && items.length > 1) { i = (i + items.length - 1) % items.length; draw(); } };
+  lb.onclick = e => { if (e.target === lb) close(); };
+  addEventListener('keydown', key); draw(); document.body.append(lb);
+}
+
+/* ---------------- species page ---------------- */
+const IUCN = { CR: 'Critically Endangered', EN: 'Endangered', VU: 'Vulnerable', NT: 'Near Threatened', LC: 'Least Concern', DD: 'Data Deficient', NE: 'Not Evaluated', EX: 'Extinct', EW: 'Extinct in the Wild' };
+const ROWS = [['k', 'Kind of bird'], ['sz', 'Size'], ['h', 'Head'], ['u', 'Back and wings'], ['d', 'Breast and belly'], ['m', 'Markings'], ['bs', 'Bill shape'], ['bc', 'Bill colour'], ['lc', 'Leg colour'], ['lg', 'Leg length'], ['tl', 'Tail length'], ['hab', 'Habitat'], ['beh', 'Usually seen']];
+const sw = cs => `<span class="dots">${(cs || []).map(c => `<i style="background:${HEX[c]}" title="${MD.COLOURS[c]}"></i>`).join('')}</span>`;
+function traitCell(s, q, fem) { const t = esc(traitText(s, q, fem)); return ['h', 'u', 'd', 'bc', 'lc'].includes(q) ? `${sw(fem && s.f && s.f[q] && s.f[q].length ? s.f[q] : s[q])} ${t}` : t; }
+function distance(a, b) {
+  let d = a.k === b.k ? 0 : 4;
+  const set = (x, y) => { x = x || []; y = y || []; const u = new Set([...x, ...y]); if (!u.size) return 0; return 1 - x.filter(v => y.includes(v)).length / u.size; };
+  d += set(a.h, b.h) + set(a.u, b.u) + set(a.d, b.d) + 1.5 * set(a.m, b.m) + (a.bs === b.bs ? 0 : 1) + 0.5 * set(a.bc, b.bc) + 0.5 * set(a.lc, b.lc) + 0.5 * set(a.hab, b.hab);
+  d += a.sz && b.sz ? Math.abs(a.sz - b.sz) : 0.5;
+  return d;
+}
+const similar = s => B.species.filter(x => x !== s).map(x => ({ x, d: distance(s, x) })).sort((p, q) => p.d - q.d);
+function speciesPage(code) {
+  const s = SP[code]; if (!s) return speciesList();
+  const sim = similar(s).slice(0, 8);
+  const mx = Math.max(1, ...s.mo), st = Object.entries(s.st).sort((a, b) => b[1] - a[1]), smx = Math.max(1, ...st.map(x => x[1]));
+  const fem = !!s.f;
+  $('#main').innerHTML = `
+  <div class="ghead"><div><h1>${esc(s.en)}</h1>
+    <div><span class="sci">${esc(s.sci)}</span>${s.was ? ` <span class="muted small">(older name${s.was.length > 1 ? 's' : ''}: ${s.was.map(w => `<span class="sci">${esc(w)}</span>`).join(', ')})</span>` : ''}</div>
+    <div class="muted">${esc(s.famEn || '')} · <span class="sci">${esc(s.fam || '')}</span>${s.iucn ? ` · <span class="iucn ${s.iucn}" title="${esc(IUCN[s.iucn] || s.iucn)}">${s.iucn}</span> ${esc(IUCN[s.iucn] || '')}` : ''}${s.x ? ' · <b>probably extinct</b>' : ''}</div></div>
+    <div class="actions"><a class="btn" href="#/">← Identify</a><a class="btn" href="#/compare/${s.c}/${sim[0].x.c}">Compare</a><a class="btn" href="https://ebird.org/species/${encodeURIComponent(s.c)}" target="_blank" rel="noopener">eBird page ↗</a></div></div>
+  <div class="ggrid">
+    <div class="viewer">${s.ph.length ? `<div class="main"><img id="gimg" src="img/photos/${s.ph[0].f}.webp" alt="${esc(s.en)}"></div><div class="credit" id="gcap">${credit(s.ph[0])}</div>
+      <div class="thumbs">${s.ph.map((p, i) => `<button class="${i ? '' : 'sel'}" data-i="${i}" style="background-image:url('img/photos/${p.f}-t.webp')" aria-label="Photo ${i + 1}"></button>`).join('')}</div>` : '<p class="muted">No photograph yet. See the eBird page for photos.</p>'}</div>
+    <div>
+      <div class="block" style="margin-top:0"><h2>How to recognise it</h2>
+        <table class="t"><tbody>${ROWS.map(([q, lab]) => `<tr><th>${lab}</th><td>${traitCell(s, q)}${fem && ['h', 'u', 'd', 'm'].includes(q) && traitText(s, q, true) !== traitText(s, q) ? `<br><span class="muted small">Female / young: ${traitCell(s, q, true)}</span>` : ''}</td></tr>`).join('')}</tbody></table></div>
+    </div>
+  </div>
+  ${s.wk ? `<div class="block"><h2>Description</h2><p>${esc(s.wk.x)}</p><p class="muted small">From the Wikipedia article “<a href="${esc(s.wk.u)}" target="_blank" rel="noopener">${esc(s.wk.t)}</a>”, CC BY-SA 4.0. For field marks and calls see the <a href="https://ebird.org/species/${encodeURIComponent(s.c)}" target="_blank" rel="noopener">eBird species page</a>.</p></div>` : ''}
+  <div class="ggrid">
+    <div class="block"><h2>When is it recorded? <span class="muted small">(GBIF records in India)</span></h2>
+      <div class="months">${s.mo.map((n, i) => `<div title="${MONTHS[i]}: ${n} records"><i style="height:${(n / mx * 100).toFixed(0)}%"></i>${MONTHS[i][0]}</div>`).join('')}</div>
+      <p class="muted small">${s.rec.toLocaleString('en-IN')} records in GBIF from India.</p></div>
+    <div class="block"><h2>Where? <span class="muted small">(states with records)</span></h2>
+      <div class="states">${st.map(([k, n]) => `<div><span>${esc(B.states[k])}</span><i style="width:${(n / smx * 100).toFixed(0)}%" title="${n} records"></i></div>`).join('') || '<span class="muted">No state-level records in GBIF.</span>'}</div></div>
+  </div>
+  <div class="block"><h2>Similar birds — check the differences</h2><div class="grid">${sim.map(r => card(r.x, `<a href="#/compare/${s.c}/${r.x.c}">Compare</a>`)).join('')}</div></div>
+  ${s.g && s.g.length ? `<p class="muted small">In the Version 2 group key: ${s.g.map(g => esc(B.groups2[g] || g)).join(', ')}.</p>` : ''}`;
+  $$('.thumbs button').forEach(b => b.onclick = () => { const p = s.ph[+b.dataset.i]; $('#gimg').src = `img/photos/${p.f}.webp`; $('#gcap').innerHTML = credit(p); $$('.thumbs button').forEach(x => x.classList.toggle('sel', x === b)); });
+  const gi = $('#gimg'); if (gi) gi.onclick = () => lightbox(s.ph.map(p => ({ src: `img/photos/${p.f}.webp`, cap: `${esc(s.en)} · ${credit(p)}` })), $$('.thumbs button').findIndex(b => b.classList.contains('sel')));
+}
+function card(s, extra = '') {
+  return `<div class="card"><a href="#/sp/${s.c}" style="color:inherit;text-decoration:none"><div class="ph" style="background-image:url('${thumb(s)}')"></div><div class="tx"><b>${esc(s.en)}</b><small class="sci">${esc(s.sci)}</small></div></a>${extra ? `<div class="tx" style="padding-top:0">${extra}</div>` : ''}</div>`;
+}
+
+/* ---------------- all species ---------------- */
+function speciesList() {
+  const fams = [...new Set(B.species.map(s => s.famEn || s.fam))].sort();
+  const f0 = store('listf') || {};
+  $('#main').innerHTML = `<h1>All ${B.species.length.toLocaleString('en-IN')} birds</h1>
+    <p class="muted">Species recorded in India (GBIF), with eBird/Clements 2025 names, in taxonomic order.</p>
+    <div class="filterbar"><input id="lf" type="search" placeholder="Filter by name…" aria-label="Filter by name" value="${esc(f0.q || '')}">
+      <select id="lk" aria-label="Kind"><option value="">All kinds</option>${B.kinds.map(k => `<option value="${k.id}" ${f0.k === k.id ? 'selected' : ''}>${esc(k.label.split(/[(:]/)[0])}</option>`).join('')}</select>
+      <select id="lfam" aria-label="Family"><option value="">All families</option>${fams.map(f => `<option ${f0.f === f ? 'selected' : ''}>${esc(f)}</option>`).join('')}</select>
+      <select id="lst" aria-label="State"><option value="">All of India</option>${B.states.map((n, i) => `<option value="${i}" ${String(f0.s) === String(i) ? 'selected' : ''}>${esc(n)}</option>`).join('')}</select>
+      <span class="muted small" id="ln"></span></div>
+    <div class="grid" id="ll"></div><div class="actions"><button class="btn" id="lmore" hidden>Show more</button></div>`;
+  let lim = 120;
+  const draw = () => { const q = $('#lf').value.toLowerCase(), k = $('#lk').value, f = $('#lfam').value, st = $('#lst').value;
+    store('listf', { q, k, f, s: st });
+    const list = B.species.filter(s => (!k || s.k === k) && (!f || (s.famEn || s.fam) === f) && (st === '' || s.st[st]) && (!q || (s.en + ' ' + s.sci + ' ' + (s.was || []).join(' ')).toLowerCase().includes(q)));
+    $('#ll').innerHTML = list.slice(0, lim).map(s => card(s)).join(''); $('#ln').textContent = `${list.length} shown`; $('#lmore').hidden = list.length <= lim; };
+  $('#lf').oninput = () => { lim = 120; draw(); }; $('#lk').onchange = $('#lfam').onchange = $('#lst').onchange = () => { lim = 120; draw(); };
+  $('#lmore').onclick = () => { lim += 240; draw(); }; draw();
+}
+
+/* ---------------- compare ---------------- */
+function comparePage(a, b) {
+  const A = SP[a] || B.species.find(s => s.c === 'houspa') || B.species[0], Bs = SP[b] || similar(A)[0].x;
+  const opts = sel => [...B.species].sort((x, y) => x.en.localeCompare(y.en)).map(s => `<option value="${s.c}" ${s === sel ? 'selected' : ''}>${esc(s.en)}</option>`).join('');
+  const rows = ROWS.map(([q, lab]) => { const ta = traitText(A, q), tb = traitText(Bs, q); return `<div class="h">${lab}</div><div class="${ta !== tb ? 'diff' : ''}">${traitCell(A, q)}</div><div class="${ta !== tb ? 'diff' : ''}">${traitCell(Bs, q)}</div>`; }).join('');
+  $('#main').innerHTML = `<h1>Compare two birds</h1><p class="muted">Rows in yellow are where the two differ — the features to look for.</p>
+    <div class="filterbar"><select id="ca" aria-label="First bird">${opts(A)}</select><span>and</span><select id="cb" aria-label="Second bird">${opts(Bs)}</select></div>
+    <div class="cmp"><div class="h"></div><div class="h"><a href="#/sp/${A.c}">${esc(A.en)}</a><br><span class="sci small">${esc(A.sci)}</span></div><div class="h"><a href="#/sp/${Bs.c}">${esc(Bs.en)}</a><br><span class="sci small">${esc(Bs.sci)}</span></div>
+    <div></div><div>${thumb(A) ? `<img src="${thumb(A)}" alt="" style="border-radius:6px">` : ''}</div><div>${thumb(Bs) ? `<img src="${thumb(Bs)}" alt="" style="border-radius:6px">` : ''}</div>${rows}</div>`;
+  $('#ca').onchange = $('#cb').onchange = () => location.hash = `#/compare/${$('#ca').value}/${$('#cb').value}`;
+}
+
+/* ---------------- about ---------------- */
+function about() {
+  const nPh = B.species.reduce((a, s) => a + s.ph.length, 0);
+  const acc = ACC ? Object.entries(ACC.results).map(([t, r]) => `<tr><td>${esc(t)}</td><td>${r.top1}</td><td>${r.top3}</td><td>${r.top10}</td></tr>`).join('') : '';
+  $('#main').innerHTML = `<div class="prose"><h1>About Version 3 – Species level</h1>
+  <p class="credits"><b>Proprietary right holder - Dr. K.N. Ganeshaiah</b> · <b>Updated in 2026 by Dr. Sachin A. Rosario</b></p>
+  <p>Version 3 identifies the <b>species</b>, not only the group: ${B.species.length.toLocaleString('en-IN')} birds recorded in India. Version 1 keeps the original program; Version 2 identifies the 222 groups.</p>
+  <h2>How it works</h2><ol>
+   <li><b>Answer what you see</b> — kind of bird, size, colours of head, back and belly, markings, bill, legs, tail, habitat and behaviour. Every question has “Don't know”.</li>
+   <li>Each answer multiplies every species' chance by how likely a person looking at that species would give that answer. A wrong or unsure answer lowers a species; it never removes it. Male and female plumages are both counted for the ${B.species.filter(s => s.f).length} species where they differ.</li>
+   <li>The <b>best next question</b> is the one expected to split the likely species most (information gain).</li>
+   <li><b>Place and month are the backup</b>: they move up birds often recorded in that state or month (GBIF records) and move down the others, but never rule a bird out — so a rare visitor can still be found.</li>
+   <li>Before any answer, commoner birds (more records) sit slightly higher.</li></ol>
+  <h2>How good is it?</h2>
+  ${acc ? `<p>Tested on every species with a simulated observer who makes realistic mistakes (wrong colour 12% of the time, size one class off 35%, sees only 60% of the markings, skips bill, leg and tail questions often, kind of bird wrong 5%). Share of tests where the right bird was first, in the top 3, or in the top 10:</p>
+  <div style="overflow-x:auto"><table class="t"><thead><tr><th>Test</th><th>1st</th><th>Top 3</th><th>Top 10</th></tr></thead><tbody>${acc}</tbody></table></div>
+  <p class="muted small">This is a simulation built from the same descriptions the app uses, so real use will be somewhat lower — especially for the hard groups (leaf warblers, pipits, larks, swiftlets, female sunbirds), where a photo, call or expert check is needed. Please send feedback after use; it is how the descriptions get better.</p>` : ''}
+  <h2>Sources and credits</h2><ul>
+   <li><b>Names:</b> ${esc(B.sources.ebird)}. Older names (from GBIF and the Catalogue of Life) are shown in brackets on each species page and can be searched.</li>
+   <li><b>Field characters</b> (colours, markings, bill, legs, habitat, behaviour) were coded in 2026 for every species from eBird and Wikipedia descriptions and standard field-guide knowledge. Please report errors.</li>
+   <li><b>Size, tail and leg length:</b> ${esc(B.sources.avonet)} — body mass, wing, tail and tarsus measurements.</li>
+   <li><b>Records by state and month:</b> ${esc(B.sources.gbif)}.</li>
+   <li><b>Descriptions:</b> ${esc(B.sources.wiki)}, linked on each page.</li>
+   <li><b>Photographs:</b> ${nPh.toLocaleString('en-IN')} photographs by iNaturalist and Wikimedia Commons contributors under Creative Commons licences; photographer, licence and link under every photo. Non-commercial (NC) licences allow this free, educational use only.</li>
+   <li><b>Question drawings:</b> drawn for this version. <b>Fonts:</b> Kalam and Atkinson Hyperlegible (SIL Open Font License).</li></ul>
+  <h2>Names left out</h2><p class="muted small">These names appear in GBIF for India only because of older, wider species ideas; the birds involved are listed under their current Indian species. Left out: ${B.dropped.map(esc).join('; ')}. Javan Shortwing records are listed as Himalayan Shortwing.</p>
+  <h2>Feedback</h2><p>Use “Was this right? Tell us” after an identification. It opens your e-mail app with your answers filled in, addressed to <a href="mailto:${esc(B.feedbackEmail)}">${esc(B.feedbackEmail)}</a>.</p>
+  <p><a class="btn primary" href="#/">Start identifying</a></p></div>`;
+}
+
+/* ---------------- search ---------------- */
+(() => {
+  const inp = $('#q'), res = $('.find .res'); let sel = -1;
+  const idx = B.species.map(s => ({ s, text: [s.en, s.sci, ...(s.was || []), s.famEn || '', s.fam || ''].join(' | ').toLowerCase() }));
+  inp.oninput = () => { const q = inp.value.trim().toLowerCase(); sel = -1;
+    if (q.length < 2) { res.hidden = true; return; }
+    const hits = idx.filter(x => x.text.includes(q)).sort((a, b) => (b.s.en.toLowerCase().startsWith(q) - a.s.en.toLowerCase().startsWith(q)) || b.s.rec - a.s.rec).slice(0, 14);
+    res.innerHTML = hits.length ? hits.map((h, i) => `<a href="#/sp/${h.s.c}" data-i="${i}"><img src="${thumb(h.s)}" alt=""><span><b>${esc(h.s.en)}</b><small class="sci">${esc(h.s.sci)}</small></span></a>`).join('') : '<a>No match</a>';
+    res.hidden = false; };
+  inp.onkeydown = e => { const as = $$('a[data-i]', res); if (e.key === 'ArrowDown') sel = Math.min(as.length - 1, sel + 1); else if (e.key === 'ArrowUp') sel = Math.max(0, sel - 1); else if (e.key === 'Enter' && as[Math.max(0, sel)]) { location.hash = as[Math.max(0, sel)].getAttribute('href'); res.hidden = true; inp.blur(); return; } else if (e.key === 'Escape') { res.hidden = true; return; } else return; e.preventDefault(); as.forEach((a, i) => a.classList.toggle('sel', i === sel)); };
+  res.onclick = () => { res.hidden = true; inp.value = ''; };
+  document.addEventListener('click', e => { if (!e.target.closest('.find')) res.hidden = true; });
+})();
+
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+go();
+</script>
+</body>
+</html>
