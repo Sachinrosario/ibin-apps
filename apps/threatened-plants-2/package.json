@@ -1,0 +1,12 @@
+{
+  "name": "threatened-plants-2",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Threatened Plants of Western Ghats 2 Version 2 – Updated (names and status checked 2026)",
+  "scripts": {
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "2.12.4"
+  }
+}

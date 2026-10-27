@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Threatened Plants of Western Ghats 2</title>
+<meta name="theme-color" content="#2F5D3A">
+<link rel="icon" href="img/ui/icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+@font-face{font-family:"Kalam";src:url(fonts/kalam-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"Atkinson";src:url(fonts/atkinson-hyperlegible-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Atkinson";src:url(fonts/atkinson-hyperlegible-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"Atkinson";src:url(fonts/atkinson-hyperlegible-latin-400-italic.woff2) format("woff2");font-weight:400;font-style:italic;font-display:swap}
+:root{
+  --paper:#F6F7F2; --panel:#FFFFFF; --ink:#1D2A20; --muted:#5A675C; --rule:#DCE2D6;
+  --leaf:#2F5D3A; --leaf-soft:#E2EDDF; --sun:#D9822B; --sun-soft:#FBEBD9; --red:#B3264D; --green:#2E7D4F; --new:#5B3F95; --new-soft:#ECE6F7;
+  --hand:"Kalam","Segoe Print",cursive; --ui:"Atkinson",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r-sm:6px; --r-md:12px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 var(--ui)}
+img{max-width:100%;display:block}
+a{color:var(--leaf)}
+button,select,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+[hidden]{display:none!important}
+.sci{font-style:italic}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+.wrap{max-width:1280px;margin:0 auto;padding:0 18px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+header.top{background:var(--panel);border-bottom:1px solid var(--rule);position:sticky;top:0;z-index:20}
+header.top .wrap{display:flex;align-items:center;gap:22px;min-height:64px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.brand img{width:40px;height:40px;border-radius:8px}
+.brand b{display:block;font:700 23px/1 var(--hand);color:var(--leaf)}
+.brand small{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+nav.main{display:flex;gap:4px;flex-wrap:wrap}
+nav.main a{padding:7px 12px;border-radius:var(--r-sm);text-decoration:none;color:var(--ink);font-weight:700}
+nav.main a:hover{background:var(--leaf-soft)}
+nav.main a[aria-current]{background:var(--ink);color:#fff}
+.find{margin-left:auto;position:relative}
+.find input{width:250px;padding:8px 12px;border:1px solid var(--rule);border-radius:var(--r-sm);background:var(--paper)}
+.find .drop{position:absolute;right:0;top:42px;width:360px;background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);box-shadow:0 12px 32px rgba(0,0,0,.16);max-height:420px;overflow:auto;z-index:30}
+.find .drop a{display:flex;gap:10px;align-items:center;padding:7px 10px;text-decoration:none;color:inherit;border-bottom:1px solid var(--rule)}
+.find .drop a:hover,.find .drop a.sel{background:var(--sun-soft)}
+.find .drop img,.find .drop span.ph{width:52px;height:40px;object-fit:cover;border-radius:4px;flex:none;background:var(--leaf-soft)}
+.find .drop small{display:block;color:var(--muted)}
+main{padding:22px 0 60px}
+h1{font:700 36px/1.1 var(--hand);color:var(--leaf);margin:0 0 6px}
+h2{font-size:20px;margin:0 0 10px}
+h3{font-size:17px;margin:0 0 8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--r-sm);border:1px solid var(--rule);background:#fff;font-weight:700;cursor:pointer;text-decoration:none;color:var(--ink)}
+.btn:hover{border-color:var(--leaf)}
+.btn.primary{background:var(--leaf);border-color:var(--leaf);color:#fff}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.small{padding:4px 10px;font-size:14px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 6px 3px 11px;border-radius:999px;background:var(--sun-soft);border:1px solid var(--sun);font-size:14px}
+.chip button{border:0;background:none;cursor:pointer;padding:0 4px;font-weight:700;color:var(--muted)}
+.idgrid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:22px;align-items:start}
+.panel{background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);padding:16px}
+.board{position:relative;width:100%;max-width:640px;margin:0 auto}
+.board>img{width:100%;height:auto;user-select:none}
+.part{position:absolute;border:2px solid transparent;border-radius:8px;background:transparent;cursor:pointer;padding:0}
+.part:hover,.part:focus-visible{border-color:var(--leaf);background:rgba(47,93,58,.10)}
+.part.cur{border-color:var(--ink);background:rgba(29,42,32,.10)}
+.part.done::after{content:"✓";position:absolute;right:-12px;top:-12px;width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font:700 14px/22px var(--ui);text-align:center}
+.part.next{border-color:var(--sun);border-style:dashed;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{background:rgba(217,130,43,.18)}}
+@media (prefers-reduced-motion:reduce){.part.next{animation:none}}
+.answers{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;min-height:30px;align-items:center}
+.actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.next-tip{display:flex;gap:12px;align-items:center;justify-content:space-between;background:var(--sun-soft);border:1px solid var(--sun);border-radius:var(--r-md);padding:10px 14px;margin:14px 0}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.tabs button{border:1px solid var(--rule);background:#fff;border-radius:999px;padding:5px 12px;cursor:pointer;font-size:14px}
+.tabs button.cur{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tabs button.answered{background:var(--sun-soft);border-color:var(--sun)}
+.tabs button.cur.answered{background:var(--ink);color:#fff;border-color:var(--sun)}
+.tabs button:disabled{opacity:.4;cursor:default}
+.qhead h2{font:700 24px/1.25 var(--hand);color:var(--leaf);margin:0}
+.qhead p{margin:2px 0 0;color:var(--muted);font-size:14px}
+.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:12px}
+.opt{position:relative;border:1px solid var(--rule);border-radius:var(--r-md);background:#fff;padding:6px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:6px}
+.opt:hover{border-color:var(--leaf)}
+.opt.sel{border:2px solid var(--sun);background:var(--sun-soft);padding:5px}
+.opt .pic{aspect-ratio:1;border-radius:var(--r-sm);background:#fff center/contain no-repeat;border:1px solid var(--rule)}
+.opt .pic.word{display:flex;align-items:center;justify-content:center;text-align:center;font:700 22px/1.1 var(--hand);color:#fff;padding:8px}
+.opt b{font-size:15px;line-height:1.2}
+.opt small{color:var(--muted);font-size:13px}
+.opt.none{opacity:.5}
+.opt .ex{position:absolute;right:10px;top:10px;border:0;border-radius:999px;background:rgba(29,42,32,.75);color:#fff;font-size:12px;padding:2px 8px;cursor:pointer}
+.opt.dk .pic{display:flex;align-items:center;justify-content:center;font:700 54px/1 var(--hand);color:var(--muted);background:var(--paper)}
+.rlist{display:flex;flex-direction:column;gap:8px}
+.res{display:grid;grid-template-columns:76px 1fr;gap:12px;border:1px solid var(--rule);border-radius:var(--r-md);background:#fff;padding:8px;align-items:center}
+.res .ph{width:76px;height:58px;border-radius:6px;background:var(--leaf-soft) center/cover}
+.res a.nm{font-weight:700;text-decoration:none;color:var(--ink)}
+.res a.nm:hover{text-decoration:underline}
+.res .diff{font-size:13px;color:var(--red)}
+.mobilebar{display:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.card{background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column}
+.card:hover{border-color:var(--leaf)}
+.card .ph{aspect-ratio:4/3;background:var(--leaf-soft) center/cover}
+.card .tx{padding:8px 11px 11px}
+.card b{display:block;line-height:1.25}
+.card small{color:var(--muted)}
+.filterbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0 16px}
+.filterbar input,.filterbar select{padding:7px 10px;border:1px solid var(--rule);border-radius:var(--r-sm);background:#fff}
+.ghead{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px}
+.ggrid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:22px;align-items:start}
+.viewer{background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);padding:12px}
+.viewer .main{background:#111;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;aspect-ratio:16/10;overflow:hidden}
+.viewer .main img{width:100%;height:100%;object-fit:contain;cursor:zoom-in}
+.viewer .credit{font-size:13px;color:var(--muted);margin:8px 2px}
+.thumbs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px}
+.thumbs button{flex:none;width:78px;height:60px;border:2px solid transparent;border-radius:5px;padding:0;background:var(--leaf-soft) center/cover;cursor:pointer}
+.thumbs button.sel{border-color:var(--sun)}
+.block{background:#fff;border:1px solid var(--rule);border-radius:var(--r-md);padding:16px;margin-top:20px}
+table.t{width:100%;border-collapse:collapse;font-size:14px}
+table.t th,table.t td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--rule);vertical-align:top}
+table.t th{background:var(--paper)}
+.badge{display:inline-block;font-size:12px;font-weight:700;border-radius:4px;padding:0 6px;color:#fff;background:#6b7b7f;white-space:nowrap}
+.badge.CR{background:#c0182b}.badge.EN{background:#e0571b}.badge.VU{background:#c38d06}.badge.NT{background:#7a9a2a}.badge.LC{background:#2e7d4f}.badge.DD{background:#888}.badge.EX,.badge.EW{background:#222}
+.badge.R{background:#8a6d3b}.badge.TH{background:#9b4d00}
+.tag{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:0 8px;border:1px solid}
+.tag.new{color:var(--new);border-color:var(--new);background:var(--new-soft)}
+.tag.ren{color:var(--leaf);border-color:var(--leaf);background:var(--leaf-soft)}
+.tag.chg{color:#9a4a00;border-color:var(--sun);background:var(--sun-soft)}
+.note{border-left:4px solid var(--new);background:var(--new-soft);padding:10px 14px;border-radius:0 var(--r-sm) var(--r-sm) 0;margin:12px 0}
+.note.sun{border-color:var(--sun);background:var(--sun-soft)}
+dialog{border:0;border-radius:var(--r-md);padding:0;max-width:560px;width:calc(100% - 30px);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(10,20,12,.55)}
+dialog .in{padding:18px}
+dialog .foot{display:flex;justify-content:flex-end;gap:8px;padding:12px 18px;background:var(--paper)}
+dialog select,dialog textarea{width:100%;padding:8px;border:1px solid var(--rule);border-radius:var(--r-sm);margin-top:6px}
+.lightbox{position:fixed;inset:0;background:rgba(10,15,10,.92);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px;flex-direction:column;gap:10px;color:#fff}
+.lightbox img{max-height:80vh;width:auto;border-radius:6px}
+.lightbox .x{position:absolute;top:14px;right:18px;background:none;border:0;color:#fff;font-size:30px;cursor:pointer}
+.lightbox .nav{position:absolute;top:50%;border:0;background:rgba(255,255,255,.15);color:#fff;font-size:34px;width:48px;height:70px;cursor:pointer;margin-top:-35px}
+.lightbox p{max-width:900px;text-align:center;font-size:14px;margin:0}
+.lightbox a{color:#cfe8c8}
+footer{border-top:1px solid var(--rule);padding:18px 0 40px;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.prose{max-width:800px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:var(--r-md);z-index:60}
+.credits{background:var(--leaf-soft);border-radius:var(--r-md);padding:10px 14px;font-size:14px;margin-bottom:16px}
+@media (max-width:900px){
+  .idgrid,.ggrid{grid-template-columns:minmax(0,1fr)}
+  .find{margin-left:0;width:100%}.find input{width:100%}.find .drop{width:100%}
+  header.top{position:static}
+  h1{font-size:28px}
+  .opts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .mobilebar{display:flex;position:sticky;bottom:0;z-index:15;background:var(--ink);color:#fff;padding:10px 14px;gap:10px;align-items:center;justify-content:space-between;border-radius:var(--r-md) var(--r-md) 0 0}
+  .mobilebar a{color:#fff;font-weight:700}
+  table.t{font-size:13px}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="#/"><img src="img/ui/icon.png" alt=""><span><b>Threatened Plants of Western Ghats</b><small>Version 2 – Updated · IBIN Apps</small></span></a>
+  <nav class="main" aria-label="Main">
+    <a href="#/">Identify</a><a href="#/species">All species</a><a href="#/changes">What's changed</a><a href="#/about">About</a>
+  </nav>
+  <div class="find"><label class="sr" for="q">Search species</label><input id="q" type="search" placeholder="Search name, old name, family…" autocomplete="off"><div class="drop" hidden></div></div>
+</div></header>
+<main id="main" class="wrap" tabindex="-1"></main>
+<footer><div class="wrap">
+  <span>Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario · Version <span id="ver"></span></span>
+  <span>Names: Catalogue of Life, POWO (Kew) · Status: IUCN Red List, BSI, FRLHT/TDU · Photos: credited on each picture</span>
+</div></footer>
+<dialog id="dlg"></dialog>
+<script src="data/plants2.js"></script>
+<script>
+"use strict";
+const T = window.TP;
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const SP = Object.fromEntries(T.species.map(s => [s.id, s]));
+const CH = Object.fromEntries(T.chars.map(c => [c.id, c]));
+const SEC = Object.fromEntries(T.sections.map(s => [s.id, s]));
+// the month range repeats the individual months, so it is shown on species pages but not asked
+const ASK = id => id !== 'Flowering Period (Month Range)';
+const STATUS_NAME = { iucn: 'IUCN Red List', bsi: 'BSI (Red Data Book)', frlht: 'FRLHT / TDU (CAMP)' };
+const LBL = k => T.iucn[k] || { TH: 'Threatened', R: 'Rare' }[k] || k || '–';
+const THREAT = new Set(['CR', 'EN', 'VU', 'TH', 'R', 'EX', 'EW']);
+// tree labels on the board picture (803 × 719), as in the original program
+const BOARD = [['habit', 13, 10, 85, 35], ['leaf', 543, 120, 72, 40], ['flowerc', 498, 207, 138, 92], ['flowerp', 348, 271, 82, 88], ['fruit', 693, 391, 76, 38], ['habitat', 18, 639, 114, 38], ['status', 432, 617, 150, 58], ['search', 668, 607, 122, 78]];
+function store(k, v) { try { if (v === undefined) return JSON.parse(localStorage.getItem('tp2.' + k)); localStorage.setItem('tp2.' + k, JSON.stringify(v)); } catch (e) { return undefined; } }
+function toast(t) { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.append(d); setTimeout(() => d.remove(), 2600); }
+$('#ver').textContent = T.version;
+
+/* ---------- state ---------- */
+const S = store('state') || {};
+S.ans = S.ans || {}; S.sec = S.sec || 'habit'; S.q = S.q || null;
+for (const k of Object.keys(S.ans)) if (!CH[k]) delete S.ans[k];
+let HIST = [];
+const save = () => store('state', S);
+const push = () => { HIST.push(JSON.stringify(S.ans)); if (HIST.length > 60) HIST.shift(); };
+const label = (cid, k) => (CH[cid].values.find(v => v.key === k) || { label: k }).label;
+
+/* ---------- matching ----------
+   Within one character the chosen values are OR, across characters AND (as in the original).
+   A species with no value recorded for a character is not counted against it.
+   Species that miss on exactly one character are offered as close matches. */
+function check(s, cid, keys) { const v = s.ch[cid]; if (!v || !v.length) return 'u'; return v.some(x => keys.includes(x)) ? 'y' : 'n'; }
+function match(ans = S.ans) {
+  const exact = [], close = [];
+  const ids = Object.keys(ans).filter(k => ans[k].length);
+  for (const s of T.species) {
+    const miss = ids.filter(cid => check(s, cid, ans[cid]) === 'n');
+    const unk = ids.filter(cid => check(s, cid, ans[cid]) === 'u');
+    if (!miss.length) exact.push({ s, unk }); else if (miss.length === 1 && ids.length >= 3) close.push({ s, miss, unk });
+  }
+  const order = (a, b) => a.unk.length - b.unk.length || a.s.name.localeCompare(b.s.name);
+  return { exact: exact.sort(order), close: close.sort(order), n: ids.length };
+}
+function valueCounts(list, cid) { const c = {}; for (const { s } of list) for (const k of s.ch[cid] || []) c[k] = (c[k] || 0) + 1; return c; }
+// a character can be asked while the matched species still show two or more of its values
+const askable = (list, cid) => Object.keys(valueCounts(list, cid)).length >= 2 || (S.ans[cid] || []).length > 0;
+function bestNext(list) {
+  let best = null, bestH = 0.05;
+  for (const c of T.chars) {
+    if (!ASK(c.id) || (S.ans[c.id] || []).length) continue;
+    const cnt = valueCounts(list, c.id), keys = Object.keys(cnt); if (keys.length < 2) continue;
+    const known = list.filter(({ s }) => (s.ch[c.id] || []).length).length; if (known < list.length * 0.6) continue;
+    const tot = keys.reduce((a, k) => a + cnt[k], 0);
+    const H = -keys.reduce((a, k) => a + (cnt[k] / tot) * Math.log2(cnt[k] / tot), 0) * (known / list.length);
+    if (H > bestH) { bestH = H; best = c.id; }
+  }
+  return best;
+}
+
+/* ---------- router ---------- */
+const routes = { '': identify, 'species': speciesList, 'sp': speciesPage, 'changes': changes, 'about': about };
+function go() {
+  const [r, ...a] = location.hash.replace(/^#\/?/, '').split('/');
+  (routes[r] || identify)(...a.map(decodeURIComponent));
+  $$('nav.main a').forEach(x => x.toggleAttribute('aria-current', x.getAttribute('href') === '#/' + (routes[r] ? r : '').replace('sp', 'species')));
+  if (r !== '' ) window.scrollTo(0, 0);
+}
+addEventListener('hashchange', go);
+
+/* ---------- identify ---------- */
+function identify() {
+  const m = match(), list = m.exact, nx = list.length > 1 ? bestNext(list) : null;
+  const secOf = cid => CH[cid].section;
+  const done = new Set(Object.keys(S.ans).filter(k => S.ans[k].length).map(secOf));
+  $('#main').innerHTML = `
+  <div class="credits">Proprietary right holder: <b>Dr. K.N. Ganeshaiah</b> · Updated in 2026 by <b>Dr. Sachin A. Rosario</b></div>
+  <div class="idgrid">
+    <section class="panel" aria-labelledby="ih">
+      <h1 id="ih">Identify a threatened plant</h1>
+      <p class="muted small" style="margin:0 0 8px">Click a part of the tree, then pick what you see. You can pick more than one picture for a character. Names and status are as of ${esc(T.checked || '2026')}.</p>
+      <div class="board"><img src="img/ui/tree.png" alt="Tree with labels: Habit, Leaf, Floral characters, Floral parts, Fruit, Habitat, Conservation status" width="803" height="719">
+        ${BOARD.map(([k, x, y, w, h]) => `<button class="part${k === S.sec ? ' cur' : ''}${done.has(k) ? ' done' : ''}${nx && secOf(nx) === k && k !== S.sec ? ' next' : ''}" data-sec="${k}" style="left:${x / 8.03}%;top:${y / 7.19}%;width:${w / 8.03}%;height:${h / 7.19}%" aria-label="${esc(k === 'search' ? 'Species search' : SEC[k].label)}"></button>`).join('')}
+      </div>
+      <div class="answers">${Object.keys(S.ans).filter(k => S.ans[k].length).map(k => `<span class="chip">${esc(CH[k].caption)}: ${esc(S.ans[k].map(v => label(k, v)).join(' / '))}<button data-rm="${esc(k)}" aria-label="Remove ${esc(CH[k].caption)}">×</button></span>`).join('') || '<span class="muted small">Nothing picked yet.</span>'}</div>
+      <div class="actions"><button class="btn small" id="undo" ${HIST.length ? '' : 'disabled'}>↶ Undo</button><button class="btn small" id="clear" ${m.n ? '' : 'disabled'}>Start over</button><button class="btn small" id="fb">Send feedback</button></div>
+      ${nx ? `<div class="next-tip"><span>Most useful next: <b>${esc(CH[nx].caption)}</b></span><button class="btn small primary" id="gonext">Ask it</button></div>` : ''}
+      <div id="qp" style="margin-top:14px"></div>
+    </section>
+    <section class="results" aria-labelledby="rh">
+      <h2 id="rh">${list.length} of ${T.species.length} species match</h2>
+      ${list.length === 0 ? '<p class="note sun">No species has all of these. Remove a choice, or look at the close matches below.</p>' : ''}
+      <div class="rlist">${list.slice(0, 60).map(r => resRow(r)).join('')}</div>
+      ${list.length > 60 ? `<p class="muted small">${list.length - 60} more – pick another character to narrow the list.</p>` : ''}
+      ${m.close.length ? `<h3 style="margin-top:18px">Close matches – differ in one character (${m.close.length})</h3><div class="rlist">${m.close.slice(0, 12).map(r => resRow(r, true)).join('')}</div>` : ''}
+    </section>
+  </div>
+  <div class="mobilebar"><span>${list.length} species match</span><a href="#rh">See list ↓</a></div>`;
+  $$('.part').forEach(b => b.onclick = () => { if (b.dataset.sec === 'search') { window.scrollTo(0, 0); $('#q').focus(); return toast('Type a name, old name or family'); } S.sec = b.dataset.sec; S.q = null; save(); identify(); $('#qp').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); });
+  $$('[data-rm]').forEach(b => b.onclick = () => { push(); delete S.ans[b.dataset.rm]; save(); identify(); });
+  $('#undo').onclick = () => { if (HIST.length) { S.ans = JSON.parse(HIST.pop()); save(); identify(); } };
+  $('#clear').onclick = () => { push(); S.ans = {}; S.q = null; save(); identify(); };
+  $('#fb').onclick = () => feedback();
+  if ($('#gonext')) $('#gonext').onclick = () => { S.sec = secOf(nx); S.q = nx; save(); identify(); };
+  drawQuestion(list);
+}
+const pic = s => (s.photos[0] || {}).src || (s.sheets[0] || {}).src || '';
+function badges(s) { return ['iucn', 'bsi', 'frlht'].filter(k => s.status[k] && s.status[k].now).map(k => `<span class="badge ${esc(s.status[k].now)}" title="${esc(STATUS_NAME[k])}: ${esc(LBL(s.status[k].now))}">${k.toUpperCase()} ${esc(s.status[k].now)}</span>`).join(' '); }
+function tags(s) { return [s.isNew ? '<span class="tag new">New in V2</span>' : '', s.old.length ? '<span class="tag ren">Renamed</span>' : '', Object.values(s.status).some(x => x.changed) ? '<span class="tag chg">Status changed</span>' : ''].join(' '); }
+const nm = s => `<span class="sci">${esc(s.name)}</span>${s.old.length ? ` <span class="muted">(<span class="sci">${esc(s.old.join(', '))}</span>)</span>` : ''}`;
+function resRow(r, close) {
+  const s = r.s;
+  return `<div class="res"><div class="ph" style="background-image:url('${pic(s)}')" role="img" aria-label=""></div><div>
+    <a class="nm" href="#/sp/${s.id}">${nm(s)}</a><div class="small muted">${esc(s.family)} ${badges(s)} ${tags(s)}</div>
+    ${close ? `<div class="diff">Differs in ${esc(r.miss.map(c => CH[c].caption).join(', '))}: has ${esc(r.miss.map(c => (s.ch[c] || []).map(v => label(c, v)).join('/')).join('; '))}</div>` : ''}
+    ${r.unk.length ? `<div class="small muted">Not recorded: ${esc(r.unk.map(c => CH[c].caption).join(', '))}</div>` : ''}</div></div>`;
+}
+function drawQuestion(list) {
+  const sec = SEC[S.sec], ids = sec.chars.filter(ASK);
+  if (!S.q || !ids.includes(S.q)) S.q = ids.find(c => askable(list, c)) || ids[0];
+  const c = CH[S.q], cnt = valueCounts(list, c.id), sel = S.ans[c.id] || [];
+  const shown = c.values.filter(v => cnt[v.key] || sel.includes(v.key));
+  const rest = c.values.filter(v => !cnt[v.key] && !sel.includes(v.key));
+  const tile = v => `<button class="opt${sel.includes(v.key) ? ' sel' : ''}${cnt[v.key] ? '' : ' none'}" data-v="${esc(v.key)}" aria-pressed="${sel.includes(v.key)}">
+      ${v.thumb ? `<span class="pic" style="background-image:url('${v.thumb}')"></span>` : `<span class="pic word badge ${esc(v.key)}" style="border-radius:6px;font-size:40px">${esc(v.key)}</span>`}
+      <b>${esc(v.label)}</b><small>${cnt[v.key] || 0} species</small>${v.pics.length ? `<span class="ex" data-ex="${esc(v.key)}" role="button" tabindex="0">photos</span>` : ''}</button>`;
+  $('#qp').innerHTML = `
+    <div class="tabs" role="tablist">${ids.map(id => `<button class="${id === c.id ? 'cur' : ''}${(S.ans[id] || []).length ? ' answered' : ''}" data-q="${esc(id)}" ${askable(list, id) ? '' : 'disabled title="All matching species are the same here"'}>${esc(CH[id].caption)}</button>`).join('')}</div>
+    <div class="qhead"><h2>${esc(c.caption)}</h2><p>${c.status ? 'Current status. Pick one or more.' : 'Pick one or more pictures. Counts are among the species that match so far.'}</p></div>
+    <div class="opts">${shown.map(tile).join('')}
+      <button class="opt dk" data-dk="1"><span class="pic">?</span><b>Don't know</b><small>skip this character</small></button></div>
+    ${rest.length ? `<details style="margin-top:10px"><summary class="small">Values no matching species has (${rest.length})</summary><div class="opts">${rest.map(tile).join('')}</div></details>` : ''}`;
+  $$('[data-q]', $('#qp')).forEach(b => b.onclick = () => { S.q = b.dataset.q; save(); drawQuestion(list); });
+  $$('.opt[data-v]', $('#qp')).forEach(b => b.onclick = e => {
+    if (e.target.dataset.ex) return lightbox(c.values.find(v => v.key === e.target.dataset.ex).pics.map(p => ({ ...p, cap: label(c.id, e.target.dataset.ex) + ' – picture from the original program' })), 0);
+    push(); const k = b.dataset.v, a = new Set(S.ans[c.id] || []); a.has(k) ? a.delete(k) : a.add(k);
+    if (a.size) S.ans[c.id] = [...a].sort((x, y) => c.values.findIndex(v => v.key === x) - c.values.findIndex(v => v.key === y)); else delete S.ans[c.id];
+    save(); identify();
+  });
+  $$('.ex', $('#qp')).forEach(x => x.onkeydown = e => { if (e.key === 'Enter') x.click(); });
+  $('[data-dk]', $('#qp')).onclick = () => { push(); delete S.ans[c.id]; const nxt = ids[ids.indexOf(c.id) + 1]; if (nxt) S.q = nxt; save(); identify(); };
+}
+
+/* ---------- feedback (opens the user's e-mail program) ---------- */
+function feedback(s) {
+  const d = $('#dlg');
+  d.innerHTML = `<form method="dialog"><div class="in"><h2>Send feedback</h2>
+    <p class="small muted">Your e-mail program opens with this message to ${esc(T.feedbackEmail)}. Nothing is sent until you press Send there.</p>
+    <label>About<select id="fbk"><option>A wrong name or status</option><option>A wrong character value</option><option>A wrong or uncredited photo</option><option>The program</option><option>Other</option></select></label>
+    <label style="display:block;margin-top:10px">Message<textarea id="fbt" rows="5">${s ? 'Species: ' + esc(s.name) + '\n' : ''}</textarea></label></div>
+    <div class="foot"><button class="btn" value="x">Cancel</button><button class="btn primary" id="fbs" value="ok">Open e-mail</button></div></form>`;
+  d.showModal();
+  $('#fbs').onclick = () => {
+    const picked = Object.keys(S.ans).map(k => CH[k].caption + ': ' + S.ans[k].map(v => label(k, v)).join('/')).join('; ');
+    const body = $('#fbt').value + '\n\n--\nChoices: ' + (picked || 'none') + '\nPage: ' + location.hash + '\nVersion ' + T.version;
+    location.href = `mailto:${T.feedbackEmail}?subject=${encodeURIComponent('Threatened Plants V2 – ' + $('#fbk').value)}&body=${encodeURIComponent(body)}`;
+  };
+}
+
+/* ---------- pictures ---------- */
+function lightbox(items, i) {
+  const d = document.createElement('div'); d.className = 'lightbox'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-label', 'Picture');
+  const draw = () => { const p = items[i]; d.innerHTML = `<button class="x" aria-label="Close">×</button>${items.length > 1 ? '<button class="nav" style="left:14px" aria-label="Previous">‹</button><button class="nav" style="right:14px" aria-label="Next">›</button>' : ''}<img src="${p.src}" alt=""><p>${p.cap || ''}</p>`;
+    d.querySelector('.x').onclick = close; $$('.nav', d).forEach((b, j) => b.onclick = () => { i = (i + (j ? 1 : items.length - 1)) % items.length; draw(); }); };
+  const close = () => { d.remove(); removeEventListener('keydown', key); };
+  const key = e => { if (e.key === 'Escape') close(); if (e.key === 'ArrowRight' && items.length > 1) { i = (i + 1) % items.length; draw(); } if (e.key === 'ArrowLeft' && items.length > 1) { i = (i + items.length - 1) % items.length; draw(); } };
+  addEventListener('keydown', key); d.onclick = e => { if (e.target === d) close(); };
+  document.body.append(d); draw();
+}
+const credit = p => p.site ? `Photo: ${esc(p.credit || 'unknown')} · ${p.licenseUrl ? `<a href="${esc(p.licenseUrl)}" target="_blank" rel="noopener">${esc(p.license)}</a>` : esc(p.license || '')} · <a href="${esc(p.source)}" target="_blank" rel="noopener">${esc(p.site)}</a>` : 'Species sheet from the original program (Dr. K.N. Ganeshaiah)';
+
+/* ---------- species page ---------- */
+function speciesPage(id) {
+  const s = SP[id]; if (!s) return speciesList();
+  const items = [...s.sheets.map(p => ({ ...p, site: null })), ...s.photos];
+  const st = k => s.status[k] || {};
+  const row = (k) => { const x = st(k); if (!x.now && !x.was) return `<tr><th>${STATUS_NAME[k]}</th><td colspan="3" class="muted">Not listed</td></tr>`;
+    return `<tr><th>${STATUS_NAME[k]}</th><td>${x.now ? `<span class="badge ${esc(x.now)}">${esc(x.now)}</span> ${esc(LBL(x.now))}` : '<span class="muted">Not listed now</span>'}${x.year ? ` <span class="muted">(${esc(x.year)})</span>` : ''}${x.states ? `<div class="small muted">${esc(Object.entries(x.states).map(([a, b]) => a + ': ' + b).join(' · '))}</div>` : ''}</td>
+      <td>${x.was ? `${esc(LBL(x.was))} <span class="muted">(2015)</span>` : (s.isNew ? '<span class="muted">–</span>' : '<span class="muted">Not listed in 2015</span>')}</td>
+      <td>${x.changed ? '<span class="tag chg">Changed</span>' : ''} ${x.link ? `<a href="${esc(x.link)}" target="_blank" rel="noopener">source</a>` : ''}${x.note ? `<div class="small muted">${esc(x.note)}</div>` : ''}</td></tr>`; };
+  $('#main').innerHTML = `
+  <div class="ghead"><div><p class="small muted" style="margin:0"><a href="#/species">All species</a> › ${esc(s.family)}</p>
+    <h1 class="sci" style="font-family:var(--ui);font-weight:700;font-size:32px">${esc(s.name)} <span class="muted" style="font-style:normal;font-weight:400;font-size:20px">${esc(s.author || '')}</span></h1>
+    ${s.old.length ? `<p style="margin:0">Earlier name: <span class="sci">${esc(s.old.join(', '))}</span> (used in Version 1)</p>` : ''}
+    <p style="margin:4px 0 0">Family <b>${esc(s.family)}</b>${s.familyWas ? ` <span class="muted">(was ${esc(s.familyWas)})</span>` : ''} · ${badges(s)} ${tags(s)}</p></div>
+    <div class="actions"><button class="btn small" id="fbs2">Report a problem</button><a class="btn small primary" href="#/">Back to identify</a></div></div>
+  ${s.isNew ? `<div class="note"><b>Added in Version 2.</b> Characters filled from published descriptions – please verify. ${s.charSources && s.charSources.length ? 'Sources: ' + s.charSources.map(x => x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.title)}</a>` : esc(x.title)).join('; ') : ''}</div>` : ''}
+  ${s.notes ? `<div class="note sun">${esc(s.notes)}</div>` : ''}
+  <div class="ggrid">
+    <div class="viewer">${items.length ? `<div class="main"><img id="vi" src="${items[0].src}" alt="${esc(s.name)}"></div><div class="credit" id="vc">${credit(items[0])}</div>
+      <div class="thumbs">${items.map((p, i) => `<button class="${i ? '' : 'sel'}" data-i="${i}" style="background-image:url('${p.src}')" aria-label="Picture ${i + 1}"></button>`).join('')}</div>` : '<p class="muted">No pictures yet.</p>'}</div>
+    <div>
+      <div class="block" style="margin-top:0"><h2>Conservation status</h2><table class="t"><tr><th></th><th>Now</th><th>Version 1</th><th></th></tr>${['iucn', 'bsi', 'frlht'].map(row).join('')}</table></div>
+      <div class="block"><h2>Names</h2><table class="t">
+        <tr><th>Accepted name</th><td><span class="sci">${esc(s.name)}</span> ${esc(s.author || '')}</td></tr>
+        ${s.old.length ? `<tr><th>Earlier name</th><td class="sci">${esc(s.old.join(', '))}</td></tr>` : ''}
+        <tr><th>Checked in</th><td>${s.nameSource ? esc(s.nameSource.title || '') + (s.nameSource.url ? ` · <a href="${esc(s.nameSource.url)}" target="_blank" rel="noopener">open</a>` : '') : 'Catalogue of Life, POWO'}${s.nameSource && s.nameSource.url2 ? ` · <a href="${esc(s.nameSource.url2)}" target="_blank" rel="noopener">POWO</a>` : ''}</td></tr></table></div>
+    </div>
+  </div>
+  <div class="block"><h2>Characters</h2><table class="t">${T.sections.filter(x => x.id !== 'status').map(sec => sec.chars.map(cid => `<tr><th>${esc(CH[cid].caption)}</th><td>${(s.ch[cid] || []).length ? esc(s.ch[cid].map(v => label(cid, v)).join(', ')) : '<span class="muted">not recorded</span>'}</td></tr>`).join('')).join('')}</table></div>`;
+  $$('.thumbs button').forEach(b => b.onclick = () => { const p = items[+b.dataset.i]; $('#vi').src = p.src; $('#vc').innerHTML = credit(p); $$('.thumbs button').forEach(x => x.classList.toggle('sel', x === b)); $('#vi').dataset.i = b.dataset.i; });
+  if ($('#vi')) $('#vi').onclick = () => lightbox(items.map(p => ({ ...p, cap: credit(p) })), +($('#vi').dataset.i || 0));
+  $('#fbs2').onclick = () => feedback(s);
+}
+
+/* ---------- all species ---------- */
+function speciesList() {
+  const F = store('filter') || { t: '', fam: '', st: '', only: '' };
+  const fams = [...new Set(T.species.map(s => s.family))].sort();
+  $('#main').innerHTML = `<h1>All species (${T.species.length})</h1>
+    <div class="filterbar"><input id="ft" type="search" placeholder="Filter by name…" value="${esc(F.t)}" aria-label="Filter by name">
+      <select id="ff" aria-label="Family"><option value="">All families</option>${fams.map(f => `<option${f === F.fam ? ' selected' : ''}>${esc(f)}</option>`).join('')}</select>
+      <select id="fs" aria-label="IUCN status"><option value="">Any IUCN status</option>${Object.keys(T.iucn).map(k => `<option value="${k}"${k === F.st ? ' selected' : ''}>${esc(T.iucn[k])}</option>`).join('')}<option value="-"${F.st === '-' ? ' selected' : ''}>Not assessed</option></select>
+      <select id="fo" aria-label="Show"><option value="">All</option><option value="new"${F.only === 'new' ? ' selected' : ''}>New in Version 2</option><option value="ren"${F.only === 'ren' ? ' selected' : ''}>Renamed</option><option value="chg"${F.only === 'chg' ? ' selected' : ''}>Status changed</option></select>
+      <span id="fn" class="muted small"></span></div><div class="grid" id="gl"></div>`;
+  const draw = () => {
+    F.t = $('#ft').value; F.fam = $('#ff').value; F.st = $('#fs').value; F.only = $('#fo').value; store('filter', F);
+    const q = F.t.trim().toLowerCase();
+    const L = T.species.filter(s => (!q || [s.name, ...s.old, s.family].some(x => x.toLowerCase().includes(q))) && (!F.fam || s.family === F.fam)
+      && (!F.st || (F.st === '-' ? !(s.status.iucn || {}).now : (s.status.iucn || {}).now === F.st))
+      && (!F.only || (F.only === 'new' ? s.isNew : F.only === 'ren' ? s.old.length : Object.values(s.status).some(x => x.changed))));
+    $('#fn').textContent = L.length + ' shown';
+    $('#gl').innerHTML = L.map(s => `<a class="card" href="#/sp/${s.id}"><div class="ph" style="background-image:url('${pic(s)}')"></div><div class="tx"><b>${nm(s)}</b><small>${esc(s.family)}</small><div>${badges(s)}</div><div>${tags(s)}</div></div></a>`).join('');
+  };
+  $$('.filterbar input,.filterbar select').forEach(x => x.oninput = draw); draw();
+}
+
+/* ---------- what's changed ---------- */
+function changes() {
+  const ren = T.species.filter(s => s.old.length), fam = T.species.filter(s => s.familyWas && !s.isNew);
+  const stc = T.species.flatMap(s => ['iucn', 'bsi', 'frlht'].filter(k => s.status[k] && s.status[k].changed).map(k => ({ s, k, x: s.status[k] })));
+  const added = T.species.filter(s => s.isNew);
+  const notNow = T.species.filter(s => !s.isNew && !['iucn', 'bsi', 'frlht'].some(k => THREAT.has((s.status[k] || {}).now)));
+  const removed = (T.changes && T.changes.removed) || [];
+  const sl = s => `<a href="#/sp/${s.id}" class="sci">${esc(s.name)}</a>`;
+  $('#main').innerHTML = `<h1>What's changed in Version 2</h1>
+  <p class="prose">Version 1 is the program as it was in 2015–16. In Version 2 every name and status was checked again (${esc(T.checked || '2026')}). Old names are kept in brackets and still work in search.</p>
+  <div class="block"><h2>Renamed (${ren.length})</h2>${ren.length ? `<table class="t"><tr><th>Name now</th><th>Name in Version 1</th><th>Source</th></tr>${ren.map(s => `<tr><td>${sl(s)} ${esc(s.author || '')}</td><td class="sci">${esc(s.old.join(', '))}</td><td>${s.nameSource && s.nameSource.url ? `<a href="${esc(s.nameSource.url)}" target="_blank" rel="noopener">${esc(s.nameSource.title || 'source')}</a>` : ''}</td></tr>`).join('')}</table>` : '<p class="muted">None.</p>'}</div>
+  ${fam.length ? `<div class="block"><h2>Family changed (${fam.length})</h2><table class="t"><tr><th>Species</th><th>Family now</th><th>Family in Version 1</th></tr>${fam.map(s => `<tr><td>${sl(s)}</td><td>${esc(s.family)}</td><td>${esc(s.familyWas)}</td></tr>`).join('')}</table></div>` : ''}
+  <div class="block"><h2>Status changed (${stc.length})</h2>${stc.length ? `<table class="t"><tr><th>Species</th><th>List</th><th>Version 1 (2015)</th><th>Now</th></tr>${stc.map(({ s, k, x }) => `<tr><td>${sl(s)}</td><td>${STATUS_NAME[k]}</td><td>${esc(LBL(x.was))}</td><td>${x.now ? `<span class="badge ${esc(x.now)}">${esc(x.now)}</span> ${esc(LBL(x.now))}` : 'Not listed now'}${x.year ? ` (${esc(x.year)})` : ''}</td></tr>`).join('')}</table>` : '<p class="muted">None.</p>'}</div>
+  <div class="block"><h2>New species added (${added.length})</h2>${added.length ? `<p class="small muted">Characters of these species were filled from published descriptions and should be verified.</p><table class="t"><tr><th>Species</th><th>Family</th><th>Status</th></tr>${added.map(s => `<tr><td>${sl(s)} ${esc(s.author || '')}</td><td>${esc(s.family)}</td><td>${badges(s)}</td></tr>`).join('')}</table>` : '<p class="muted">None.</p>'}</div>
+  <div class="block"><h2>No longer threatened (${notNow.length})</h2>${notNow.length ? `<p class="small muted">Kept in the key, but no current list now places them in a threatened category.</p><table class="t"><tr><th>Species</th><th>Status now</th></tr>${notNow.map(s => `<tr><td>${sl(s)}</td><td>${badges(s) || 'Not listed'}</td></tr>`).join('')}</table>` : '<p class="muted">None.</p>'}</div>
+  <div class="block"><h2>Removed (${removed.length})</h2>${removed.length ? `<table class="t"><tr><th>Name in Version 1</th><th>Why</th></tr>${removed.map(r => `<tr><td class="sci">${esc(r.name)}</td><td>${esc(r.why)}</td></tr>`).join('')}</table>` : '<p class="muted">None – every Version 1 species is still in the key.</p>'}</div>`;
+}
+
+/* ---------- about ---------- */
+function about() {
+  $('#main').innerHTML = `<div class="prose"><h1>About</h1>
+  <div class="credits">Proprietary right holder: <b>Dr. K.N. Ganeshaiah</b> · Updated in 2026 by <b>Dr. Sachin A. Rosario</b></div>
+  <p><b>Threatened Plants of Western Ghats</b> (the RET Kit) is a field guide by Prof. K.N. Ganeshaiah, University of Agricultural Sciences, Bangalore (2015–16). It identifies threatened plants of the Western Ghats from their habit, leaves, flowers, fruit, habitat and conservation status.</p>
+  <h2>How identification works</h2>
+  <ul><li>Pick one or more pictures for a character: a plant matches if it has any of them.</li>
+  <li>Every character you pick must match. A species with no value recorded for a character is not ruled out by it.</li>
+  <li>Species that differ in just one character are shown as close matches, in case one choice was wrong.</li>
+  <li>"Most useful next" suggests the character that splits the remaining species most evenly.</li></ul>
+  <h2>What Version 2 updates</h2>
+  <ul><li>Names checked in Catalogue of Life and POWO (Kew); old names shown in brackets.</li>
+  <li>Status: current IUCN Red List category; FRLHT/TDU state assessments (CAMP); BSI Red Data Book status as published.</li>
+  <li>New threatened species of the Western Ghats, with characters filled from published descriptions (marked for checking).</li>
+  <li>Credited field photos from Wikimedia Commons and iNaturalist contributors, alongside the original species sheets.</li></ul>
+  <h2>Sources</h2><ul>${(T.sources || []).map(x => `<li>${x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.title)}</a>` : esc(x.title)}${x.note ? ' – ' + esc(x.note) : ''}</li>`).join('') || '<li>Catalogue of Life · POWO (Royal Botanic Gardens, Kew) · IUCN Red List · FRLHT/TDU ENVIS · GBIF</li>'}</ul>
+  <p><button class="btn" id="fba">Send feedback</button> <a class="btn" href="https://sachinrosario.github.io/ibin-apps/threatened-plants/" target="_blank" rel="noopener">Open Version 1 (original)</a></p></div>`;
+  $('#fba').onclick = () => feedback();
+}
+
+/* ---------- search ---------- */
+(() => {
+  const q = $('#q'), box = $('.find .drop'); let sel = -1, hits = [];
+  const draw = () => { box.hidden = !hits.length; box.innerHTML = hits.map((s, i) => `<a href="#/sp/${s.id}" class="${i === sel ? 'sel' : ''}">${pic(s) ? `<img src="${pic(s)}" alt="">` : '<span class="ph"></span>'}<span><b>${nm(s)}</b><small>${esc(s.family)}</small></span></a>`).join(''); };
+  q.oninput = () => { const t = q.value.trim().toLowerCase(); sel = -1; hits = t.length < 2 ? [] : T.species.filter(s => [s.name, ...s.old, s.family, s.genus].some(x => x.toLowerCase().includes(t))).slice(0, 12); draw(); };
+  q.onkeydown = e => { if (e.key === 'ArrowDown') { sel = Math.min(sel + 1, hits.length - 1); draw(); e.preventDefault(); } else if (e.key === 'ArrowUp') { sel = Math.max(sel - 1, 0); draw(); e.preventDefault(); }
+    else if (e.key === 'Enter' && hits.length) { location.hash = '#/sp/' + hits[Math.max(sel, 0)].id; hits = []; q.value = ''; draw(); } else if (e.key === 'Escape') { hits = []; draw(); } };
+  box.onclick = () => { hits = []; q.value = ''; draw(); };
+  document.addEventListener('click', e => { if (!e.target.closest('.find')) { hits = []; draw(); } });
+})();
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+go();
+</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+1 ICON "app.ico"
+1 24 "app.manifest"
+1 VERSIONINFO
+FILEVERSION 1,0,0,0
+PRODUCTVERSION 1,0,0,0
+FILEOS 0x40004
+FILETYPE 0x1
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904B0"
+    BEGIN
+      VALUE "CompanyName", "IBIN Apps"
+      VALUE "FileDescription", "Threatened Plants of Western Ghats 2"
+      VALUE "FileVersion", "1.0.0"
+      VALUE "InternalName", "ThreatenedPlants2"
+      VALUE "LegalCopyright", "Threatened Plants of Western Ghats (c) 2015-2016 K.N. Ganeshaiah, UAS Bangalore. Rebuild 2026."
+      VALUE "OriginalFilename", "ThreatenedPlants2.exe"
+      VALUE "ProductName", "Threatened Plants of Western Ghats 2"
+      VALUE "ProductVersion", "1.0.0"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x409, 1200
+  END
+END
