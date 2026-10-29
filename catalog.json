@@ -695,6 +695,69 @@
      ]
     },
     {
+     "id": "vrikshayurveda-2",
+     "key": "v2",
+     "label": "Version 2 – Scientific names updated (2026)",
+     "versionName": "Version 2 – Scientific names updated",
+     "version": "2.0.0",
+     "released": "2026-10-29",
+     "published": false,
+     "summary": "Exactly like Version 1, with the scientific names brought up to date: the 2011 name is kept and the current accepted name is shown in brackets.",
+     "facts": [
+      "Same screens as Version 1",
+      "41 names updated",
+      "New name in brackets",
+      "869 verses",
+      "3,754 pictures"
+     ],
+     "web": "https://sachinrosario.github.io/ibin-apps/vrikshayurveda-2/",
+     "preview": "",
+     "downloads": [
+      {
+       "os": "windows",
+       "kind": "Installer",
+       "file": "Vrikshayurveda2_2.0.0_Setup.exe",
+       "size": "",
+       "note": "Installs beside Versions 1 and 3. No administrator password."
+      },
+      {
+       "os": "windows",
+       "kind": "No-install",
+       "file": "Vrikshayurveda2.exe",
+       "size": "",
+       "note": "Runs straight from a folder or pen drive."
+      },
+      {
+       "os": "mac",
+       "kind": "App",
+       "file": "Vrikshayurveda2_2.0.0_universal.dmg",
+       "size": "",
+       "note": "Intel and Apple-silicon Macs."
+      },
+      {
+       "os": "ubuntu",
+       "kind": "Package",
+       "file": "Vrikshayurveda2_2.0.0_amd64.deb",
+       "size": "",
+       "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+      },
+      {
+       "os": "any",
+       "kind": "Offline folder",
+       "file": "Vrikshayurveda2_2.0.0_offline.zip",
+       "size": "",
+       "note": "Any computer. Extract, then double-click Open Kit.html."
+      }
+     ],
+     "changes": [
+      {
+       "version": "2.0.0",
+       "date": "2026-10-29",
+       "text": "Version 1 with updated scientific names: the current accepted name (GBIF Backbone / Catalogue of Life) is shown in brackets after the 2011 name. 11 doubtful names are left unchanged for a taxonomist to check."
+      }
+     ]
+    },
+    {
      "id": "vrikshayurveda",
      "key": "v1",
      "label": "Version 1 – Original (2011 screens)",

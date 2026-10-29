@@ -1,4 +1,4 @@
-// Vrikshayurveda2 — Windows launcher (Version 2, updated).
+// Vrikshayurveda2 — Windows launcher (Version 2, scientific names updated).
 // Carries the whole kit inside the exe, serves it only to this computer (127.0.0.1),
 // and opens it in its own Microsoft Edge app window. Closes itself when the window is closed.
 package main

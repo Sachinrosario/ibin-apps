@@ -28,8 +28,8 @@
     "publisher": "IBIN Apps",
     "copyright": "Vrikshayurveda (c) K.N. Ganeshaiah (proprietary right holder). Version 2 updated in 2026 by Sachin A. Rosario.",
     "category": "Education",
-    "shortDescription": "Search the verses of five Sanskrit works on plant science, with current plant names, pictures and recitations",
-    "longDescription": "Version 2 (2026): one search over 869 verses, 235 plants and 428 Sanskrit plant names; current plant names with the 2011 names kept; verse pages with recitation; plant pages with distribution map, synonyms and pictures; subject and keyword browsing. Works offline.",
+    "shortDescription": "The 2011 Vrikshayurveda program with current scientific names (new name in brackets)",
+    "longDescription": "Version 2 (2026): the 2011 Vrikshayurveda program exactly as it was, with the scientific names updated to current accepted names (new name in brackets). Search 869 verses of five Sanskrit works by plant, common name, keyword or verse; hear the recitations; see each plant's classification, names, distribution, synonyms and pictures. Works offline.",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

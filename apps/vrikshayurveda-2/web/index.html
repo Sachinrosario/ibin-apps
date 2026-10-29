@@ -3,392 +3,467 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vrikshayurveda 2</title>
-<meta name="description" content="Search the verses of five Sanskrit works on plant science, with current plant names, pictures and recitations.">
-<link rel="icon" href="img/ui/icon.png">
-<link rel="manifest" href="manifest.webmanifest">
+<title>Vrikshayurveda</title>
+<link rel="icon" href="img/ui/icon.png"><link rel="manifest" href="manifest.webmanifest">
 <style>
-@font-face{font-family:"VUI";src:local("Arial"),url(fonts/arimo-latin-400-normal.woff2) format("woff2");font-weight:400}
-@font-face{font-family:"VUI";src:local("Arial Bold"),url(fonts/arimo-latin-700-normal.woff2) format("woff2");font-weight:700}
-@font-face{font-family:"VSerif";src:local("Times New Roman"),url(fonts/tinos-latin-400-normal.woff2) format("woff2");font-weight:400}
-@font-face{font-family:"VDeva";src:local("Nirmala UI"),local("Mangal"),url(fonts/noto-sans-devanagari-400.woff2) format("woff2");font-weight:400}
-@font-face{font-family:"VDeva";src:local("Nirmala UI Bold"),url(fonts/noto-sans-devanagari-700.woff2) format("woff2");font-weight:700}
-@font-face{font-family:"VKan";src:local("Nirmala UI"),local("Tunga"),url(fonts/noto-sans-kannada-400.woff2) format("woff2");font-weight:400}
-:root{--bg:#f6f0e3;--card:#fffaf0;--ink:#2a2118;--mute:#6b5d4d;--line:#dccfb8;--acc:#1f6b4a;--acc2:#154d35;--acc-ink:#fff;--mar:#7a1f2b;--hl:#fff1b8;--warn:#9a5b00;--chip:#efe5d0;
-  --ui:"VUI",Arial,sans-serif;--ser:"VSerif",Georgia,"Times New Roman",serif;--deva:"VDeva","VKan","Nirmala UI",Mangal,sans-serif}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17130f;--card:#201a14;--ink:#f1e8d8;--mute:#b3a58f;--line:#3a3025;--acc:#5fc08f;--acc2:#8ad9b0;--acc-ink:#0d1f16;--mar:#f0a0a8;--hl:#4a3f10;--warn:#e0a84a;--chip:#2c241b}}
-:root[data-theme="dark"]{--bg:#17130f;--card:#201a14;--ink:#f1e8d8;--mute:#b3a58f;--line:#3a3025;--acc:#5fc08f;--acc2:#8ad9b0;--acc-ink:#0d1f16;--mar:#f0a0a8;--hl:#4a3f10;--warn:#e0a84a;--chip:#2c241b}
-*{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--ui)}
-a{color:var(--acc);text-decoration:none}a:hover{text-decoration:underline}
-button{font:inherit;color:inherit;cursor:pointer}
-:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
-.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
-header.top{position:sticky;top:0;z-index:30;background:var(--bg);border-bottom:1px solid var(--line)}
-.bar{display:flex;align-items:center;gap:12px;padding:10px 0;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:10px;color:var(--ink);font:700 20px/1 var(--ser);text-decoration:none!important}
-.brand img{width:34px;height:34px;border-radius:8px}
-.brand small{display:block;font:400 11px/1.2 var(--ui);color:var(--mute);letter-spacing:.04em}
-.sbox{flex:1 1 280px;position:relative;min-width:200px}
-.sbox input{width:100%;font:17px var(--ui);padding:11px 14px 11px 42px;border:1.5px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink)}
-.sbox svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:19px;height:19px;stroke:var(--mute);fill:none;stroke-width:2}
-nav.tabs{display:flex;gap:2px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
-nav.tabs a{padding:7px 14px;border-radius:999px;color:var(--mute);white-space:nowrap;font-size:15px}
-nav.tabs a.on{background:var(--acc);color:var(--acc-ink);text-decoration:none}
-main{padding:20px 0 70px;min-height:70vh}
-h1,h2,h3{font-family:var(--ser);line-height:1.2;margin:0 0 .5em}
-h1{font-size:30px}h2{font-size:23px;margin-top:1.5em}h3{font-size:18px}
-.eyebrow{font:700 11.5px var(--ui);letter-spacing:.09em;text-transform:uppercase;color:var(--mute);margin:0 0 4px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
-.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
-.tile{display:block;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;color:var(--ink);text-decoration:none!important}
-.tile:hover{border-color:var(--acc)}
-.tile b{font:700 17px var(--ser);display:block}
-.tile span{color:var(--mute);font-size:14px}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:3px 11px;font-size:14px;color:var(--ink);text-decoration:none!important;display:inline-block}
-a.chip:hover{border-color:var(--acc)}
-.chip.on{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
-.sa{font:400 22px/1.7 var(--deva);color:var(--mar)}
-.verse-sa{font:400 24px/1.85 var(--deva);white-space:pre-wrap;color:var(--ink)}
-.it{font-style:italic}
-.latin{font-style:italic;font-family:var(--ser)}
-.old{color:var(--mute);font-size:.8em;font-style:italic;font-family:var(--ser);font-weight:400}
-.badge{display:inline-block;font:700 11px var(--ui);padding:2px 8px;border-radius:999px;background:var(--hl);color:var(--ink);border:1px solid var(--warn);vertical-align:middle;letter-spacing:.03em}
-.row{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start}
-.btn{background:var(--acc);color:var(--acc-ink);border:0;border-radius:10px;padding:9px 16px;font-weight:700;text-decoration:none!important;display:inline-flex;align-items:center;gap:8px}
-.btn.ghost{background:transparent;color:var(--acc);border:1.5px solid var(--acc)}
-.btn[disabled]{opacity:.4;cursor:default}
-.res{display:block;padding:12px 4px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none!important}
-.res:hover{background:var(--card)}
-.res .t{font:700 17px var(--ser)}.res .s{color:var(--mute);font-size:14px}
-mark{background:var(--hl);color:inherit;border-radius:3px;padding:0 1px}
-.kind{font:700 10.5px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--acc);margin-right:8px}
-table.t{border-collapse:collapse;width:100%;font-size:15px}
-table.t th{text-align:left;font:700 12px var(--ui);letter-spacing:.06em;text-transform:uppercase;color:var(--mute);border-bottom:2px solid var(--line);padding:6px 8px}
-table.t td{border-bottom:1px solid var(--line);padding:7px 8px;vertical-align:top}
-.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
-.thumbs button{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:4px;text-align:center}
-.thumbs img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:7px;background:#fff;display:block}
-.thumbs small{display:block;font-size:11.5px;line-height:1.25;color:var(--mute);margin-top:3px;overflow-wrap:anywhere}
-.lb{position:fixed;inset:0;background:rgba(10,8,5,.92);z-index:80;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px}
-.lb img{max-width:100%;max-height:78vh;background:#fff;border-radius:6px}
-.lb p{color:#eee;margin:10px 0 0;text-align:center;font-size:14px}
-.lb .x,.lb .n{position:absolute;background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:50%;width:46px;height:46px;font-size:24px}
-.lb .x{top:12px;right:12px}.lb .n.p{left:10px;top:50%}.lb .n.nx{right:10px;top:50%}
-.player{display:flex;align-items:center;gap:12px;background:var(--chip);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
-.player button{width:42px;height:42px;border-radius:50%;border:0;background:var(--acc);color:var(--acc-ink);font-size:18px;flex:none}
-.player input[type=range]{flex:1;accent-color:var(--acc)}
-.player select{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:4px}
-.pg{display:flex;justify-content:space-between;gap:10px;margin-top:24px}
-.crumbs{font-size:14px;color:var(--mute);margin-bottom:10px}
-.mapwrap{position:relative;max-width:460px}
-.mapwrap svg{width:100%;height:auto;display:block}
-.mapwrap path{stroke:var(--bg);stroke-width:.5;cursor:pointer}
-.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:13px;padding:3px 8px;border-radius:6px;transform:translate(-50%,-130%);white-space:nowrap}
-.empty{color:var(--mute);font-style:italic}
-details.card summary{cursor:pointer;font-weight:700}
-footer{border-top:1px solid var(--line);padding:18px 0 40px;color:var(--mute);font-size:13.5px}
-@media (max-width:640px){h1{font-size:25px}.verse-sa{font-size:21px}}
-@media print{header.top,footer,.pg,.player,.noprint{display:none!important}body{background:#fff;color:#000}}
+/* VRIKSHAYURVEDA (2011) - Version 1, faithful web rebuild.
+   Every window keeps the pixel geometry measured on Windows inside a 1440x900 stage scaled to the browser.
+   The window pictures are cut from screenshots of the original; everything that changes is drawn on top. */
+@font-face{font-family:"VA";src:local("Arial"),local("ArialMT"),url(fonts/arimo-latin-400-normal.woff2) format("woff2");font-weight:400}
+@font-face{font-family:"VA";src:local("Arial Bold"),local("Arial-BoldMT"),url(fonts/arimo-latin-700-normal.woff2) format("woff2");font-weight:700}
+@font-face{font-family:"VDeva";src:local("Mangal"),local("Nirmala UI"),url(fonts/noto-sans-devanagari-400.woff2) format("woff2");font-weight:400}
+@font-face{font-family:"VDeva";src:local("Mangal Bold"),local("Nirmala UI Bold"),url(fonts/noto-sans-devanagari-700.woff2) format("woff2");font-weight:700}
+@font-face{font-family:"VKan";src:local("Tunga"),local("Nirmala UI"),url(fonts/noto-sans-kannada-400.woff2) format("woff2");font-weight:400}
+@font-face{font-family:"VSerif";src:local("Times New Roman"),url(fonts/tinos-latin-400-normal.woff2) format("woff2")}
+:root{--a:"VA",Arial,sans-serif;--ind:"VA","VDeva","VKan",Arial,sans-serif;--segoe:"Segoe UI",Tahoma,"VA",sans-serif}
+html,body{margin:0;height:100%;background:#0f3d5c;overflow:hidden;font-family:var(--a)}
+#stage{position:absolute;width:1440px;height:900px;transform-origin:0 0;overflow:hidden;user-select:none;-webkit-user-select:none;
+  background:linear-gradient(160deg,#1f6fa8 0%,#17578a 45%,#0e3f6b 100%)}
+#stage img{-webkit-user-drag:none}
+[hidden]{display:none!important}
+.abs{position:absolute}
+.hot{position:absolute;cursor:default}
+.win{position:absolute;overflow:hidden;box-shadow:0 7px 24px rgba(0,0,0,.4);background-repeat:no-repeat}
+.x{position:absolute;top:0;width:46px;height:30px}
+.x:hover{background:rgba(232,17,35,.85)}
+.x:hover::after{content:"✕";position:absolute;left:0;right:0;top:5px;text-align:center;color:#fff;font:15px var(--segoe)}
+.press:active{filter:brightness(.9)}
+.white{position:absolute;background:#fff}
+/* combo boxes (VB ComboBox and Forms 2.0 ComboBox) */
+.cb{position:absolute;background:#fff;font:bold 13px var(--a);line-height:20px;white-space:nowrap;overflow:hidden;cursor:default;padding-left:3px;box-sizing:border-box}
+.cb.hl span{background:#0078d7;color:#fff;padding:0 1px}
+.cbhot{position:absolute;cursor:default}
+.drop{position:absolute;box-sizing:border-box;border:1px solid #646464;background:#fff;overflow-y:auto;overflow-x:hidden;z-index:20;font:13px/16px var(--a)}
+.drop div{padding-left:2px;cursor:default;white-space:nowrap}
+.drop div:hover,.drop div.on{background:#0078d7;color:#fff}
+.drop.deva{font:17px/22px "VDeva",var(--a)}
+.drop::-webkit-scrollbar{width:17px}.drop::-webkit-scrollbar-thumb{background:#cdcdcd;border:2px solid #f0f0f0}.drop::-webkit-scrollbar-track{background:#f0f0f0}
+/* list boxes */
+.lb{position:absolute;background:#fff;overflow-y:auto;overflow-x:hidden;font:13px/15px var(--a);box-sizing:border-box;padding-top:1px}
+.lb div{white-space:nowrap;padding-left:3px;cursor:default}
+.lb div.sel{background:#0078d7;color:#fff}
+.lb::-webkit-scrollbar{width:17px}.lb::-webkit-scrollbar-thumb{background:#cdcdcd;border:2px solid #f0f0f0}.lb::-webkit-scrollbar-track{background:#f0f0f0}
+/* text boxes */
+.tx{position:absolute;background:#fff;overflow:hidden;box-sizing:border-box;white-space:pre-wrap;word-wrap:break-word}
+.tx.scroll{overflow-y:auto}
+.tx.scroll::-webkit-scrollbar{width:17px}.tx.scroll::-webkit-scrollbar-thumb{background:#cdcdcd;border:2px solid #f0f0f0}.tx.scroll::-webkit-scrollbar-track{background:#f0f0f0}
+/* MSHFlexGrid */
+.grid{position:absolute;overflow:auto;background:#fff}
+.grid table{border-collapse:collapse;table-layout:fixed}
+.grid th{background:#008080;color:#fff;font-weight:400;text-align:left;padding:0 4px;border:1px solid #808080;white-space:nowrap;overflow:hidden}
+.grid td{border:1px solid #808080;padding:0 4px;white-space:nowrap;overflow:hidden;vertical-align:middle}
+.grid::-webkit-scrollbar{width:17px;height:17px}.grid::-webkit-scrollbar-thumb{background:#cdcdcd;border:2px solid #f0f0f0}.grid::-webkit-scrollbar-track{background:#f0f0f0}
+/* thumbnails of the Images tab */
+.thumbs{position:absolute;overflow-y:auto;overflow-x:hidden;background:#f0f0f0}
+.thumbs::-webkit-scrollbar{width:17px}.thumbs::-webkit-scrollbar-thumb{background:#cdcdcd;border:2px solid #f0f0f0}.thumbs::-webkit-scrollbar-track{background:#f0f0f0}
+.tc{position:absolute;width:116px}
+.tc img{display:block;width:116px;height:98px;object-fit:fill;background:#fff;border:1px solid #c0c0c0;box-sizing:border-box;cursor:pointer}
+.tc .cap{height:30px;margin-top:2px;background:#e3e3e3;border:1px solid #c8c8c8;box-sizing:border-box;font:11px/13px var(--a);text-align:center;overflow:hidden;word-wrap:break-word}
+/* picture viewer (stands in for the Windows photo viewer) */
+.viewer{position:absolute;inset:0;background:rgba(0,0,0,.82);z-index:40;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px}
+.viewer img{max-width:1300px;max-height:800px;background:#fff}
+.viewer p{margin:0;color:#fff;font:13px var(--segoe)}
+.viewer .close{position:absolute;right:16px;top:10px;color:#fff;font:28px var(--segoe);cursor:pointer}
+.viewer .nav{position:absolute;top:420px;width:48px;height:70px;background:rgba(255,255,255,.15);color:#fff;font:34px var(--segoe);display:flex;align-items:center;justify-content:center;cursor:pointer}
+/* WMP strip */
+#wmpPlay{position:absolute;left:4px;top:12px;width:28px;height:28px;border-radius:50%;cursor:default}
+#wmpBar{position:absolute;left:30px;top:9px;width:213px;height:4px}
+#wmpBar i{position:absolute;top:-3px;width:16px;height:9px;border-radius:5px;background:#2f74c8;border:1px solid #1d4f92;box-sizing:border-box}
+.closed{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;color:#fff;font:16px var(--segoe)}
+.closed button{font:15px var(--segoe);padding:8px 18px;cursor:pointer}
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap">
-  <div class="bar">
-    <a class="brand" href="#/"><img src="img/ui/icon.png" alt=""><span>Vrikshayurveda<small>VERSION 2 · UPDATED 2026</small></span></a>
-    <label class="sbox"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-      <input id="q" type="search" placeholder="Search a plant, Sanskrit name, subject, verse… (e.g. neem, ariṣṭa, Surapala 12)" autocomplete="off" enterkeyhint="search" aria-label="Search"></label>
+<div id="stage">
+  <!-- 1. title screen (frmsplash, maximised) -->
+  <div id="splash" class="abs" style="left:0;top:0;width:1440px;height:900px">
+    <img src="img/ui/splash.webp" width="1440" height="900" alt="Vrikshayurveda">
+    <div class="hot press" id="sNext" title="Next" style="left:1314px;top:444px;width:104px;height:72px"></div>
+    <div class="x" id="sClose" style="left:1394px;top:0;height:23px"></div>
+    <div class="abs" style="left:16px;top:858px;font:12px/15px var(--a);color:#fff;text-shadow:0 0 3px #000,0 0 2px #000">Proprietary right holder - Dr. K.N. Ganeshaiah &nbsp;·&nbsp; Updated in 2026 by Dr. Sachin A. Rosario &nbsp;·&nbsp; Version <span id="ver"></span> – scientific names updated, new name in brackets</div>
   </div>
-  <nav class="tabs" id="tabs"></nav>
-</div></header>
-<main><div class="wrap" id="app"></div></main>
-<footer><div class="wrap">Proprietary right holder – Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario · Version <span id="ver"></span> · <a href="#/about">About, sources and names</a></div></footer>
-<div id="lbHost"></div>
+
+  <!-- 2. main menu (frmfirst) -->
+  <div id="first" class="win" hidden style="left:410px;top:219px;width:619px;height:459px;background-image:url(img/ui/first.webp)">
+    <div class="x" data-close="first" style="left:573px"></div>
+    <div class="hot press" id="fSearch" style="left:217px;top:74px;width:169px;height:161px"></div>
+    <div class="hot press" id="fCredits" style="left:473px;top:106px;width:108px;height:41px"></div>
+    <div class="hot press" id="fExit" style="left:473px;top:162px;width:105px;height:41px"></div>
+    <div class="hot press" data-pdf="Brihat Samhitha" style="left:33px;top:306px;width:164px;height:41px"></div>
+    <div class="hot press" data-pdf="Krishi Parashara" style="left:217px;top:306px;width:164px;height:41px"></div>
+    <div class="hot press" data-pdf="Lokopakaram" style="left:409px;top:306px;width:164px;height:41px"></div>
+    <div class="hot press" data-pdf="Surapala Vrikshayurveda" style="left:33px;top:362px;width:164px;height:49px"></div>
+    <div class="hot press" data-pdf="Upavanavinoda" style="left:217px;top:362px;width:164px;height:41px"></div>
+  </div>
+
+  <!-- 3. search (frmdata) -->
+  <div id="search" class="win" hidden style="left:328px;top:197px;width:783px;height:504px;background-image:url(img/ui/search.webp)">
+    <div class="x" data-close="search" style="left:737px"></div>
+    <div class="cb" id="cSan" style="left:117px;top:85px;width:144px;height:26px;font:17px/26px 'VDeva',var(--a);font-weight:400"></div><div class="cbhot" data-combo="cSan" style="left:114px;top:82px;width:167px;height:32px"></div>
+    <div class="cb" id="cGenus" style="left:123px;top:188px;width:140px;height:20px"></div><div class="cbhot" data-combo="cGenus" style="left:121px;top:186px;width:161px;height:24px"></div>
+    <div class="cb" id="cSpecies" style="left:123px;top:228px;width:140px;height:20px"></div><div class="cbhot" data-combo="cSpecies" style="left:121px;top:226px;width:161px;height:24px"></div>
+    <div class="cb" id="cLang" style="left:123px;top:332px;width:140px;height:20px"></div><div class="cbhot" data-combo="cLang" style="left:121px;top:330px;width:161px;height:24px"></div>
+    <div class="cb" id="cName" style="left:123px;top:380px;width:140px;height:20px"></div><div class="cbhot" data-combo="cName" style="left:121px;top:378px;width:161px;height:24px"></div>
+    <div class="cb" id="cCat" style="left:507px;top:68px;width:164px;height:20px"></div><div class="cbhot" data-combo="cCat" style="left:505px;top:66px;width:185px;height:24px"></div>
+    <div class="cb" id="cSrc" style="left:531px;top:348px;width:164px;height:20px"></div><div class="cbhot" data-combo="cSrc" style="left:529px;top:346px;width:185px;height:24px"></div>
+    <div class="cb" id="cVerse" style="left:531px;top:388px;width:164px;height:20px"></div><div class="cbhot" data-combo="cVerse" style="left:529px;top:386px;width:185px;height:24px"></div>
+    <div class="lb" id="lAvail" style="left:387px;top:124px;width:157px;height:160px"></div>
+    <div class="lb" id="lSel" style="left:595px;top:124px;width:157px;height:160px"></div>
+    <img class="abs" id="bRight" src="img/ui/arr_r_on.png" style="left:553px;top:154px" hidden alt="">
+    <div class="hot" id="hRight" style="left:553px;top:154px;width:33px;height:25px"></div>
+    <img class="abs" id="bLeft" src="img/ui/arr_l_on.png" style="left:553px;top:186px" hidden alt="">
+    <div class="hot" id="hLeft" style="left:553px;top:186px;width:33px;height:25px"></div>
+    <img class="abs" id="bSearch" src="img/ui/search_on.png" style="left:321px;top:410px" hidden alt="">
+    <div class="hot" id="hSearch" style="left:321px;top:410px;width:105px;height:81px"></div>
+    <div class="hot press" id="bRefresh" style="left:97px;top:450px;width:105px;height:41px"></div>
+    <div class="hot press" id="bBack" style="left:585px;top:450px;width:105px;height:41px"></div>
+  </div>
+
+  <!-- 4. a verse (frmshloka) -->
+  <div id="shloka" class="win" hidden style="left:324px;top:176px;width:792px;height:546px;background-image:url(img/ui/shloka.webp)">
+    <div class="x" data-close="shloka" style="left:746px"></div>
+    <div class="white" style="left:83px;top:44px;width:308px;height:28px"></div>
+    <div class="abs" id="tSrc" style="left:83px;top:44px;width:308px;height:28px;font:18px/28px var(--a);text-align:center"></div>
+    <div class="white" style="left:547px;top:44px;width:44px;height:28px"></div>
+    <div class="abs" id="tVerse" style="left:547px;top:44px;width:44px;height:28px;font:18px/28px var(--a);text-align:center"></div>
+    <div class="hot press" id="bSpeak" title="Click to listen Shloka" style="left:137px;top:90px;width:65px;height:57px"></div>
+    <div class="abs" style="left:233px;top:90px;width:250px;height:50px">
+      <div id="wmpBar"><i id="wmpKnob" style="left:0"></i></div>
+      <div id="wmpPlay" title="Play"></div>
+    </div>
+    <div class="tx" id="tSloka" style="left:83px;top:165px;width:493px;height:138px;padding:6px 8px 0 10px;font:17px/22px var(--ind)"></div>
+    <div class="tx scroll" id="tDetails" style="left:83px;top:316px;width:493px;height:101px;padding:1px 2px;font:12px/16px var(--a)"></div>
+    <div class="tx scroll" id="tComments" style="left:99px;top:428px;width:477px;height:69px;padding:1px 2px;font:12px/16px var(--a)"></div>
+    <div class="lb" id="lPlants" style="left:587px;top:180px;width:197px;height:246px;padding-top:6px;line-height:17px;overflow-x:auto;overflow-y:hidden"></div>
+    <img class="abs" id="bSpDet" src="img/ui/spdet_on.png" style="left:617px;top:450px" alt="">
+    <div class="hot" id="hSpDet" style="left:617px;top:450px;width:137px;height:41px"></div>
+    <img class="abs" id="nFirst" style="left:233px;top:506px" alt=""><div class="hot" data-nav="first" style="left:233px;top:506px;width:31px;height:28px"></div>
+    <img class="abs" id="nPrev" style="left:265px;top:506px" alt=""><div class="hot" data-nav="prev" style="left:265px;top:506px;width:31px;height:28px"></div>
+    <img class="abs" id="nNext" style="left:449px;top:506px" alt=""><div class="hot" data-nav="next" style="left:449px;top:506px;width:31px;height:28px"></div>
+    <img class="abs" id="nLast" style="left:481px;top:506px" alt=""><div class="hot" data-nav="last" style="left:481px;top:506px;width:29px;height:28px"></div>
+    <div class="white" style="left:299px;top:508px;width:149px;height:24px"></div>
+    <div class="abs" id="tCount" style="left:299px;top:508px;width:149px;height:24px;font:16px/24px VSerif,serif;color:#5a5050;text-align:center"></div>
+    <div class="hot press" id="bShBack" style="left:689px;top:42px;width:81px;height:41px"></div>
+  </div>
+
+  <!-- 5. a species (species) -->
+  <div id="species" class="win" hidden style="left:306px;top:177px;width:827px;height:544px;background-image:url(img/ui/species.webp)">
+    <div class="x" data-close="species" style="left:781px"></div>
+    <div class="white" style="left:2px;top:24px;width:822px;height:30px"></div>
+    <div class="abs" id="spName" style="left:2px;top:24px;width:822px;height:34px;font:23px/34px var(--a);color:#400000;text-align:center"></div>
+    <img class="abs" id="spTabs" src="img/ui/tabs_tax.png" style="left:0;top:54px" alt="">
+    <div class="hot" data-tab="tax" style="left:9px;top:56px;width:161px;height:24px"></div>
+    <div class="hot" data-tab="com" style="left:171px;top:56px;width:160px;height:24px"></div>
+    <div class="hot" data-tab="dis" style="left:332px;top:56px;width:160px;height:24px"></div>
+    <div class="hot" data-tab="syn" style="left:493px;top:56px;width:160px;height:24px"></div>
+    <div class="hot" data-tab="img" style="left:654px;top:56px;width:163px;height:24px"></div>
+    <!-- Taxonomic Hierarchy -->
+    <div id="pTax" class="abs" style="left:0;top:0">
+      <div class="white" style="left:297px;top:154px;width:345px;height:33px"></div><div class="white" style="left:297px;top:200px;width:345px;height:32px"></div>
+      <div class="white" style="left:297px;top:250px;width:345px;height:33px"></div><div class="white" style="left:297px;top:295px;width:345px;height:33px"></div>
+      <div class="white" style="left:297px;top:343px;width:345px;height:33px"></div><div class="white" style="left:297px;top:391px;width:345px;height:33px"></div>
+      <div id="taxVals"></div>
+    </div>
+    <!-- other tabs: a plain panel with the tab's content -->
+    <div id="pOther" class="abs" style="left:11px;top:80px;width:805px;height:448px;background:#f0f0f0" hidden>
+      <div id="pCom" class="grid" style="left:142px;top:34px;width:521px;height:393px;background:#f0f0f0;border-left:2px solid #808080;border-top:1px solid #a0a0a0;box-sizing:border-box"></div>
+      <div id="pDis" class="grid" style="left:14px;top:10px;width:777px;height:424px;border:1px solid #808080;box-sizing:border-box"></div>
+      <div id="pSyn" class="abs" style="left:0;top:0;width:805px;height:448px">
+        <img class="abs" src="img/ui/syn_head.png" style="left:7px;top:2px" alt="">
+        <div class="lb" id="lSyn" style="left:207px;top:58px;width:393px;height:164px;border:1px solid #a0a0a0;font:17px/20px var(--a);padding:2px 0 0 1px"></div>
+        <div class="tx" id="tFlora" style="left:79px;top:234px;width:641px;height:199px;border:1px solid #a0a0a0;font:12px/13px var(--a);padding:2px 3px"></div>
+      </div>
+      <div id="pImg" class="abs" style="left:0;top:0;width:805px;height:448px">
+        <img class="abs" id="imgBar" src="img/ui/imgbar_H.png" style="left:7px;top:2px" alt="">
+        <img class="abs" id="paintOff" src="img/ui/paint_off.png" style="left:324px;top:4px" hidden alt="">
+        <div class="hot" data-cat="H" style="left:14px;top:6px;width:153px;height:33px"></div>
+        <div class="hot" data-cat="L" style="left:182px;top:6px;width:129px;height:33px"></div>
+        <div class="hot" data-cat="P" style="left:326px;top:6px;width:121px;height:33px"></div>
+        <div class="hot" data-cat="F" style="left:462px;top:6px;width:113px;height:33px"></div>
+        <div class="thumbs" id="thumbs" style="left:13px;top:45px;width:790px;height:401px;border-top:2px solid #808080;border-left:2px solid #808080;box-sizing:border-box"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="closed" class="closed" hidden><div>Vrikshayurveda has been closed.</div><button id="reopen">Open it again</button></div>
+  <div id="viewer" class="viewer" hidden><div class="close" id="vClose">✕</div><div class="nav" id="vPrev" style="left:20px">‹</div><div class="nav" id="vNext" style="right:20px">›</div><img id="vImg" alt=""><p id="vCap"></p></div>
+  <div id="dropHost"></div>
+</div>
 <audio id="audio" preload="none"></audio>
-<script src="data/vrk2.js"></script>
-<script src="data/map.js"></script>
+<script src="data/vrk.js"></script>
 <script>
 "use strict";
-const D = window.VRK2, MAPD = window.MAP_DATA;
-const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const D = window.VRK;
+const NM = D.nm || {};
+// current accepted name (GBIF Backbone / Catalogue of Life, 2026) for a 2011 name; '' when unchanged or under review
+const newName = n => NM[String(n || '').trim().toLowerCase().replace(/\s+/g, ' ')] || '';
+const withNew = n => { const x = newName(n); return x ? `${n} (${x})` : n; };
+const $ = id => document.getElementById(id), $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-$('#ver').textContent = D.version;
-const BOOKS = D.books, SP = D.species, V = D.verses, SAN = D.sanskrit;
-const BSHORT = ['Brihat Samhita', 'Krishi Parashara', 'Lokopakaram', 'Surapala Vrikshayurveda', 'Upavanavinoda'];
-const BPRE = ['bs2-', 'kp-', 'lok-', 'sv-', 'uv-'];
-const BABBR = { bs: 0, brihat: 0, bri: 0, kp: 1, krishi: 1, lok: 2, lokopakaram: 2, sv: 3, surapala: 3, sur: 3, uv: 4, upavanavinoda: 4, upa: 4 };
-const BINFO = [
-  'A classical Sanskrit text on astronomy and general science; its chapter on tree care (Vrikshayurveda) is one of the earliest on plant science.',
-  'A text on agriculture and weather, with rules for sowing, tilling and harvest.',
-  'A text on plant care and garden practice.',
-  'A dedicated treatise of plant science: planting, soil, watering, disease and seed treatment.',
-  'A treatise on garden making, with planting, watering, treating diseases and plant selection.'];
-const verseIndex = new Map(V.map((v, i) => [v[0] + '/' + v[1], i]));
-const vkey = (b, n) => b + '/' + n;
-/* ---------- text helpers ---------- */
-const fold = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-const rom = s => fold(s).replace(/sh/g, 's').replace(/aa/g, 'a').replace(/ee/g, 'i').replace(/oo/g, 'u').replace(/[^a-z0-9ऀ-ॿಀ-೿ ]/g, ' ').replace(/\s+/g, ' ').trim();
-const hl = (txt, toks) => { let s = esc(txt); for (const t of toks) { if (t.length < 2) continue; const re = new RegExp('(' + t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig'); s = s.replace(re, (m, a, off, all) => /&[a-z#0-9]*$/i.test(all.slice(0, off)) ? m : '<mark>' + m + '</mark>'); } return s; };
-const plural = (n, a, b) => n + ' ' + (n === 1 ? a : b);
-/* ---------- media (pictures and recitations; on the web page they come from Version 1's folder when not bundled) ---------- */
+$('ver').textContent = D.version;
+// Jet compares text without regard to case; Unicode text (Sanskrit names) sorts by code point
+const jcmp = (a, b) => { const x = String(a).toLowerCase(), y = String(b).toLowerCase(); return x < y ? -1 : x > y ? 1 : 0; };
+const uniq = a => [...new Set(a)];
+const sortJ = a => uniq(a).sort(jcmp);
+const AUDIO = { 'Brihat Samhitha': 'bs2-', 'Krishi Parashara': 'kp-', 'Lokopakaram': 'lok-', 'Surapala Vrikshayurveda': 'sv-', 'Upavanavinoda': 'uv-' };
+const SOURCES = ['Brihat Samhitha', 'Krishi Parashara', 'Lokopakaram', 'Surapala Vrikshayurveda', 'Upavanavinoda'];
+const CATS = ['Action/Properties', 'Diseases/Disorders', 'Organisms', 'Others'];
+const CATCOL = { 'Organisms': 1, 'Action/Properties': 2, 'Diseases/Disorders': 3, 'Others': 4 };
+
+/* ---------- stage scaling ---------- */
+function fit() { const s = Math.min(innerWidth / 1440, innerHeight / 900); const st = $('stage'); st.style.transform = `scale(${s})`; st.style.left = (innerWidth - 1440 * s) / 2 + 'px'; st.style.top = (innerHeight - 900 * s) / 2 + 'px'; }
+addEventListener('resize', fit); fit();
+/* pictures and recitations: on the web page they are read from Version 1's folder when this folder has none */
 const SHARED = '../vrikshayurveda/';
-const imgSrc = (id, t) => `img/${t ? 't/' : ''}${id}.webp`;
-document.addEventListener('error', e => { const el = e.target; if (el.tagName === 'IMG' && !el.dataset.fb && /^img\//.test(el.getAttribute('src') || '')) { el.dataset.fb = 1; el.src = SHARED + el.getAttribute('src'); } }, true);
-/* ---------- indexes ---------- */
-const sanByPlant = new Map(); SAN.forEach((s, i) => s.sp.forEach(p => { if (!sanByPlant.has(p)) sanByPlant.set(p, []); sanByPlant.get(p).push(i); }));
-const verseByPlant = SP.map(() => []); V.forEach((v, i) => v[7].forEach(p => verseByPlant[p].push(i)));
-const subjects = new Map(); V.forEach((v, i) => { const s = v[2] || ''; if (!s) return; if (!subjects.has(s)) subjects.set(s, []); subjects.get(s).push(i); });
-const kwMap = new Map(); V.forEach((v, i) => v[3].forEach(k => { const f = fold(k); if (!kwMap.has(f)) kwMap.set(f, { k, v: [] }); kwMap.get(f).v.push(i); }));
-const kwCat = new Map(D.keywords.map(k => [fold(k[0]), k[1]]));
-const plantText = SP.map((s, i) => rom([s.n, s.sug, ...s.o, s.f, s.en, ...s.cn.map(c => c[1]), ...(sanByPlant.get(i) || []).flatMap(j => [SAN[j].t, SAN[j].en])].filter(Boolean).join(' ')));
-const plantDeva = SP.map((s, i) => (sanByPlant.get(i) || []).map(j => SAN[j].d).join(' ') + ' ' + s.sa.join(' '));
-const sanText = SAN.map(s => rom([s.t, s.en, s.ot].join(' ')));
-const verseText = V.map(v => rom([BOOKS[v[0]], v[2], v[3].join(' '), v[5], v[6]].join(' ')));
-const verseDeva = V.map(v => v[4]);
-/* ---------- routing ---------- */
-const TABS = [['#/', 'Home'], ['#/plants', 'Plants'], ['#/sanskrit', 'Sanskrit names'], ['#/books', 'Books and verses'], ['#/subjects', 'Subjects'], ['#/keywords', 'Keywords'], ['#/about', 'About']];
-function drawTabs(h) { $('#tabs').innerHTML = TABS.map(([u, t]) => `<a href="${u}" class="${(u === '#/' ? h === '#/' || h === '' : h.startsWith(u) || (u === '#/books' && /^#\/(book|verse)/.test(h)) || (u === '#/plants' && h.startsWith('#/plant')) || (u === '#/subjects' && h.startsWith('#/subject')) || (u === '#/keywords' && h.startsWith('#/keyword'))) ? 'on' : ''}">${t}</a>`).join(''); }
-function route() {
-  stopAudio(); closeLb();
-  const h = location.hash || '#/'; const p = h.slice(2).split('/').map(decodeURIComponent);
-  drawTabs(h); let html = ''; if (p[0] !== 'search') $('#q').value = '';
-  try {
-    switch (p[0]) {
-      case '': html = home(); break;
-      case 'search': html = search(p.slice(1).join('/')); break;
-      case 'plants': html = plantsPage(p[1]); break;
-      case 'plant': html = plantPage(+p[1]); break;
-      case 'sanskrit': html = sanskritPage(); break;
-      case 'books': html = booksPage(); break;
-      case 'book': html = bookPage(+p[1]); break;
-      case 'verse': html = versePage(+p[1], +p[2]); break;
-      case 'subjects': html = subjectsPage(); break;
-      case 'subject': html = subjectPage(p.slice(1).join('/')); break;
-      case 'keywords': html = keywordsPage(p[1]); break;
-      case 'keyword': html = keywordPage(p.slice(1).join('/')); break;
-      case 'about': html = aboutPage(); break;
-      default: html = '<h1>Not found</h1><p><a href="#/">Go to the home page</a></p>';
+document.addEventListener('error', e => { const el = e.target; if (el.tagName === 'IMG' && !el.dataset.fb && /^img\/\d|^img\/t\//.test(el.getAttribute('src') || '')) { el.dataset.fb = 1; el.src = SHARED + el.getAttribute('src'); } }, true);
+function show(id) { for (const w of ['splash', 'first', 'search', 'shloka', 'species', 'closed']) $(w).hidden = w !== id && !(id === 'species' && w === 'shloka_keep'); closeDrop(); }
+
+/* ---------- 1. title screen ---------- */
+$('sNext').onclick = () => show('first');
+$('sClose').onclick = () => show('closed');
+$('reopen').onclick = () => { resetSearch(); show('splash'); };
+$$('[data-close]').forEach(x => x.onclick = () => ({ first: () => show('closed'), search: () => show('closed'), shloka: () => { stopAudio(); show('search'); }, species: () => show('shloka') })[x.dataset.close]());
+
+/* ---------- 2. main menu ---------- */
+$('fSearch').onclick = () => show('search');
+$('fExit').onclick = () => show('closed');
+$('fCredits').onclick = () => window.open('data/credits.pdf', '_blank');
+$$('[data-pdf]').forEach(b => b.onclick = () => window.open('data/' + encodeURIComponent(b.dataset.pdf) + '.pdf', '_blank'));
+
+/* ---------- 3. search ---------- */
+const S = { cSan: '', cGenus: '', cSpecies: '', cLang: '', cName: '', cCat: '', cSrc: '', cVerse: '', avail: [], sel: [], availIdx: -1, selIdx: -1, hl: '' };
+const GROUP = { cSan: 'san', cGenus: 'sci', cSpecies: 'sci', cLang: 'com', cName: 'com', cSrc: 'slo', cVerse: 'slo', cCat: 'key' };
+function options(id) {
+  switch (id) {
+    case 'cSan': return sortJ(D.plants.map(p => p[0]).filter(Boolean)).sort((a, b) => a < b ? -1 : a > b ? 1 : 0);
+    case 'cGenus': return sortJ(D.master.map(m => m[0]));
+    case 'cSpecies': return S.cGenus ? sortJ(D.master.filter(m => m[0] === S.cGenus).map(m => m[1])) : [];
+    case 'cLang': return sortJ(D.cmname.map(c => c[3]));
+    case 'cName': return S.cLang ? sortJ(D.cmname.filter(c => c[3] === S.cLang).map(c => c[2])) : [];
+    case 'cCat': return CATS;
+    case 'cSrc': return SOURCES;
+    case 'cVerse': return S.cSrc ? uniq(D.details.filter(d => d[1] === S.cSrc).map(d => d[4])).sort((a, b) => a - b).map(String) : [];
+  }
+}
+// choosing in one search box clears the other kinds of search (as the original does)
+function clearOthers(group) {
+  if (group !== 'san') S.cSan = '';
+  if (group !== 'sci') { S.cGenus = ''; S.cSpecies = ''; }
+  if (group !== 'com') { S.cLang = ''; S.cName = ''; }
+  if (group !== 'slo') { S.cSrc = ''; S.cVerse = ''; }
+  if (group !== 'key') { S.cCat = ''; S.avail = []; S.sel = []; S.availIdx = S.selIdx = -1; }
+}
+function pick(id, v) {
+  clearOthers(GROUP[id]);
+  S[id] = v; S.hl = id;
+  if (id === 'cGenus') S.cSpecies = '';
+  if (id === 'cLang') S.cName = '';
+  if (id === 'cSrc') S.cVerse = '';
+  if (id === 'cCat') { S.avail = sortJ(D.keylist.filter(k => k[CATCOL[v]] === '1').map(k => k[0])).filter(k => !S.sel.includes(k)); S.availIdx = -1; }
+  drawSearch();
+}
+function canSearch() { return !!(S.cSan || (S.cGenus && S.cSpecies) || (S.cLang && S.cName) || (S.cSrc && S.cVerse) || S.sel.length); }
+function drawSearch() {
+  for (const id of Object.keys(GROUP)) { const el = $(id); el.innerHTML = S[id] ? `<span>${esc(S[id])}</span>` : ''; el.classList.toggle('hl', S.hl === id && !!S[id]); }
+  $('lAvail').innerHTML = S.avail.map((k, i) => `<div class="${i === S.availIdx ? 'sel' : ''}" data-i="${i}">${esc(k)}</div>`).join('');
+  $('lSel').innerHTML = S.sel.map((k, i) => `<div class="${i === S.selIdx ? 'sel' : ''}" data-i="${i}">${esc(k)}</div>`).join('');
+  $('bRight').hidden = !S.avail.length; $('bLeft').hidden = !S.sel.length;
+  $('bSearch').hidden = !canSearch();
+}
+function resetSearch() { Object.assign(S, { cSan: '', cGenus: '', cSpecies: '', cLang: '', cName: '', cCat: '', cSrc: '', cVerse: '', avail: [], sel: [], availIdx: -1, selIdx: -1, hl: '' }); drawSearch(); }
+let dropFor = null;
+function closeDrop() { $('dropHost').innerHTML = ''; dropFor = null; }
+$$('[data-combo]').forEach(h => h.onclick = e => {
+  e.stopPropagation();
+  const id = h.dataset.combo; if (dropFor === id) return closeDrop();
+  closeDrop(); const opts = options(id); dropFor = id;
+  const win = h.closest('.win'), wl = win.offsetLeft, wt = win.offsetTop;
+  const rows = Math.min(8, Math.max(1, opts.length)), rh = id === 'cSan' ? 22 : 16;
+  const d = document.createElement('div'); d.className = 'drop' + (id === 'cSan' ? ' deva' : '');
+  Object.assign(d.style, { left: wl + h.offsetLeft + 'px', top: wt + h.offsetTop + h.offsetHeight + 'px', width: (id === 'cSpecies' ? Math.max(h.offsetWidth, 330) : h.offsetWidth) + 'px', height: rows * rh + 2 + 'px' });
+  d.innerHTML = opts.map(o => `<div class="${o === S[id] ? 'on' : ''}">${esc(id === 'cSpecies' ? withNew(S.cGenus + ' ' + o).slice(S.cGenus.length + 1) : o)}</div>`).join('') || '<div>&nbsp;</div>';
+  [...d.children].forEach((c, i) => c.onclick = ev => { ev.stopPropagation(); closeDrop(); if (opts[i] !== undefined) pick(id, opts[i]); });
+  $('dropHost').append(d);
+  const on = d.querySelector('.on'); if (on) on.scrollIntoView({ block: 'nearest' });
+});
+document.addEventListener('click', () => closeDrop());
+$('lAvail').onclick = e => { const i = e.target.dataset.i; if (i === undefined) return; S.availIdx = +i; drawSearch(); };
+$('lAvail').ondblclick = () => $('hRight').onclick();
+$('lSel').onclick = e => { const i = e.target.dataset.i; if (i === undefined) return; S.selIdx = +i; drawSearch(); };
+$('lSel').ondblclick = () => $('hLeft').onclick();
+$('hRight').onclick = () => {
+  if (!S.avail.length || S.availIdx < 0) return;
+  clearOthers('key');
+  const k = S.avail.splice(S.availIdx, 1)[0]; S.sel.push(k); S.availIdx = Math.min(S.availIdx, S.avail.length - 1); S.hl = ''; drawSearch();
+};
+$('hLeft').onclick = () => {
+  if (!S.sel.length || S.selIdx < 0) return;
+  const k = S.sel.splice(S.selIdx, 1)[0]; S.selIdx = Math.min(S.selIdx, S.sel.length - 1);
+  if (S.cCat && D.keylist.some(r => r[0] === k && r[CATCOL[S.cCat]] === '1')) { S.avail.push(k); S.avail.sort(jcmp); }
+  drawSearch();
+};
+$('bRefresh').onclick = resetSearch;
+$('bBack').onclick = () => show('first');
+$('hSearch').onclick = () => { if (canSearch()) runSearch(); };
+
+/* the search: collect (book, verse) pairs as the original's temp table, then the matching verses */
+const verses = s => String(s || '').split(',').map(x => x.trim()).filter(x => x !== '').map(x => parseInt(x, 10)).filter(x => !isNaN(x));
+let R = { list: [], i: 0, red: [] };
+function runSearch() {
+  const temp = []; let red = [];
+  if (S.cSan) {
+    const rows = uniq(D.plants.filter(p => p[0] === S.cSan).map(p => p[3] + '\u0001' + p[2]));      // GROUP BY book, slokas
+    for (const r of rows) { const [b, sl] = r.split('\u0001'); for (const v of verses(sl)) temp.push([b, v]); }
+    red = D.plants.filter(p => p[0] === S.cSan).map(p => p[1]);
+  } else if (S.cGenus && S.cSpecies) {
+    const rows = uniq(D.master.filter(m => m[0] === S.cGenus && m[1] === S.cSpecies).map(m => m[2] + '\u0001' + m[3]));
+    for (const r of rows) { const [b, vs] = r.split('\u0001'); for (const v of verses(vs)) temp.push([b, v]); }
+    red = [S.cGenus + ' ' + S.cSpecies];
+  } else if (S.cLang && S.cName) {
+    const sp = D.cmname.filter(c => c[2] === S.cName && c[3] === S.cLang);
+    const rows = uniq(D.master.filter(m => sp.some(c => c[0] === m[0] && c[1] === m[1])).map(m => m[2] + '\u0001' + m[3]));
+    for (const r of rows) { const [b, vs] = r.split('\u0001'); for (const v of verses(vs)) temp.push([b, v]); }
+    red = uniq(sp.map(c => c[0] + ' ' + c[1]));
+  } else if (S.cSrc && S.cVerse) {
+    temp.push([S.cSrc, +S.cVerse]);
+  } else if (S.sel.length) {
+    for (const k of uniq(D.keys.filter(k => S.sel.includes(k[2])).map(k => k[0] + '\u0001' + k[1]))) { const [b, v] = k.split('\u0001'); temp.push([b, +v]); }
+  }
+  // SELECT details.ID FROM temp INNER JOIN details ... (rows come out in the order of the details table)
+  const list = [];
+  for (const d of D.details) for (const t of temp) if (t[0] === d[1] && t[1] === d[4]) list.push(d);
+  R = { list, i: 0, red: red.map(x => String(x).trim().toLowerCase()), first: true };
+  drawShloka(); show('shloka');
+}
+
+/* ---------- 4. a verse ---------- */
+const plantsOf = d => sortJ(D.master.filter(m => m[2] === d[1] && String(m[3]).includes(String(d[4]))).map(m => m[0] + ' ' + m[1]));
+let plantSel = -1;
+function drawShloka() {
+  stopAudio();
+  const n = R.list.length, d = R.list[R.i];
+  $('tSrc').textContent = d ? d[1] : ''; $('tVerse').textContent = d ? d[4] : '';
+  $('tSloka').textContent = d ? d[6] : ''; $('tDetails').textContent = d ? d[5] : ''; $('tComments').textContent = d ? d[7] : '';
+  $('tDetails').scrollTop = 0; $('tComments').scrollTop = 0;
+  const pl = d ? plantsOf(d) : [];
+  plantSel = R.first && pl.length && !R.red.length ? 0 : -1;
+  R.first = false;
+  $('lPlants').innerHTML = pl.map((p, i) => `<div data-i="${i}" class="${i === plantSel ? 'sel' : ''}" data-name="${esc(p)}" style="color:${R.red.includes(p.toLowerCase()) ? '#ff0000' : '#004000'}">${esc(withNew(p))}</div>`).join('');
+  $('lPlants').dataset.n = pl.length;
+  $('bSpDet').src = pl.length ? 'img/ui/spdet_on.png' : 'img/ui/spdet_off.png';
+  $('tCount').textContent = `[${n ? R.i + 1 : 0}/${n} ]`;
+  const atStart = R.i <= 0, atEnd = R.i >= n - 1;
+  $('nFirst').src = `img/ui/nav_first_${atStart ? 'off' : 'on'}.png`; $('nPrev').src = `img/ui/nav_prev_${atStart ? 'off' : 'on'}.png`;
+  $('nNext').src = `img/ui/nav_next_${atEnd ? 'off' : 'on'}.png`; $('nLast').src = `img/ui/nav_last_${atEnd ? 'off' : 'on'}.png`;
+}
+$('lPlants').onclick = e => { const i = e.target.dataset.i; if (i === undefined) return; plantSel = +i; $$('#lPlants div').forEach((x, k) => { x.classList.toggle('sel', k === plantSel); }); };
+$('lPlants').ondblclick = () => $('hSpDet').onclick();
+$$('[data-nav]').forEach(b => b.onclick = () => {
+  const n = R.list.length; if (!n) return;
+  const k = b.dataset.nav, i = k === 'first' ? 0 : k === 'prev' ? R.i - 1 : k === 'next' ? R.i + 1 : n - 1;
+  if (i < 0 || i >= n || i === R.i) return; R.i = i; drawShloka();
+});
+$('bShBack').onclick = () => { stopAudio(); drawSearch(); show('search'); };
+$('hSpDet').onclick = () => {
+  const items = $$('#lPlants div'); if (!items.length) return;
+  const name = items[plantSel >= 0 ? plantSel : 0].dataset.name;
+  openSpecies(name);
+};
+// verse recording (the original plays data\slokas\<prefix><verse>.wma in a Windows Media Player control)
+const audio = $('audio'); let raf = 0;
+function stopAudio() { audio.pause(); audio.removeAttribute('src'); audio.load(); $('wmpKnob').style.left = '0px'; cancelAnimationFrame(raf); }
+function tick() { if (audio.duration) $('wmpKnob').style.left = (audio.currentTime / audio.duration * 197).toFixed(1) + 'px'; raf = requestAnimationFrame(tick); }
+let audioFb = false;
+audio.onerror = () => { if (!audioFb && audio.getAttribute('src') && !audio.getAttribute('src').startsWith(SHARED)) { audioFb = true; audio.src = SHARED + audio.getAttribute('src'); audio.play().catch(() => {}); } };
+function playVerse() { const d = R.list[R.i]; if (!d) return; audioFb = false; audio.src = `audio/${AUDIO[d[1]]}${d[4]}.mp3`; audio.play().catch(() => {}); cancelAnimationFrame(raf); tick(); }
+$('bSpeak').onclick = playVerse;
+$('wmpPlay').onclick = () => { if (!audio.getAttribute('src')) return playVerse(); audio.paused ? audio.play() : audio.pause(); };
+audio.onended = () => { cancelAnimationFrame(raf); $('wmpKnob').style.left = '0px'; };
+
+/* ---------- 5. a species ---------- */
+let SP = null, tab = 'tax', cat = 'H';
+function openSpecies(name) {
+  const [g, ...rest] = name.split(' '); SP = { g, s: rest.join(' ') };
+  $('spName').textContent = withNew(g + ' ' + SP.s); tab = 'tax';
+  // Taxonomic Hierarchy
+  const c = D.class[g + '|' + SP.s] || Object.entries(D.class).find(([k]) => k.toLowerCase() === (g + '|' + SP.s).toLowerCase())?.[1] || ['', '', '', '', '', ''];
+  const ys = [154, 200, 250, 295, 343, 391];
+  $('taxVals').innerHTML = c.map((v, i) => `<div class="abs" style="left:297px;top:${ys[i]}px;width:345px;height:33px;font:23px/33px var(--a);color:#800000;text-align:center">${esc(v)}</div>`).join('');
+  // Common Names: grouped by language and name, the language cell merged
+  const cn = uniq(D.cmname.filter(r => r[0] === g && r[1] === SP.s).map(r => r[3] + '\u0001' + r[2])).map(x => x.split('\u0001')).sort((a, b) => jcmp(a[0], b[0]) || jcmp(a[1], b[1]));
+  let rows = '';
+  for (let i = 0; i < cn.length; i++) {
+    let span = 1; if (i > 0 && cn[i - 1][0] === cn[i][0]) span = 0; else while (i + span < cn.length && cn[i + span][0] === cn[i][0]) span++;
+    rows += `<tr style="height:23px">${span ? `<td rowspan="${span}" style="color:#000">${esc(cn[i][0])}</td>` : ''}<td style="color:#7a2b2b">${esc(cn[i][1])}</td></tr>`;
+  }
+  $('pCom').innerHTML = `<table style="font:16px var(--a);width:440px"><colgroup><col style="width:200px"><col style="width:240px"></colgroup><tr style="height:23px"><th style="font-size:15px;letter-spacing:.3px">LANGUAGE / REGION</th><th style="font-size:15px">NAME</th></tr>${rows}</table>`;
+  // Distribution: Country, State, District merged when repeated; "None" shown blank
+  const ds = uniq((D.dist[g + '|' + SP.s] || []).map(r => r.map(v => v === 'None' || v === 'none' ? '' : v).join('\u0001'))).map(x => x.split('\u0001'))
+    .sort((a, b) => { for (let k = 0; k < 5; k++) { const c2 = jcmp(a[k], b[k]); if (c2) return c2; } return 0; });
+  const W = [117, 133, 133, 133, 240], BG = ['#fff', '#ddd0cb', '#fff', '#ddd0cb', '#fff'];
+  let drows = '';
+  for (let i = 0; i < ds.length; i++) {
+    let tr = '';
+    for (let k = 0; k < 5; k++) {
+      if (k <= 2) {
+        const same = (a, b) => { for (let q = 0; q <= k; q++) if (a[q] !== b[q]) return false; return true; };
+        if (i > 0 && same(ds[i - 1], ds[i])) continue;
+        let span = 1; while (i + span < ds.length && same(ds[i + span], ds[i])) span++;
+        tr += `<td rowspan="${span}" style="background:${BG[k]}">${esc(ds[i][k])}</td>`;
+      } else tr += `<td style="background:${BG[k]}">${esc(ds[i][k])}</td>`;
     }
-  } catch (e) { html = `<h1>Something went wrong</h1><p class="empty">${esc(e.message)}</p><p><a href="#/">Home</a></p>`; console.error(e); }
-  $('#app').innerHTML = html; window.scrollTo(0, 0); bind(p[0]);
-  document.title = ($('#app h1')?.textContent || 'Vrikshayurveda') + ' – Vrikshayurveda 2';
-}
-addEventListener('hashchange', route);
-/* ---------- search ---------- */
-let qt = 0;
-$('#q').addEventListener('input', e => { clearTimeout(qt); const v = e.target.value.trim(); qt = setTimeout(() => { location.hash = v ? '#/search/' + encodeURIComponent(v) : '#/'; }, 220); });
-$('#q').addEventListener('keydown', e => { if (e.key === 'Enter') { clearTimeout(qt); const v = e.target.value.trim(); location.hash = v ? '#/search/' + encodeURIComponent(v) : '#/'; } });
-function search(q) {
-  const raw = q.trim(); if ($('#q').value !== raw) $('#q').value = raw;
-  const toks = rom(raw).split(' ').filter(Boolean); const deva = raw.match(/[ऀ-ॿ]+/g) || [];
-  // "Surapala 12" / "sv 12" / "krishi parashara 40"
-  let jump = '';
-  const m = raw.toLowerCase().match(/^([a-z ]+?)\s*(?:verse|v|no\.?|#|:)?\s*(\d{1,3})$/);
-  if (m) { const key = m[1].trim().split(' ')[0]; if (key in BABBR) { const b = BABBR[key], n = +m[2]; if (verseIndex.has(vkey(b, n))) jump = `<a class="res" href="#/verse/${b}/${n}"><span class="kind">Go to verse</span><span class="t">${esc(BOOKS[b])}, verse ${n}</span></a>`; } }
-  if (!toks.length && !deva.length) return home();
-  const all = (txt, dv) => toks.every(t => txt.includes(t)) && deva.every(d => dv.includes(d));
-  const score = (txt, t0) => { let s = 0; for (const t of toks) { if (txt.startsWith(t)) s += 3; else if (txt.includes(' ' + t)) s += 2; else s += 1; } return s; };
-  const pl = SP.map((s, i) => [i, plantText[i], plantDeva[i]]).filter(([i, t, d]) => all(t, d)).map(([i, t]) => [i, score(t) + (rom(SP[i].n).startsWith(toks[0] || '') ? 4 : 0) + (toks.every(t => rom(SP[i].en).split(' ').includes(t)) ? 6 : 0)]).sort((a, b) => b[1] - a[1]);
-  const sn = SAN.map((s, i) => [i, sanText[i], s.d]).filter(([i, t, d]) => all(t, d)).slice(0, 60);
-  const vv = V.map((v, i) => [i, verseText[i], verseDeva[i]]).filter(([i, t, d]) => all(t, d));
-  const kw = [...kwMap.values()].filter(k => toks.every(t => rom(k.k).includes(t)) && !deva.length).slice(0, 12);
-  const sb = [...subjects.keys()].filter(s => toks.every(t => rom(s).includes(t)) && !deva.length).slice(0, 12);
-  const total = pl.length + sn.length + vv.length;
-  const snip = i => { const v = V[i]; const src = v[5] || v[6] || ''; const idx = Math.max(0, fold(src).indexOf(toks[0] || '')); return esc(src.slice(Math.max(0, idx - 40), idx + 140)); };
-  let h = `<h1>Search</h1><p class="empty">“${esc(raw)}” – ${plural(total, 'result', 'results')}</p>${jump}`;
-  if (pl.length) h += `<h2>Plants (${pl.length})</h2>` + pl.slice(0, 40).map(([i]) => plantRow(i, toks)).join('') + (pl.length > 40 ? `<p class="empty">and ${pl.length - 40} more plants – make the search more specific.</p>` : '');
-  if (sn.length) h += `<h2>Sanskrit plant names (${sn.length})</h2>` + sn.map(([i]) => sanRow(i, toks)).join('');
-  if (kw.length || sb.length) h += `<h2>Subjects and keywords</h2><div class="chips">${sb.map(s => `<a class="chip" href="#/subject/${encodeURIComponent(s)}">${esc(s)}</a>`).join('')}${kw.map(k => `<a class="chip" href="#/keyword/${encodeURIComponent(k.k)}">${esc(k.k)} · ${k.v.length}</a>`).join('')}</div>`;
-  if (vv.length) h += `<h2>Verses (${vv.length})</h2>` + vv.slice(0, 60).map(([i]) => verseRow(i, toks, snip(i))).join('') + (vv.length > 60 ? `<p class="empty">and ${vv.length - 60} more verses – make the search more specific.</p>` : '');
-  if (!total && !kw.length && !sb.length && !jump) h += `<div class="card"><p>Nothing found. Try the common name (neem), the Sanskrit name in English letters (ariṣṭa or arishta), an old or new scientific name, or a subject (watering, seeds, soil).</p></div>`;
-  return h;
-}
-const plantRow = (i, toks = []) => { const s = SP[i]; return `<a class="res" href="#/plant/${i}"><span class="kind">Plant</span><span class="t latin">${hl(s.n, toks)}</span>${s.o.length ? ` <span class="old">(${esc(s.o.join('; '))})</span>` : ''}<div class="s">${esc([s.f, s.en].filter(Boolean).join(' · '))}${s.v.length ? ' · ' + plural(s.v.length, 'verse', 'verses') : ''}</div></a>`; };
-const sanRow = (i, toks = []) => { const s = SAN[i]; return `<a class="res" href="#/sanskrit/${i}" data-san="${i}"><span class="kind">Sanskrit name</span><span class="sa" style="font-size:20px">${esc(s.d)}</span> <b>${hl(s.t, toks)}</b><div class="s">${esc(s.en)}${s.sp.length ? ' · ' + s.sp.map(p => SP[p].n).join(', ') : ''} · ${plural(s.v.length, 'verse', 'verses')}</div></a>`; };
-const verseRow = (i, toks = [], sn = '') => { const v = V[i]; return `<a class="res" href="#/verse/${v[0]}/${v[1]}"><span class="kind">Verse</span><span class="t">${esc(BOOKS[v[0]])} · ${v[1]}</span>${v[2] ? ` <span class="s">– ${hl(v[2], toks)}</span>` : ''}<div class="s">${hl(sn || (v[5] || '').slice(0, 160), toks)}</div></a>`; };
-/* ---------- home ---------- */
-function home() {
-  const withText = V.filter(v => v[5] || v[4]).length;
-  const rand = SP.map((s, i) => i).filter(i => SP[i].im.F.length + SP[i].im.H.length).sort(() => Math.random() - .5).slice(0, 6);
-  return `<h1>Verses of the Vrikshayurveda</h1>
-  <p style="max-width:62ch">The plant-science verses of five Sanskrit works, with the plants they name, their current scientific names, pictures and recitations. Type in the box above, or start here.</p>
-  <div class="grid" style="margin:18px 0">
-    <a class="tile" href="#/books"><b>${plural(V.length, 'verse', 'verses')}</b><span>${withText} with Sanskrit and English text · five books</span></a>
-    <a class="tile" href="#/plants"><b>${plural(SP.length, 'plant', 'plants')}</b><span>Current names, 2011 names in brackets</span></a>
-    <a class="tile" href="#/sanskrit"><b>${plural(SAN.length, 'Sanskrit name', 'Sanskrit names')}</b><span>Devanagari and English letters</span></a>
-    <a class="tile" href="#/subjects"><b>${plural(subjects.size, 'subject', 'subjects')}</b><span>Watering, seeds, soil, disease and more</span></a>
-    <a class="tile" href="#/keywords"><b>${plural(kwMap.size, 'keyword', 'keywords')}</b><span>Organisms, actions, diseases, others</span></a>
-  </div>
-  <h2>The five books</h2><div class="grid">${BOOKS.map((b, i) => `<a class="tile" href="#/book/${i}"><b>${esc(BSHORT[i])}</b><span>${V.filter(v => v[0] === i).length} verses</span></a>`).join('')}</div>
-  <h2>Some plants</h2><div class="thumbs" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))">${rand.map(i => { const s = SP[i]; const im = (s.im.F.concat(s.im.H)).find(x => x[4]); return `<a href="#/plant/${i}" class="tile" style="padding:8px;text-align:center">${im ? `<img src="${imgSrc(im[0], 1)}" alt="" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;background:#fff">` : ''}<b class="latin" style="font-size:15px;margin-top:6px">${esc(s.n)}</b></a>`; }).join('')}</div>`;
-}
-/* ---------- plants ---------- */
-function plantsPage(letter) {
-  const letters = [...new Set(SP.map(s => s.n[0].toUpperCase()))].sort();
-  const L = letter || '';
-  const list = SP.map((s, i) => i).filter(i => !L || SP[i].n[0].toUpperCase() === L).sort((a, b) => SP[a].n.localeCompare(SP[b].n));
-  const fams = [...new Set(SP.map(s => s.f).filter(Boolean))].sort();
-  return `<h1>Plants (${SP.length})</h1><p class="empty">Names are the current accepted names; the names used in the 2011 program are in brackets and are searchable too.</p>
-  <div class="chips" style="margin:10px 0"><a class="chip ${L ? '' : 'on'}" href="#/plants">All</a>${letters.map(l => `<a class="chip ${L === l ? 'on' : ''}" href="#/plants/${l}">${l}</a>`).join('')}</div>
-  <div class="card" style="padding:4px 14px">${list.map(i => plantRow(i)).join('')}</div>
-  <h2>By family</h2><div class="chips">${fams.map(f => `<a class="chip" href="#/search/${encodeURIComponent(f)}">${esc(f)} · ${SP.filter(s => s.f === f).length}</a>`).join('')}</div>`;
-}
-function plantPage(i) {
-  const s = SP[i]; if (!s) return '<h1>Plant not found</h1>';
-  const san = (sanByPlant.get(i) || []).map(j => SAN[j]).sort((a, b) => (/[\u0900-\u097f]/.test(b.d) ? 1 : 0) - (/[\u0900-\u097f]/.test(a.d) ? 1 : 0));
-  const cnBy = {}; s.cn.forEach(([l, n]) => { (cnBy[l] ||= []).push(n); });
-  const vs = verseByPlant[i];
-  const rows = s.d.filter(r => r.some(Boolean));
-  const catN = { H: 'Herbarium sheets', L: 'Line diagrams', P: 'Paintings', F: 'Photographs' };
-  const cats = Object.keys(catN).filter(c => s.im[c].length);
-  const cl = s.cl || [];
-  return `<div class="crumbs"><a href="#/plants">Plants</a> › ${esc(s.f || '')}</div>
-  <h1 class="latin">${esc(s.n)} ${s.au ? `<span style="font:400 17px var(--ser);font-style:normal;color:var(--mute)">${esc(s.au)}</span>` : ''}</h1>
-  ${s.o.length ? `<p class="old" style="margin:-6px 0 8px;font-size:16px">2011 name${s.o.length > 1 ? 's' : ''}: ${esc(s.o.join('; '))}</p>` : ''}
-  ${s.rv ? `<p><span class="badge">NAME UNDER REVIEW</span> ${s.sug ? `The Catalogue-of-Life style lookup suggests <i>${esc(s.sug)}</i>, but this needs a taxonomist’s check, so the 2011 name is kept.` : 'No match was found for this name in the lookup; it needs a taxonomist’s check.'}</p>` : ''}
-  <div class="chips" style="margin-bottom:6px">${s.f ? `<a class="chip" href="#/search/${encodeURIComponent(s.f)}">Family: ${esc(s.f)}</a>` : ''}${s.en ? `<span class="chip">${esc(s.en)}</span>` : ''}${s.gk ? `<a class="chip" target="_blank" rel="noopener" href="https://www.gbif.org/species/${s.gk}">GBIF record ↗</a>` : ''}</div>
-  ${san.length ? `<h2>Sanskrit names</h2><div class="card"><div class="chips">${san.map(x => `<a class="chip" href="#/sanskrit/${SAN.indexOf(x)}" style="font-size:17px"><span class="sa" style="font-size:19px">${esc(x.d)}</span> ${esc(x.t)}</a>`).join('')}</div></div>` : ''}
-  <h2>Verses (${vs.length})</h2>${vs.length ? `<div class="card" style="padding:4px 14px">${vs.map(j => verseRow(j)).join('')}</div>` : '<p class="empty">No verse is linked to this plant in the 2011 database.</p>'}
-  ${Object.keys(cnBy).length ? `<h2>Common names</h2><div class="card"><table class="t"><tr><th>Language / region</th><th>Names</th></tr>${Object.entries(cnBy).map(([l, n]) => `<tr><td>${esc(l)}</td><td>${n.map(esc).join(', ')}</td></tr>`).join('')}</table></div>` : ''}
-  ${cl.some(Boolean) ? `<h2>Classification</h2><div class="card"><table class="t">${['Kingdom', 'Phylum', 'Class', 'Subclass', 'Order', 'Family'].map((k, j) => cl[j] ? `<tr><td style="width:130px;color:var(--mute)">${k}</td><td>${esc(cl[j])}</td></tr>` : '').join('')}</table></div>` : ''}
-  ${rows.length ? `<h2>Distribution</h2>${distHtml(rows)}` : ''}
-  ${s.sy.length ? `<h2>Synonyms and where they are published</h2>${synHtml(s.sy)}` : ''}
-  ${cats.length ? `<h2>Pictures</h2><div class="chips" style="margin-bottom:10px" id="catChips">${cats.map((c, k) => `<button type="button" class="chip ${k ? '' : 'on'}" data-cat="${c}">${catN[c]} · ${s.im[c].length}</button>`).join('')}</div><div class="thumbs" id="thumbs" data-p="${i}" data-c="${cats[0]}"></div>` : ''}`;
-}
-function distHtml(rows) {
-  const st = {}; rows.forEach(r => { const k = r[1] || (r[0] && r[0] !== 'India' ? r[0] : '(state not given)'); (st[k] ||= []).push(r); });
-  const india = rows.filter(r => r[0] === 'India' && r[1]).length;
-  const states = Object.keys(st).sort((a, b) => st[b].length - st[a].length);
-  const map = india ? mapSvg(Object.fromEntries(Object.entries(st).map(([k, v]) => [k, v.length]))) : '';
-  return `<div class="row"><div class="mapwrap noprint">${map}</div><div style="flex:1;min-width:260px"><p class="empty">${plural(rows.length, 'record', 'records')} in ${plural(states.length, 'state or country', 'states or countries')}. Tap a state on the map or a name below.</p>
-  ${states.map(k => `<details class="card" style="margin-bottom:8px;padding:8px 14px" data-st="${esc(k)}"><summary>${esc(k)} <span class="old">· ${st[k].length}</span></summary><table class="t" style="margin-top:6px"><tr><th>District</th><th>Taluk</th><th>Place</th></tr>${st[k].map(r => `<tr><td>${esc(r[2])}</td><td>${esc(r[3])}</td><td>${esc(r[4])}</td></tr>`).join('')}</table></details>`).join('')}</div></div>`;
-}
-let mapCache = null;
-function mapSvg(counts) {
-  const W = 460, Hh = 520, x0 = 67.5, x1 = 98, y0 = 6, y1 = 37.3, X = lon => (lon - x0) / (x1 - x0) * W, Y = lat => (y1 - lat) / (y1 - y0) * Hh;
-  if (!mapCache) mapCache = MAPD.features.filter(f => f.properties.kind === 'state').map(f => ({ n: f.properties.name, d: (f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates).map(poly => poly.map(ring => 'M' + ring.map(p => X(p[0]).toFixed(1) + ' ' + Y(p[1]).toFixed(1)).join('L') + 'Z').join('')).join('') }));
-  const max = Math.max(1, ...Object.values(counts));
-  const col = n => n ? `color-mix(in srgb, var(--acc) ${18 + Math.round(Math.log(n + 1) / Math.log(max + 1) * 75)}%, var(--card))` : 'var(--chip)';
-  return `<svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Map of India with the states where the plant is recorded">${mapCache.map(m => `<path d="${m.d}" fill="${col(counts[m.n] || 0)}" data-n="${esc(m.n)}" data-c="${counts[m.n] || 0}"><title>${esc(m.n)}${counts[m.n] ? ' · ' + counts[m.n] : ''}</title></path>`).join('')}</svg>`;
-}
-function synHtml(sy) {
-  const by = {}; sy.forEach(r => { (by[r[0]] ||= []).push(r); });
-  return `<div class="card"><table class="t"><tr><th>Name used</th><th>Published in</th></tr>${Object.entries(by).map(([n, rs]) => `<tr><td class="latin">${esc(n)}</td><td>${rs.filter(r => r[1]).map(r => esc([r[1], r[2] && !/^[-0]$/.test(r[2]) && 'vol. ' + r[2], r[3] !== '-' && r[3], r[4] && !/^[-0]$/.test(r[4]) && r[4] + ' ed.', !/^[-0]$/.test(r[5]) && r[5]].filter(Boolean).join(', '))).join('<br>') || '<span class="empty">—</span>'}</td></tr>`).join('')}</table></div>`;
-}
-/* ---------- Sanskrit names ---------- */
-function sanskritPage() {
-  const h = (location.hash.split('/')[2] || '');
-  if (h !== '') {
-    const s = SAN[+h]; if (!s) return '<h1>Not found</h1>';
-    return `<div class="crumbs"><a href="#/sanskrit">Sanskrit names</a></div><h1><span class="sa" style="font-size:36px">${esc(s.d)}</span> <span style="color:var(--mute)">${esc(s.t)}</span></h1>
-    ${s.en ? `<p>${esc(s.en)}</p>` : ''}${s.ot ? `<p class="empty">Other languages: ${esc(s.ot)}</p>` : ''}
-    <h2>Plants</h2>${s.sp.length ? `<div class="card" style="padding:4px 14px">${s.sp.map(p => plantRow(p)).join('')}</div>` : '<p class="empty">The 2011 database does not give a scientific name for this word.</p>'}
-    <h2>Verses (${s.v.length})</h2><div class="card" style="padding:4px 14px">${s.v.map(([b, n]) => verseIndex.has(vkey(b, n)) ? verseRow(verseIndex.get(vkey(b, n))) : `<span class="res"><span class="t">${esc(BOOKS[b])} · ${n}</span> <span class="s">(verse not in the database)</span></span>`).join('')}</div>`;
+    drows += `<tr style="height:33px">${tr}</tr>`;
   }
-  const order = SAN.map((s, i) => i).sort((a, b) => rom(SAN[a].t).localeCompare(rom(SAN[b].t)));
-  return `<h1>Sanskrit plant names (${SAN.length})</h1><p class="empty">Sorted by the name in English letters. You can also search in Devanagari or English letters from the box above.</p><div class="card" style="padding:4px 14px">${order.map(i => sanRow(i)).join('')}</div>`;
+  $('pDis').innerHTML = `<table style="font:bold 13px var(--a);color:#7a2b2b;width:756px"><colgroup>${W.map(w => `<col style="width:${w}px">`).join('')}</colgroup><tr style="height:33px">${['Country', 'State', 'District', 'Taluk', 'Place'].map(h => `<th style="font:17px var(--a)">${h}</th>`).join('')}</tr>${drows}</table>`;
+  // Synonyms
+  const sy = uniq(D.syn.filter(r => r[0] === g && r[1] === SP.s).map(r => r[2] + '\u0001' + r[3])).map(x => x.split('\u0001')).sort((a, b) => jcmp(a[0], b[0]) || jcmp(a[1], b[1]));
+  $('lSyn').innerHTML = sy.map((r, i) => `<div data-i="${i}">${esc(r[0])}&nbsp;&nbsp;${esc(r[1])}</div>`).join('');
+  $('lSyn').onclick = e => {
+    const i = e.target.closest('[data-i]')?.dataset.i; if (i === undefined) return;
+    $$('#lSyn div').forEach((x, k) => x.classList.toggle('sel', k === +i));
+    const [sg, ss] = sy[+i];
+    const fl = uniq(D.syn.filter(r => r[0] === g && r[1] === SP.s && r[2] === sg && r[3] === ss).map(r => [r[4], r[5], r[6], r[7], r[8]].join('\u0001'))).map(x => x.split('\u0001'))
+      .sort((a, b) => { for (let k = 0; k < 5; k++) { const c2 = jcmp(a[k], b[k]); if (c2) return c2; } return 0; });
+    $('tFlora').textContent = fl.map(r => r.map(v => /^\d+\.0$/.test(v) ? v.slice(0, -2) : v).join('  ')).join('\n');
+  };
+  $('tFlora').textContent = '';
+  cat = 'H'; drawTab(); show('species'); $('shloka').hidden = false;
 }
-/* ---------- books and verses ---------- */
-function booksPage() {
-  return `<h1>Books and verses</h1><div class="grid">${BOOKS.map((b, i) => `<a class="tile" href="#/book/${i}"><b>${esc(BSHORT[i])}</b><span>${BINFO[i]}</span><br><span>${V.filter(v => v[0] === i).length} verses</span></a>`).join('')}</div>
-  <h2>Source documents</h2><div class="chips">${BOOKS.map(b => `<a class="chip" target="_blank" rel="noopener" href="data/${encodeURIComponent(b)}.pdf">${esc(b)} (PDF) ↗</a>`).join('')}<a class="chip" target="_blank" rel="noopener" href="data/credits.pdf">Credits (PDF) ↗</a></div>`;
+function imagesOf(c) { return D.herb.filter(h => h[1] === SP.g && h[2] === SP.s && h[3] === c).sort((a, b) => a[0] - b[0]); }
+function caption(h) {
+  const base = String(h[5]).replace(/\.jpg$/i, '');
+  if (h[3] === 'H') return (h[4] && h[4] !== '0' ? h[4] + '_' : '') + base;
+  if (h[3] === 'L' || h[3] === 'P') return base;
+  return h[6] === 'Y' ? 'WesternGhat Team' : '';
 }
-function bookPage(b) {
-  if (!BOOKS[b]) return '<h1>Not found</h1>';
-  const vs = V.map((v, i) => i).filter(i => V[i][0] === b);
-  return `<div class="crumbs"><a href="#/books">Books</a></div><h1>${esc(BSHORT[b])}</h1><p style="max-width:62ch">${BINFO[b]}</p>
-  <p><a class="chip" target="_blank" rel="noopener" href="data/${encodeURIComponent(BOOKS[b])}.pdf">Open the source document (PDF) ↗</a></p>
-  <div class="card" style="padding:4px 14px">${vs.map(i => { const v = V[i]; return `<a class="res" href="#/verse/${b}/${v[1]}"><span class="t">${v[1]}</span> <span class="s">${esc(v[2])}</span>${v[5] ? `<div class="s">${esc(v[5].slice(0, 130))}</div>` : '<div class="s empty">(no text in the 2011 database)</div>'}</a>`; }).join('')}</div>`;
+function drawTab() {
+  $('spTabs').src = `img/ui/tabs_${tab}.png`;
+  $('pTax').hidden = tab !== 'tax'; $('pOther').hidden = tab === 'tax';
+  $('pCom').hidden = tab !== 'com'; $('pDis').hidden = tab !== 'dis'; $('pSyn').hidden = tab !== 'syn'; $('pImg').hidden = tab !== 'img';
+  if (tab === 'img') drawImages();
 }
-let curVerse = null;
-function versePage(b, n) {
-  const i = verseIndex.get(vkey(b, n)); if (i === undefined) return '<h1>Verse not found</h1><p><a href="#/books">Books</a></p>';
-  const v = V[i]; curVerse = v;
-  const same = V.map((x, j) => j).filter(j => V[j][0] === b); const pos = same.indexOf(i);
-  const prev = same[pos - 1], next = same[pos + 1];
-  return `<div class="crumbs"><a href="#/books">Books</a> › <a href="#/book/${b}">${esc(BSHORT[b])}</a></div>
-  <h1>${esc(BSHORT[b])} · verse ${n}</h1>
-  ${v[2] ? `<p><span class="eyebrow" style="display:inline;margin-right:8px">Subject</span><a href="#/subject/${encodeURIComponent(v[2])}" style="font:700 19px var(--ser)">${esc(v[2])}</a></p>` : ''}
-  <div class="player noprint" aria-label="Recitation"><button type="button" id="play" aria-label="Play recitation">▶</button><input type="range" id="seek" min="0" max="1000" value="0" aria-label="Position"><span id="time" class="s" style="font-size:13px;min-width:78px;text-align:right">0:00</span>
-    <select id="rate" aria-label="Speed"><option value=".75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option></select><label style="font-size:13px"><input type="checkbox" id="loop"> repeat</label></div>
-  <p id="audioErr" class="empty" hidden>The recitation could not be loaded.</p>
-  <div class="card" style="margin-top:14px"><div class="eyebrow">Sanskrit</div>${v[4] ? `<div class="verse-sa">${esc(v[4])}</div>` : '<p class="empty">The 2011 database has no Sanskrit text for this verse.</p>'}</div>
-  <div class="card" style="margin-top:12px"><div class="eyebrow">Meaning</div>${v[5] ? `<p style="margin:0;font:18px/1.65 var(--ser);white-space:pre-wrap">${esc(v[5])}</p>` : '<p class="empty" style="margin:0">No English text for this verse in the 2011 database.</p>'}</div>
-  ${v[6] ? `<div class="card" style="margin-top:12px"><div class="eyebrow">Comments</div><p style="margin:0;white-space:pre-wrap">${esc(v[6])}</p></div>` : ''}
-  ${v[7].length ? `<h2>Plants in this verse</h2><div class="card" style="padding:4px 14px">${v[7].map(p => plantRow(p)).join('')}</div>` : ''}
-  ${v[3].length ? `<h2>Keywords</h2><div class="chips">${v[3].map(k => `<a class="chip" href="#/keyword/${encodeURIComponent(k)}">${esc(k)}</a>`).join('')}</div>` : ''}
-  <div class="pg noprint"><a class="btn ghost" ${prev !== undefined ? `href="#/verse/${b}/${V[prev][1]}"` : 'aria-disabled="true" style="opacity:.35;pointer-events:none"'}>‹ Previous</a>
-    <button type="button" class="btn ghost" id="cite">Copy citation</button><a class="btn ghost" ${next !== undefined ? `href="#/verse/${b}/${V[next][1]}"` : 'aria-disabled="true" style="opacity:.35;pointer-events:none"'}>Next ›</a></div>`;
+let shown = [];
+function drawImages() {
+  $('imgBar').src = `img/ui/imgbar_${cat}.png`;
+  $('paintOff').hidden = imagesOf('P').length > 0 || cat === 'P';
+  shown = imagesOf(cat);
+  $('thumbs').innerHTML = shown.map((h, i) => `<div class="tc" style="left:${(i % 6) * 118}px;top:${Math.floor(i / 6) * 134}px"><img data-i="${i}" ${h[7] ? `src="img/t/${h[0]}.webp"` : ''} alt=""><div class="cap">${esc(caption(h))}</div></div>`).join('')
+    + `<div style="height:${Math.ceil(shown.length / 6) * 134}px;width:1px"></div>`;
+  $('thumbs').scrollTop = 0;
 }
-/* ---------- subjects and keywords ---------- */
-function subjectsPage() { const ks = [...subjects.keys()].sort((a, b) => a.localeCompare(b)); return `<h1>Subjects (${ks.length})</h1><p class="empty">Each verse of the 2011 database carries one subject.</p><div class="grid">${ks.map(k => `<a class="tile" href="#/subject/${encodeURIComponent(k)}"><b>${esc(k)}</b><span>${plural(subjects.get(k).length, 'verse', 'verses')}</span></a>`).join('')}</div>`; }
-function subjectPage(s) { const vs = subjects.get(s) || []; return `<div class="crumbs"><a href="#/subjects">Subjects</a></div><h1>${esc(s)}</h1><p class="empty">${plural(vs.length, 'verse', 'verses')}</p><div class="card" style="padding:4px 14px">${vs.map(i => verseRow(i)).join('')}</div>`; }
-const CATN = { Organisms: 'Organisms', 'Action/Properties': 'Actions and properties', 'Diseases/Disorders': 'Diseases and disorders', Others: 'Others' };
-function keywordsPage(c) {
-  const cats = Object.keys(CATN); const cur = c && CATN[c] ? c : '';
-  const ks = [...kwMap.values()].filter(k => !cur || (kwCat.get(fold(k.k)) || []).includes(cur)).sort((a, b) => fold(a.k).localeCompare(fold(b.k)));
-  return `<h1>Keywords (${ks.length})</h1><div class="chips" style="margin:10px 0"><a class="chip ${cur ? '' : 'on'}" href="#/keywords">All</a>${cats.map(k => `<a class="chip ${cur === k ? 'on' : ''}" href="#/keywords/${encodeURIComponent(k)}">${CATN[k]}</a>`).join('')}</div>
-  <div class="chips">${ks.map(k => `<a class="chip" href="#/keyword/${encodeURIComponent(k.k)}">${esc(k.k)} · ${k.v.length}</a>`).join('')}</div>`;
-}
-function keywordPage(k) { const e = kwMap.get(fold(k)); if (!e) return '<h1>Not found</h1>'; return `<div class="crumbs"><a href="#/keywords">Keywords</a></div><h1>${esc(e.k)}</h1><p class="empty">${plural(e.v.length, 'verse', 'verses')}${(kwCat.get(fold(e.k)) || []).length ? ' · ' + kwCat.get(fold(e.k)).map(c => CATN[c]).join(', ') : ''}</p><div class="card" style="padding:4px 14px">${e.v.map(i => verseRow(i)).join('')}</div>`; }
-/* ---------- about ---------- */
-function aboutPage() {
-  const ch = SP.filter(s => s.o.length), rv = SP.filter(s => s.rv);
-  return `<h1>About Vrikshayurveda 2</h1>
-  <p style="max-width:64ch">Vrikshayurveda is the traditional Indian science of plants. This program gathers the plant-science verses of five Sanskrit works with the plants they mention. It was first made in 2011 by the Western Ghats team, University of Agricultural Sciences, Bangalore.</p>
-  <div class="card"><p style="margin:0"><b>Proprietary right holder</b> – Dr. K.N. Ganeshaiah<br><b>Updated in 2026</b> by Dr. Sachin A. Rosario<br><a target="_blank" rel="noopener" href="data/credits.pdf">Original credits (PDF) ↗</a></p></div>
-  <h2>What is new in Version 2</h2><ul style="max-width:64ch;line-height:1.7"><li>One search box over verses, plants, Sanskrit names, subjects and keywords, in English letters or Devanagari, with “Surapala 12” style jumps.</li><li>Current scientific names, with the 2011 names kept and searchable.</li><li>Verse pages with recitation (speed and repeat), subject, keywords, plants and previous/next.</li><li>Plant pages with all their verses, Sanskrit and common names, classification, distribution map, synonyms and pictures.</li><li>Verses are linked to plants by exact verse number (Version 1 matched “3” inside “13” and “23”, as the 2011 program did).</li><li>Works on phones and offline.</li></ul>
-  <h2>Where the plant names come from</h2><p style="max-width:64ch">Every scientific name in the 2011 database was looked up in the GBIF Backbone Taxonomy, which is built on the Catalogue of Life, in October 2026. <b>${ch.length}</b> plants now show a different name from 2011 (the 2011 name is in brackets). <b>${rv.length}</b> names are marked “name under review” because the lookup gave a doubtful or rank-reduced answer; for these the 2011 name is kept until a taxonomist checks them:</p>
-  <div class="card"><ul style="margin:0;padding-left:18px">${rv.map(s => `<li><a class="latin" href="#/plant/${SP.indexOf(s)}">${esc(s.n)}</a>${s.sug ? ` – lookup suggests <i>${esc(s.sug)}</i>` : ' – no match found'}</li>`).join('')}</ul></div>
-  <h2>Sources</h2><ul style="max-width:64ch;line-height:1.7"><li>Verses, Sanskrit and English text, comments, keywords, plant names, common names, distribution, synonyms and the picture list: the 2011 program’s database (db1.mdb).</li><li>Pictures and recitations: the 2011 program’s files, converted for the web.</li><li>Source documents: the five PDFs and the credits that came with the program.</li><li>Map boundaries: DataMeet (Community Created Maps of India), CC BY 4.0.</li></ul>
-  <h2>Known gaps in the 2011 data</h2><ul style="max-width:64ch;line-height:1.7"><li>${V.filter(v => !v[5] && !v[4]).length} verses have no Sanskrit or English text.</li><li>Two pictures are damaged and two are missing in the original files.</li><li>The 2011 distribution table uses the state names of that time (for example Orissa, Uttaranchal); they are shown with today’s names.</li></ul>`;
-}
-/* ---------- behaviours after drawing ---------- */
-const audio = $('#audio'); let curCat = null;
-function stopAudio() { audio.pause(); audio.removeAttribute('src'); audio.load(); }
-function fmt(t) { t = Math.floor(t || 0); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); }
-function bind(kind) {
-  if (kind === 'verse' && curVerse) {
-    const v = curVerse, src = `audio/${BPRE[v[0]]}${v[1]}.mp3`; let fb = false;
-    const btn = $('#play'), seek = $('#seek'), tm = $('#time');
-    const setSrc = () => { audio.src = fb ? SHARED + src : src; };
-    btn.onclick = () => { if (!audio.getAttribute('src')) setSrc(); audio.playbackRate = +$('#rate').value; audio.paused ? audio.play().catch(() => { }) : audio.pause(); };
-    audio.onplay = () => btn.textContent = '❚❚'; audio.onpause = () => btn.textContent = '▶';
-    audio.onended = () => { btn.textContent = '▶'; if ($('#loop')?.checked) { audio.currentTime = 0; audio.play(); } };
-    audio.ontimeupdate = () => { if (audio.duration) { seek.value = audio.currentTime / audio.duration * 1000; tm.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration); } };
-    audio.onerror = () => { if (!fb && audio.getAttribute('src') && !/^(\.\.)/.test(audio.getAttribute('src'))) { fb = true; setSrc(); audio.play().catch(() => { }); } else $('#audioErr').hidden = false; };
-    seek.oninput = () => { if (audio.duration) audio.currentTime = seek.value / 1000 * audio.duration; };
-    $('#rate').onchange = () => audio.playbackRate = +$('#rate').value;
-    $('#cite').onclick = () => { const t = `${BOOKS[v[0]]}, verse ${v[1]}. Vrikshayurveda 2 (IBIN Apps), ${location.href.split('#')[0]}#/verse/${v[0]}/${v[1]}`; (navigator.clipboard?.writeText(t) || Promise.reject()).then(() => { $('#cite').textContent = 'Copied'; setTimeout(() => $('#cite').textContent = 'Copy citation', 1500); }).catch(() => prompt('Copy this citation', t)); };
-  }
-  if (kind === 'plant') {
-    const th = $('#thumbs'); if (th) { drawThumbs(th, th.dataset.c); $$('#catChips [data-cat]').forEach(b => b.onclick = () => { $$('#catChips .chip').forEach(x => x.classList.toggle('on', x === b)); drawThumbs(th, b.dataset.cat); }); }
-    $$('.mapwrap path').forEach(p => { p.onclick = () => { const d = $(`details[data-st="${p.dataset.n}"]`); if (d) { d.open = true; d.scrollIntoView({ behavior: 'smooth', block: 'center' }); } }; });
-  }
-}
-const CAPT = { H: 'Herbarium sheet', L: 'Line diagram', P: 'Painting', F: 'Photograph' };
-function drawThumbs(th, c) {
-  const s = SP[+th.dataset.p]; const list = s.im[c]; th.dataset.c = c;
-  th.innerHTML = list.map((im, k) => `<button type="button" data-k="${k}" aria-label="Open picture ${k + 1}">${im[4] ? `<img loading="lazy" src="${imgSrc(im[0], 1)}" alt="">` : `<div style="aspect-ratio:1;display:flex;align-items:center;justify-content:center;color:var(--mute);font-size:12px">not available</div>`}<small>${esc(im[1] ? im[1] + ' · ' : '')}${esc(im[2].replace(s.o[0] || s.n, '').replace(/^[_ ]+/, '') || CAPT[c])}</small></button>`).join('');
-  th.onclick = e => { const b = e.target.closest('button[data-k]'); if (b) openLb(s, c, +b.dataset.k); };
-}
-let lbState = null;
-function openLb(s, c, k) {
-  const list = s.im[c].filter(x => x[4]); const cur = s.im[c][k]; let j = list.indexOf(cur); if (j < 0) return; lbState = { s, c, list, j };
-  drawLb();
-}
-function drawLb() {
-  const { s, c, list, j } = lbState, im = list[j];
-  $('#lbHost').innerHTML = `<div class="lb" role="dialog" aria-modal="true" aria-label="Picture"><button class="x" aria-label="Close">✕</button>${list.length > 1 ? '<button class="n p" aria-label="Previous">‹</button><button class="n nx" aria-label="Next">›</button>' : ''}<img src="${imgSrc(im[0])}" alt="${esc(s.n)}"><p><i>${esc(s.n)}</i> – ${CAPT[c]}${im[1] ? ' · ' + esc(im[1]) : ''}${im[3] ? ' · WesternGhat Team' : ''} · ${j + 1} of ${list.length}</p></div>`;
-  const h = $('#lbHost'); $('.x', h).onclick = closeLb; if ($('.p', h)) { $('.p', h).onclick = () => { lbState.j = (j + list.length - 1) % list.length; drawLb(); }; $('.nx', h).onclick = () => { lbState.j = (j + 1) % list.length; drawLb(); }; }
-  $('.lb', h).onclick = e => { if (e.target.classList.contains('lb')) closeLb(); };
-}
-function closeLb() { $('#lbHost').innerHTML = ''; lbState = null; }
-addEventListener('keydown', e => { if (!lbState) return; if (e.key === 'Escape') closeLb(); else if (e.key === 'ArrowRight') $('#lbHost .nx')?.click(); else if (e.key === 'ArrowLeft') $('#lbHost .p')?.click(); });
-if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => { });
-route();
+$$('[data-tab]').forEach(t => t.onclick = () => { tab = t.dataset.tab; drawTab(); });
+$$('[data-cat]').forEach(b => b.onclick = () => { if (b.dataset.cat === 'P' && !imagesOf('P').length) return; cat = b.dataset.cat; drawImages(); });
+let vi = 0;
+function viewer(i) { vi = i; const h = shown[i]; $('vImg').src = h[7] ? `img/${h[0]}.webp` : ''; $('vCap').textContent = `${SP.g} ${SP.s} — ${caption(h) || h[5]} (${i + 1} of ${shown.length})`; $('viewer').hidden = false; }
+$('thumbs').onclick = e => { const i = e.target.dataset.i; if (i !== undefined) viewer(+i); };
+$('vClose').onclick = () => $('viewer').hidden = true;
+$('viewer').onclick = e => { if (e.target.id === 'viewer') $('viewer').hidden = true; };
+$('vPrev').onclick = e => { e.stopPropagation(); viewer((vi + shown.length - 1) % shown.length); };
+$('vNext').onclick = e => { e.stopPropagation(); viewer((vi + 1) % shown.length); };
+addEventListener('keydown', e => { if ($('viewer').hidden) return; if (e.key === 'Escape') $('viewer').hidden = true; if (e.key === 'ArrowRight') $('vNext').onclick(e); if (e.key === 'ArrowLeft') $('vPrev').onclick(e); });
+
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+drawSearch();
 </script>
 </body>
 </html>

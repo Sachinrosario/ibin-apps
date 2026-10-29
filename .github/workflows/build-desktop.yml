@@ -44,9 +44,12 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           A=apps/${{ steps.info.outputs.app }}
-          gh release view "${{ steps.info.outputs.tag }}" >/dev/null 2>&1 || \
-          gh release create "${{ steps.info.outputs.tag }}" --target "$GITHUB_SHA" \
-            --title "$(jq -r .title $A/release.json)" --notes-file $A/RELEASE_NOTES.md
+          if gh release view "${{ steps.info.outputs.tag }}" >/dev/null 2>&1; then
+            gh release edit "${{ steps.info.outputs.tag }}" --title "$(jq -r .title $A/release.json)" --notes-file $A/RELEASE_NOTES.md
+          else
+            gh release create "${{ steps.info.outputs.tag }}" --target "$GITHUB_SHA" \
+              --title "$(jq -r .title $A/release.json)" --notes-file $A/RELEASE_NOTES.md
+          fi
 
   windows:
     needs: prepare

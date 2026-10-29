@@ -2,7 +2,7 @@
   "name": "vrikshayurveda-2",
   "version": "2.0.0",
   "private": true,
-  "description": "Vrikshayurveda2 (updated 2026)",
+  "description": "Vrikshayurveda 2 (original screens, scientific names updated 2026)",
   "scripts": {
     "tauri": "tauri"
   },

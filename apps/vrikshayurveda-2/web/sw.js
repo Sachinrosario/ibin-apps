@@ -1,14 +1,13 @@
-// Offline support: keeps the app, data and every picture or recitation that has been opened.
+// Offline support: keeps the app, data and every picture that has been viewed.
 const CACHE = 'vrk2-v1';
-const CORE = ['./', 'index.html', 'data/vrk2.js', 'data/map.js', 'manifest.webmanifest', 'img/ui/icon.png',
-  'fonts/arimo-latin-400-normal.woff2', 'fonts/arimo-latin-700-normal.woff2', 'fonts/tinos-latin-400-normal.woff2', 'fonts/noto-sans-devanagari-400.woff2', 'fonts/noto-sans-devanagari-700.woff2', 'fonts/noto-sans-kannada-400.woff2'];
+const CORE = ['./', 'index.html', 'data/vrk.js', 'manifest.webmanifest', 'img/ui/icon.png', 'img/ui/splash.webp', 'img/ui/first.webp', 'img/ui/search.webp', 'img/ui/shloka.webp', 'img/ui/species.webp'];
 self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting())));
 self.addEventListener('activate', e => e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())));
 self.addEventListener('fetch', e => {
   const u = new URL(e.request.url);
-  if (e.request.method !== 'GET' || u.origin !== location.origin || u.pathname.includes('__alive') || e.request.headers.has('range')) return;
+  if (e.request.method !== 'GET' || u.origin !== location.origin || u.pathname.includes('__alive')) return;
   e.respondWith(caches.match(e.request).then(hit => {
     const net = fetch(e.request).then(r => { if (r.ok) caches.open(CACHE).then(c => c.put(e.request, r.clone())); return r; }).catch(() => hit);
-    return hit && /\.(webp|png|jpg|woff2|mp3)$/.test(u.pathname) ? hit : net.then(r => r || hit);
+    return hit && /\.(webp|png|jpg|woff2)$/.test(u.pathname) ? hit : net.then(r => r || hit);
   }));
 });
