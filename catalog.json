@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-27",
+ "updated": "2026-10-29",
  "owner": "Sachinrosario",
  "releasesRepo": "ibin-apps",
  "apps": [
@@ -630,6 +630,11 @@
    "name": "Pathanga Bharathi",
    "summary": "Butterfly species database",
    "stage": "Waiting for intake"
+  },
+  {
+   "name": "Vrikshayurveda",
+   "summary": "Verses of five Sanskrit works on plant science, with plants, pictures and recitations (2011 program)",
+   "stage": "Version 1 being built"
   }
  ]
 }
