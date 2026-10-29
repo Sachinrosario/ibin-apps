@@ -117,16 +117,20 @@ const myOS=/Windows/i.test(ua)?'windows':/Mac OS X|Macintosh/i.test(ua)&&!/iPhon
 async function load(){
   const cat=await fetch('catalog.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('catalogue '+r.status);return r.json();});
   const eds=cat.apps.flatMap(a=>a.editions||[a]);
-  // On the public site, ask GitHub which release files really exist.
+  // On the public site, ask GitHub (one request) which release files really exist. If GitHub cannot be asked
+  // (rate limit, offline), trust the catalogue instead of wrongly showing "Being published".
   if(/github\.io$/.test(location.hostname)){
-    await Promise.all(eds.map(async e=>{
-      try{
-        const r=await fetch(`https://api.github.com/repos/${cat.owner}/${cat.releasesRepo}/releases/tags/${e.id}-v${e.version}`);
-        if(!r.ok){e.published=false;return;}
-        const rel=await r.json(); const names=new Set(rel.assets.map(x=>x.name));
-        e.published=true; e.downloads.forEach(d=>d.live=names.has(d.file));
-      }catch(err){}
-    }));
+    try{
+      let rels=null; try{rels=JSON.parse(sessionStorage.getItem('rels')||'null');}catch(_){}
+      if(!rels){
+        const r=await fetch(`https://api.github.com/repos/${cat.owner}/${cat.releasesRepo}/releases?per_page=100`);
+        if(r.ok){ rels=(await r.json()).map(x=>({t:x.tag_name,a:x.assets.map(y=>y.name)})); try{sessionStorage.setItem('rels',JSON.stringify(rels));}catch(_){} }
+      }
+      if(rels){
+        const by=new Map(rels.map(x=>[x.t,new Set(x.a)]));
+        eds.forEach(e=>{ const names=by.get(`${e.id}-v${e.version}`); if(!names){ if(e.published) e.published=true; return; } e.published=true; e.downloads.forEach(d=>d.live=names.has(d.file)); });
+      }
+    }catch(err){}
   }
   CAT=cat; render();
 }
