@@ -637,7 +637,7 @@
      "versionName": "Version 2 – Updated",
      "version": "2.0.0",
      "released": "2026-10-29",
-     "published": false,
+     "published": true,
      "summary": "One search over verses, plants, Sanskrit names, subjects and keywords. Current plant names with the 2011 names kept, verse pages with recitation, plant pages with distribution map, synonyms and pictures. Works on phones and offline.",
      "facts": [
       "869 verses",
@@ -654,35 +654,35 @@
        "os": "windows",
        "kind": "Installer",
        "file": "Vrikshayurveda2_2.0.0_Setup.exe",
-       "size": "",
+       "size": "155 MB",
        "note": "Installs beside Version 1. No administrator password."
       },
       {
        "os": "windows",
        "kind": "No-install",
        "file": "Vrikshayurveda2.exe",
-       "size": "",
+       "size": "163 MB",
        "note": "Runs straight from a folder or pen drive."
       },
       {
        "os": "mac",
        "kind": "App",
        "file": "Vrikshayurveda2_2.0.0_universal.dmg",
-       "size": "",
+       "size": "309 MB",
        "note": "Intel and Apple-silicon Macs."
       },
       {
        "os": "ubuntu",
        "kind": "Package",
        "file": "Vrikshayurveda2_2.0.0_amd64.deb",
-       "size": "",
+       "size": "153 MB",
        "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
       },
       {
        "os": "any",
        "kind": "Offline folder",
        "file": "Vrikshayurveda2_2.0.0_offline.zip",
-       "size": "",
+       "size": "156 MB",
        "note": "Any computer. Extract, then double-click Open Kit.html."
       }
      ],
