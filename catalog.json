@@ -623,6 +623,77 @@
      ]
     }
    ]
+  },
+  {
+   "name": "Vrikshayurveda",
+   "icon": "apps/vrikshayurveda.png",
+   "origin": "Vrikshayurveda (2011): verses of five Sanskrit works on plant science with plants, pictures and recitations. Western Ghats team, UAS Bangalore.",
+   "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
+   "editions": [
+    {
+     "id": "vrikshayurveda",
+     "key": "v1",
+     "label": "Version 1 – Original (2011 screens)",
+     "versionName": "Version 1 – Original",
+     "version": "1.0.0",
+     "released": "2026-10-29",
+     "published": true,
+     "summary": "The 2011 program rebuilt screen for screen: search 869 verses by plant, common name, keyword or verse number, hear each recitation, and open every plant's classification, names, distribution, synonyms and pictures.",
+     "facts": [
+      "869 verses",
+      "5 Sanskrit works",
+      "Verse recordings",
+      "747 plant names",
+      "3,754 pictures"
+     ],
+     "web": "https://sachinrosario.github.io/ibin-apps/vrikshayurveda/",
+     "preview": "",
+     "downloads": [
+      {
+       "os": "windows",
+       "kind": "Installer",
+       "file": "Vrikshayurveda_1.0.0_Setup.exe",
+       "size": "",
+       "note": "Adds Start-menu and desktop shortcuts. No administrator password."
+      },
+      {
+       "os": "windows",
+       "kind": "No-install",
+       "file": "Vrikshayurveda.exe",
+       "size": "",
+       "note": "Runs straight from a folder or pen drive."
+      },
+      {
+       "os": "mac",
+       "kind": "App",
+       "file": "Vrikshayurveda_1.0.0_universal.dmg",
+       "size": "",
+       "note": "Intel and Apple-silicon Macs."
+      },
+      {
+       "os": "ubuntu",
+       "kind": "Package",
+       "file": "Vrikshayurveda_1.0.0_amd64.deb",
+       "size": "",
+       "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+      },
+      {
+       "os": "any",
+       "kind": "Offline folder",
+       "file": "Vrikshayurveda_1.0.0_offline.zip",
+       "size": "",
+       "note": "Any computer. Extract, then double-click Open Kit.html."
+      }
+     ],
+     "changes": [
+      {
+       "version": "1.0.0",
+       "date": "2026-10-29",
+       "text": "First release: the 2011 program rebuilt for Windows, Mac, Ubuntu and the web, with the original database, pictures and verse recordings."
+      }
+     ]
+    }
+   ]
   }
  ],
  "upcoming": [
@@ -630,11 +701,6 @@
    "name": "Pathanga Bharathi",
    "summary": "Butterfly species database",
    "stage": "Waiting for intake"
-  },
-  {
-   "name": "Vrikshayurveda",
-   "summary": "Verses of five Sanskrit works on plant science, with plants, pictures and recitations (2011 program)",
-   "stage": "Version 1 being built"
   }
  ]
 }
