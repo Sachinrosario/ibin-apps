@@ -1,833 +1,833 @@
 {
- "updated": "2026-10-29",
- "owner": "Sachinrosario",
- "releasesRepo": "ibin-apps",
- "apps": [
-  {
-   "name": "Phyllanthus & Rattans Identification Kit",
-   "icon": "apps/phyllanthus-rattans-kit.png",
-   "origin": "Indian Barcode of Life kit (DBT, Government of India), 2010. Built by ATREE Bangalore, UAS Bangalore and BSI Kolkata.",
-   "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
-   "editions": [
+  "updated": "2026-10-29",
+  "owner": "Sachinrosario",
+  "releasesRepo": "ibin-apps",
+  "apps": [
     {
-     "id": "phyllanthus-rattans-kit-2",
-     "key": "v2",
-     "label": "Version 2 – Updated (2026)",
-     "versionName": "Version 2 – Updated",
-     "version": "2.0.0",
-     "released": "2026-10-22",
-     "published": true,
-     "summary": "Names updated to the Catalogue of Life (2010 names kept), GenBank DNA barcode records, guided key, India distribution map with GIS export, comparison and glossary.",
-     "facts": [
-      "59 species",
-      "Catalogue of Life names",
-      "GenBank records",
-      "India map",
-      "GIS export"
-     ],
-     "gis": "Exports localities as GeoJSON, KML and CSV for QGIS or ArcGIS (desktop and published web version).",
-     "web": "https://sachinrosario.github.io/ibin-apps/phyllanthus-rattans-kit-2/",
-     "preview": "https://claude.ai/artifact/WEmJbGHc8LigJW9fY9LmrQ",
-     "downloads": [
-      {
-       "os": "windows",
-       "kind": "Installer",
-       "file": "PhyllanthusRattansKit2_2.0.0_Setup.exe",
-       "size": "19 MB",
-       "note": "Installs beside Version 1. No administrator password."
-      },
-      {
-       "os": "windows",
-       "kind": "No-install",
-       "file": "PhyllanthusRattansKit2.exe",
-       "size": "24 MB",
-       "note": "Runs straight from a folder or pen drive."
-      },
-      {
-       "os": "mac",
-       "kind": "App",
-       "file": "PhyllanthusRattansKit2_2.0.0_universal.dmg",
-       "size": "",
-       "note": "Intel and Apple-silicon Macs."
-      },
-      {
-       "os": "ubuntu",
-       "kind": "Package",
-       "file": "PhyllanthusRattansKit2_2.0.0_amd64.deb",
-       "size": "",
-       "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
-      },
-      {
-       "os": "any",
-       "kind": "Offline folder",
-       "file": "PhyllanthusRattansKit2_2.0.0_offline.zip",
-       "size": "",
-       "note": "Any computer. Extract, then double-click Open Kit.html."
-      }
-     ],
-     "changes": [
-      {
-       "version": "2.0.0",
-       "date": "2026-10-22",
-       "text": "Catalogue of Life names with 2010 names kept; GenBank barcode records; guided key; India map with GIS export; comparison; glossary."
-      }
-     ]
+      "name": "Phyllanthus & Rattans Identification Kit",
+      "icon": "apps/phyllanthus-rattans-kit.png",
+      "origin": "Indian Barcode of Life kit (DBT, Government of India), 2010. Built by ATREE Bangalore, UAS Bangalore and BSI Kolkata.",
+      "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
+      "editions": [
+        {
+          "id": "phyllanthus-rattans-kit-2",
+          "key": "v2",
+          "label": "Version 2 – Updated (2026)",
+          "versionName": "Version 2 – Updated",
+          "version": "2.0.0",
+          "released": "2026-10-22",
+          "published": true,
+          "summary": "Names updated to the Catalogue of Life (2010 names kept), GenBank DNA barcode records, guided key, India distribution map with GIS export, comparison and glossary.",
+          "facts": [
+            "59 species",
+            "Catalogue of Life names",
+            "GenBank records",
+            "India map",
+            "GIS export"
+          ],
+          "gis": "Exports localities as GeoJSON, KML and CSV for QGIS or ArcGIS (desktop and published web version).",
+          "web": "https://sachinrosario.github.io/ibin-apps/phyllanthus-rattans-kit-2/",
+          "preview": "https://claude.ai/artifact/WEmJbGHc8LigJW9fY9LmrQ",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "PhyllanthusRattansKit2_2.0.0_Setup.exe",
+              "size": "19 MB",
+              "note": "Installs beside Version 1. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "PhyllanthusRattansKit2.exe",
+              "size": "24 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "PhyllanthusRattansKit2_2.0.0_universal.dmg",
+              "size": "",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "PhyllanthusRattansKit2_2.0.0_amd64.deb",
+              "size": "",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "PhyllanthusRattansKit2_2.0.0_offline.zip",
+              "size": "",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "2.0.0",
+              "date": "2026-10-22",
+              "text": "Catalogue of Life names with 2010 names kept; GenBank barcode records; guided key; India map with GIS export; comparison; glossary."
+            }
+          ]
+        },
+        {
+          "version": "1.0.1",
+          "versionName": "Version 1 – Original",
+          "released": "2026-10-22",
+          "published": true,
+          "web": "https://sachinrosario.github.io/ibin-apps/phyllanthus-rattans-kit/",
+          "preview": "https://claude.ai/artifact/56VWoteCcb6azsGiqrxxsQ",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "PhyllanthusRattansKit_1.0.1_Setup.exe",
+              "size": "19 MB",
+              "note": "Adds Start-menu and desktop shortcuts. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "PhyllanthusRattansKit.exe",
+              "size": "23.5 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "PhyllanthusRattansKit_1.0.1_universal.dmg",
+              "size": "38 MB",
+              "note": "Built by the GitHub build robot. Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "PhyllanthusRattansKit_1.0.1_amd64.deb",
+              "size": "18 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "PhyllanthusRattansKit_1.0.1_offline.zip",
+              "size": "17 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "1.0.1",
+              "date": "2026-10-22",
+              "text": "Opening screen now credits the proprietary right holder, Dr. K.N. Ganeshaiah, and the 2026 update by Dr. Sachin A. Rosario. No other changes."
+            },
+            {
+              "version": "1.0.0",
+              "date": "2026-10-22",
+              "text": "Faithful rebuild of the 2010 program. Same species, data and identification keys; results checked against the original database on 1,290 combinations."
+            }
+          ],
+          "facts": [
+            "59 species",
+            "4 identification keys",
+            "264 images",
+            "1,117 localities",
+            "DNA barcodes"
+          ],
+          "gis": "Not needed. Locality coordinates can be exported to GIS from Version 2.",
+          "id": "phyllanthus-rattans-kit",
+          "key": "v1",
+          "label": "Version 1 – Original (2010)",
+          "summary": "The 2010 program as it was: original names and data, with the 2026 credits."
+        }
+      ]
     },
     {
-     "version": "1.0.1",
-     "versionName": "Version 1 – Original",
-     "released": "2026-10-22",
-     "published": true,
-     "web": "https://sachinrosario.github.io/ibin-apps/phyllanthus-rattans-kit/",
-     "preview": "https://claude.ai/artifact/56VWoteCcb6azsGiqrxxsQ",
-     "downloads": [
-      {
-       "os": "windows",
-       "kind": "Installer",
-       "file": "PhyllanthusRattansKit_1.0.1_Setup.exe",
-       "size": "19 MB",
-       "note": "Adds Start-menu and desktop shortcuts. No administrator password."
-      },
-      {
-       "os": "windows",
-       "kind": "No-install",
-       "file": "PhyllanthusRattansKit.exe",
-       "size": "23.5 MB",
-       "note": "Runs straight from a folder or pen drive."
-      },
-      {
-       "os": "mac",
-       "kind": "App",
-       "file": "PhyllanthusRattansKit_1.0.1_universal.dmg",
-       "size": "38 MB",
-       "note": "Built by the GitHub build robot. Intel and Apple-silicon Macs."
-      },
-      {
-       "os": "ubuntu",
-       "kind": "Package",
-       "file": "PhyllanthusRattansKit_1.0.1_amd64.deb",
-       "size": "18 MB",
-       "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
-      },
-      {
-       "os": "any",
-       "kind": "Offline folder",
-       "file": "PhyllanthusRattansKit_1.0.1_offline.zip",
-       "size": "17 MB",
-       "note": "Any computer. Extract, then double-click Open Kit.html."
-      }
-     ],
-     "changes": [
-      {
-       "version": "1.0.1",
-       "date": "2026-10-22",
-       "text": "Opening screen now credits the proprietary right holder, Dr. K.N. Ganeshaiah, and the 2026 update by Dr. Sachin A. Rosario. No other changes."
-      },
-      {
-       "version": "1.0.0",
-       "date": "2026-10-22",
-       "text": "Faithful rebuild of the 2010 program. Same species, data and identification keys; results checked against the original database on 1,290 combinations."
-      }
-     ],
-     "facts": [
-      "59 species",
-      "4 identification keys",
-      "264 images",
-      "1,117 localities",
-      "DNA barcodes"
-     ],
-     "gis": "Not needed. Locality coordinates can be exported to GIS from Version 2.",
-     "id": "phyllanthus-rattans-kit",
-     "key": "v1",
-     "label": "Version 1 – Original (2010)",
-     "summary": "The 2010 program as it was: original names and data, with the 2026 credits."
+      "name": "Pathanga Suchya",
+      "icon": "apps/pathanga-suchya.png",
+      "origin": "Butterfly identification program for the butterflies of Bangalore, K.N. Ganeshaiah, GKVK (2006–2007; Version 3.0 of 2018).",
+      "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
+      "editions": [
+        {
+          "id": "pathanga-suchya-4",
+          "key": "v4",
+          "label": "Version 4 – Updated (2026)",
+          "versionName": "Version 4 – Updated",
+          "version": "4.0.0",
+          "released": "2026-10-23",
+          "published": true,
+          "summary": "New design that also works on phones: a guided key that suggests the best next question and shows how many butterflies each answer leaves, Catalogue of Life names (2007 names kept in brackets), month-by-month 'what flies when', similar butterflies on every page.",
+          "facts": [
+            "120 butterflies",
+            "Catalogue of Life names",
+            "8,582 photos",
+            "What flies when",
+            "Works on phones"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/pathanga-suchya-4/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "PathangaSuchya4_4.0.0_Setup.exe",
+              "size": "181 MB",
+              "note": "Installs beside Version 3. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "PathangaSuchya4.exe",
+              "size": "187 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "PathangaSuchya4_4.0.0_universal.dmg",
+              "size": "365 MB",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "PathangaSuchya4_4.0.0_amd64.deb",
+              "size": "181 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "PathangaSuchya4_4.0.0_offline.zip",
+              "size": "183 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "4.0.0",
+              "date": "2026-10-23",
+              "text": "New design and palette; guided key with best next question and counts; Catalogue of Life names with 2007 names in brackets; month-by-month seasonality and 'what flies when'; similar butterflies; search."
+            }
+          ]
+        },
+        {
+          "id": "pathanga-suchya",
+          "key": "v3",
+          "label": "Version 3 – Original (2018 screens)",
+          "versionName": "Version 3 – Original",
+          "version": "3.0.2",
+          "released": "2026-10-24",
+          "published": true,
+          "summary": "The 2018 program rebuilt screen for screen: identification keys, quick finding by patch, spot and eye-spot colours, butterfly photos, host plants, life cycles and seasonality wheels.",
+          "facts": [
+            "120 butterflies",
+            "8,582 photos",
+            "Host plants",
+            "Life cycles",
+            "Seasonality"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/pathanga-suchya/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "PathangaSuchya_3.0.2_Setup.exe",
+              "size": "181 MB",
+              "note": "Adds Start-menu and desktop shortcuts. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "PathangaSuchya.exe",
+              "size": "188 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "PathangaSuchya_3.0.2_universal.dmg",
+              "size": "365 MB",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "PathangaSuchya_3.0.2_amd64.deb",
+              "size": "181 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "PathangaSuchya_3.0.2_offline.zip",
+              "size": "183 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "3.0.2",
+              "date": "2026-10-24",
+              "text": "Exit on the opening screen now closes the program, and the minimise button of the windows works."
+            },
+            {
+              "version": "3.0.1",
+              "date": "2026-10-23",
+              "text": "The program's screen is now centred in wide browser windows and desktop windows. No other changes."
+            },
+            {
+              "version": "3.0.0",
+              "date": "2026-10-23",
+              "text": "Faithful rebuild of Pathanga Suchya 3.0 (2018) with the same screens and behaviour. Butterfly View shows the photos in each species folder (the original looked for file names that are not in the package)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Threatened Plants of Western Ghats",
+      "icon": "apps/threatened-plants.png",
+      "origin": "RET Kit: A Field Guide to Threatened Plants of Western Ghats, Prof. K.N. Ganeshaiah, School of Ecology and Conservation, UAS Bangalore (2015–2016).",
+      "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
+      "editions": [
+        {
+          "id": "threatened-plants-2",
+          "key": "v2",
+          "label": "Version 2 – Updated (2026)",
+          "versionName": "Version 2 – Updated",
+          "version": "2.0.0",
+          "released": "2026-10-27",
+          "published": true,
+          "summary": "New design that also works on phones: 178 threatened plants (77 added in 2026), Catalogue of Life names (2015 names kept in brackets), current IUCN status with year, FRLHT/TDU status by state, close matches and best next question, credited field photos and a 'What's changed' page.",
+          "facts": [
+            "178 threatened plants",
+            "77 added in 2026",
+            "Catalogue of Life names",
+            "IUCN status updated",
+            "Works on phones"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/threatened-plants-2/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "ThreatenedPlants2_2.0.0_Setup.exe",
+              "size": "56 MB",
+              "note": "Installs beside Version 1. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "ThreatenedPlants2.exe",
+              "size": "59 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "ThreatenedPlants2_2.0.0_universal.dmg",
+              "size": "116 MB",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "ThreatenedPlants2_2.0.0_amd64.deb",
+              "size": "55 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "ThreatenedPlants2_2.0.0_offline.zip",
+              "size": "54 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "2.0.0",
+              "date": "2026-10-27",
+              "text": "New design; names checked in Catalogue of Life (12 renamed, old names in brackets); IUCN status updated with year (60 changes); FRLHT/TDU status by state; 77 threatened species added with characters from published descriptions; 11 species marked no longer threatened; credited photos; What's changed page."
+            }
+          ]
+        },
+        {
+          "id": "threatened-plants",
+          "key": "v1",
+          "label": "Version 1 – Original (2015 screens)",
+          "versionName": "Version 1 – Original",
+          "version": "1.0.1",
+          "released": "2026-10-24",
+          "published": true,
+          "summary": "The 2015 field guide rebuilt screen for screen: choose characters on the tree, pick thumbnails, see the matching species, open their detail sheets, or look them up by family and genus.",
+          "facts": [
+            "101 threatened plants",
+            "26 characters",
+            "Species sheets",
+            "Character photos",
+            "Species search"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/threatened-plants/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "ThreatenedPlants_1.0.1_Setup.exe",
+              "size": "33 MB",
+              "note": "Adds Start-menu and desktop shortcuts. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "ThreatenedPlants.exe",
+              "size": "36 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "ThreatenedPlants_1.0.1_universal.dmg",
+              "size": "70 MB",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "ThreatenedPlants_1.0.1_amd64.deb",
+              "size": "32 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "ThreatenedPlants_1.0.1_offline.zip",
+              "size": "31 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "1.0.1",
+              "date": "2026-10-24",
+              "text": "The title-bar buttons now work: minimise hides the window behind a button at the bottom, the square button switches full screen on and off, and the close button on the opening screen closes the program."
+            },
+            {
+              "version": "1.0.0",
+              "date": "2026-10-23",
+              "text": "Faithful rebuild of the 2015 RET Kit with the same screens and behaviour, checked against the original on Windows. Clear works on every screen, the first thumbnail combines like the others, and all 101 species sheets open (the original crashed, dropped the first thumbnail, and missed eight sheets)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Birds Group Identification (with Prob)",
+      "icon": "apps/birds-group-identification.png",
+      "origin": "Bird group identification key with probability ranking, by K.N. Ganeshaiah (database of 2019).",
+      "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
+      "editions": [
+        {
+          "id": "birds-group-identification-3",
+          "key": "v3",
+          "label": "Version 3 – Species (2026)",
+          "versionName": "Version 3 – Species",
+          "version": "3.0.0",
+          "released": "2026-10-27",
+          "published": true,
+          "summary": "Identifies the species, not only the group: 1,326 birds of India with eBird/Clements 2025 names. Answer simple questions in any order (kind, size, colours, markings, bill, legs, tail, habitat), follow the best next question, and use place and month as a backup. Species pages with credited photos, records by state and month, similar birds and compare.",
+          "facts": [
+            "1,326 species",
+            "Names: eBird 2025",
+            "Best next question",
+            "Place & month backup",
+            "Works on phones"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/birds-group-identification-3/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "BirdIdentification3_3.0.0_Setup.exe",
+              "size": "96 MB",
+              "note": "Installs beside Versions 1 and 2. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "BirdIdentification3.exe",
+              "size": "101 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "BirdIdentification3_3.0.0_universal.dmg",
+              "size": "192 MB",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "BirdIdentification3_3.0.0_amd64.deb",
+              "size": "95 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "BirdIdentification3_3.0.0_offline.zip",
+              "size": "95 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "3.0.0",
+              "date": "2026-10-27",
+              "text": "Species-level identification of 1,326 Indian birds; eBird/Clements 2025 names; 13 questions with Don't know; best next question; male and female plumages; place and month as backup; species pages with photos, records, similar birds; compare; search; 48 new drawings; feedback by e-mail."
+            }
+          ]
+        },
+        {
+          "id": "birds-group-identification-2",
+          "key": "v2",
+          "label": "Version 2 – Updated (2026)",
+          "versionName": "Version 2 – Updated",
+          "version": "2.0.0",
+          "released": "2026-10-27",
+          "published": true,
+          "summary": "New design that also works on phones: each bird group with its chance in percent, a forgiving ranking, the best next question, Why? for every group, where-and-when filters, group pages with Indian species (Catalogue of Life names, IUCN status), records by state and month, credited photos, compare, and 47 new drawings.",
+          "facts": [
+            "222 bird groups",
+            "1,432 Indian species",
+            "Chance in %",
+            "Best next question",
+            "Works on phones"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/birds-group-identification-2/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "BirdsGroupIdentification2_2.0.0_Setup.exe",
+              "size": "104 MB",
+              "note": "Installs beside Version 1. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "BirdsGroupIdentification2.exe",
+              "size": "107 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "BirdsGroupIdentification2_2.0.0_universal.dmg",
+              "size": "206 MB",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "BirdsGroupIdentification2_2.0.0_amd64.deb",
+              "size": "102 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "BirdsGroupIdentification2_2.0.0_offline.zip",
+              "size": "103 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "2.0.0",
+              "date": "2026-10-27",
+              "text": "New design; chance in percent with a forgiving ranking; best next question; Why?; where and when filters; group pages with 1,432 Indian species, Catalogue of Life names, IUCN status, records by state and month, credited photos; compare; search; Feet Color question; 47 new drawings; feedback by e-mail."
+            }
+          ]
+        },
+        {
+          "id": "birds-group-identification",
+          "key": "v1",
+          "label": "Version 1 – Original",
+          "versionName": "Version 1 – Original",
+          "version": "1.0.0",
+          "released": "2026-10-24",
+          "published": true,
+          "summary": "The original program rebuilt screen for screen: describe a sitting or flying bird by clicking its parts, and see 222 bird groups ranked by probability, with pictures.",
+          "facts": [
+            "222 bird groups",
+            "Sitting or flying",
+            "21 characters",
+            "Ranked by probability",
+            "Group pictures"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/birds-group-identification/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "BirdsGroupIdentification_1.0.0_Setup.exe",
+              "size": "46 MB",
+              "note": "Adds Start-menu and desktop shortcuts. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "BirdsGroupIdentification.exe",
+              "size": "50 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "BirdsGroupIdentification_1.0.0_universal.dmg",
+              "size": "91 MB",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "BirdsGroupIdentification_1.0.0_amd64.deb",
+              "size": "45 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "BirdsGroupIdentification_1.0.0_offline.zip",
+              "size": "45 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "1.0.0",
+              "date": "2026-10-24",
+              "text": "Faithful rebuild with the same screens, thumbnails and probability ranking, checked against the original on Windows. Pictures open in the program's own viewer; the Images and Home buttons are no longer hidden under the taskbar."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Vrikshayurveda",
+      "icon": "apps/vrikshayurveda.png",
+      "origin": "Vrikshayurveda (2011): verses of five Sanskrit works on plant science with plants, pictures and recitations. Western Ghats team, UAS Bangalore.",
+      "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
+      "editions": [
+        {
+          "id": "vrikshayurveda-3",
+          "key": "v3",
+          "label": "Version 3 – Search-first (2026)",
+          "versionName": "Version 3 – Search-first",
+          "version": "3.0.0",
+          "released": "2026-10-29",
+          "published": true,
+          "summary": "One search over verses, plants, Sanskrit names, subjects and keywords. Current plant names with the 2011 names kept, verse pages with recitation, plant pages with distribution map, synonyms and pictures. Works on phones and offline.",
+          "facts": [
+            "869 verses",
+            "235 plants",
+            "428 Sanskrit names",
+            "Current names",
+            "Distribution map",
+            "Recitations"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/vrikshayurveda-3/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "Vrikshayurveda3_3.0.0_Setup.exe",
+              "size": "155 MB",
+              "note": "Installs beside Versions 1 and 2. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "Vrikshayurveda3.exe",
+              "size": "163 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "Vrikshayurveda3_3.0.0_universal.dmg",
+              "size": "309 MB",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "Vrikshayurveda3_3.0.0_amd64.deb",
+              "size": "153 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "Vrikshayurveda3_3.0.0_offline.zip",
+              "size": "156 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "3.0.0",
+              "date": "2026-10-29",
+              "text": "Search-first rebuild: one search box, current plant names (2011 names kept), verse and plant pages, distribution map, synonyms, subjects and keywords, phone layout and offline use."
+            }
+          ]
+        },
+        {
+          "id": "vrikshayurveda-2",
+          "key": "v2",
+          "label": "Version 2 – Scientific names updated (2026)",
+          "versionName": "Version 2 – Scientific names updated",
+          "version": "2.0.0",
+          "released": "2026-10-29",
+          "published": true,
+          "summary": "Exactly like Version 1, with the scientific names brought up to date: the 2011 name is kept and the current accepted name is shown in brackets.",
+          "facts": [
+            "Same screens as Version 1",
+            "41 names updated",
+            "New name in brackets",
+            "869 verses",
+            "3,754 pictures"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/vrikshayurveda-2/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "Vrikshayurveda2_2.0.0_Setup.exe",
+              "size": "155 MB",
+              "note": "Installs beside Versions 1 and 3. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "Vrikshayurveda2.exe",
+              "size": "164 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "Vrikshayurveda2_2.0.0_universal.dmg",
+              "size": "309 MB",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "Vrikshayurveda2_2.0.0_amd64.deb",
+              "size": "154 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "Vrikshayurveda2_2.0.0_offline.zip",
+              "size": "156 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "2.0.0",
+              "date": "2026-10-29",
+              "text": "Version 1 with updated scientific names: the current accepted name (GBIF Backbone / Catalogue of Life) is shown in brackets after the 2011 name. 11 doubtful names are left unchanged for a taxonomist to check."
+            }
+          ]
+        },
+        {
+          "id": "vrikshayurveda",
+          "key": "v1",
+          "label": "Version 1 – Original (2011 screens)",
+          "versionName": "Version 1 – Original",
+          "version": "1.0.0",
+          "released": "2026-10-29",
+          "published": true,
+          "summary": "The 2011 program rebuilt screen for screen: search 869 verses by plant, common name, keyword or verse number, hear each recitation, and open every plant's classification, names, distribution, synonyms and pictures.",
+          "facts": [
+            "869 verses",
+            "5 Sanskrit works",
+            "Verse recordings",
+            "747 plant names",
+            "3,754 pictures"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/vrikshayurveda/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "Vrikshayurveda_1.0.0_Setup.exe",
+              "size": "155 MB",
+              "note": "Adds Start-menu and desktop shortcuts. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "Vrikshayurveda.exe",
+              "size": "164 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "Vrikshayurveda_1.0.0_universal.dmg",
+              "size": "309 MB",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "Vrikshayurveda_1.0.0_amd64.deb",
+              "size": "154 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "Vrikshayurveda_1.0.0_offline.zip",
+              "size": "156 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "1.0.0",
+              "date": "2026-10-29",
+              "text": "First release: the 2011 program rebuilt for Windows, Mac, Ubuntu and the web, with the original database, pictures and verse recordings."
+            }
+          ]
+        }
+      ]
     }
-   ]
-  },
-  {
-   "name": "Pathanga Suchya",
-   "icon": "apps/pathanga-suchya.png",
-   "origin": "Butterfly identification program for the butterflies of Bangalore, K.N. Ganeshaiah, GKVK (2006–2007; Version 3.0 of 2018).",
-   "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
-   "editions": [
+  ],
+  "upcoming": [
     {
-     "id": "pathanga-suchya-4",
-     "key": "v4",
-     "label": "Version 4 – Updated (2026)",
-     "versionName": "Version 4 – Updated",
-     "version": "4.0.0",
-     "released": "2026-10-23",
-     "published": true,
-     "summary": "New design that also works on phones: a guided key that suggests the best next question and shows how many butterflies each answer leaves, Catalogue of Life names (2007 names kept in brackets), month-by-month 'what flies when', similar butterflies on every page.",
-     "facts": [
-      "120 butterflies",
-      "Catalogue of Life names",
-      "8,582 photos",
-      "What flies when",
-      "Works on phones"
-     ],
-     "web": "https://sachinrosario.github.io/ibin-apps/pathanga-suchya-4/",
-     "preview": "",
-     "downloads": [
-      {
-       "os": "windows",
-       "kind": "Installer",
-       "file": "PathangaSuchya4_4.0.0_Setup.exe",
-       "size": "181 MB",
-       "note": "Installs beside Version 3. No administrator password."
-      },
-      {
-       "os": "windows",
-       "kind": "No-install",
-       "file": "PathangaSuchya4.exe",
-       "size": "187 MB",
-       "note": "Runs straight from a folder or pen drive."
-      },
-      {
-       "os": "mac",
-       "kind": "App",
-       "file": "PathangaSuchya4_4.0.0_universal.dmg",
-       "size": "365 MB",
-       "note": "Intel and Apple-silicon Macs."
-      },
-      {
-       "os": "ubuntu",
-       "kind": "Package",
-       "file": "PathangaSuchya4_4.0.0_amd64.deb",
-       "size": "181 MB",
-       "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
-      },
-      {
-       "os": "any",
-       "kind": "Offline folder",
-       "file": "PathangaSuchya4_4.0.0_offline.zip",
-       "size": "183 MB",
-       "note": "Any computer. Extract, then double-click Open Kit.html."
-      }
-     ],
-     "changes": [
-      {
-       "version": "4.0.0",
-       "date": "2026-10-23",
-       "text": "New design and palette; guided key with best next question and counts; Catalogue of Life names with 2007 names in brackets; month-by-month seasonality and 'what flies when'; similar butterflies; search."
-      }
-     ]
-    },
-    {
-     "id": "pathanga-suchya",
-     "key": "v3",
-     "label": "Version 3 – Original (2018 screens)",
-     "versionName": "Version 3 – Original",
-     "version": "3.0.2",
-     "released": "2026-10-24",
-     "published": true,
-     "summary": "The 2018 program rebuilt screen for screen: identification keys, quick finding by patch, spot and eye-spot colours, butterfly photos, host plants, life cycles and seasonality wheels.",
-     "facts": [
-      "120 butterflies",
-      "8,582 photos",
-      "Host plants",
-      "Life cycles",
-      "Seasonality"
-     ],
-     "web": "https://sachinrosario.github.io/ibin-apps/pathanga-suchya/",
-     "preview": "",
-     "downloads": [
-      {
-       "os": "windows",
-       "kind": "Installer",
-       "file": "PathangaSuchya_3.0.2_Setup.exe",
-       "size": "181 MB",
-       "note": "Adds Start-menu and desktop shortcuts. No administrator password."
-      },
-      {
-       "os": "windows",
-       "kind": "No-install",
-       "file": "PathangaSuchya.exe",
-       "size": "188 MB",
-       "note": "Runs straight from a folder or pen drive."
-      },
-      {
-       "os": "mac",
-       "kind": "App",
-       "file": "PathangaSuchya_3.0.2_universal.dmg",
-       "size": "365 MB",
-       "note": "Intel and Apple-silicon Macs."
-      },
-      {
-       "os": "ubuntu",
-       "kind": "Package",
-       "file": "PathangaSuchya_3.0.2_amd64.deb",
-       "size": "181 MB",
-       "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
-      },
-      {
-       "os": "any",
-       "kind": "Offline folder",
-       "file": "PathangaSuchya_3.0.2_offline.zip",
-       "size": "183 MB",
-       "note": "Any computer. Extract, then double-click Open Kit.html."
-      }
-     ],
-     "changes": [
-      {
-       "version": "3.0.2",
-       "date": "2026-10-24",
-       "text": "Exit on the opening screen now closes the program, and the minimise button of the windows works."
-      },
-      {
-       "version": "3.0.1",
-       "date": "2026-10-23",
-       "text": "The program's screen is now centred in wide browser windows and desktop windows. No other changes."
-      },
-      {
-       "version": "3.0.0",
-       "date": "2026-10-23",
-       "text": "Faithful rebuild of Pathanga Suchya 3.0 (2018) with the same screens and behaviour. Butterfly View shows the photos in each species folder (the original looked for file names that are not in the package)."
-      }
-     ]
+      "name": "Pathanga Bharathi",
+      "summary": "Butterfly species database",
+      "stage": "Waiting for intake"
     }
-   ]
-  },
-  {
-   "name": "Threatened Plants of Western Ghats",
-   "icon": "apps/threatened-plants.png",
-   "origin": "RET Kit: A Field Guide to Threatened Plants of Western Ghats, Prof. K.N. Ganeshaiah, School of Ecology and Conservation, UAS Bangalore (2015–2016).",
-   "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
-   "editions": [
-    {
-     "id": "threatened-plants-2",
-     "key": "v2",
-     "label": "Version 2 – Updated (2026)",
-     "versionName": "Version 2 – Updated",
-     "version": "2.0.0",
-     "released": "2026-10-27",
-     "published": true,
-     "summary": "New design that also works on phones: 178 threatened plants (77 added in 2026), Catalogue of Life names (2015 names kept in brackets), current IUCN status with year, FRLHT/TDU status by state, close matches and best next question, credited field photos and a 'What's changed' page.",
-     "facts": [
-      "178 threatened plants",
-      "77 added in 2026",
-      "Catalogue of Life names",
-      "IUCN status updated",
-      "Works on phones"
-     ],
-     "web": "https://sachinrosario.github.io/ibin-apps/threatened-plants-2/",
-     "preview": "",
-     "downloads": [
-      {
-       "os": "windows",
-       "kind": "Installer",
-       "file": "ThreatenedPlants2_2.0.0_Setup.exe",
-       "size": "56 MB",
-       "note": "Installs beside Version 1. No administrator password."
-      },
-      {
-       "os": "windows",
-       "kind": "No-install",
-       "file": "ThreatenedPlants2.exe",
-       "size": "59 MB",
-       "note": "Runs straight from a folder or pen drive."
-      },
-      {
-       "os": "mac",
-       "kind": "App",
-       "file": "ThreatenedPlants2_2.0.0_universal.dmg",
-       "size": "116 MB",
-       "note": "Intel and Apple-silicon Macs."
-      },
-      {
-       "os": "ubuntu",
-       "kind": "Package",
-       "file": "ThreatenedPlants2_2.0.0_amd64.deb",
-       "size": "55 MB",
-       "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
-      },
-      {
-       "os": "any",
-       "kind": "Offline folder",
-       "file": "ThreatenedPlants2_2.0.0_offline.zip",
-       "size": "54 MB",
-       "note": "Any computer. Extract, then double-click Open Kit.html."
-      }
-     ],
-     "changes": [
-      {
-       "version": "2.0.0",
-       "date": "2026-10-27",
-       "text": "New design; names checked in Catalogue of Life (12 renamed, old names in brackets); IUCN status updated with year (60 changes); FRLHT/TDU status by state; 77 threatened species added with characters from published descriptions; 11 species marked no longer threatened; credited photos; What's changed page."
-      }
-     ]
-    },
-    {
-     "id": "threatened-plants",
-     "key": "v1",
-     "label": "Version 1 – Original (2015 screens)",
-     "versionName": "Version 1 – Original",
-     "version": "1.0.1",
-     "released": "2026-10-24",
-     "published": true,
-     "summary": "The 2015 field guide rebuilt screen for screen: choose characters on the tree, pick thumbnails, see the matching species, open their detail sheets, or look them up by family and genus.",
-     "facts": [
-      "101 threatened plants",
-      "26 characters",
-      "Species sheets",
-      "Character photos",
-      "Species search"
-     ],
-     "web": "https://sachinrosario.github.io/ibin-apps/threatened-plants/",
-     "preview": "",
-     "downloads": [
-      {
-       "os": "windows",
-       "kind": "Installer",
-       "file": "ThreatenedPlants_1.0.1_Setup.exe",
-       "size": "33 MB",
-       "note": "Adds Start-menu and desktop shortcuts. No administrator password."
-      },
-      {
-       "os": "windows",
-       "kind": "No-install",
-       "file": "ThreatenedPlants.exe",
-       "size": "36 MB",
-       "note": "Runs straight from a folder or pen drive."
-      },
-      {
-       "os": "mac",
-       "kind": "App",
-       "file": "ThreatenedPlants_1.0.1_universal.dmg",
-       "size": "70 MB",
-       "note": "Intel and Apple-silicon Macs."
-      },
-      {
-       "os": "ubuntu",
-       "kind": "Package",
-       "file": "ThreatenedPlants_1.0.1_amd64.deb",
-       "size": "32 MB",
-       "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
-      },
-      {
-       "os": "any",
-       "kind": "Offline folder",
-       "file": "ThreatenedPlants_1.0.1_offline.zip",
-       "size": "31 MB",
-       "note": "Any computer. Extract, then double-click Open Kit.html."
-      }
-     ],
-     "changes": [
-      {
-       "version": "1.0.1",
-       "date": "2026-10-24",
-       "text": "The title-bar buttons now work: minimise hides the window behind a button at the bottom, the square button switches full screen on and off, and the close button on the opening screen closes the program."
-      },
-      {
-       "version": "1.0.0",
-       "date": "2026-10-23",
-       "text": "Faithful rebuild of the 2015 RET Kit with the same screens and behaviour, checked against the original on Windows. Clear works on every screen, the first thumbnail combines like the others, and all 101 species sheets open (the original crashed, dropped the first thumbnail, and missed eight sheets)."
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "name": "Birds Group Identification (with Prob)",
-   "icon": "apps/birds-group-identification.png",
-   "origin": "Bird group identification key with probability ranking, by K.N. Ganeshaiah (database of 2019).",
-   "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
-   "editions": [
-    {
-     "id": "birds-group-identification-3",
-     "key": "v3",
-     "label": "Version 3 – Species (2026)",
-     "versionName": "Version 3 – Species",
-     "version": "3.0.0",
-     "released": "2026-10-27",
-     "published": true,
-     "summary": "Identifies the species, not only the group: 1,326 birds of India with eBird/Clements 2025 names. Answer simple questions in any order (kind, size, colours, markings, bill, legs, tail, habitat), follow the best next question, and use place and month as a backup. Species pages with credited photos, records by state and month, similar birds and compare.",
-     "facts": [
-      "1,326 species",
-      "Names: eBird 2025",
-      "Best next question",
-      "Place & month backup",
-      "Works on phones"
-     ],
-     "web": "https://sachinrosario.github.io/ibin-apps/birds-group-identification-3/",
-     "preview": "",
-     "downloads": [
-      {
-       "os": "windows",
-       "kind": "Installer",
-       "file": "BirdIdentification3_3.0.0_Setup.exe",
-       "size": "96 MB",
-       "note": "Installs beside Versions 1 and 2. No administrator password."
-      },
-      {
-       "os": "windows",
-       "kind": "No-install",
-       "file": "BirdIdentification3.exe",
-       "size": "101 MB",
-       "note": "Runs straight from a folder or pen drive."
-      },
-      {
-       "os": "mac",
-       "kind": "App",
-       "file": "BirdIdentification3_3.0.0_universal.dmg",
-       "size": "192 MB",
-       "note": "Intel and Apple-silicon Macs."
-      },
-      {
-       "os": "ubuntu",
-       "kind": "Package",
-       "file": "BirdIdentification3_3.0.0_amd64.deb",
-       "size": "95 MB",
-       "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
-      },
-      {
-       "os": "any",
-       "kind": "Offline folder",
-       "file": "BirdIdentification3_3.0.0_offline.zip",
-       "size": "95 MB",
-       "note": "Any computer. Extract, then double-click Open Kit.html."
-      }
-     ],
-     "changes": [
-      {
-       "version": "3.0.0",
-       "date": "2026-10-27",
-       "text": "Species-level identification of 1,326 Indian birds; eBird/Clements 2025 names; 13 questions with Don't know; best next question; male and female plumages; place and month as backup; species pages with photos, records, similar birds; compare; search; 48 new drawings; feedback by e-mail."
-      }
-     ]
-    },
-    {
-     "id": "birds-group-identification-2",
-     "key": "v2",
-     "label": "Version 2 – Updated (2026)",
-     "versionName": "Version 2 – Updated",
-     "version": "2.0.0",
-     "released": "2026-10-27",
-     "published": true,
-     "summary": "New design that also works on phones: each bird group with its chance in percent, a forgiving ranking, the best next question, Why? for every group, where-and-when filters, group pages with Indian species (Catalogue of Life names, IUCN status), records by state and month, credited photos, compare, and 47 new drawings.",
-     "facts": [
-      "222 bird groups",
-      "1,432 Indian species",
-      "Chance in %",
-      "Best next question",
-      "Works on phones"
-     ],
-     "web": "https://sachinrosario.github.io/ibin-apps/birds-group-identification-2/",
-     "preview": "",
-     "downloads": [
-      {
-       "os": "windows",
-       "kind": "Installer",
-       "file": "BirdsGroupIdentification2_2.0.0_Setup.exe",
-       "size": "104 MB",
-       "note": "Installs beside Version 1. No administrator password."
-      },
-      {
-       "os": "windows",
-       "kind": "No-install",
-       "file": "BirdsGroupIdentification2.exe",
-       "size": "107 MB",
-       "note": "Runs straight from a folder or pen drive."
-      },
-      {
-       "os": "mac",
-       "kind": "App",
-       "file": "BirdsGroupIdentification2_2.0.0_universal.dmg",
-       "size": "206 MB",
-       "note": "Intel and Apple-silicon Macs."
-      },
-      {
-       "os": "ubuntu",
-       "kind": "Package",
-       "file": "BirdsGroupIdentification2_2.0.0_amd64.deb",
-       "size": "102 MB",
-       "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
-      },
-      {
-       "os": "any",
-       "kind": "Offline folder",
-       "file": "BirdsGroupIdentification2_2.0.0_offline.zip",
-       "size": "103 MB",
-       "note": "Any computer. Extract, then double-click Open Kit.html."
-      }
-     ],
-     "changes": [
-      {
-       "version": "2.0.0",
-       "date": "2026-10-27",
-       "text": "New design; chance in percent with a forgiving ranking; best next question; Why?; where and when filters; group pages with 1,432 Indian species, Catalogue of Life names, IUCN status, records by state and month, credited photos; compare; search; Feet Color question; 47 new drawings; feedback by e-mail."
-      }
-     ]
-    },
-    {
-     "id": "birds-group-identification",
-     "key": "v1",
-     "label": "Version 1 – Original",
-     "versionName": "Version 1 – Original",
-     "version": "1.0.0",
-     "released": "2026-10-24",
-     "published": true,
-     "summary": "The original program rebuilt screen for screen: describe a sitting or flying bird by clicking its parts, and see 222 bird groups ranked by probability, with pictures.",
-     "facts": [
-      "222 bird groups",
-      "Sitting or flying",
-      "21 characters",
-      "Ranked by probability",
-      "Group pictures"
-     ],
-     "web": "https://sachinrosario.github.io/ibin-apps/birds-group-identification/",
-     "preview": "",
-     "downloads": [
-      {
-       "os": "windows",
-       "kind": "Installer",
-       "file": "BirdsGroupIdentification_1.0.0_Setup.exe",
-       "size": "46 MB",
-       "note": "Adds Start-menu and desktop shortcuts. No administrator password."
-      },
-      {
-       "os": "windows",
-       "kind": "No-install",
-       "file": "BirdsGroupIdentification.exe",
-       "size": "50 MB",
-       "note": "Runs straight from a folder or pen drive."
-      },
-      {
-       "os": "mac",
-       "kind": "App",
-       "file": "BirdsGroupIdentification_1.0.0_universal.dmg",
-       "size": "91 MB",
-       "note": "Intel and Apple-silicon Macs."
-      },
-      {
-       "os": "ubuntu",
-       "kind": "Package",
-       "file": "BirdsGroupIdentification_1.0.0_amd64.deb",
-       "size": "45 MB",
-       "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
-      },
-      {
-       "os": "any",
-       "kind": "Offline folder",
-       "file": "BirdsGroupIdentification_1.0.0_offline.zip",
-       "size": "45 MB",
-       "note": "Any computer. Extract, then double-click Open Kit.html."
-      }
-     ],
-     "changes": [
-      {
-       "version": "1.0.0",
-       "date": "2026-10-24",
-       "text": "Faithful rebuild with the same screens, thumbnails and probability ranking, checked against the original on Windows. Pictures open in the program's own viewer; the Images and Home buttons are no longer hidden under the taskbar."
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "name": "Vrikshayurveda",
-   "icon": "apps/vrikshayurveda.png",
-   "origin": "Vrikshayurveda (2011): verses of five Sanskrit works on plant science with plants, pictures and recitations. Western Ghats team, UAS Bangalore.",
-   "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
-   "editions": [
-    {
-     "id": "vrikshayurveda-3",
-     "key": "v3",
-     "label": "Version 3 – Search-first (2026)",
-     "versionName": "Version 3 – Search-first",
-     "version": "3.0.0",
-     "released": "2026-10-29",
-     "published": false,
-     "summary": "One search over verses, plants, Sanskrit names, subjects and keywords. Current plant names with the 2011 names kept, verse pages with recitation, plant pages with distribution map, synonyms and pictures. Works on phones and offline.",
-     "facts": [
-      "869 verses",
-      "235 plants",
-      "428 Sanskrit names",
-      "Current names",
-      "Distribution map",
-      "Recitations"
-     ],
-     "web": "https://sachinrosario.github.io/ibin-apps/vrikshayurveda-3/",
-     "preview": "",
-     "downloads": [
-      {
-       "os": "windows",
-       "kind": "Installer",
-       "file": "Vrikshayurveda3_3.0.0_Setup.exe",
-       "size": "155 MB",
-       "note": "Installs beside Versions 1 and 2. No administrator password."
-      },
-      {
-       "os": "windows",
-       "kind": "No-install",
-       "file": "Vrikshayurveda3.exe",
-       "size": "163 MB",
-       "note": "Runs straight from a folder or pen drive."
-      },
-      {
-       "os": "mac",
-       "kind": "App",
-       "file": "Vrikshayurveda3_3.0.0_universal.dmg",
-       "size": "309 MB",
-       "note": "Intel and Apple-silicon Macs."
-      },
-      {
-       "os": "ubuntu",
-       "kind": "Package",
-       "file": "Vrikshayurveda3_3.0.0_amd64.deb",
-       "size": "153 MB",
-       "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
-      },
-      {
-       "os": "any",
-       "kind": "Offline folder",
-       "file": "Vrikshayurveda3_3.0.0_offline.zip",
-       "size": "156 MB",
-       "note": "Any computer. Extract, then double-click Open Kit.html."
-      }
-     ],
-     "changes": [
-      {
-       "version": "3.0.0",
-       "date": "2026-10-29",
-       "text": "Search-first rebuild: one search box, current plant names (2011 names kept), verse and plant pages, distribution map, synonyms, subjects and keywords, phone layout and offline use."
-      }
-     ]
-    },
-    {
-     "id": "vrikshayurveda-2",
-     "key": "v2",
-     "label": "Version 2 – Scientific names updated (2026)",
-     "versionName": "Version 2 – Scientific names updated",
-     "version": "2.0.0",
-     "released": "2026-10-29",
-     "published": false,
-     "summary": "Exactly like Version 1, with the scientific names brought up to date: the 2011 name is kept and the current accepted name is shown in brackets.",
-     "facts": [
-      "Same screens as Version 1",
-      "41 names updated",
-      "New name in brackets",
-      "869 verses",
-      "3,754 pictures"
-     ],
-     "web": "https://sachinrosario.github.io/ibin-apps/vrikshayurveda-2/",
-     "preview": "",
-     "downloads": [
-      {
-       "os": "windows",
-       "kind": "Installer",
-       "file": "Vrikshayurveda2_2.0.0_Setup.exe",
-       "size": "",
-       "note": "Installs beside Versions 1 and 3. No administrator password."
-      },
-      {
-       "os": "windows",
-       "kind": "No-install",
-       "file": "Vrikshayurveda2.exe",
-       "size": "",
-       "note": "Runs straight from a folder or pen drive."
-      },
-      {
-       "os": "mac",
-       "kind": "App",
-       "file": "Vrikshayurveda2_2.0.0_universal.dmg",
-       "size": "",
-       "note": "Intel and Apple-silicon Macs."
-      },
-      {
-       "os": "ubuntu",
-       "kind": "Package",
-       "file": "Vrikshayurveda2_2.0.0_amd64.deb",
-       "size": "",
-       "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
-      },
-      {
-       "os": "any",
-       "kind": "Offline folder",
-       "file": "Vrikshayurveda2_2.0.0_offline.zip",
-       "size": "",
-       "note": "Any computer. Extract, then double-click Open Kit.html."
-      }
-     ],
-     "changes": [
-      {
-       "version": "2.0.0",
-       "date": "2026-10-29",
-       "text": "Version 1 with updated scientific names: the current accepted name (GBIF Backbone / Catalogue of Life) is shown in brackets after the 2011 name. 11 doubtful names are left unchanged for a taxonomist to check."
-      }
-     ]
-    },
-    {
-     "id": "vrikshayurveda",
-     "key": "v1",
-     "label": "Version 1 – Original (2011 screens)",
-     "versionName": "Version 1 – Original",
-     "version": "1.0.0",
-     "released": "2026-10-29",
-     "published": true,
-     "summary": "The 2011 program rebuilt screen for screen: search 869 verses by plant, common name, keyword or verse number, hear each recitation, and open every plant's classification, names, distribution, synonyms and pictures.",
-     "facts": [
-      "869 verses",
-      "5 Sanskrit works",
-      "Verse recordings",
-      "747 plant names",
-      "3,754 pictures"
-     ],
-     "web": "https://sachinrosario.github.io/ibin-apps/vrikshayurveda/",
-     "preview": "",
-     "downloads": [
-      {
-       "os": "windows",
-       "kind": "Installer",
-       "file": "Vrikshayurveda_1.0.0_Setup.exe",
-       "size": "155 MB",
-       "note": "Adds Start-menu and desktop shortcuts. No administrator password."
-      },
-      {
-       "os": "windows",
-       "kind": "No-install",
-       "file": "Vrikshayurveda.exe",
-       "size": "164 MB",
-       "note": "Runs straight from a folder or pen drive."
-      },
-      {
-       "os": "mac",
-       "kind": "App",
-       "file": "Vrikshayurveda_1.0.0_universal.dmg",
-       "size": "309 MB",
-       "note": "Intel and Apple-silicon Macs."
-      },
-      {
-       "os": "ubuntu",
-       "kind": "Package",
-       "file": "Vrikshayurveda_1.0.0_amd64.deb",
-       "size": "154 MB",
-       "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
-      },
-      {
-       "os": "any",
-       "kind": "Offline folder",
-       "file": "Vrikshayurveda_1.0.0_offline.zip",
-       "size": "156 MB",
-       "note": "Any computer. Extract, then double-click Open Kit.html."
-      }
-     ],
-     "changes": [
-      {
-       "version": "1.0.0",
-       "date": "2026-10-29",
-       "text": "First release: the 2011 program rebuilt for Windows, Mac, Ubuntu and the web, with the original database, pictures and verse recordings."
-      }
-     ]
-    }
-   ]
-  }
- ],
- "upcoming": [
-  {
-   "name": "Pathanga Bharathi",
-   "summary": "Butterfly species database",
-   "stage": "Waiting for intake"
-  }
- ]
+  ]
 }
