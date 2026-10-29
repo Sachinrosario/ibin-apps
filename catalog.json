@@ -653,35 +653,35 @@
        "os": "windows",
        "kind": "Installer",
        "file": "Vrikshayurveda_1.0.0_Setup.exe",
-       "size": "",
+       "size": "155 MB",
        "note": "Adds Start-menu and desktop shortcuts. No administrator password."
       },
       {
        "os": "windows",
        "kind": "No-install",
        "file": "Vrikshayurveda.exe",
-       "size": "",
+       "size": "164 MB",
        "note": "Runs straight from a folder or pen drive."
       },
       {
        "os": "mac",
        "kind": "App",
        "file": "Vrikshayurveda_1.0.0_universal.dmg",
-       "size": "",
+       "size": "309 MB",
        "note": "Intel and Apple-silicon Macs."
       },
       {
        "os": "ubuntu",
        "kind": "Package",
        "file": "Vrikshayurveda_1.0.0_amd64.deb",
-       "size": "",
+       "size": "154 MB",
        "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
       },
       {
        "os": "any",
        "kind": "Offline folder",
        "file": "Vrikshayurveda_1.0.0_offline.zip",
-       "size": "",
+       "size": "156 MB",
        "note": "Any computer. Extract, then double-click Open Kit.html."
       }
      ],
