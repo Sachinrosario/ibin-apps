@@ -1,0 +1,27 @@
+1 ICON "app.ico"
+1 24 "app.manifest"
+1 VERSIONINFO
+FILEVERSION 1,0,0,0
+PRODUCTVERSION 1,0,0,0
+FILEOS 0x40004
+FILETYPE 0x1
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904B0"
+    BEGIN
+      VALUE "CompanyName", "IBIN Apps"
+      VALUE "FileDescription", "Vrikshayurveda 3"
+      VALUE "FileVersion", "1.0.0"
+      VALUE "InternalName", "Vrikshayurveda3"
+      VALUE "LegalCopyright", "Vrikshayurveda 3 (c) K.N. Ganeshaiah (proprietary right holder). Updated in 2026 by Sachin A. Rosario."
+      VALUE "OriginalFilename", "Vrikshayurveda3.exe"
+      VALUE "ProductName", "Vrikshayurveda 3"
+      VALUE "ProductVersion", "1.0.0"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x409, 1200
+  END
+END

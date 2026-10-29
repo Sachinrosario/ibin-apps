@@ -631,13 +631,13 @@
    "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
    "editions": [
     {
-     "id": "vrikshayurveda-2",
-     "key": "v2",
-     "label": "Version 2 – Updated (2026)",
-     "versionName": "Version 2 – Updated",
-     "version": "2.0.0",
+     "id": "vrikshayurveda-3",
+     "key": "v3",
+     "label": "Version 3 – Search-first (2026)",
+     "versionName": "Version 3 – Search-first",
+     "version": "3.0.0",
      "released": "2026-10-29",
-     "published": true,
+     "published": false,
      "summary": "One search over verses, plants, Sanskrit names, subjects and keywords. Current plant names with the 2011 names kept, verse pages with recitation, plant pages with distribution map, synonyms and pictures. Works on phones and offline.",
      "facts": [
       "869 verses",
@@ -647,48 +647,48 @@
       "Distribution map",
       "Recitations"
      ],
-     "web": "https://sachinrosario.github.io/ibin-apps/vrikshayurveda-2/",
+     "web": "https://sachinrosario.github.io/ibin-apps/vrikshayurveda-3/",
      "preview": "",
      "downloads": [
       {
        "os": "windows",
        "kind": "Installer",
-       "file": "Vrikshayurveda2_2.0.0_Setup.exe",
+       "file": "Vrikshayurveda3_3.0.0_Setup.exe",
        "size": "155 MB",
-       "note": "Installs beside Version 1. No administrator password."
+       "note": "Installs beside Versions 1 and 2. No administrator password."
       },
       {
        "os": "windows",
        "kind": "No-install",
-       "file": "Vrikshayurveda2.exe",
+       "file": "Vrikshayurveda3.exe",
        "size": "163 MB",
        "note": "Runs straight from a folder or pen drive."
       },
       {
        "os": "mac",
        "kind": "App",
-       "file": "Vrikshayurveda2_2.0.0_universal.dmg",
+       "file": "Vrikshayurveda3_3.0.0_universal.dmg",
        "size": "309 MB",
        "note": "Intel and Apple-silicon Macs."
       },
       {
        "os": "ubuntu",
        "kind": "Package",
-       "file": "Vrikshayurveda2_2.0.0_amd64.deb",
+       "file": "Vrikshayurveda3_3.0.0_amd64.deb",
        "size": "153 MB",
        "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
       },
       {
        "os": "any",
        "kind": "Offline folder",
-       "file": "Vrikshayurveda2_2.0.0_offline.zip",
+       "file": "Vrikshayurveda3_3.0.0_offline.zip",
        "size": "156 MB",
        "note": "Any computer. Extract, then double-click Open Kit.html."
       }
      ],
      "changes": [
       {
-       "version": "2.0.0",
+       "version": "3.0.0",
        "date": "2026-10-29",
        "text": "Search-first rebuild: one search box, current plant names (2011 names kept), verse and plant pages, distribution map, synonyms, subjects and keywords, phone layout and offline use."
       }
