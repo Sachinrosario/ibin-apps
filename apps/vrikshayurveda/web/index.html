@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vrikshayurveda</title>
+<link rel="icon" href="img/ui/icon.png"><link rel="manifest" href="manifest.webmanifest">
+<style>
+/* VRIKSHAYURVEDA (2011) - Version 1, faithful web rebuild.
+   Every window keeps the pixel geometry measured on Windows inside a 1440x900 stage scaled to the browser.
+   The window pictures are cut from screenshots of the original; everything that changes is drawn on top. */
+@font-face{font-family:"VA";src:local("Arial"),local("ArialMT"),url(fonts/arimo-latin-400-normal.woff2) format("woff2");font-weight:400}
+@font-face{font-family:"VA";src:local("Arial Bold"),local("Arial-BoldMT"),url(fonts/arimo-latin-700-normal.woff2) format("woff2");font-weight:700}
+@font-face{font-family:"VDeva";src:local("Mangal"),local("Nirmala UI"),url(fonts/noto-sans-devanagari-400.woff2) format("woff2");font-weight:400}
+@font-face{font-family:"VDeva";src:local("Mangal Bold"),local("Nirmala UI Bold"),url(fonts/noto-sans-devanagari-700.woff2) format("woff2");font-weight:700}
+@font-face{font-family:"VKan";src:local("Tunga"),local("Nirmala UI"),url(fonts/noto-sans-kannada-400.woff2) format("woff2");font-weight:400}
+@font-face{font-family:"VSerif";src:local("Times New Roman"),url(fonts/tinos-latin-400-normal.woff2) format("woff2")}
+:root{--a:"VA",Arial,sans-serif;--ind:"VA","VDeva","VKan",Arial,sans-serif;--segoe:"Segoe UI",Tahoma,"VA",sans-serif}
+html,body{margin:0;height:100%;background:#0f3d5c;overflow:hidden;font-family:var(--a)}
+#stage{position:absolute;width:1440px;height:900px;transform-origin:0 0;overflow:hidden;user-select:none;-webkit-user-select:none;
+  background:linear-gradient(160deg,#1f6fa8 0%,#17578a 45%,#0e3f6b 100%)}
+#stage img{-webkit-user-drag:none}
+[hidden]{display:none!important}
+.abs{position:absolute}
+.hot{position:absolute;cursor:default}
+.win{position:absolute;overflow:hidden;box-shadow:0 7px 24px rgba(0,0,0,.4);background-repeat:no-repeat}
+.x{position:absolute;top:0;width:46px;height:30px}
+.x:hover{background:rgba(232,17,35,.85)}
+.x:hover::after{content:"✕";position:absolute;left:0;right:0;top:5px;text-align:center;color:#fff;font:15px var(--segoe)}
+.press:active{filter:brightness(.9)}
+.white{position:absolute;background:#fff}
+/* combo boxes (VB ComboBox and Forms 2.0 ComboBox) */
+.cb{position:absolute;background:#fff;font:bold 13px var(--a);line-height:20px;white-space:nowrap;overflow:hidden;cursor:default;padding-left:3px;box-sizing:border-box}
+.cb.hl span{background:#0078d7;color:#fff;padding:0 1px}
+.cbhot{position:absolute;cursor:default}
+.drop{position:absolute;box-sizing:border-box;border:1px solid #646464;background:#fff;overflow-y:auto;overflow-x:hidden;z-index:20;font:13px/16px var(--a)}
+.drop div{padding-left:2px;cursor:default;white-space:nowrap}
+.drop div:hover,.drop div.on{background:#0078d7;color:#fff}
+.drop.deva{font:17px/22px "VDeva",var(--a)}
+.drop::-webkit-scrollbar{width:17px}.drop::-webkit-scrollbar-thumb{background:#cdcdcd;border:2px solid #f0f0f0}.drop::-webkit-scrollbar-track{background:#f0f0f0}
+/* list boxes */
+.lb{position:absolute;background:#fff;overflow-y:auto;overflow-x:hidden;font:13px/15px var(--a);box-sizing:border-box;padding-top:1px}
+.lb div{white-space:nowrap;padding-left:3px;cursor:default}
+.lb div.sel{background:#0078d7;color:#fff}
+.lb::-webkit-scrollbar{width:17px}.lb::-webkit-scrollbar-thumb{background:#cdcdcd;border:2px solid #f0f0f0}.lb::-webkit-scrollbar-track{background:#f0f0f0}
+/* text boxes */
+.tx{position:absolute;background:#fff;overflow:hidden;box-sizing:border-box;white-space:pre-wrap;word-wrap:break-word}
+.tx.scroll{overflow-y:auto}
+.tx.scroll::-webkit-scrollbar{width:17px}.tx.scroll::-webkit-scrollbar-thumb{background:#cdcdcd;border:2px solid #f0f0f0}.tx.scroll::-webkit-scrollbar-track{background:#f0f0f0}
+/* MSHFlexGrid */
+.grid{position:absolute;overflow:auto;background:#fff}
+.grid table{border-collapse:collapse;table-layout:fixed}
+.grid th{background:#008080;color:#fff;font-weight:400;text-align:left;padding:0 4px;border:1px solid #808080;white-space:nowrap;overflow:hidden}
+.grid td{border:1px solid #808080;padding:0 4px;white-space:nowrap;overflow:hidden;vertical-align:middle}
+.grid::-webkit-scrollbar{width:17px;height:17px}.grid::-webkit-scrollbar-thumb{background:#cdcdcd;border:2px solid #f0f0f0}.grid::-webkit-scrollbar-track{background:#f0f0f0}
+/* thumbnails of the Images tab */
+.thumbs{position:absolute;overflow-y:auto;overflow-x:hidden;background:#f0f0f0}
+.thumbs::-webkit-scrollbar{width:17px}.thumbs::-webkit-scrollbar-thumb{background:#cdcdcd;border:2px solid #f0f0f0}.thumbs::-webkit-scrollbar-track{background:#f0f0f0}
+.tc{position:absolute;width:116px}
+.tc img{display:block;width:116px;height:98px;object-fit:fill;background:#fff;border:1px solid #c0c0c0;box-sizing:border-box;cursor:pointer}
+.tc .cap{height:30px;margin-top:2px;background:#e3e3e3;border:1px solid #c8c8c8;box-sizing:border-box;font:11px/13px var(--a);text-align:center;overflow:hidden;word-wrap:break-word}
+/* picture viewer (stands in for the Windows photo viewer) */
+.viewer{position:absolute;inset:0;background:rgba(0,0,0,.82);z-index:40;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px}
+.viewer img{max-width:1300px;max-height:800px;background:#fff}
+.viewer p{margin:0;color:#fff;font:13px var(--segoe)}
+.viewer .close{position:absolute;right:16px;top:10px;color:#fff;font:28px var(--segoe);cursor:pointer}
+.viewer .nav{position:absolute;top:420px;width:48px;height:70px;background:rgba(255,255,255,.15);color:#fff;font:34px var(--segoe);display:flex;align-items:center;justify-content:center;cursor:pointer}
+/* WMP strip */
+#wmpPlay{position:absolute;left:4px;top:12px;width:28px;height:28px;border-radius:50%;cursor:default}
+#wmpBar{position:absolute;left:30px;top:9px;width:213px;height:4px}
+#wmpBar i{position:absolute;top:-3px;width:16px;height:9px;border-radius:5px;background:#2f74c8;border:1px solid #1d4f92;box-sizing:border-box}
+.closed{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;color:#fff;font:16px var(--segoe)}
+.closed button{font:15px var(--segoe);padding:8px 18px;cursor:pointer}
+</style>
+</head>
+<body>
+<div id="stage">
+  <!-- 1. title screen (frmsplash, maximised) -->
+  <div id="splash" class="abs" style="left:0;top:0;width:1440px;height:900px">
+    <img src="img/ui/splash.webp" width="1440" height="900" alt="Vrikshayurveda">
+    <div class="hot press" id="sNext" title="Next" style="left:1314px;top:444px;width:104px;height:72px"></div>
+    <div class="x" id="sClose" style="left:1394px;top:0;height:23px"></div>
+    <div class="abs" style="left:16px;top:858px;font:12px/15px var(--a);color:#fff;text-shadow:0 0 3px #000,0 0 2px #000">Proprietary right holder - Dr. K.N. Ganeshaiah &nbsp;·&nbsp; Updated in 2026 by Dr. Sachin A. Rosario &nbsp;·&nbsp; Version <span id="ver"></span></div>
+  </div>
+
+  <!-- 2. main menu (frmfirst) -->
+  <div id="first" class="win" hidden style="left:410px;top:219px;width:619px;height:459px;background-image:url(img/ui/first.webp)">
+    <div class="x" data-close="first" style="left:573px"></div>
+    <div class="hot press" id="fSearch" style="left:217px;top:74px;width:169px;height:161px"></div>
+    <div class="hot press" id="fCredits" style="left:473px;top:106px;width:108px;height:41px"></div>
+    <div class="hot press" id="fExit" style="left:473px;top:162px;width:105px;height:41px"></div>
+    <div class="hot press" data-pdf="Brihat Samhitha" style="left:33px;top:306px;width:164px;height:41px"></div>
+    <div class="hot press" data-pdf="Krishi Parashara" style="left:217px;top:306px;width:164px;height:41px"></div>
+    <div class="hot press" data-pdf="Lokopakaram" style="left:409px;top:306px;width:164px;height:41px"></div>
+    <div class="hot press" data-pdf="Surapala Vrikshayurveda" style="left:33px;top:362px;width:164px;height:49px"></div>
+    <div class="hot press" data-pdf="Upavanavinoda" style="left:217px;top:362px;width:164px;height:41px"></div>
+  </div>
+
+  <!-- 3. search (frmdata) -->
+  <div id="search" class="win" hidden style="left:328px;top:197px;width:783px;height:504px;background-image:url(img/ui/search.webp)">
+    <div class="x" data-close="search" style="left:737px"></div>
+    <div class="cb" id="cSan" style="left:117px;top:85px;width:144px;height:26px;font:17px/26px 'VDeva',var(--a);font-weight:400"></div><div class="cbhot" data-combo="cSan" style="left:114px;top:82px;width:167px;height:32px"></div>
+    <div class="cb" id="cGenus" style="left:123px;top:188px;width:140px;height:20px"></div><div class="cbhot" data-combo="cGenus" style="left:121px;top:186px;width:161px;height:24px"></div>
+    <div class="cb" id="cSpecies" style="left:123px;top:228px;width:140px;height:20px"></div><div class="cbhot" data-combo="cSpecies" style="left:121px;top:226px;width:161px;height:24px"></div>
+    <div class="cb" id="cLang" style="left:123px;top:332px;width:140px;height:20px"></div><div class="cbhot" data-combo="cLang" style="left:121px;top:330px;width:161px;height:24px"></div>
+    <div class="cb" id="cName" style="left:123px;top:380px;width:140px;height:20px"></div><div class="cbhot" data-combo="cName" style="left:121px;top:378px;width:161px;height:24px"></div>
+    <div class="cb" id="cCat" style="left:507px;top:68px;width:164px;height:20px"></div><div class="cbhot" data-combo="cCat" style="left:505px;top:66px;width:185px;height:24px"></div>
+    <div class="cb" id="cSrc" style="left:531px;top:348px;width:164px;height:20px"></div><div class="cbhot" data-combo="cSrc" style="left:529px;top:346px;width:185px;height:24px"></div>
+    <div class="cb" id="cVerse" style="left:531px;top:388px;width:164px;height:20px"></div><div class="cbhot" data-combo="cVerse" style="left:529px;top:386px;width:185px;height:24px"></div>
+    <div class="lb" id="lAvail" style="left:387px;top:124px;width:157px;height:160px"></div>
+    <div class="lb" id="lSel" style="left:595px;top:124px;width:157px;height:160px"></div>
+    <img class="abs" id="bRight" src="img/ui/arr_r_on.png" style="left:553px;top:154px" hidden alt="">
+    <div class="hot" id="hRight" style="left:553px;top:154px;width:33px;height:25px"></div>
+    <img class="abs" id="bLeft" src="img/ui/arr_l_on.png" style="left:553px;top:186px" hidden alt="">
+    <div class="hot" id="hLeft" style="left:553px;top:186px;width:33px;height:25px"></div>
+    <img class="abs" id="bSearch" src="img/ui/search_on.png" style="left:321px;top:410px" hidden alt="">
+    <div class="hot" id="hSearch" style="left:321px;top:410px;width:105px;height:81px"></div>
+    <div class="hot press" id="bRefresh" style="left:97px;top:450px;width:105px;height:41px"></div>
+    <div class="hot press" id="bBack" style="left:585px;top:450px;width:105px;height:41px"></div>
+  </div>
+
+  <!-- 4. a verse (frmshloka) -->
+  <div id="shloka" class="win" hidden style="left:324px;top:176px;width:792px;height:546px;background-image:url(img/ui/shloka.webp)">
+    <div class="x" data-close="shloka" style="left:746px"></div>
+    <div class="white" style="left:83px;top:44px;width:308px;height:28px"></div>
+    <div class="abs" id="tSrc" style="left:83px;top:44px;width:308px;height:28px;font:18px/28px var(--a);text-align:center"></div>
+    <div class="white" style="left:547px;top:44px;width:44px;height:28px"></div>
+    <div class="abs" id="tVerse" style="left:547px;top:44px;width:44px;height:28px;font:18px/28px var(--a);text-align:center"></div>
+    <div class="hot press" id="bSpeak" title="Click to listen Shloka" style="left:137px;top:90px;width:65px;height:57px"></div>
+    <div class="abs" style="left:233px;top:90px;width:250px;height:50px">
+      <div id="wmpBar"><i id="wmpKnob" style="left:0"></i></div>
+      <div id="wmpPlay" title="Play"></div>
+    </div>
+    <div class="tx" id="tSloka" style="left:83px;top:165px;width:493px;height:138px;padding:6px 8px 0 10px;font:17px/22px var(--ind)"></div>
+    <div class="tx scroll" id="tDetails" style="left:83px;top:316px;width:493px;height:101px;padding:1px 2px;font:12px/16px var(--a)"></div>
+    <div class="tx scroll" id="tComments" style="left:99px;top:428px;width:477px;height:69px;padding:1px 2px;font:12px/16px var(--a)"></div>
+    <div class="lb" id="lPlants" style="left:587px;top:180px;width:197px;height:246px;padding-top:6px;line-height:17px;overflow:hidden"></div>
+    <img class="abs" id="bSpDet" src="img/ui/spdet_on.png" style="left:617px;top:450px" alt="">
+    <div class="hot" id="hSpDet" style="left:617px;top:450px;width:137px;height:41px"></div>
+    <img class="abs" id="nFirst" style="left:233px;top:506px" alt=""><div class="hot" data-nav="first" style="left:233px;top:506px;width:31px;height:28px"></div>
+    <img class="abs" id="nPrev" style="left:265px;top:506px" alt=""><div class="hot" data-nav="prev" style="left:265px;top:506px;width:31px;height:28px"></div>
+    <img class="abs" id="nNext" style="left:449px;top:506px" alt=""><div class="hot" data-nav="next" style="left:449px;top:506px;width:31px;height:28px"></div>
+    <img class="abs" id="nLast" style="left:481px;top:506px" alt=""><div class="hot" data-nav="last" style="left:481px;top:506px;width:29px;height:28px"></div>
+    <div class="white" style="left:299px;top:508px;width:149px;height:24px"></div>
+    <div class="abs" id="tCount" style="left:299px;top:508px;width:149px;height:24px;font:16px/24px VSerif,serif;color:#5a5050;text-align:center"></div>
+    <div class="hot press" id="bShBack" style="left:689px;top:42px;width:81px;height:41px"></div>
+  </div>
+
+  <!-- 5. a species (species) -->
+  <div id="species" class="win" hidden style="left:306px;top:177px;width:827px;height:544px;background-image:url(img/ui/species.webp)">
+    <div class="x" data-close="species" style="left:781px"></div>
+    <div class="white" style="left:2px;top:24px;width:822px;height:30px"></div>
+    <div class="abs" id="spName" style="left:2px;top:24px;width:822px;height:34px;font:23px/34px var(--a);color:#400000;text-align:center"></div>
+    <img class="abs" id="spTabs" src="img/ui/tabs_tax.png" style="left:0;top:54px" alt="">
+    <div class="hot" data-tab="tax" style="left:9px;top:56px;width:161px;height:24px"></div>
+    <div class="hot" data-tab="com" style="left:171px;top:56px;width:160px;height:24px"></div>
+    <div class="hot" data-tab="dis" style="left:332px;top:56px;width:160px;height:24px"></div>
+    <div class="hot" data-tab="syn" style="left:493px;top:56px;width:160px;height:24px"></div>
+    <div class="hot" data-tab="img" style="left:654px;top:56px;width:163px;height:24px"></div>
+    <!-- Taxonomic Hierarchy -->
+    <div id="pTax" class="abs" style="left:0;top:0">
+      <div class="white" style="left:297px;top:154px;width:345px;height:33px"></div><div class="white" style="left:297px;top:200px;width:345px;height:32px"></div>
+      <div class="white" style="left:297px;top:250px;width:345px;height:33px"></div><div class="white" style="left:297px;top:295px;width:345px;height:33px"></div>
+      <div class="white" style="left:297px;top:343px;width:345px;height:33px"></div><div class="white" style="left:297px;top:391px;width:345px;height:33px"></div>
+      <div id="taxVals"></div>
+    </div>
+    <!-- other tabs: a plain panel with the tab's content -->
+    <div id="pOther" class="abs" style="left:11px;top:80px;width:805px;height:448px;background:#f0f0f0" hidden>
+      <div id="pCom" class="grid" style="left:142px;top:34px;width:521px;height:393px;background:#f0f0f0;border-left:2px solid #808080;border-top:1px solid #a0a0a0;box-sizing:border-box"></div>
+      <div id="pDis" class="grid" style="left:14px;top:10px;width:777px;height:424px;border:1px solid #808080;box-sizing:border-box"></div>
+      <div id="pSyn" class="abs" style="left:0;top:0;width:805px;height:448px">
+        <img class="abs" src="img/ui/syn_head.png" style="left:7px;top:2px" alt="">
+        <div class="lb" id="lSyn" style="left:207px;top:58px;width:393px;height:164px;border:1px solid #a0a0a0;font:17px/20px var(--a);padding:2px 0 0 1px"></div>
+        <div class="tx" id="tFlora" style="left:79px;top:234px;width:641px;height:199px;border:1px solid #a0a0a0;font:12px/13px var(--a);padding:2px 3px"></div>
+      </div>
+      <div id="pImg" class="abs" style="left:0;top:0;width:805px;height:448px">
+        <img class="abs" id="imgBar" src="img/ui/imgbar_H.png" style="left:7px;top:2px" alt="">
+        <img class="abs" id="paintOff" src="img/ui/paint_off.png" style="left:324px;top:4px" hidden alt="">
+        <div class="hot" data-cat="H" style="left:14px;top:6px;width:153px;height:33px"></div>
+        <div class="hot" data-cat="L" style="left:182px;top:6px;width:129px;height:33px"></div>
+        <div class="hot" data-cat="P" style="left:326px;top:6px;width:121px;height:33px"></div>
+        <div class="hot" data-cat="F" style="left:462px;top:6px;width:113px;height:33px"></div>
+        <div class="thumbs" id="thumbs" style="left:13px;top:45px;width:790px;height:401px;border-top:2px solid #808080;border-left:2px solid #808080;box-sizing:border-box"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="closed" class="closed" hidden><div>Vrikshayurveda has been closed.</div><button id="reopen">Open it again</button></div>
+  <div id="viewer" class="viewer" hidden><div class="close" id="vClose">✕</div><div class="nav" id="vPrev" style="left:20px">‹</div><div class="nav" id="vNext" style="right:20px">›</div><img id="vImg" alt=""><p id="vCap"></p></div>
+  <div id="dropHost"></div>
+</div>
+<audio id="audio" preload="none"></audio>
+<script src="data/vrk.js"></script>
+<script>
+"use strict";
+const D = window.VRK;
+const $ = id => document.getElementById(id), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+$('ver').textContent = D.version;
+// Jet compares text without regard to case; Unicode text (Sanskrit names) sorts by code point
+const jcmp = (a, b) => { const x = String(a).toLowerCase(), y = String(b).toLowerCase(); return x < y ? -1 : x > y ? 1 : 0; };
+const uniq = a => [...new Set(a)];
+const sortJ = a => uniq(a).sort(jcmp);
+const AUDIO = { 'Brihat Samhitha': 'bs2-', 'Krishi Parashara': 'kp-', 'Lokopakaram': 'lok-', 'Surapala Vrikshayurveda': 'sv-', 'Upavanavinoda': 'uv-' };
+const SOURCES = ['Brihat Samhitha', 'Krishi Parashara', 'Lokopakaram', 'Surapala Vrikshayurveda', 'Upavanavinoda'];
+const CATS = ['Action/Properties', 'Diseases/Disorders', 'Organisms', 'Others'];
+const CATCOL = { 'Organisms': 1, 'Action/Properties': 2, 'Diseases/Disorders': 3, 'Others': 4 };
+
+/* ---------- stage scaling ---------- */
+function fit() { const s = Math.min(innerWidth / 1440, innerHeight / 900); const st = $('stage'); st.style.transform = `scale(${s})`; st.style.left = (innerWidth - 1440 * s) / 2 + 'px'; st.style.top = (innerHeight - 900 * s) / 2 + 'px'; }
+addEventListener('resize', fit); fit();
+function show(id) { for (const w of ['splash', 'first', 'search', 'shloka', 'species', 'closed']) $(w).hidden = w !== id && !(id === 'species' && w === 'shloka_keep'); closeDrop(); }
+
+/* ---------- 1. title screen ---------- */
+$('sNext').onclick = () => show('first');
+$('sClose').onclick = () => show('closed');
+$('reopen').onclick = () => { resetSearch(); show('splash'); };
+$$('[data-close]').forEach(x => x.onclick = () => ({ first: () => show('closed'), search: () => show('closed'), shloka: () => { stopAudio(); show('search'); }, species: () => show('shloka') })[x.dataset.close]());
+
+/* ---------- 2. main menu ---------- */
+$('fSearch').onclick = () => show('search');
+$('fExit').onclick = () => show('closed');
+$('fCredits').onclick = () => window.open('data/credits.pdf', '_blank');
+$$('[data-pdf]').forEach(b => b.onclick = () => window.open('data/' + encodeURIComponent(b.dataset.pdf) + '.pdf', '_blank'));
+
+/* ---------- 3. search ---------- */
+const S = { cSan: '', cGenus: '', cSpecies: '', cLang: '', cName: '', cCat: '', cSrc: '', cVerse: '', avail: [], sel: [], availIdx: -1, selIdx: -1, hl: '' };
+const GROUP = { cSan: 'san', cGenus: 'sci', cSpecies: 'sci', cLang: 'com', cName: 'com', cSrc: 'slo', cVerse: 'slo', cCat: 'key' };
+function options(id) {
+  switch (id) {
+    case 'cSan': return sortJ(D.plants.map(p => p[0]).filter(Boolean)).sort((a, b) => a < b ? -1 : a > b ? 1 : 0);
+    case 'cGenus': return sortJ(D.master.map(m => m[0]));
+    case 'cSpecies': return S.cGenus ? sortJ(D.master.filter(m => m[0] === S.cGenus).map(m => m[1])) : [];
+    case 'cLang': return sortJ(D.cmname.map(c => c[3]));
+    case 'cName': return S.cLang ? sortJ(D.cmname.filter(c => c[3] === S.cLang).map(c => c[2])) : [];
+    case 'cCat': return CATS;
+    case 'cSrc': return SOURCES;
+    case 'cVerse': return S.cSrc ? uniq(D.details.filter(d => d[1] === S.cSrc).map(d => d[4])).sort((a, b) => a - b).map(String) : [];
+  }
+}
+// choosing in one search box clears the other kinds of search (as the original does)
+function clearOthers(group) {
+  if (group !== 'san') S.cSan = '';
+  if (group !== 'sci') { S.cGenus = ''; S.cSpecies = ''; }
+  if (group !== 'com') { S.cLang = ''; S.cName = ''; }
+  if (group !== 'slo') { S.cSrc = ''; S.cVerse = ''; }
+  if (group !== 'key') { S.cCat = ''; S.avail = []; S.sel = []; S.availIdx = S.selIdx = -1; }
+}
+function pick(id, v) {
+  clearOthers(GROUP[id]);
+  S[id] = v; S.hl = id;
+  if (id === 'cGenus') S.cSpecies = '';
+  if (id === 'cLang') S.cName = '';
+  if (id === 'cSrc') S.cVerse = '';
+  if (id === 'cCat') { S.avail = sortJ(D.keylist.filter(k => k[CATCOL[v]] === '1').map(k => k[0])).filter(k => !S.sel.includes(k)); S.availIdx = -1; }
+  drawSearch();
+}
+function canSearch() { return !!(S.cSan || (S.cGenus && S.cSpecies) || (S.cLang && S.cName) || (S.cSrc && S.cVerse) || S.sel.length); }
+function drawSearch() {
+  for (const id of Object.keys(GROUP)) { const el = $(id); el.innerHTML = S[id] ? `<span>${esc(S[id])}</span>` : ''; el.classList.toggle('hl', S.hl === id && !!S[id]); }
+  $('lAvail').innerHTML = S.avail.map((k, i) => `<div class="${i === S.availIdx ? 'sel' : ''}" data-i="${i}">${esc(k)}</div>`).join('');
+  $('lSel').innerHTML = S.sel.map((k, i) => `<div class="${i === S.selIdx ? 'sel' : ''}" data-i="${i}">${esc(k)}</div>`).join('');
+  $('bRight').hidden = !S.avail.length; $('bLeft').hidden = !S.sel.length;
+  $('bSearch').hidden = !canSearch();
+}
+function resetSearch() { Object.assign(S, { cSan: '', cGenus: '', cSpecies: '', cLang: '', cName: '', cCat: '', cSrc: '', cVerse: '', avail: [], sel: [], availIdx: -1, selIdx: -1, hl: '' }); drawSearch(); }
+let dropFor = null;
+function closeDrop() { $('dropHost').innerHTML = ''; dropFor = null; }
+$$('[data-combo]').forEach(h => h.onclick = e => {
+  e.stopPropagation();
+  const id = h.dataset.combo; if (dropFor === id) return closeDrop();
+  closeDrop(); const opts = options(id); dropFor = id;
+  const win = h.closest('.win'), wl = win.offsetLeft, wt = win.offsetTop;
+  const rows = Math.min(8, Math.max(1, opts.length)), rh = id === 'cSan' ? 22 : 16;
+  const d = document.createElement('div'); d.className = 'drop' + (id === 'cSan' ? ' deva' : '');
+  Object.assign(d.style, { left: wl + h.offsetLeft + 'px', top: wt + h.offsetTop + h.offsetHeight + 'px', width: h.offsetWidth + 'px', height: rows * rh + 2 + 'px' });
+  d.innerHTML = opts.map(o => `<div class="${o === S[id] ? 'on' : ''}">${esc(o)}</div>`).join('') || '<div>&nbsp;</div>';
+  [...d.children].forEach((c, i) => c.onclick = ev => { ev.stopPropagation(); closeDrop(); if (opts[i] !== undefined) pick(id, opts[i]); });
+  $('dropHost').append(d);
+  const on = d.querySelector('.on'); if (on) on.scrollIntoView({ block: 'nearest' });
+});
+document.addEventListener('click', () => closeDrop());
+$('lAvail').onclick = e => { const i = e.target.dataset.i; if (i === undefined) return; S.availIdx = +i; drawSearch(); };
+$('lAvail').ondblclick = () => $('hRight').onclick();
+$('lSel').onclick = e => { const i = e.target.dataset.i; if (i === undefined) return; S.selIdx = +i; drawSearch(); };
+$('lSel').ondblclick = () => $('hLeft').onclick();
+$('hRight').onclick = () => {
+  if (!S.avail.length || S.availIdx < 0) return;
+  clearOthers('key');
+  const k = S.avail.splice(S.availIdx, 1)[0]; S.sel.push(k); S.availIdx = Math.min(S.availIdx, S.avail.length - 1); S.hl = ''; drawSearch();
+};
+$('hLeft').onclick = () => {
+  if (!S.sel.length || S.selIdx < 0) return;
+  const k = S.sel.splice(S.selIdx, 1)[0]; S.selIdx = Math.min(S.selIdx, S.sel.length - 1);
+  if (S.cCat && D.keylist.some(r => r[0] === k && r[CATCOL[S.cCat]] === '1')) { S.avail.push(k); S.avail.sort(jcmp); }
+  drawSearch();
+};
+$('bRefresh').onclick = resetSearch;
+$('bBack').onclick = () => show('first');
+$('hSearch').onclick = () => { if (canSearch()) runSearch(); };
+
+/* the search: collect (book, verse) pairs as the original's temp table, then the matching verses */
+const verses = s => String(s || '').split(',').map(x => x.trim()).filter(x => x !== '').map(x => parseInt(x, 10)).filter(x => !isNaN(x));
+let R = { list: [], i: 0, red: [] };
+function runSearch() {
+  const temp = []; let red = [];
+  if (S.cSan) {
+    const rows = uniq(D.plants.filter(p => p[0] === S.cSan).map(p => p[3] + '\u0001' + p[2]));      // GROUP BY book, slokas
+    for (const r of rows) { const [b, sl] = r.split('\u0001'); for (const v of verses(sl)) temp.push([b, v]); }
+    red = D.plants.filter(p => p[0] === S.cSan).map(p => p[1]);
+  } else if (S.cGenus && S.cSpecies) {
+    const rows = uniq(D.master.filter(m => m[0] === S.cGenus && m[1] === S.cSpecies).map(m => m[2] + '\u0001' + m[3]));
+    for (const r of rows) { const [b, vs] = r.split('\u0001'); for (const v of verses(vs)) temp.push([b, v]); }
+    red = [S.cGenus + ' ' + S.cSpecies];
+  } else if (S.cLang && S.cName) {
+    const sp = D.cmname.filter(c => c[2] === S.cName && c[3] === S.cLang);
+    const rows = uniq(D.master.filter(m => sp.some(c => c[0] === m[0] && c[1] === m[1])).map(m => m[2] + '\u0001' + m[3]));
+    for (const r of rows) { const [b, vs] = r.split('\u0001'); for (const v of verses(vs)) temp.push([b, v]); }
+    red = uniq(sp.map(c => c[0] + ' ' + c[1]));
+  } else if (S.cSrc && S.cVerse) {
+    temp.push([S.cSrc, +S.cVerse]);
+  } else if (S.sel.length) {
+    for (const k of uniq(D.keys.filter(k => S.sel.includes(k[2])).map(k => k[0] + '\u0001' + k[1]))) { const [b, v] = k.split('\u0001'); temp.push([b, +v]); }
+  }
+  // SELECT details.ID FROM temp INNER JOIN details ... (rows come out in the order of the details table)
+  const list = [];
+  for (const d of D.details) for (const t of temp) if (t[0] === d[1] && t[1] === d[4]) list.push(d);
+  R = { list, i: 0, red: red.map(x => String(x).trim().toLowerCase()), first: true };
+  drawShloka(); show('shloka');
+}
+
+/* ---------- 4. a verse ---------- */
+const plantsOf = d => sortJ(D.master.filter(m => m[2] === d[1] && String(m[3]).includes(String(d[4]))).map(m => m[0] + ' ' + m[1]));
+let plantSel = -1;
+function drawShloka() {
+  stopAudio();
+  const n = R.list.length, d = R.list[R.i];
+  $('tSrc').textContent = d ? d[1] : ''; $('tVerse').textContent = d ? d[4] : '';
+  $('tSloka').textContent = d ? d[6] : ''; $('tDetails').textContent = d ? d[5] : ''; $('tComments').textContent = d ? d[7] : '';
+  $('tDetails').scrollTop = 0; $('tComments').scrollTop = 0;
+  const pl = d ? plantsOf(d) : [];
+  plantSel = R.first && pl.length && !R.red.length ? 0 : -1;
+  R.first = false;
+  $('lPlants').innerHTML = pl.map((p, i) => `<div data-i="${i}" class="${i === plantSel ? 'sel' : ''}" style="color:${R.red.includes(p.toLowerCase()) ? '#ff0000' : '#004000'}">${esc(p)}</div>`).join('');
+  $('lPlants').dataset.n = pl.length;
+  $('bSpDet').src = pl.length ? 'img/ui/spdet_on.png' : 'img/ui/spdet_off.png';
+  $('tCount').textContent = `[${n ? R.i + 1 : 0}/${n} ]`;
+  const atStart = R.i <= 0, atEnd = R.i >= n - 1;
+  $('nFirst').src = `img/ui/nav_first_${atStart ? 'off' : 'on'}.png`; $('nPrev').src = `img/ui/nav_prev_${atStart ? 'off' : 'on'}.png`;
+  $('nNext').src = `img/ui/nav_next_${atEnd ? 'off' : 'on'}.png`; $('nLast').src = `img/ui/nav_last_${atEnd ? 'off' : 'on'}.png`;
+}
+$('lPlants').onclick = e => { const i = e.target.dataset.i; if (i === undefined) return; plantSel = +i; $$('#lPlants div').forEach((x, k) => { x.classList.toggle('sel', k === plantSel); }); };
+$('lPlants').ondblclick = () => $('hSpDet').onclick();
+$$('[data-nav]').forEach(b => b.onclick = () => {
+  const n = R.list.length; if (!n) return;
+  const k = b.dataset.nav, i = k === 'first' ? 0 : k === 'prev' ? R.i - 1 : k === 'next' ? R.i + 1 : n - 1;
+  if (i < 0 || i >= n || i === R.i) return; R.i = i; drawShloka();
+});
+$('bShBack').onclick = () => { stopAudio(); drawSearch(); show('search'); };
+$('hSpDet').onclick = () => {
+  const items = $$('#lPlants div'); if (!items.length) return;
+  const name = items[plantSel >= 0 ? plantSel : 0].textContent;
+  openSpecies(name);
+};
+// verse recording (the original plays data\slokas\<prefix><verse>.wma in a Windows Media Player control)
+const audio = $('audio'); let raf = 0;
+function stopAudio() { audio.pause(); audio.removeAttribute('src'); audio.load(); $('wmpKnob').style.left = '0px'; cancelAnimationFrame(raf); }
+function tick() { if (audio.duration) $('wmpKnob').style.left = (audio.currentTime / audio.duration * 197).toFixed(1) + 'px'; raf = requestAnimationFrame(tick); }
+function playVerse() { const d = R.list[R.i]; if (!d) return; audio.src = `audio/${AUDIO[d[1]]}${d[4]}.mp3`; audio.play().catch(() => {}); cancelAnimationFrame(raf); tick(); }
+$('bSpeak').onclick = playVerse;
+$('wmpPlay').onclick = () => { if (!audio.getAttribute('src')) return playVerse(); audio.paused ? audio.play() : audio.pause(); };
+audio.onended = () => { cancelAnimationFrame(raf); $('wmpKnob').style.left = '0px'; };
+
+/* ---------- 5. a species ---------- */
+let SP = null, tab = 'tax', cat = 'H';
+function openSpecies(name) {
+  const [g, ...rest] = name.split(' '); SP = { g, s: rest.join(' ') };
+  $('spName').textContent = g + ' ' + SP.s; tab = 'tax';
+  // Taxonomic Hierarchy
+  const c = D.class[g + '|' + SP.s] || Object.entries(D.class).find(([k]) => k.toLowerCase() === (g + '|' + SP.s).toLowerCase())?.[1] || ['', '', '', '', '', ''];
+  const ys = [154, 200, 250, 295, 343, 391];
+  $('taxVals').innerHTML = c.map((v, i) => `<div class="abs" style="left:297px;top:${ys[i]}px;width:345px;height:33px;font:23px/33px var(--a);color:#800000;text-align:center">${esc(v)}</div>`).join('');
+  // Common Names: grouped by language and name, the language cell merged
+  const cn = uniq(D.cmname.filter(r => r[0] === g && r[1] === SP.s).map(r => r[3] + '\u0001' + r[2])).map(x => x.split('\u0001')).sort((a, b) => jcmp(a[0], b[0]) || jcmp(a[1], b[1]));
+  let rows = '';
+  for (let i = 0; i < cn.length; i++) {
+    let span = 1; if (i > 0 && cn[i - 1][0] === cn[i][0]) span = 0; else while (i + span < cn.length && cn[i + span][0] === cn[i][0]) span++;
+    rows += `<tr style="height:23px">${span ? `<td rowspan="${span}" style="color:#000">${esc(cn[i][0])}</td>` : ''}<td style="color:#7a2b2b">${esc(cn[i][1])}</td></tr>`;
+  }
+  $('pCom').innerHTML = `<table style="font:16px var(--a);width:440px"><colgroup><col style="width:200px"><col style="width:240px"></colgroup><tr style="height:23px"><th style="font-size:15px;letter-spacing:.3px">LANGUAGE / REGION</th><th style="font-size:15px">NAME</th></tr>${rows}</table>`;
+  // Distribution: Country, State, District merged when repeated; "None" shown blank
+  const ds = uniq((D.dist[g + '|' + SP.s] || []).map(r => r.map(v => v === 'None' || v === 'none' ? '' : v).join('\u0001'))).map(x => x.split('\u0001'))
+    .sort((a, b) => { for (let k = 0; k < 5; k++) { const c2 = jcmp(a[k], b[k]); if (c2) return c2; } return 0; });
+  const W = [117, 133, 133, 133, 240], BG = ['#fff', '#ddd0cb', '#fff', '#ddd0cb', '#fff'];
+  let drows = '';
+  for (let i = 0; i < ds.length; i++) {
+    let tr = '';
+    for (let k = 0; k < 5; k++) {
+      if (k <= 2) {
+        const same = (a, b) => { for (let q = 0; q <= k; q++) if (a[q] !== b[q]) return false; return true; };
+        if (i > 0 && same(ds[i - 1], ds[i])) continue;
+        let span = 1; while (i + span < ds.length && same(ds[i + span], ds[i])) span++;
+        tr += `<td rowspan="${span}" style="background:${BG[k]}">${esc(ds[i][k])}</td>`;
+      } else tr += `<td style="background:${BG[k]}">${esc(ds[i][k])}</td>`;
+    }
+    drows += `<tr style="height:33px">${tr}</tr>`;
+  }
+  $('pDis').innerHTML = `<table style="font:bold 13px var(--a);color:#7a2b2b;width:756px"><colgroup>${W.map(w => `<col style="width:${w}px">`).join('')}</colgroup><tr style="height:33px">${['Country', 'State', 'District', 'Taluk', 'Place'].map(h => `<th style="font:17px var(--a)">${h}</th>`).join('')}</tr>${drows}</table>`;
+  // Synonyms
+  const sy = uniq(D.syn.filter(r => r[0] === g && r[1] === SP.s).map(r => r[2] + '\u0001' + r[3])).map(x => x.split('\u0001')).sort((a, b) => jcmp(a[0], b[0]) || jcmp(a[1], b[1]));
+  $('lSyn').innerHTML = sy.map((r, i) => `<div data-i="${i}">${esc(r[0])}&nbsp;&nbsp;${esc(r[1])}</div>`).join('');
+  $('lSyn').onclick = e => {
+    const i = e.target.closest('[data-i]')?.dataset.i; if (i === undefined) return;
+    $$('#lSyn div').forEach((x, k) => x.classList.toggle('sel', k === +i));
+    const [sg, ss] = sy[+i];
+    const fl = uniq(D.syn.filter(r => r[0] === g && r[1] === SP.s && r[2] === sg && r[3] === ss).map(r => [r[4], r[5], r[6], r[7], r[8]].join('\u0001'))).map(x => x.split('\u0001'))
+      .sort((a, b) => { for (let k = 0; k < 5; k++) { const c2 = jcmp(a[k], b[k]); if (c2) return c2; } return 0; });
+    $('tFlora').textContent = fl.map(r => r.map(v => /^\d+\.0$/.test(v) ? v.slice(0, -2) : v).join('  ')).join('\n');
+  };
+  $('tFlora').textContent = '';
+  cat = 'H'; drawTab(); show('species'); $('shloka').hidden = false;
+}
+function imagesOf(c) { return D.herb.filter(h => h[1] === SP.g && h[2] === SP.s && h[3] === c).sort((a, b) => a[0] - b[0]); }
+function caption(h) {
+  const base = String(h[5]).replace(/\.jpg$/i, '');
+  if (h[3] === 'H') return (h[4] && h[4] !== '0' ? h[4] + '_' : '') + base;
+  if (h[3] === 'L' || h[3] === 'P') return base;
+  return h[6] === 'Y' ? 'WesternGhat Team' : '';
+}
+function drawTab() {
+  $('spTabs').src = `img/ui/tabs_${tab}.png`;
+  $('pTax').hidden = tab !== 'tax'; $('pOther').hidden = tab === 'tax';
+  $('pCom').hidden = tab !== 'com'; $('pDis').hidden = tab !== 'dis'; $('pSyn').hidden = tab !== 'syn'; $('pImg').hidden = tab !== 'img';
+  if (tab === 'img') drawImages();
+}
+let shown = [];
+function drawImages() {
+  $('imgBar').src = `img/ui/imgbar_${cat}.png`;
+  $('paintOff').hidden = imagesOf('P').length > 0 || cat === 'P';
+  shown = imagesOf(cat);
+  $('thumbs').innerHTML = shown.map((h, i) => `<div class="tc" style="left:${(i % 6) * 118}px;top:${Math.floor(i / 6) * 134}px"><img data-i="${i}" ${h[7] ? `src="img/t/${h[0]}.webp"` : ''} alt=""><div class="cap">${esc(caption(h))}</div></div>`).join('')
+    + `<div style="height:${Math.ceil(shown.length / 6) * 134}px;width:1px"></div>`;
+  $('thumbs').scrollTop = 0;
+}
+$$('[data-tab]').forEach(t => t.onclick = () => { tab = t.dataset.tab; drawTab(); });
+$$('[data-cat]').forEach(b => b.onclick = () => { if (b.dataset.cat === 'P' && !imagesOf('P').length) return; cat = b.dataset.cat; drawImages(); });
+let vi = 0;
+function viewer(i) { vi = i; const h = shown[i]; $('vImg').src = h[7] ? `img/${h[0]}.webp` : ''; $('vCap').textContent = `${SP.g} ${SP.s} — ${caption(h) || h[5]} (${i + 1} of ${shown.length})`; $('viewer').hidden = false; }
+$('thumbs').onclick = e => { const i = e.target.dataset.i; if (i !== undefined) viewer(+i); };
+$('vClose').onclick = () => $('viewer').hidden = true;
+$('viewer').onclick = e => { if (e.target.id === 'viewer') $('viewer').hidden = true; };
+$('vPrev').onclick = e => { e.stopPropagation(); viewer((vi + shown.length - 1) % shown.length); };
+$('vNext').onclick = e => { e.stopPropagation(); viewer((vi + 1) % shown.length); };
+addEventListener('keydown', e => { if ($('viewer').hidden) return; if (e.key === 'Escape') $('viewer').hidden = true; if (e.key === 'ArrowRight') $('vNext').onclick(e); if (e.key === 'ArrowLeft') $('vPrev').onclick(e); });
+
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+drawSearch();
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "vrikshayurveda",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vrikshayurveda (original programme, rebuilt 2026)",
+  "scripts": {
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "2.12.4"
+  }
+}

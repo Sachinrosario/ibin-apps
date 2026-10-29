@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Vrikshayurveda",
+  "mainBinaryName": "vrikshayurveda",
+  "version": "1.0.0",
+  "identifier": "in.ibinapps.vrikshayurveda",
+  "build": {
+    "frontendDist": "../web"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Vrikshayurveda",
+        "width": 1360,
+        "height": 900,
+        "minWidth": 380,
+        "minHeight": 560,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "publisher": "IBIN Apps",
+    "copyright": "Vrikshayurveda (c) K.N. Ganeshaiah (proprietary right holder). Updated in 2026 by Sachin A. Rosario.",
+    "category": "Education",
+    "shortDescription": "Verses of five Sanskrit works on plant science, with plants, pictures and recitations",
+    "longDescription": "Version 1 (original): the 2011 Vrikshayurveda program rebuilt. Search 869 verses of Brihat Samhita, Krishi Parashara, Lokopakaram, Surapala Vrikshayurveda and Upavanavinoda by plant, common name, keyword or verse; hear the recitations; see each plant's classification, names, distribution, synonyms and pictures. Works offline.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    }
+  }
+}
