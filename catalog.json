@@ -829,6 +829,69 @@
       "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
       "editions": [
         {
+          "id": "sasya-sahyadri-2",
+          "key": "v2",
+          "label": "Version 2 – Scientific names updated (2026)",
+          "versionName": "Version 2 – Scientific names updated",
+          "version": "2.0.0",
+          "released": "2026-11-01",
+          "published": false,
+          "summary": "Exactly like Version 1, with the scientific names brought up to date: the 2003–04 name is kept and the current accepted name is shown in brackets.",
+          "facts": [
+            "Same screens as Version 1",
+            "3,675 names updated",
+            "New name in brackets",
+            "10,353 plant names",
+            "1,818 plants with pictures"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/sasya-sahyadri-2/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "SasyaSahyadri2_2.0.0_Setup.exe",
+              "size": "95 MB",
+              "note": "Installs beside Version 1. Adds Start-menu and desktop shortcuts. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "SasyaSahyadri2.exe",
+              "size": "108 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "SasyaSahyadri2_2.0.0_universal.dmg",
+              "size": "189 MB",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "SasyaSahyadri2_2.0.0_amd64.deb",
+              "size": "94 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "SasyaSahyadri2_2.0.0_offline.zip",
+              "size": "94 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "2.0.0",
+              "date": "2026-11-01",
+              "text": "Version 1 with updated scientific names: the current accepted name (GBIF Backbone / Catalogue of Life) is shown in brackets after the 2003–04 name. 3,675 names updated; 792 doubtful names left unchanged for a taxonomist to check."
+            }
+          ]
+        },
+        {
           "id": "sasya-sahyadri",
           "key": "v1",
           "label": "Version 1 – Original (2003–04 screens)",

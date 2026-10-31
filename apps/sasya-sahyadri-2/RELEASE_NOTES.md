@@ -1,30 +1,20 @@
-## Sasya Sahyadri – Version 1 – Original (1.0.1)
+## Sasya Sahyadri – Version 2 – Scientific names updated (2.0.0)
 
-The 2003–04 Sasya Sahyadri program ("A Database on Plants of Western Ghats") rebuilt so that it looks and works as the original did, and now runs on Windows, Mac and Ubuntu, in a browser, and offline.
+Version 2 is Version 1 exactly as it was (same screens, same search, same behaviour), with one change: the scientific names are brought up to date.
 
 Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario
 
-### Fixed in 1.0.1
-- Opening Sasya Sahyadri no longer deletes the offline copies of the other IBIN apps.
-- Windows: the program keeps running while its window is minimised, and closes when the window is closed.
-- Land-use pattern: Political / Habitat can now be switched any number of times.
-- Thematic maps: "Conservation value" no longer repeats the species map (the original grid values could not be recovered); it points to the original 3D picture.
-- Synonym data: the definition box now starts with the plant's own status.
-- Thematic legends run from low to high; the map Print button works; records from Dadra & Nagar Haveli now appear on the maps; Exit closes the program.
-
-### What it contains (all from the original database)
-- **10,353 plant names** in 246 families and 2,439 genera, each marked correct, probably correct, synonym, probably synonym or undecided, exactly as in 2004.
-- **Data Recovery Modules**: Political boundary, Land-use pattern, Gridwise (100 sq. km), Thematic maps, Images and Text-form search (common name, talukwise, scientific name).
-- **Family, Genus and Species pages**: Taxonomic hierarchy, Maps (probability of recording by district), Images (1,818 plants, 2,851 pictures), Distribution data (by political zone, biotic zone and habitat, with the flora that records each place), Synonym data, Common names (65,735 names in many languages) and the list of 148 floras.
-- The 6 land-use classes (forests, arable land, plantation, scrub and grass, unproductive land, water body) by political and by habitat distribution, and the 3D views of family, genus, species and conservation value.
+### What changed
+- Wherever the 2003–04 program showed a scientific name that is no longer the accepted one, the 2003–04 name is kept and the **current accepted name is shown in brackets after it**, for example *Hedyotis hygrophila (Oldenlandia hygrophila)*. This applies to the species lists, the species-name boxes, the synonym box and the heading of each species page.
+- **3,675 names were updated** by looking up every scientific name in the GBIF Backbone Taxonomy (built on the Catalogue of Life) in November 2026. Obvious spelling slips in the 2003–04 data (for example *Zyziphjus horrida*) are corrected the same way.
+- **792 names were left without a bracket** because the lookup gave a doubtful answer (145 not found, 264 unclear spelling matches, 6 partial synonyms, the rest accepted at sub-species level); they need a taxonomist's check.
+- Searching still works with the 2003–04 names, because the lookups behind the screens are unchanged.
 
 ### Downloads
 | File | For |
 |---|---|
-| `SasyaSahyadri_1.0.1_Setup.exe` | Windows 10/11: installs, no administrator password |
-| `SasyaSahyadri.exe` | Windows: runs without installing |
-| `SasyaSahyadri_1.0.1_universal.dmg` | macOS (Intel and Apple silicon) |
-| `SasyaSahyadri_1.0.1_amd64.deb` | Ubuntu 22.04 or newer |
-| `SasyaSahyadri_1.0.1_offline.zip` | Any computer: extract, then open `Open Kit.html` |
-
-Version 1 keeps the original's windows, buttons and behaviour. Names are as printed in 2004; updated names (Catalogue of Life) and more search options are planned for Version 2.
+| `SasyaSahyadri2_2.0.0_Setup.exe` | Windows 10/11: installs beside Version 1, no administrator password |
+| `SasyaSahyadri2.exe` | Windows: runs without installing |
+| `SasyaSahyadri2_2.0.0_universal.dmg` | macOS (Intel and Apple silicon) |
+| `SasyaSahyadri2_2.0.0_amd64.deb` | Ubuntu 22.04 or newer |
+| `SasyaSahyadri2_2.0.0_offline.zip` | Any computer: extract, then open `Open Kit.html` |
