@@ -835,7 +835,7 @@
           "versionName": "Version 1 – Original",
           "version": "1.0.0",
           "released": "2026-11-01",
-          "published": false,
+          "published": true,
           "summary": "The 2003–04 database of the plants of the Western Ghats rebuilt screen for screen: search by family, genus or species, by common name or by place; see each plant's classification, distribution maps, pictures, synonyms, common names and the floras that record it.",
           "facts": [
             "10,353 plant names",
@@ -851,35 +851,35 @@
               "os": "windows",
               "kind": "Installer",
               "file": "SasyaSahyadri_1.0.0_Setup.exe",
-              "size": "",
+              "size": "96 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password."
             },
             {
               "os": "windows",
               "kind": "No-install",
               "file": "SasyaSahyadri.exe",
-              "size": "",
+              "size": "110 MB",
               "note": "Runs straight from a folder or pen drive."
             },
             {
               "os": "mac",
               "kind": "App",
               "file": "SasyaSahyadri_1.0.0_universal.dmg",
-              "size": "",
+              "size": "192 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
               "file": "SasyaSahyadri_1.0.0_amd64.deb",
-              "size": "",
+              "size": "95 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
               "file": "SasyaSahyadri_1.0.0_offline.zip",
-              "size": "",
+              "size": "95 MB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
