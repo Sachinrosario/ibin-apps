@@ -835,7 +835,7 @@
           "versionName": "Version 2 – Scientific names updated",
           "version": "2.0.0",
           "released": "2026-11-01",
-          "published": false,
+          "published": true,
           "summary": "Exactly like Version 1, with the scientific names brought up to date: the 2003–04 name is kept and the current accepted name is shown in brackets.",
           "facts": [
             "Same screens as Version 1",
@@ -858,14 +858,14 @@
               "os": "windows",
               "kind": "No-install",
               "file": "SasyaSahyadri2.exe",
-              "size": "108 MB",
+              "size": "109 MB",
               "note": "Runs straight from a folder or pen drive."
             },
             {
               "os": "mac",
               "kind": "App",
               "file": "SasyaSahyadri2_2.0.0_universal.dmg",
-              "size": "189 MB",
+              "size": "190 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
