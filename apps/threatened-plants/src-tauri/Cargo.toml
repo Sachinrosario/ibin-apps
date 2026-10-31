@@ -1,6 +1,6 @@
 [package]
 name = "threatened-plants"
-version = "3.0.0"
+version = "1.0.0"
 description = "Threatened Plants of Western Ghats"
 edition = "2021"
 

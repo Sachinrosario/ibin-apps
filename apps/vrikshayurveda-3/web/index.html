@@ -108,6 +108,7 @@ footer{border-top:1px solid var(--line);padding:18px 0 40px;color:var(--mute);fo
 <div id="lbHost"></div>
 <audio id="audio" preload="none"></audio>
 <script src="data/vrk3.js"></script>
+<script src="data/media-base.js"></script>
 <script src="data/map.js"></script>
 <script>
 "use strict";
@@ -134,7 +135,8 @@ const hl = (txt, toks) => { let s = esc(txt); for (const t of toks) { if (t.leng
 const plural = (n, a, b) => n + ' ' + (n === 1 ? a : b);
 /* ---------- media (pictures and recitations; on the web page they come from Version 1's folder when not bundled) ---------- */
 const SHARED = '../vrikshayurveda/';
-const imgSrc = (id, t) => `img/${t ? 't/' : ''}${id}.webp`;
+const MB = window.MEDIA_BASE || '';
+const imgSrc = (id, t) => `${MB}img/${t ? 't/' : ''}${id}.webp`;
 document.addEventListener('error', e => { const el = e.target; if (el.tagName === 'IMG' && !el.dataset.fb && /^img\//.test(el.getAttribute('src') || '')) { el.dataset.fb = 1; el.src = SHARED + el.getAttribute('src'); } }, true);
 /* ---------- indexes ---------- */
 const sanByPlant = new Map(); SAN.forEach((s, i) => s.sp.forEach(p => { if (!sanByPlant.has(p)) sanByPlant.set(p, []); sanByPlant.get(p).push(i); }));
@@ -351,7 +353,7 @@ function stopAudio() { audio.pause(); audio.removeAttribute('src'); audio.load()
 function fmt(t) { t = Math.floor(t || 0); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); }
 function bind(kind) {
   if (kind === 'verse' && curVerse) {
-    const v = curVerse, src = `audio/${BPRE[v[0]]}${v[1]}.mp3`; let fb = false;
+    const v = curVerse, src = `${MB}audio/${BPRE[v[0]]}${v[1]}.mp3`; let fb = false;
     const btn = $('#play'), seek = $('#seek'), tm = $('#time');
     const setSrc = () => { audio.src = fb ? SHARED + src : src; };
     btn.onclick = () => { if (!audio.getAttribute('src')) setSrc(); audio.playbackRate = +$('#rate').value; audio.paused ? audio.play().catch(() => { }) : audio.pause(); };

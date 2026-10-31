@@ -1,6 +1,6 @@
 [package]
 name = "birds-group-identification"
-version = "3.0.0"
+version = "1.0.0"
 description = "Birds Group Identification"
 edition = "2021"
 

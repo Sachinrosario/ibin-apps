@@ -1,7 +1,7 @@
 # Build & Release
 # Builds every download for an app and publishes them on this repository's Releases page.
-# Starts by itself when apps/<app>/release.json changes (raise "version" there to release),
-# or by hand from Actions -> "Build & Release" -> Run workflow.
+# Starts by itself when apps/<app>/release.json changes (raise "version" there to release) - every app
+# changed in the push is released, each in its own run - or by hand from Actions -> "Build & Release" -> Run workflow.
 name: Build & Release
 
 on:
@@ -22,28 +22,51 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     outputs:
-      app: ${{ steps.info.outputs.app }}
-      version: ${{ steps.info.outputs.version }}
-      base: ${{ steps.info.outputs.base }}
-      tag: ${{ steps.info.outputs.tag }}
+      apps: ${{ steps.which.outputs.apps }}
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
-      - id: info
-        name: Work out app and version
+          fetch-depth: 50
+      - id: which
+        name: Work out which apps to release
+        env:
+          APP: ${{ inputs.app }}
+          BEFORE: ${{ github.event.before }}
         run: |
-          APP="${{ inputs.app }}"
-          if [ -z "$APP" ]; then APP=$(git diff --name-only HEAD~1 HEAD | grep -m1 '^apps/.*/release.json' | cut -d/ -f2); fi
-          [ -z "$APP" ] && APP=phyllanthus-rattans-kit
-          VER=$(jq -r .version apps/$APP/release.json); BASE=$(jq -r .fileBase apps/$APP/release.json)
-          echo "app=$APP" >> $GITHUB_OUTPUT; echo "version=$VER" >> $GITHUB_OUTPUT
-          echo "base=$BASE" >> $GITHUB_OUTPUT; echo "tag=$APP-v$VER" >> $GITHUB_OUTPUT
+          if [ -n "$APP" ]; then
+            LIST="$APP"
+          else
+            # every release.json changed by the whole push, not only by its last commit
+            if [ -z "$BEFORE" ] || ! git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then BEFORE=$(git rev-parse HEAD~1); fi
+            LIST=$(git diff --name-only "$BEFORE" "$GITHUB_SHA" | grep -E '^apps/[^/]+/release\.json$' | cut -d/ -f2 | sort -u)
+          fi
+          JSON=$(for a in $LIST; do [ -f "apps/$a/release.json" ] && echo "$a"; done | jq -R . | jq -sc .)
+          echo "Apps to release: $JSON"
+          echo "apps=$JSON" >> $GITHUB_OUTPUT
+
+  release:
+    needs: prepare
+    if: needs.prepare.outputs.apps != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJSON(needs.prepare.outputs.apps) }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: info
+        name: Version and file names
+        run: |
+          A=apps/${{ matrix.app }}
+          VER=$(jq -r .version $A/release.json)
+          echo "version=$VER" >> $GITHUB_OUTPUT
+          echo "base=$(jq -r .fileBase $A/release.json)" >> $GITHUB_OUTPUT
+          echo "tag=${{ matrix.app }}-v$VER" >> $GITHUB_OUTPUT
       - name: Create the release page
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          A=apps/${{ steps.info.outputs.app }}
+          A=apps/${{ matrix.app }}
           if gh release view "${{ steps.info.outputs.tag }}" >/dev/null 2>&1; then
             gh release edit "${{ steps.info.outputs.tag }}" --title "$(jq -r .title $A/release.json)" --notes-file $A/RELEASE_NOTES.md
           else
@@ -52,10 +75,22 @@ jobs:
           fi
 
   windows:
-    needs: prepare
+    needs: [prepare, release]
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJSON(needs.prepare.outputs.apps) }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - id: info
+        name: Version and file names
+        run: |
+          A=apps/${{ matrix.app }}
+          VER=$(jq -r .version $A/release.json)
+          echo "version=$VER" >> $GITHUB_OUTPUT
+          echo "base=$(jq -r .fileBase $A/release.json)" >> $GITHUB_OUTPUT
+          echo "tag=${{ matrix.app }}-v$VER" >> $GITHUB_OUTPUT
       - name: Shared pictures
         run: bash .github/share-images.sh
       - uses: actions/setup-go@v5
@@ -64,26 +99,38 @@ jobs:
       - name: Windows build tools
         run: sudo apt-get update && sudo apt-get install -y binutils-mingw-w64-x86-64 nsis
       - name: Build exe and Setup
-        working-directory: apps/${{ needs.prepare.outputs.app }}/windows
+        working-directory: apps/${{ matrix.app }}/windows
         run: |
           cp -r ../web web
-          V=${{ needs.prepare.outputs.version }}; C=$(echo $V | tr . ,)
+          V=${{ steps.info.outputs.version }}; C=$(echo $V | tr . ,)
           sed -i "s/1,0,0,0/$C,0/g; s/\"1\.0\.0\"/\"$V\"/g; s/1\.0\.0 Original/$V/g" app.rc
           x86_64-w64-mingw32-windres --preprocessor=cat -O coff -i app.rc -o rsrc_windows_amd64.syso
-          GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -ldflags "-s -w -H windowsgui" -o ${{ needs.prepare.outputs.base }}.exe .
-          makensis -V2 -DVERSION=${{ needs.prepare.outputs.version }} installer.nsi
+          GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -ldflags "-s -w -H windowsgui" -o ${{ steps.info.outputs.base }}.exe .
+          makensis -V2 -DVERSION=${{ steps.info.outputs.version }} installer.nsi
           ls -la *.exe
       - name: Attach to release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        working-directory: apps/${{ needs.prepare.outputs.app }}/windows
-        run: gh release upload "${{ needs.prepare.outputs.tag }}" ${{ needs.prepare.outputs.base }}.exe ${{ needs.prepare.outputs.base }}_${{ needs.prepare.outputs.version }}_Setup.exe --clobber
+        working-directory: apps/${{ matrix.app }}/windows
+        run: gh release upload "${{ steps.info.outputs.tag }}" ${{ steps.info.outputs.base }}.exe ${{ steps.info.outputs.base }}_${{ steps.info.outputs.version }}_Setup.exe --clobber
 
   ubuntu:
-    needs: prepare
+    needs: [prepare, release]
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJSON(needs.prepare.outputs.apps) }}
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+      - id: info
+        name: Version and file names
+        run: |
+          A=apps/${{ matrix.app }}
+          VER=$(jq -r .version $A/release.json)
+          echo "version=$VER" >> $GITHUB_OUTPUT
+          echo "base=$(jq -r .fileBase $A/release.json)" >> $GITHUB_OUTPUT
+          echo "tag=${{ matrix.app }}-v$VER" >> $GITHUB_OUTPUT
       - name: Shared pictures
         run: bash .github/share-images.sh
       - name: Ubuntu build libraries
@@ -93,25 +140,37 @@ jobs:
           node-version: 22
       - uses: dtolnay/rust-toolchain@stable
       - name: Set version number
-        working-directory: apps/${{ needs.prepare.outputs.app }}
-        run: node -e "const f='src-tauri/tauri.conf.json',c=require('./'+f);c.version='${{ needs.prepare.outputs.version }}';require('fs').writeFileSync(f,JSON.stringify(c,null,2))"
+        working-directory: apps/${{ matrix.app }}
+        run: node -e "const f='src-tauri/tauri.conf.json',c=require('./'+f);c.version='${{ steps.info.outputs.version }}';require('fs').writeFileSync(f,JSON.stringify(c,null,2))"
       - name: Build .deb
-        working-directory: apps/${{ needs.prepare.outputs.app }}
+        working-directory: apps/${{ matrix.app }}
         run: |
           npm install
           npx tauri build --bundles deb
-          cp src-tauri/target/release/bundle/deb/*.deb ${{ needs.prepare.outputs.base }}_${{ needs.prepare.outputs.version }}_amd64.deb
+          cp src-tauri/target/release/bundle/deb/*.deb ${{ steps.info.outputs.base }}_${{ steps.info.outputs.version }}_amd64.deb
       - name: Attach to release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        working-directory: apps/${{ needs.prepare.outputs.app }}
-        run: gh release upload "${{ needs.prepare.outputs.tag }}" ${{ needs.prepare.outputs.base }}_${{ needs.prepare.outputs.version }}_amd64.deb --clobber
+        working-directory: apps/${{ matrix.app }}
+        run: gh release upload "${{ steps.info.outputs.tag }}" ${{ steps.info.outputs.base }}_${{ steps.info.outputs.version }}_amd64.deb --clobber
 
   mac:
-    needs: prepare
+    needs: [prepare, release]
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJSON(needs.prepare.outputs.apps) }}
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+      - id: info
+        name: Version and file names
+        run: |
+          A=apps/${{ matrix.app }}
+          VER=$(jq -r .version $A/release.json)
+          echo "version=$VER" >> $GITHUB_OUTPUT
+          echo "base=$(jq -r .fileBase $A/release.json)" >> $GITHUB_OUTPUT
+          echo "tag=${{ matrix.app }}-v$VER" >> $GITHUB_OUTPUT
       - name: Shared pictures
         run: bash .github/share-images.sh
       - uses: actions/setup-node@v4
@@ -121,34 +180,46 @@ jobs:
         with:
           targets: aarch64-apple-darwin,x86_64-apple-darwin
       - name: Set version number
-        working-directory: apps/${{ needs.prepare.outputs.app }}
-        run: node -e "const f='src-tauri/tauri.conf.json',c=require('./'+f);c.version='${{ needs.prepare.outputs.version }}';require('fs').writeFileSync(f,JSON.stringify(c,null,2))"
+        working-directory: apps/${{ matrix.app }}
+        run: node -e "const f='src-tauri/tauri.conf.json',c=require('./'+f);c.version='${{ steps.info.outputs.version }}';require('fs').writeFileSync(f,JSON.stringify(c,null,2))"
       - name: Build .dmg (Intel and Apple silicon)
-        working-directory: apps/${{ needs.prepare.outputs.app }}
+        working-directory: apps/${{ matrix.app }}
         run: |
           npm install
           npx tauri build --target universal-apple-darwin --bundles dmg
-          cp src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg ${{ needs.prepare.outputs.base }}_${{ needs.prepare.outputs.version }}_universal.dmg
+          cp src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg ${{ steps.info.outputs.base }}_${{ steps.info.outputs.version }}_universal.dmg
       - name: Attach to release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        working-directory: apps/${{ needs.prepare.outputs.app }}
-        run: gh release upload "${{ needs.prepare.outputs.tag }}" ${{ needs.prepare.outputs.base }}_${{ needs.prepare.outputs.version }}_universal.dmg --clobber
+        working-directory: apps/${{ matrix.app }}
+        run: gh release upload "${{ steps.info.outputs.tag }}" ${{ steps.info.outputs.base }}_${{ steps.info.outputs.version }}_universal.dmg --clobber
 
   offline-zip:
-    needs: prepare
+    needs: [prepare, release]
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJSON(needs.prepare.outputs.apps) }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - id: info
+        name: Version and file names
+        run: |
+          A=apps/${{ matrix.app }}
+          VER=$(jq -r .version $A/release.json)
+          echo "version=$VER" >> $GITHUB_OUTPUT
+          echo "base=$(jq -r .fileBase $A/release.json)" >> $GITHUB_OUTPUT
+          echo "tag=${{ matrix.app }}-v$VER" >> $GITHUB_OUTPUT
       - name: Shared pictures
         run: bash .github/share-images.sh
       - name: Make offline zip and attach it
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          A=${{ needs.prepare.outputs.app }}; B=${{ needs.prepare.outputs.base }}; V=${{ needs.prepare.outputs.version }}
+          A=${{ matrix.app }}; B=${{ steps.info.outputs.base }}; V=${{ steps.info.outputs.version }}
           mkdir -p "pack/$B" && cp -r apps/$A/web/* "pack/$B/"
           mv "pack/$B/index.html" "pack/$B/Open Kit.html"
           printf 'Extract this zip, open the folder, then double-click "Open Kit.html". Keep it together with the data and img folders.\r\n' > "pack/$B/READ ME FIRST.txt"
           (cd pack && zip -qr "../${B}_${V}_offline.zip" "$B")
-          gh release upload "${{ needs.prepare.outputs.tag }}" "${B}_${V}_offline.zip" --clobber
+          gh release upload "${{ steps.info.outputs.tag }}" "${B}_${V}_offline.zip" --clobber

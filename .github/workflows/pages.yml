@@ -30,6 +30,12 @@ jobs:
           mkdir -p site
           cp index.html catalog.json site/ && mkdir -p site/apps && cp apps/*.png site/apps/
           for d in apps/*/; do n=$(basename "$d"); mkdir -p "site/$n"; cp -r "$d/web/." "site/$n/"; done
+          # apps that share another app's numbered pictures and recitations read them straight from that app's folder
+          for f in apps/*/web/img/SHARED_MEDIA_FROM; do
+            [ -f "$f" ] || continue
+            n=$(basename "$(dirname "$(dirname "$(dirname "$f")")")"); src=$(tr -d '[:space:]' < "$f")
+            echo "window.MEDIA_BASE = '../$src/';" > "site/$n/data/media-base.js"
+          done
           touch site/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

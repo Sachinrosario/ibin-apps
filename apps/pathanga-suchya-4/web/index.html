@@ -478,7 +478,12 @@ function renderQuick() {
     <section class="results"><div class="head"><span class="count">${QS.lines.length ? names.length : '–'}</span><span>${QS.lines.length ? (names.length === 1 ? 'butterfly matches' : 'butterflies match') : 'Choose a colour to see matches'}</span></div>
     ${QS.lines.length ? (names.length ? `<div class="grid">${names.map(n => { const q = K.quick.find(x => x.name === n), s = qName(q); return s ? card(s) : `<div class="card"><div class="ph" style="background-image:url('${q.photos && q.photos[0] ? q.photos[0].src : ''}')"></div><div class="tx"><b>${esc(n)}</b><div class="old">Not in the identification key</div></div></div>`; }).join('')}</div>` : '<div class="empty">No butterfly has this combination. Remove the last colour you added.</div>') : ''}</section>`;
   $('#app').querySelectorAll('[data-s]').forEach(b => b.onclick = () => { QS.slot = +b.dataset.s; renderQuick(); });
-  $('#app').querySelectorAll('[data-rm]').forEach(b => b.onclick = () => { QS.lines.splice(+b.dataset.rm, 1); renderQuick(); });
+  $('#app').querySelectorAll('[data-rm]').forEach(b => b.onclick = () => {
+    const [L] = QS.lines.splice(+b.dataset.rm, 1);
+    // eye-spot rings are counted from the centre: number the rings left on that wing part 1, 2, 3 again
+    if (L.cnt) { let n = 0; for (const x of QS.lines) if (x.slot === L.slot && x.cnt) x.cnt = ++n; }
+    renderQuick();
+  });
   if ($('#qclear')) $('#qclear').onclick = () => { QS.lines = []; renderQuick(); };
   $('#app').querySelectorAll('.swatch').forEach(b => b.onclick = () => {
     const c = b.dataset.c, kind = slot.kind;

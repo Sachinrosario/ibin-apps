@@ -238,7 +238,7 @@ const routes = { '': identify, 'species': speciesList, 'sp': speciesPage, 'chang
 function go() {
   const [r, ...a] = location.hash.replace(/^#\/?/, '').split('/');
   (routes[r] || identify)(...a.map(decodeURIComponent));
-  $$('nav.main a').forEach(x => x.toggleAttribute('aria-current', x.getAttribute('href') === '#/' + (routes[r] ? r : '').replace('sp', 'species')));
+  $$('nav.main a').forEach(x => x.toggleAttribute('aria-current', x.getAttribute('href') === '#/' + (r === 'sp' ? 'species' : routes[r] ? r : '')));
   if (r !== '' ) window.scrollTo(0, 0);
 }
 addEventListener('hashchange', go);

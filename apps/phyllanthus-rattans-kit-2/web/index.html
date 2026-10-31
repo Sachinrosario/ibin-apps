@@ -432,8 +432,10 @@ const canDownload=()=>/github\.io$|^localhost$|^127\.0\.0\.1$|^tauri\.localhost$
 
 /* ============ router ============ */
 let view={name:'home'};
-const history_=[];
-function go(v,push=true){ if(push) history_.push(view); view=v; closeSearch(); $('#nav').classList.remove('open'); render(); window.scrollTo({top:0}); }
+// each screen is a browser history entry, so the Back and Forward buttons move between screens of the kit
+const remember=(push)=>{try{history[push?'pushState':'replaceState']({...view},'');}catch(e){}};
+function go(v,push=true){ view=v; remember(push); closeSearch(); $('#nav').classList.remove('open'); render(); window.scrollTo({top:0}); }
+addEventListener('popstate',e=>{view=(e.state&&e.state.name)?e.state:{name:'home'}; closeSearch(); $('#nav').classList.remove('open'); $('#lb').hidden=true; render(); window.scrollTo({top:0});});
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-go]'); if(t){e.preventDefault();go({name:t.dataset.go});return;}
   const sp=e.target.closest('[data-sp]'); if(sp&&!e.target.closest('[data-noop]')){go({name:'species',id:+sp.dataset.sp});return;}
@@ -664,7 +666,7 @@ function species(id,tab){
   app.querySelectorAll('[data-ti]').forEach(b=>b.onclick=()=>setG(+b.dataset.ti));
   $('#galmain')&&($('#galmain').onclick=()=>openLB(order,gi));
   $('#tocmp').onclick=()=>{const peers=g?K.keys[g].records.map(r=>r.spid).filter(x=>x!==id):[];CMP=[id,...rankSimilar(id,peers).slice(0,2)];go({name:'compare'});};
-  app.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{if(b.disabled)return;view.tab=b.dataset.tab;app.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('on',x===b));tabBody(s,b.dataset.tab,cn);});
+  app.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{if(b.disabled)return;view.tab=b.dataset.tab;remember(false);app.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('on',x===b));tabBody(s,b.dataset.tab,cn);});
   tabBody(s,tab,cn);
 }
 function nameBox(s){
@@ -762,13 +764,13 @@ function drawMap(box,pts,opt={}){
   const toSvg=e=>{const r=svg.getBoundingClientRect();return [vb[0]+(e.clientX-r.left)/r.width*vb[2],vb[1]+(e.clientY-r.top)/r.height*vb[3]];};
   svg.addEventListener('wheel',e=>{e.preventDefault();const [x,y]=toSvg(e);zoom(e.deltaY<0?.8:1.25,x,y);},{passive:false});
   let drag=null;
-  svg.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,vb:[...vb],moved:false};svg.setPointerCapture(e.pointerId);});
+  svg.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,vb:[...vb],moved:false,pt:e.target.closest('circle')};svg.setPointerCapture(e.pointerId);});
   svg.addEventListener('pointermove',e=>{
     if(drag){const r=svg.getBoundingClientRect();const dx=(e.clientX-drag.x)/r.width*vb[2],dy=(e.clientY-drag.y)/r.height*vb[3];if(Math.abs(e.clientX-drag.x)+Math.abs(e.clientY-drag.y)>4)drag.moved=true;vb=[drag.vb[0]-dx,drag.vb[1]-dy,vb[2],vb[3]];svg.setAttribute('viewBox',vb.join(' '));tip.hidden=true;return;}
     const c=e.target.closest('circle');if(!c){tip.hidden=true;return;}
     const p=pts[+c.dataset.pi];const br=box.getBoundingClientRect();tip.innerHTML=`<span class="bn">${esc(p.s.name)}</span><br>${esc(p.l.location)}, ${esc(p.l.district)}`;tip.style.left=(e.clientX-br.left)+'px';tip.style.top=(e.clientY-br.top)+'px';tip.hidden=false;
   });
-  svg.addEventListener('pointerup',e=>{const moved=drag&&drag.moved;drag=null;if(moved)return;const c=e.target.closest('circle');if(c&&opt.onPick)opt.onPick(pts[+c.dataset.pi]);});
+  svg.addEventListener('pointerup',e=>{const d=drag;drag=null;if(!d||d.moved)return;const c=d.pt;if(c&&opt.onPick)opt.onPick(pts[+c.dataset.pi]);}); // the map holds the pointer while pressed, so the dot is the one pressed at pointerdown
   svg.addEventListener('pointerleave',()=>{tip.hidden=true;});
 }
 let MF={grp:'all',sp:''};
@@ -869,6 +871,6 @@ function about(){
 Promise.all([
   window.KIT_DATA?Promise.resolve(window.KIT_DATA):fetch('data/kit.json').then(r=>{if(!r.ok)throw new Error('kit '+r.status);return r.json();}),
   window.MAP_DATA?Promise.resolve(window.MAP_DATA):fetch('data/india.geojson').then(r=>{if(!r.ok)throw new Error('map '+r.status);return r.json();})
-]).then(([k,m])=>{K=k;MAP=m;K.species.forEach(s=>{s.kitName=s.name;if(s.col&&s.col.accepted)s.name=s.col.accepted;S[s.spid]=s;});buildIndex();buildLand();render();})
+]).then(([k,m])=>{K=k;MAP=m;K.species.forEach(s=>{s.kitName=s.name;if(s.col&&s.col.accepted)s.name=s.col.accepted;S[s.spid]=s;});buildIndex();buildLand();remember(false);render();})
  .catch(e=>{app.innerHTML=`<p>The kit could not be loaded (${esc(e.message)}). Reload the page to try again.</p>`;});
 </script>

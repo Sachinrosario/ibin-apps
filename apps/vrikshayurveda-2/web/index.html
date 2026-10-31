@@ -191,6 +191,7 @@ html,body{margin:0;height:100%;background:#0f3d5c;overflow:hidden;font-family:va
 </div>
 <audio id="audio" preload="none"></audio>
 <script src="data/vrk.js"></script>
+<script src="data/media-base.js"></script>
 <script>
 "use strict";
 const D = window.VRK;
@@ -214,7 +215,7 @@ const CATCOL = { 'Organisms': 1, 'Action/Properties': 2, 'Diseases/Disorders': 3
 function fit() { const s = Math.min(innerWidth / 1440, innerHeight / 900); const st = $('stage'); st.style.transform = `scale(${s})`; st.style.left = (innerWidth - 1440 * s) / 2 + 'px'; st.style.top = (innerHeight - 900 * s) / 2 + 'px'; }
 addEventListener('resize', fit); fit();
 /* pictures and recitations: on the web page they are read from Version 1's folder when this folder has none */
-const SHARED = '../vrikshayurveda/';
+const SHARED = '../vrikshayurveda/', MB = window.MEDIA_BASE || '';
 document.addEventListener('error', e => { const el = e.target; if (el.tagName === 'IMG' && !el.dataset.fb && /^img\/\d|^img\/t\//.test(el.getAttribute('src') || '')) { el.dataset.fb = 1; el.src = SHARED + el.getAttribute('src'); } }, true);
 function show(id) { for (const w of ['splash', 'first', 'search', 'shloka', 'species', 'closed']) $(w).hidden = w !== id && !(id === 'species' && w === 'shloka_keep'); closeDrop(); }
 
@@ -337,7 +338,8 @@ function runSearch() {
 }
 
 /* ---------- 4. a verse ---------- */
-const plantsOf = d => sortJ(D.master.filter(m => m[2] === d[1] && String(m[3]).includes(String(d[4]))).map(m => m[0] + ' ' + m[1]));
+// a plant belongs to a verse when that exact verse number is in its list ("3" must not match "13" or "23" as in the 2011 program)
+const plantsOf = d => sortJ(D.master.filter(m => m[2] === d[1] && verses(m[3]).includes(+d[4])).map(m => m[0] + ' ' + m[1]));
 let plantSel = -1;
 function drawShloka() {
   stopAudio();
@@ -375,7 +377,7 @@ function stopAudio() { audio.pause(); audio.removeAttribute('src'); audio.load()
 function tick() { if (audio.duration) $('wmpKnob').style.left = (audio.currentTime / audio.duration * 197).toFixed(1) + 'px'; raf = requestAnimationFrame(tick); }
 let audioFb = false;
 audio.onerror = () => { if (!audioFb && audio.getAttribute('src') && !audio.getAttribute('src').startsWith(SHARED)) { audioFb = true; audio.src = SHARED + audio.getAttribute('src'); audio.play().catch(() => {}); } };
-function playVerse() { const d = R.list[R.i]; if (!d) return; audioFb = false; audio.src = `audio/${AUDIO[d[1]]}${d[4]}.mp3`; audio.play().catch(() => {}); cancelAnimationFrame(raf); tick(); }
+function playVerse() { const d = R.list[R.i]; if (!d) return; audioFb = false; audio.src = `${MB}audio/${AUDIO[d[1]]}${d[4]}.mp3`; audio.play().catch(() => {}); cancelAnimationFrame(raf); tick(); }
 $('bSpeak').onclick = playVerse;
 $('wmpPlay').onclick = () => { if (!audio.getAttribute('src')) return playVerse(); audio.paused ? audio.play() : audio.pause(); };
 audio.onended = () => { cancelAnimationFrame(raf); $('wmpKnob').style.left = '0px'; };
@@ -447,14 +449,14 @@ function drawImages() {
   $('imgBar').src = `img/ui/imgbar_${cat}.png`;
   $('paintOff').hidden = imagesOf('P').length > 0 || cat === 'P';
   shown = imagesOf(cat);
-  $('thumbs').innerHTML = shown.map((h, i) => `<div class="tc" style="left:${(i % 6) * 118}px;top:${Math.floor(i / 6) * 134}px"><img data-i="${i}" ${h[7] ? `src="img/t/${h[0]}.webp"` : ''} alt=""><div class="cap">${esc(caption(h))}</div></div>`).join('')
+  $('thumbs').innerHTML = shown.map((h, i) => `<div class="tc" style="left:${(i % 6) * 118}px;top:${Math.floor(i / 6) * 134}px"><img data-i="${i}" ${h[7] ? `src="${MB}img/t/${h[0]}.webp"` : ''} alt=""><div class="cap">${esc(caption(h))}</div></div>`).join('')
     + `<div style="height:${Math.ceil(shown.length / 6) * 134}px;width:1px"></div>`;
   $('thumbs').scrollTop = 0;
 }
 $$('[data-tab]').forEach(t => t.onclick = () => { tab = t.dataset.tab; drawTab(); });
 $$('[data-cat]').forEach(b => b.onclick = () => { if (b.dataset.cat === 'P' && !imagesOf('P').length) return; cat = b.dataset.cat; drawImages(); });
 let vi = 0;
-function viewer(i) { vi = i; const h = shown[i]; $('vImg').src = h[7] ? `img/${h[0]}.webp` : ''; $('vCap').textContent = `${SP.g} ${SP.s} — ${caption(h) || h[5]} (${i + 1} of ${shown.length})`; $('viewer').hidden = false; }
+function viewer(i) { vi = i; const h = shown[i]; $('vImg').src = h[7] ? `${MB}img/${h[0]}.webp` : ''; $('vCap').textContent = `${SP.g} ${SP.s} — ${caption(h) || h[5]} (${i + 1} of ${shown.length})`; $('viewer').hidden = false; }
 $('thumbs').onclick = e => { const i = e.target.dataset.i; if (i !== undefined) viewer(+i); };
 $('vClose').onclick = () => $('viewer').hidden = true;
 $('viewer').onclick = e => { if (e.target.id === 'viewer') $('viewer').hidden = true; };

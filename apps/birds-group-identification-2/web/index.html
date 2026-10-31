@@ -220,7 +220,15 @@ const S = store('state') || {};
 S.mode = S.mode || 'sit'; S.ans = S.ans || {}; S.dk = S.dk || []; S.region = S.region || ''; S.month = S.month || ''; S.cur = S.cur ?? null;
 let HIST = [], SHOW = 8;
 const save = () => store('state', S);
+if (!B.modes[S.mode]) S.mode = 'sit';
 const M = () => B.modes[S.mode];
+// answers saved earlier must belong to the current mode's questions (otherwise the page could not be drawn)
+function validState() {
+  for (const i of Object.keys(S.ans)) if (!M().chars[i] || !Array.isArray(S.ans[i])) delete S.ans[i];
+  S.dk = S.dk.filter(i => M().chars[i]);
+  if (S.cur != null && !M().chars[S.cur]) S.cur = null;
+}
+validState();
 const CHAR = idx => M().chars[idx];
 const TAB = idx => B.tables[CHAR(idx).table];
 const label = (idx, k) => (TAB(idx).values.find(v => v.key === k) || { label: k }).label;
@@ -231,7 +239,7 @@ function visible(idx) {           // the marking questions appear only after "Ye
   if (c === 'neck markings' && S.mode === 'sit') return (S.ans[9] || []).includes('yes');
   return true;
 }
-function push() { HIST.push(JSON.stringify({ ans: S.ans, dk: S.dk })); if (HIST.length > 60) HIST.shift(); }
+function push() { HIST.push(JSON.stringify({ mode: S.mode, ans: S.ans, dk: S.dk, cur: S.cur })); if (HIST.length > 60) HIST.shift(); }
 
 /* ---------------- the probability model ----------------
    Original program: a group is dropped as soon as one answer does not fit it, and the ranking score is hidden.
@@ -335,7 +343,7 @@ function identify() {
   $$('[data-del]').forEach(b => b.onclick = e => { e.stopPropagation(); push(); delete S.ans[b.dataset.del]; cleanup(); save(); identify(); });
   $$('[data-edit]').forEach(c => c.onclick = () => { S.cur = +c.dataset.edit; save(); identify(); });
   $$('[data-goto]').forEach(b => b.onclick = () => { S.cur = +b.dataset.goto; save(); identify(); });
-  $('#undo').onclick = () => { const h = HIST.pop(); if (!h) return; Object.assign(S, JSON.parse(h)); save(); identify(); };
+  $('#undo').onclick = () => { const h = HIST.pop(); if (!h) return; Object.assign(S, JSON.parse(h)); validState(); save(); identify(); };
   $('#reset').onclick = () => { push(); S.ans = {}; S.dk = []; S.cur = null; save(); identify(); };
   $('#region').onchange = e => { S.region = e.target.value; save(); identify(); };
   $('#month').onchange = e => { S.month = e.target.value; save(); identify(); };

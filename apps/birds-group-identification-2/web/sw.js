@@ -3,7 +3,9 @@ const CACHE = 'bgi2-v1';
 const CORE = ['./', 'index.html', 'data/birds2.js', 'manifest.webmanifest', 'img/ui/icon.png', 'img/ui/sit.png', 'img/ui/fly.png', 'img/ui/board-sit.webp', 'img/ui/board-fly.webp',
   'fonts/kalam-latin-700-normal.woff2', 'fonts/atkinson-hyperlegible-latin-400-normal.woff2', 'fonts/atkinson-hyperlegible-latin-700-normal.woff2', 'fonts/atkinson-hyperlegible-latin-400-italic.woff2'];
 self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting())));
-self.addEventListener('activate', e => e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())));
+// All IBIN apps share one website, so only this app's own older copies are removed (never another app's offline copy).
+const PREFIX = CACHE.replace(/-v\d+$/, '-v');
+self.addEventListener('activate', e => e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE && k.startsWith(PREFIX)).map(k => caches.delete(k)))).then(() => self.clients.claim())));
 self.addEventListener('fetch', e => {
   const u = new URL(e.request.url);
   if (e.request.method !== 'GET' || u.origin !== location.origin || u.pathname.includes('__alive')) return;

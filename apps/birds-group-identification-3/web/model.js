@@ -16,8 +16,9 @@
   };
   const BILLS = { co: 'Short and conical (seed-eater)', th: 'Thin and pointed', ho: 'Hooked', ls: 'Long and straight (dagger)', dc: 'Curved downwards',
     lg: 'Large and heavy', fl: 'Flat (duck bill)', sp: 'Spoon-shaped', up: 'Curved upwards', wi: 'Tiny bill, wide gape' };
-  const BILL_NEAR = 'thco thdc lsth lsdc lglsho lgho lgco hoth flsp lgdc with'.split(' ');
-  const billNear = (a, b) => BILL_NEAR.some(x => x.includes(a) && x.includes(b) && a !== b);
+  // groups of bill shapes that are easily confused, written as 2-letter codes run together ("lglsho" = lg, ls, ho)
+  const BILL_NEAR = 'thco thdc lsth lsdc lglsho lgho lgco hoth flsp lgdc with'.split(' ').map(x => x.match(/../g));
+  const billNear = (a, b) => a !== b && BILL_NEAR.some(g => g.includes(a) && g.includes(b));
   const HAB = { W: 'Wetland, lake or marsh', S: 'Sea or coast', R: 'River or stream', F: 'Forest or woodland', O: 'Open country, fields or grassland', D: 'Dry scrub or desert', T: 'Towns, gardens, farms', M: 'Mountains (high hills)' };
   const BEH = { sw: 'Swimming', wa: 'Wading in water', gr: 'On the ground', tr: 'Perched in a tree or bush', ae: 'Flying or soaring', nt: 'Active at night' };
   const SIZE = ['', 'Tiny (sunbird, warbler)', 'Small (sparrow to bulbul)', 'Medium (myna to pigeon)', 'Large (crow, duck, kite)', 'Very large (eagle, stork, crane)'];
