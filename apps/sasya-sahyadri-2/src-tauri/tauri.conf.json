@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Sasya Sahyadri 2",
+  "mainBinaryName": "sasya-sahyadri-2",
+  "version": "2.0.0",
+  "identifier": "in.ibinapps.sasyasahyadri2",
+  "build": {
+    "frontendDist": "../web"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Sasya Sahyadri 2",
+        "width": 1100,
+        "height": 840,
+        "minWidth": 380,
+        "minHeight": 560,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "publisher": "IBIN Apps",
+    "copyright": "Sasya Sahyadri (c) K.N. Ganeshaiah (proprietary right holder). Version 2 updated in 2026 by Sachin A. Rosario.",
+    "category": "Education",
+    "shortDescription": "The 2003-04 Sasya Sahyadri plant database with current scientific names (new name in brackets)",
+    "longDescription": "Version 2 (2026): the 2003-04 Sasya Sahyadri database exactly as it was, with the scientific names updated to current accepted names (new name in brackets). Search the plants of the Western Ghats by family, genus, species, common name or grid; see taxonomy, pictures, distribution, synonyms, common names and the floras that record each plant. Works offline.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    }
+  }
+}
