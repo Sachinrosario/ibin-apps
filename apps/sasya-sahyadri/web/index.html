@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sasya Sahyadri</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0a6b5a">
+<style>
+/* Sasya Sahyadri - Version 1 (original). Every screen keeps the layout of the 2003-04 program inside a 1024x768 stage scaled to the browser. */
+html,body{margin:0;height:100%;background:#000;overflow:hidden}
+body{font:13px/1.2 "MS Sans Serif","Microsoft Sans Serif",Tahoma,Arial,sans-serif;color:#000}
+#stage{position:absolute;width:1024px;height:768px;transform-origin:0 0;overflow:hidden;user-select:none;-webkit-user-select:none;background:#000}
+#stage img{-webkit-user-drag:none}
+.scr{position:absolute;inset:0;overflow:hidden;display:none}
+.scr.on{display:block}
+.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.abs{position:absolute}
+button{font:inherit;color:#000;cursor:pointer}
+.btn{position:absolute;background:#c0c0c0;border:2px outset #fff;border-right-color:#404040;border-bottom-color:#404040;padding:0;text-align:center;line-height:16px}
+.btn:active{border-style:inset}
+.btn.dis{color:#808080;text-shadow:1px 1px #fff;pointer-events:none}
+.help{position:absolute;color:#a0300c;font-size:13px}
+/* opening */
+#open .t1{position:absolute;left:240px;top:10px;width:560px;text-align:center;font:bold 66px/70px Impact,"Arial Narrow",Arial,sans-serif;color:#8b0000;letter-spacing:1px}
+#open .t2{position:absolute;left:30px;top:194px;width:980px;font:bold 22px Arial,sans-serif;color:#00e400;white-space:nowrap}
+#open .hd{position:absolute;color:#ff9a1c;font:bold 15px Arial;text-decoration:underline}
+#open .nm{position:absolute;color:#fff;font:bold 15px Arial;text-align:center}
+#open .sm{position:absolute;color:#fff;font:14px Arial}
+#open .gb{position:absolute;background:#10b000;border:2px outset #6f6;font:italic bold 15px Arial;text-decoration:underline;text-align:center;line-height:20px;height:20px;cursor:pointer;color:#000}
+#team{position:absolute;left:230px;top:120px;width:560px;background:#fff8e8;border:2px solid #333;padding:14px 18px;display:none;font:14px/1.5 Arial;z-index:5}
+/* modules */
+#mods .in{position:absolute;left:0;top:0;width:800px;height:600px;transform:scale(1.28);transform-origin:0 0}
+#mods .fr{position:absolute;left:27px;top:77px;width:745px;height:500px;border:1px dashed #fff}
+#mods h1{position:absolute;left:0;top:44px;width:800px;margin:0;text-align:center;font:normal 24px "Arial",sans-serif;color:#0000cd;text-decoration:underline;letter-spacing:1px}
+#mods .cap{position:absolute;width:200px;text-align:center;color:#00008b;font:bold 12.5px Tahoma,Arial;text-decoration:underline;background:#fff;letter-spacing:1.5px;line-height:15px}
+#mods .tile{position:absolute;width:196px;height:206px;cursor:pointer;border:0;object-fit:fill}
+/* list panel (right side of every search screen) */
+.pan{position:absolute;left:517px;top:24px;width:498px;height:404px;background:#ffe0b4;border:2px solid #7d6d5a;box-shadow:inset 1px 1px #fff}
+.pan .ti{position:absolute;left:0;top:10px;width:100%;text-align:center;font:bold 14px Arial;color:#000}
+.pan .cb{position:absolute;top:36px;width:158px;height:50px;border:1px solid #a89878;border-top-color:#fff;background:#ffe8c4;text-align:center}
+.pan .cb b{position:absolute;left:0;top:-7px;background:#ffe0b4;margin-left:6px;padding:0 2px;font:bold 12px Arial}
+.pan .cb .n{position:absolute;left:0;top:11px;width:100%;font:bold 13.5px Arial}
+.pan .cb .s{position:absolute;left:0;top:28px;width:100%;font:11px Arial}
+.pan select{position:absolute;top:97px;width:162px;height:194px;background:#fff;border:2px inset #ccc;font:13.5px Arial;padding:0;overflow:auto}
+.pan select option{padding:1px 2px}
+.pan .note{position:absolute;left:5px;top:298px;width:488px;font:10.5px/11px Arial;color:#222}
+.pan .btn{height:20px;font:13px Arial}
+/* maps and tables */
+.peach{background:#ffdfc0}
+table.wt{border-collapse:collapse;font:13.5px Arial}
+table.wt td,table.wt th{border:1px solid #888;padding:1px 4px}
+.tab{position:absolute;top:52px;height:24px;background:#c0c0c0;border:1px solid #fff;border-right-color:#404040;border-bottom:1px solid #404040;color:#800000;font:bold 12.5px Arial;text-align:center;line-height:22px;cursor:pointer;box-sizing:border-box}
+.tab.on{background:#d4d0c8;border-bottom-color:#d4d0c8;height:26px;top:50px}
+.tp{position:absolute;left:0;top:76px;width:1024px;height:692px;display:none;overflow:hidden}
+.tp.on{display:block}
+.ttl{position:absolute;left:0;top:17px;width:978px;height:32px;text-align:center;font:bold 21px/32px Arial;color:#8b0000;letter-spacing:.5px;word-spacing:5px}
+.bar{position:absolute;left:0;top:17px;width:1024px;height:32px;object-fit:fill}
+.blue{background:#00008b;color:#fff;font:bold 12px Arial;padding:2px 3px;position:absolute;left:10px;right:2px;height:15px}
+.tree{position:absolute;background:#fff;border:1px solid #666;overflow:auto;font:15px/22px Arial}
+.tree .row{white-space:nowrap}
+.tree .tg{display:inline-block;width:12px;height:12px;border:1px solid #666;font:11px/11px Arial;text-align:center;margin-right:6px;vertical-align:middle;cursor:pointer;background:#fff}
+.legend{position:absolute;right:26px;top:6px;width:232px;background:#ffdfc0;border:1px solid #777;font:11px Arial;z-index:3}
+.legend td{padding:0 3px;font-size:11px}
+#pop{position:absolute;left:300px;top:160px;width:430px;background:#ffe0b4;border:2px solid #444;display:none;z-index:9;padding:10px;font:13px Arial}
+::-webkit-scrollbar{width:16px;height:16px}::-webkit-scrollbar-track{background:#e8e8e8}::-webkit-scrollbar-thumb{background:#c0c0c0;border:2px outset #fff}
+.mv{margin:0 auto;width:fit-content}
+</style></head>
+<body>
+<div id="stage">
+
+<!-- 1. opening screen -->
+<div id="open" class="scr on">
+  <img class="bg" src="img/ui/opening.webp" alt="">
+  <div class="t1">Sasya Sahyadri</div>
+  <img class="abs" src="img/ui/title.webp" style="left:342px;top:108px;width:310px;height:57px;border:1px solid #fff" alt="">
+  <div class="t2">Distribution,Taxonomy &amp; Diversity of Plants of Western Ghats</div>
+  <div class="hd" style="left:143px;top:259px">TEAM</div>
+  <div class="nm" style="left:50px;top:292px;width:250px;line-height:23px">Dr. K. N. GANESHAIAH<br>Dr. R. UMA SHAANKER</div>
+  <div class="hd" style="left:86px;top:358px;font-size:14px">SOFTWARE DEVELOPMENT</div>
+  <div class="sm" style="left:116px;top:391px;line-height:22px">SAGAR KATHURIA<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NANDITA</div>
+  <div class="hd" style="left:718px;top:259px;font-size:14px">SOFTWARE ASSISTANCE</div>
+  <div class="sm" style="left:745px;top:290px;line-height:20px">MANJUNATH<br>ANAND KALYAN</div>
+  <div class="hd" style="left:744px;top:341px;font-size:14px">DATA ASSISTANCE</div>
+  <div class="sm" style="left:768px;top:375px;line-height:20px">RAJANIKANTH<br>BYRE GOWDA</div>
+  <div class="sm" style="left:6px;top:692px;font-size:13px;line-height:15px">Copyright @ 2003 - 2004<br>&nbsp;&nbsp;K. N. GANESHAIAH</div>
+  <div class="sm" style="left:266px;top:670px;font-size:13px;line-height:16px"><span style="text-decoration:underline">For Details Contact :</span><br>Prof.&nbsp; K.N. Ganeshaiah<br>University&nbsp; of&nbsp; Agricultural&nbsp; Sciences<br>GKVK, Bangalore - 560 065</div>
+  <div class="sm" style="left:532px;top:676px;font-size:13px;line-height:16px">email &nbsp;:&nbsp; &nbsp;kng@vsnl.com<br>Phone : &nbsp; 91- 80- 3636276 (Off)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;91- 80- 3636412 (Res)</div>
+  <div class="sm" style="left:6px;top:742px;font-size:11px;color:#ffe">Proprietary right holder - Dr. K.N. Ganeshaiah &nbsp;·&nbsp; Updated in 2026 by Dr. Sachin A. Rosario &nbsp;·&nbsp; Version <span id="ver"></span> (original)</div>
+  <div class="gb" id="bTeam" style="left:875px;top:737px;width:44px">Team</div>
+  <div class="gb" id="bNext" style="left:925px;top:737px;width:44px">Next</div>
+  <div class="gb" id="bExit" style="left:975px;top:737px;width:44px">Exit</div>
+  <div id="team"></div>
+</div>
+
+<!-- 2. data recovery modules -->
+<div id="mods" class="scr">
+  <img class="bg" src="img/ui/valley2.webp" alt="">
+  <div class="in">
+    <div class="help" style="left:333px;top:23px;font-size:12px">Press F1 to view Help.</div>
+    <h1>DATA RECOVERY MODULES</h1>
+    <div class="fr"></div>
+    <div class="cap" style="left:75px;top:92px;width:190px">POLITICAL BOUNDARY</div>
+    <img class="tile" data-m="political" src="img/ui/tile_political.webp" style="left:75px;top:109px;width:196px;height:206px" alt="">
+    <div class="cap" style="left:306px;top:92px;width:190px">LAND USE PATTERN</div>
+    <img class="tile" data-m="land" src="img/ui/tile_land.webp" style="left:307px;top:109px;width:196px;height:206px" alt="">
+    <div class="cap" style="left:547px;top:92px;width:190px">GRIDWISE(100 Sq.kms)</div>
+    <img class="tile" data-m="grid" src="img/ui/tile_grid.webp" style="left:547px;top:109px;width:196px;height:206px" alt="">
+    <div class="cap" style="left:94px;top:332px;width:160px">THEMATIC MAPS</div>
+    <img class="tile" data-m="thematic" src="img/ui/tile_thematic.webp" style="left:75px;top:358px;width:196px;height:204px" alt="">
+    <div class="cap" style="left:329px;top:332px;width:150px">IMAGES</div>
+    <img class="tile" data-m="images" src="img/ui/tile_images.webp" style="left:307px;top:358px;width:196px;height:204px" alt="">
+    <div class="cap" style="left:570px;top:333px;width:150px">TEXTFORM SEARCH</div>
+    <div class="tile" data-m="text" style="left:547px;top:358px;width:196px;height:204px;background:url(img/ui/tile_text.webp) 0 0/100% 100%"></div>
+  </div>
+  <div class="btn" id="mHome" style="left:908px;top:6px;width:48px;height:20px;font:bold 13px Arial;text-decoration:underline">Home</div>
+  <div class="btn" id="mExit" style="left:960px;top:6px;width:48px;height:20px;font:bold 13px Arial">Exit</div>
+</div>
+
+<!-- 3. search screens that carry the list panel -->
+<div id="srch" class="scr">
+  <img class="bg" id="srchBg" src="img/ui/lake.webp" alt="">
+  <div class="help" style="left:517px;top:1px">Press F1 to view Help</div>
+  <div class="btn" id="sHome" style="left:908px;top:2px;width:48px;height:20px;font:bold 12px Arial;text-decoration:underline">Home</div>
+  <div class="btn" id="sExit" style="left:960px;top:2px;width:48px;height:20px;font:bold 12px Arial">Exit</div>
+  <div id="left"></div>
+  <div class="pan" id="pan" style="display:none"></div>
+</div>
+
+<!-- 4. detail window (species / genus / family) -->
+<div id="det" class="scr" style="background:#d4d0c8">
+  <div class="abs" style="left:0;top:0;width:1024px;height:17px;background:#00007a;color:#fff;font:bold 11px/17px Arial;padding-left:20px;box-sizing:border-box">Distribution Data</div>
+  <div class="abs" style="left:1005px;top:2px;width:15px;height:13px;background:#c0c0c0;border:1px outset #fff;font:bold 10px/12px Arial;text-align:center;color:#000">x</div>
+  <img class="bar" src="img/ui/bar.webp" alt="">
+  <div class="ttl" id="dTitle"></div>
+  <div class="btn" id="dBack" style="left:979px;top:17px;width:42px;height:30px;font:bold 11px/26px Arial;background:#c8c8c8">BACK</div>
+  <div id="tabs"></div>
+  <div id="tps"></div>
+</div>
+
+<div id="pop"></div>
+</div>
+<script src="data/ssy.js"></script>
+<script src="data/ssymap.js"></script>
+<script>
+'use strict';
+const S = window.SSY, M = window.SSYMAP;
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+$('ver').textContent = '1.0.0';
+function fit() { const s = Math.min(innerWidth / 1024, innerHeight / 768); const st = $('stage'); st.style.transform = `scale(${s})`; st.style.left = (innerWidth - 1024 * s) / 2 + 'px'; st.style.top = (innerHeight - 768 * s) / 2 + 'px'; }
+addEventListener('resize', fit); fit();
+function show(id) { document.querySelectorAll('.scr').forEach(e => e.classList.toggle('on', e.id === id)); }
+
+/* ---------- data helpers ---------- */
+const SP = S.sp, FAMS = S.fams, STCOL = ['#008000', '#808080', '#ff0000', '#c000c0', '#0000ff'], STNAME = ['Correct Name', 'Probably Correct', 'Synonym', 'Probably Synonym', 'Undecided'];
+const nm = n => SP[n][2] + ' ' + SP[n][3];
+const famOf = n => FAMS[SP[n][1]];
+const byGenus = new Map(), byFam = new Map();
+SP.forEach(x => { (byGenus.get(x[2]) || byGenus.set(x[2], []).get(x[2])).push(x[0]); (byFam.get(FAMS[x[1]]) || byFam.set(FAMS[x[1]], []).get(FAMS[x[1]])).push(x[0]); });
+const genusFam = new Map(); SP.forEach(x => { if (!genusFam.has(x[2])) genusFam.set(x[2], FAMS[x[1]]); });
+const cmp = (a, b) => a < b ? -1 : a > b ? 1 : 0;
+const FLORA = S.flora;
+const recsOf = n => S.dist[n] || [];
+const placesOf = r => S.rec[r][1].map(p => S.places[p]);
+const uniq = a => [...new Set(a)];
+function statusCounts(ids) { const c = [0, 0, 0, 0, 0]; ids.forEach(n => c[SP[n][4]]++); return c; }
+// index of species per place, built the first time it is needed
+let PIDX = null;
+function placeIndex() {
+  if (PIDX) return PIDX;
+  PIDX = {state: new Map(), district: new Map(), taluk: new Map(), blank: new Map()};
+  const add = (m, k, n) => { let s = m.get(k); if (!s) m.set(k, s = new Set()); s.add(n); };
+  for (const k in S.dist) { const n = +k; for (const r of S.dist[k]) for (const p of S.rec[r][1]) { const t = S.places[p]; add(PIDX.state, t[2], n); add(PIDX.district, t[2] + '|' + t[3], n); add(PIDX.taluk, t[2] + '|' + t[3] + '|' + t[4], n); if (!t[4]) add(PIDX.blank, t[2] + '|' + t[3], n); } }
+  return PIDX;
+}
+// a taluk's plants = those recorded in the taluk plus those recorded for its whole district (no taluk given)
+function talukSet(st, di, ta) { const X = placeIndex(), a = X.taluk.get(st + '|' + di + '|' + ta) || new Set(), b = X.blank.get(st + '|' + di) || new Set(); return [...new Set([...a, ...b])]; }
+function members(kind, key) { return kind === 'family' ? byFam.get(key) : kind === 'genus' ? byGenus.get(key) : [+key]; }
+
+/* ---------- opening screen ---------- */
+$('bNext').onclick = () => show('mods');
+$('bExit').onclick = () => { try { window.close(); } catch (e) {} show('open'); };
+$('bTeam').onclick = () => { const t = $('team'); t.style.display = t.style.display === 'block' ? 'none' : 'block'; };
+$('team').innerHTML = '<b style="font-size:17px">SASYA SAHYADRI – A DATABASE ON PLANTS OF WESTERN GHATS</b><br>Developed by K N Ganeshaiah and R Uma Shaanker, University of Agricultural Sciences, GKVK, Bangalore 560 065.<br>Supported by University of Agricultural Sciences; Department of Biotechnology and Department of Science and Technology, Government of India; Jawaharlal Nehru Center for Advanced Scientific Research; Ashoka Trust for Research in Ecology and the Environment; Suri Sehgal Family Foundation, USA.<br><b>Software development:</b> Sagar Kathuria, Nandita. <b>Database management:</b> Manjunath, Anand Kalyan, Rajanikanth. <b>Data analysis:</b> Byre Gowda. <b>Data compilation:</b> Chandra Prabha, Deepika, Lakshmi G, Lakshmidevamma, T N Malini, D R Purushotham, Padmanabh, Ramya, Sowmya L. <b>Help file:</b> Byre Gowda. <b>Image collection:</b> Dr. Mohan G.S, Kailash, Anuradha.<br><br><i>Proprietary right holder – Dr. K.N. Ganeshaiah. Updated in 2026 by Dr. Sachin A. Rosario.</i>';
+$('mHome').onclick = $('mExit').onclick = () => show('open');
+$('sHome').onclick = () => show('mods');
+$('sExit').onclick = () => show('open');
+document.querySelectorAll('[data-m]').forEach(e => e.onclick = () => openModule(e.dataset.m));
+addEventListener('keydown', e => { if (e.key === 'F1') { e.preventDefault(); popup('<b>Help</b><br>Click a picture on the Data Recovery Modules screen to start. Select a family, genus or species in the lists and press its Search button to see the full inventory of that name.<br><br><div style="text-align:center"><span class="btn" style="position:static;display:inline-block;padding:0 14px" onclick="$(\'pop\').style.display=\'none\'">OK</span></div>'); } });
+function popup(html) { const p = $('pop'); p.innerHTML = html; p.style.display = 'block'; }
+window.closePop = () => $('pop').style.display = 'none';
+
+/* ---------- list panel ---------- */
+let P = null; // {title, ids, fam, gen, sp, onSearch}
+function allIds() { return SP.map(x => x[0]); }
+function setPanel(title, ids, bg) {
+  P = {title, ids, fam: '', gen: '', sp: -1};
+  $('pan').style.display = 'block'; drawPanel();
+}
+function view() {
+  const ids = P.ids, famSet = new Set(), genSet = new Set();
+  let spIds = ids;
+  const fams = uniq(ids.map(famOf)).sort(cmp);
+  let gens = P.fam ? uniq(ids.filter(n => famOf(n) === P.fam).map(n => SP[n][2])) : uniq(ids.map(n => SP[n][2]));
+  gens.sort(cmp);
+  if (P.fam) spIds = spIds.filter(n => famOf(n) === P.fam);
+  if (P.gen) spIds = spIds.filter(n => SP[n][2] === P.gen);
+  spIds = spIds.slice().sort((a, b) => cmp(nm(a), nm(b)));
+  return {fams, gens, spIds};
+}
+function drawPanel() {
+  const v = view(), c = statusCounts(v.spIds), p = $('pan');
+  const opt = (a, sel, f) => a.map(x => `<option value="${esc(f ? f(x) : x)}"${(f ? f(x) : x) == sel ? ' selected' : ''}>${esc(f ? nm(x) : x)}</option>`).join('');
+  p.innerHTML = `<div class="ti">${esc(P.title)}</div>
+  <div class="cb" style="left:3px"><b>Number of Families</b><div class="n" style="top:24px">${v.fams.length}</div></div>
+  <div class="cb" style="left:168px"><b>Number of Genera</b><div class="n" style="top:24px">${v.gens.length}</div></div>
+  <div class="cb" style="left:333px"><b>Number of Species</b><div class="n" style="top:11px">${v.spIds.length}</div><div class="s">**(${c.join(',')})</div></div>
+  <select id="lF" size="10" style="left:3px">${opt(v.fams, P.fam)}</select>
+  <select id="lG" size="10" style="left:168px">${opt(v.gens, P.gen)}</select>
+  <select id="lS" size="10" style="left:333px">${opt(v.spIds, P.sp, x => x)}</select>
+  <div class="note">** The numbers in the bracket represents the count of valid,probably valid, synonym,probably synonym,undecided species respectively</div>
+  <div class="btn ${P.fam ? '' : 'dis'}" id="bFS" style="left:3px;top:326px;width:158px;font-style:italic"><u>F</u>amily&nbsp; Search</div>
+  <div class="btn ${P.gen ? '' : 'dis'}" id="bGS" style="left:168px;top:326px;width:158px;font-style:italic"><u>G</u>enus&nbsp; Search</div>
+  <div class="btn ${P.sp >= 0 ? '' : 'dis'}" id="bSS" style="left:333px;top:326px;width:158px;font-style:italic"><u>S</u>pecies&nbsp; Search</div>
+  <div class="btn ${P.fam || P.gen || P.sp >= 0 ? '' : 'dis'}" id="bRf" style="left:3px;top:353px;width:113px;font-weight:bold"><u>R</u>efresh</div>
+  <div class="btn" id="bCS" style="left:122px;top:353px;width:369px;font-weight:bold">To List Correct &amp; Synonym Names, Click Here</div>`;
+  const pk = (id, key, fn) => $(id).onchange = e => { fn(e.target.value); };
+  $('lF').onchange = e => { P.fam = e.target.value; P.gen = ''; P.sp = -1; drawPanel(); };
+  $('lG').onchange = e => { P.gen = e.target.value; if (P.gen && !P.fam) P.fam = genusFam.get(P.gen); P.sp = -1; drawPanel(); };
+  $('lS').onchange = e => { P.sp = +e.target.value; P.gen = SP[P.sp][2]; P.fam = famOf(P.sp); drawPanel(); $('lS').value = P.sp; };
+  $('bFS').onclick = () => P.fam && openDetail('family', P.fam);
+  $('bGS').onclick = () => P.gen && openDetail('genus', P.gen);
+  $('bSS').onclick = () => P.sp >= 0 && openDetail('species', P.sp);
+  $('bRf').onclick = () => { P.fam = ''; P.gen = ''; P.sp = -1; drawPanel(); };
+  $('bCS').onclick = () => {
+    if (P.sp < 0) return popup('<b>Correct &amp; Synonym Names</b><br>Select a species in the list first.<br><br><div style="text-align:center"><span class="btn" style="position:static;display:inline-block;padding:0 14px" onclick="closePop()">OK</span></div>');
+    const syn = uniq((S.syn[P.sp] || []).map(x => x[0])).map(t => S.synn[t]).sort((a, b) => cmp(a[0], b[0]));
+    popup(`<b>Correct &amp; Synonym Names for ${esc(nm(P.sp))}</b><div style="margin:6px 0;max-height:300px;overflow:auto;background:#fff;border:1px solid #666;padding:4px">` + [[nm(P.sp), SP[P.sp][4]], ...syn].map(x => `<div style="color:${STCOL[x[1]]}">${esc(x[0])} <small style="color:#555">(${STNAME[x[1]]})</small></div>`).join('') + '</div><div style="text-align:center"><span class="btn" style="position:static;display:inline-block;padding:0 14px" onclick="closePop()">OK</span></div>');
+  };
+}
+
+/* ---------- modules ---------- */
+let LASTMOD = '';
+function openModule(m) {
+  LASTMOD = m; show('srch'); $('pan').style.display = 'none'; $('left').innerHTML = '';
+  $('srchBg').src = 'img/ui/lake.webp';
+  if (m === 'images') { setPanel('Images are available for the listed Species', Object.keys(S.img).map(Number)); }
+  else if (m === 'text') textModule();
+  else if (m === 'political') politicalModule();
+  else if (m === 'grid') gridModule();
+  else if (m === 'land') landModule();
+  else if (m === 'thematic') thematicModule();
+}
+function selOpts(a, first) { return `<option value=""></option>` + a.map(x => `<option>${esc(x)}</option>`).join(''); }
+/* text form search */
+function textModule() {
+  const langs = uniq(Object.values(S.cm).flat().map(x => x[1])).filter(Boolean).sort(cmp);
+  const states = uniq(S.places.map(p => p[2])).filter(Boolean).sort(cmp);
+  const sel = 'position:absolute;width:165px;height:21px;font:12.5px Arial';
+  $('left').innerHTML = `<div class="abs" style="left:0;top:18px;width:400px;height:440px;border:1px solid #223;background:rgba(30,60,90,.12)"></div>
+  <div class="abs" style="left:116px;top:36px;font:bold 13px Arial;color:#00c;text-decoration:underline;letter-spacing:.5px">Common Name Search</div>
+  <div class="abs" style="left:10px;top:70px;font:bold 12px Arial;color:#00338a">Language</div><select id="xL" style="${sel};left:125px;top:64px">${selOpts(langs)}</select>
+  <div class="abs" style="left:10px;top:102px;font:bold 12px Arial;color:#00338a">Common Name</div><select id="xN" style="${sel};left:125px;top:97px"></select>
+  <div class="btn dis" id="xCS" style="left:322px;top:90px;width:62px;background:#ffb7ff">Search</div>
+  <div class="abs" style="left:0;top:136px;width:400px;border-top:1px dashed #333"></div>
+  <div class="abs" style="left:114px;top:166px;font:bold 13px Arial;color:#00c;text-decoration:underline">Political Boundry Search</div>
+  <div class="abs" style="left:34px;top:206px;font:bold 12px Arial;color:#00338a">State</div><select id="xS" style="${sel};left:125px;top:201px">${selOpts(states)}</select>
+  <div class="abs" style="left:34px;top:236px;font:bold 12px Arial;color:#00338a">District</div><select id="xD" style="${sel};left:125px;top:232px"></select>
+  <div class="abs" style="left:34px;top:265px;font:bold 12px Arial;color:#00338a">Taluk</div><select id="xT" style="${sel};left:125px;top:262px"></select>
+  <div class="btn dis" id="xPS" style="left:322px;top:226px;width:62px;background:#ffb7ff">Search</div>
+  <div class="btn" id="xPR" style="left:182px;top:294px;width:75px;font-weight:bold">Refresh</div>
+  <div class="abs" style="left:0;top:326px;width:400px;border-top:1px dashed #333"></div>
+  <div class="abs" style="left:100px;top:350px;font:bold 13px Arial;color:#00c;text-decoration:underline">Scientific Name Search</div>
+  <div class="abs" style="left:34px;top:393px;font:bold 12px Arial;color:#00338a">Family</div><select id="xF" style="${sel};left:125px;top:388px">${selOpts(FAMS)}</select>
+  <div class="abs" style="left:34px;top:423px;font:bold 12px Arial;color:#00338a">Genera</div><select id="xG" style="${sel};left:125px;top:419px"></select>
+  <div class="abs" style="left:34px;top:454px;font:bold 12px Arial;color:#00338a">Species</div><select id="xP" style="${sel};left:125px;top:450px"></select>
+  <div class="btn dis" id="xSS" style="left:322px;top:414px;width:62px;background:#ffb7ff">Search</div>
+  <div class="btn" id="xSR" style="left:182px;top:484px;width:75px;font-weight:bold">Refresh</div>`;
+  const en = (id, on) => $(id).classList.toggle('dis', !on);
+  // common names
+  $('xL').onchange = () => { const l = $('xL').value; const names = uniq(Object.values(S.cm).flat().filter(x => x[1] === l).map(x => x[0])).sort(cmp); $('xN').innerHTML = selOpts(names); en('xCS', false); };
+  $('xN').onchange = () => en('xCS', !!$('xN').value);
+  $('xCS').onclick = () => { const l = $('xL').value, n = $('xN').value; if (!n) return; const ids = Object.keys(S.cm).filter(k => S.cm[k].some(x => x[0] === n && x[1] === l)).map(Number); setPanel('Plant Richness of the Species ' + (ids.length === 1 ? nm(ids[0]) : n), ids); };
+  // political
+  $('xS').onchange = () => { const s = $('xS').value; $('xD').innerHTML = selOpts(uniq(S.places.filter(p => p[2] === s).map(p => p[3])).filter(Boolean).sort(cmp)); $('xT').innerHTML = ''; en('xPS', !!s); };
+  $('xD').onchange = () => { const s = $('xS').value, d = $('xD').value; $('xT').innerHTML = selOpts(uniq(S.places.filter(p => p[2] === s && p[3] === d).map(p => p[4])).filter(Boolean).sort(cmp)); };
+  $('xPS').onclick = () => { const s = $('xS').value, d = $('xD').value, t = $('xT').value; if (!s) return; const X = placeIndex(); setPanel('Plant Richness of the ' + (t ? 'taluk ' + t : d ? 'district ' + d : 'state ' + s), t ? talukSet(s, d, t) : [...((d ? X.district.get(s + '|' + d) : X.state.get(s)) || [])]); };
+  $('xPR').onclick = () => { $('xS').value = ''; $('xD').innerHTML = ''; $('xT').innerHTML = ''; en('xPS', false); };
+  // scientific
+  $('xF').onchange = () => { const f = $('xF').value; $('xG').innerHTML = selOpts(uniq((byFam.get(f) || []).map(n => SP[n][2])).sort(cmp)); $('xP').innerHTML = ''; en('xSS', !!f); };
+  $('xG').onchange = () => { const g = $('xG').value; $('xP').innerHTML = `<option value=""></option>` + (byGenus.get(g) || []).slice().sort((a, b) => cmp(nm(a), nm(b))).map(n => `<option value="${n}">${esc(nm(n))}</option>`).join(''); };
+  $('xSS').onclick = () => { const f = $('xF').value, g = $('xG').value, p = $('xP').value; if (!f) return; if (p) setPanel('Plant Richness of the Species ' + nm(+p), [+p]); else if (g) setPanel('Plant Richness of the Genus ' + g, byGenus.get(g)); else setPanel('Plant Richness of the Family ' + f, byFam.get(f)); };
+  $('xSR').onclick = () => { $('xF').value = ''; $('xG').innerHTML = ''; $('xP').innerHTML = ''; en('xSS', false); };
+}
+
+/* ---------- maps ---------- */
+const NS = 'http://www.w3.org/2000/svg';
+const ringPath = rs => rs.map(r => 'M' + r.map(p => p[0] + ',' + (-p[1])).join('L') + 'Z').join('');
+function mapBounds() { let a = 999, b = -999, c = 999, d = -999; M.s.forEach(s => s[1].forEach(r => r.forEach(p => { a = Math.min(a, p[0]); b = Math.max(b, p[0]); c = Math.min(c, p[1]); d = Math.max(d, p[1]); }))); return [a, b, c, d]; }
+const MB = mapBounds();
+const distIndex = (() => { const m = new Map(); M.d.forEach((d, i) => { if (d[0]) m.set(d[0] + '|' + d[1], i); (d[3] || []).forEach(a => m.set(a[0] + '|' + a[1], i)); }); return m; })();
+const stateCenter = (() => { const o = {}; M.s.forEach(s => { let x = 0, y = 0, n = 0; s[1].reduce((a, r) => a.length > r.length ? a : r, []).forEach(p => { x += p[0]; y += p[1]; n++; }); o[s[0]] = [x / n, y / n]; }); return o; })();
+const STLABEL = {'Tamilnadu': 'TAMIL NADU', 'Maharastra': 'MAHARASHTRA', 'Dadra & Nagarhaveli': ''};
+function svgMap(opt) { // opt: fills {districtIdx: color}, clipWG, borders {state,district,wg}, w,h, grid
+  const [x0, x1, y0, y1] = MB, W = x1 - x0, H = y1 - y0;
+  const wgd = M.w.map(ringPath).join('');
+  let s = `<svg xmlns="${NS}" viewBox="${x0 - .1} ${-y1 - .1} ${W + .2} ${H + .2}" width="${opt.w}" height="${opt.h || opt.w * H / W}" style="display:block" preserveAspectRatio="xMidYMid meet"><defs><clipPath id="wgc"><path clip-rule="evenodd" d="${wgd}"/></clipPath></defs>`;
+  if (opt.bg) s += `<rect x="${x0 - .1}" y="${-y1 - .1}" width="${W + .2}" height="${H + .2}" fill="${opt.bg}"/>`;
+  if (opt.stateFill) M.s.forEach(st => { s += `<path d="${ringPath(st[1])}" fill="${opt.stateFill[st[0]] || '#fff'}" stroke="none"/>`; });
+  const fills = opt.fills || {};
+  s += '<g clip-path="url(#wgc)">';
+  M.d.forEach((d, i) => { if (fills[i]) s += `<path d="${ringPath(d[2])}" fill="${fills[i]}" stroke="none"/>`; });
+  s += '</g>';
+  if (opt.extra) s += opt.extra;
+  if (opt.district) M.d.forEach(d => { s += `<path d="${ringPath(d[2])}" fill="none" stroke="#000" stroke-width="${opt.dw || .014}"/>`; });
+  if (opt.state) M.s.forEach(st => { s += `<path d="${ringPath(st[1])}" fill="none" stroke="#000" stroke-width="${opt.sw || .03}"/>`; });
+  if (opt.wg) s += `<path d="${wgd}" fill="none" stroke="#c00" stroke-width="${opt.ww || .02}" stroke-dasharray=".08 .05"/>`;
+  if (opt.labels) M.s.forEach(st => { const c = stateCenter[st[0]], t = STLABEL[st[0]] != null ? STLABEL[st[0]] : st[0].toUpperCase(); if (t) s += `<text x="${c[0]}" y="${-c[1]}" font-size="${opt.fs || .27}" font-family="Arial" fill="${opt.lc || '#000'}" text-anchor="middle" font-weight="bold">${t}</text>`; });
+  return s + '</svg>';
+}
+const RAMPS = {sp: ['#c8f4ff', '#b4f0c4', '#82f082', '#12e812', '#00b400', '#007800', '#004800'], fam: ['#ffc060', '#ff9a30', '#ff6a00', '#ff2800', '#d00000', '#9a0000', '#5a0000']};
+function richness(ids, species) { // returns {fills, legend rows}
+  const per = new Map();
+  ids.forEach(n => recsOf(n).forEach(r => { const fl = S.rec[r][0]; placesOf(r).forEach(t => { const i = distIndex.get(t[2] + '|' + t[3]); if (i == null) return; let s = per.get(i); if (!s) per.set(i, s = new Set()); s.add(species ? fl : n); }); }));
+  const val = new Map([...per].map(([i, s]) => [i, s.size])); const mx = Math.max(1, ...val.values());
+  const k = Math.min(7, mx), step = mx <= 7 ? 1 : Math.ceil(mx / 7);
+  const ramp = species ? RAMPS.sp : RAMPS.fam, fills = {}, rows = [];
+  for (let c = 0; c < k; c++) { const lo = c * step + 1, hi = mx <= 7 ? c + 1 : Math.min(mx, (c + 1) * step); rows.push([ramp[c], lo, hi]); }
+  val.forEach((v, i) => { const c = Math.min(rows.length - 1, Math.floor((v - 1) / step)); fills[i] = rows[c][0]; });
+  return {fills, rows};
+}
+function mapTab(ids, species, host) {
+  const rich = richness(ids, species);
+  let ST = {state: true, district: true, wg: true};
+  const draw = () => {
+    host.querySelector('.mv').innerHTML = svgMap({w: 540, h: 880, fills: rich.fills, state: ST.state, district: ST.district, wg: ST.wg, labels: true, bg: '#ffdfc0', fs: .3, dw: .012, sw: .028});
+    host.querySelector('[data-b=state]').innerHTML = (ST.state ? 'Cancel' : 'Apply') + ' State<br>Border';
+    host.querySelector('[data-b=district]').innerHTML = (ST.district ? 'Cancel' : 'Apply') + ' District<br>Border';
+    host.querySelector('[data-b=wg]').innerHTML = (ST.wg ? 'Cancel' : 'Apply') + ' Western<br>Ghat Border';
+  };
+  host.innerHTML = `<div class="blue" style="top:7px;width:1002px">Biodiversity Database Maps</div>
+  <div class="abs" style="left:10px;top:30px;width:1010px;height:36px;background:#c0c0c0"></div>
+  <div class="btn" style="left:12px;top:30px;width:32px;height:32px"><span style="font-size:20px;line-height:30px">&#128194;</span></div>
+  <div class="btn" style="left:48px;top:30px;width:32px;height:32px"><span style="font-size:20px;line-height:30px">&#127760;</span></div>
+  <div class="btn" style="left:84px;top:30px;width:32px;height:32px"><span style="font-size:20px;line-height:30px">&#128424;</span></div>
+  <div class="btn" data-b="state" style="left:122px;top:30px;width:92px;height:34px;font:bold 12px/14px Arial;padding-top:3px"></div>
+  <div class="btn" data-b="district" style="left:218px;top:30px;width:92px;height:34px;font:bold 12px/14px Arial;padding-top:3px"></div>
+  <div class="btn" data-b="wg" style="left:314px;top:30px;width:110px;height:34px;font:bold 12px/14px Arial;padding-top:3px"></div>
+  <div class="abs peach" style="left:10px;top:68px;width:1004px;height:620px;overflow:auto"><div class="mv"></div></div>
+  <div class="legend"><div style="text-align:center;font-size:12px;padding:3px">Legend</div><table style="width:100%;border-collapse:collapse"><tr style="background:#e8e8e8"><td style="border:1px solid #888;width:20px"></td><td style="border:1px solid #888">Min</td><td style="border:1px solid #888">Max</td></tr><tr><td></td><td colspan="2" style="border:1px solid #888">${species ? 'Probability of Rec...' : 'Number of species'}</td></tr>${rich.rows.map(r => `<tr><td style="background:${r[0]};border:1px solid #666"></td><td style="border:1px solid #bbb">${r[1]}</td><td style="border:1px solid #bbb">${r[2]}</td></tr>`).join('')}</table></div>`;
+  host.querySelectorAll('[data-b]').forEach(b => b.onclick = () => { ST[b.dataset.b] = !ST[b.dataset.b]; draw(); });
+  draw();
+}
+
+/* political boundary module */
+function politicalModule() {
+  const sf = {'Gujarat': '#e8f4c8', 'Maharastra': '#e8d800', 'Dadra & Nagarhaveli': '#e8f4c8', 'Goa': '#fff', 'Karnataka': '#d8dcf8', 'Kerala': '#ffd4d4', 'Tamilnadu': '#d8f4ff'};
+  $('left').innerHTML = `<div class="abs" style="left:0;top:0;width:500px;height:768px;background:#0000ff;overflow:hidden"><div id="pm" style="margin:50px 0 0 -20px">${svgMap({w: 560, stateFill: sf, state: true, district: false, labels: true, fs: .3, lc: '#c00000', sw: .02, ww: .01})}</div></div>
+  <div class="abs" style="left:4px;top:735px;width:510px;font:11px/13px Arial;color:#fff">Double Click on the Map to View the Species Richness of Western Ghats OR<br>Click on the State Name to View its Species Richness in Western Ghat Region.</div>`;
+  const svg = $('pm').firstChild, pt = svg.createSVGPoint();
+  const hit = e => { pt.x = e.clientX; pt.y = e.clientY; const q = pt.matrixTransform(svg.getScreenCTM().inverse()); return [q.x, -q.y]; };
+  const stateAt = c => { for (const st of M.s) { for (const r of st[1]) if (inRing(c, r)) return st[0]; } return ''; };
+  svg.addEventListener('dblclick', e => setPanel('Plant Richness of Entire Western Ghats', allIds()));
+  svg.addEventListener('click', e => { const s = stateAt(hit(e)); if (s && s !== 'Dadra & Nagarhaveli') setPanel('Plant Richness of the State ' + s, [...(placeIndex().state.get(s) || [])]); });
+  setPanel('Plant Richness of Entire Western Ghats', allIds());
+}
+function inRing(pt, ring) { let c = false; for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) { const a = ring[i], b = ring[j]; if ((a[1] > pt[1]) !== (b[1] > pt[1]) && pt[0] < (b[0] - a[0]) * (pt[1] - a[1]) / (b[1] - a[1]) + a[0]) c = !c; } return c; }
+
+/* grid module */
+const GR = S.grids; // [grid,state,district,taluk,x,y,fam,gen,sp,minx,maxx,miny,maxy]
+function gridModule() {
+  const [x0, x1, y0, y1] = (() => { let a = 999, b = 0, c = 999, d = 0; GR.forEach(g => { a = Math.min(a, g[9]); b = Math.max(b, g[10]); c = Math.min(c, g[11]); d = Math.max(d, g[12]); }); return [a, b, c, d]; })();
+  const W = x1 - x0, H = y1 - y0, sc = 720 / H;
+  const cells = GR.map((g, i) => `<rect data-i="${i}" x="${g[9]}" y="${-g[12]}" width="${g[10] - g[9]}" height="${g[12] - g[11]}" fill="#fff" stroke="#000" stroke-width=".004"/>`).join('');
+  $('left').innerHTML = `<div class="abs" style="left:0;top:0;width:500px;height:768px;background:#80ffff;overflow:auto"><svg id="gs" xmlns="${NS}" viewBox="${x0 - .05} ${-y1 - .05} ${W + .1} ${H + .1}" width="${(W + .1) * sc}" height="${(H + .1) * sc}" style="margin:12px 0 0 10px">${cells}<path d="${M.w.map(ringPath).join('')}" fill="none" stroke="#c00" stroke-width=".012" stroke-dasharray=".05 .04"/><rect id="gsel" width="0" height="0" fill="none" stroke="#f00" stroke-width=".02"/></svg></div>
+  <div class="abs" id="gInfo" style="left:643px;top:432px;width:268px;height:122px;background:#ffcccc;border:1px solid #a88;font:bold 15px/32px Arial;color:#700;padding:2px 10px;box-sizing:border-box;display:none"></div>
+  <div class="abs" style="left:643px;top:572px;width:212px;height:122px;background:#ffcccc;border:1px solid #a88;font:bold 14px Arial;color:#700;padding:2px 10px;box-sizing:border-box"><div style="text-decoration:underline;margin:3px 0 8px">Enter Longitude &amp; Latitude</div>
+  <div style="margin:5px 0">Longitude : <input id="gLo" style="width:94px;font:12px Arial"></div><div style="margin:5px 0">Latitude : &nbsp;&nbsp;<input id="gLa" style="width:94px;font:12px Arial"></div><div class="btn" id="gEnter" style="left:90px;top:94px;width:52px;height:20px;font-weight:bold">Enter</div></div>`;
+  const pick = i => { const g = GR[i]; const r = $('gsel'); r.setAttribute('x', g[9]); r.setAttribute('y', -g[12]); r.setAttribute('width', g[10] - g[9]); r.setAttribute('height', g[12] - g[11]);
+    $('gInfo').style.display = 'block'; $('gInfo').innerHTML = `<div style="text-decoration:underline;color:#900;margin-top:-4px">The Grid you Selected Lies at</div>State : ${esc(g[1])}<br>District : ${esc(g[2])}<br>Taluk : ${esc(g[3])}`;
+    setPanel('GRIDWISE(100 Sq.kms) SEARCH', talukSet(g[1], g[2], g[3])); };
+  $('gs').addEventListener('click', e => { const t = e.target.closest('[data-i]'); if (t) pick(+t.dataset.i); });
+  $('gEnter').onclick = () => { const lo = parseFloat($('gLo').value), la = parseFloat($('gLa').value); const i = GR.findIndex(g => lo >= g[9] && lo <= g[10] && la >= g[11] && la <= g[12]); if (i >= 0) pick(i); else popup('<b>No grid found</b><br>The longitude and latitude entered are outside the Western Ghats grids.<br><br><div style="text-align:center"><span class="btn" style="position:static;display:inline-block;padding:0 14px" onclick="closePop()">OK</span></div>'); };
+  setPanel('GRIDWISE(100 Sq.kms) SEARCH', allIds());
+}
+
+/* land use module */
+function landModule() {
+  const cls = [['forest', 'Forests', '#008000'], ['agri', 'Arable Land', '#ffff00'], ['plant', 'Plantation', '#c000c0'], ['scrub', 'Scrub and Grass', '#00ff00'], ['unprod', 'Unproductive Land', '#808080'], ['water', 'Water body', '#0000ff']];
+  const order = [cls[1], cls[2], cls[0], cls[3], cls[4], cls[5]];
+  $('left').innerHTML = `<div class="abs" style="left:0;top:0;width:512px;height:768px;background:#c8ffff"><img src="img/ui/tile_land.webp" style="position:absolute;left:12px;top:6px;width:380px;height:748px;object-fit:fill" alt=""></div>
+  <div class="abs" style="left:520px;top:452px;width:495px;height:112px;background:#ffc8c8;border:1px solid #a88;font:bold 12px Arial">
+   <div class="abs" style="left:2px;top:3px;white-space:nowrap"><input type="radio" name="lm" id="lP" checked style="margin:0"> Political Distributionwise <input type="radio" name="lm" id="lH" style="margin:0 0 0 4px"> Habitat Distributionwise</div>
+   <div class="abs" style="left:12px;top:32px;width:470px;text-align:center;color:#a00;font-size:10.5px;line-height:11px;text-decoration:underline;font-weight:bold">Click on the Corresponding Button to View the List of Species<br>Based on Political Distribution of Habitat or Based on Habitat</div>
+   ${order.map((c, i) => `<div class="abs" data-c="${c[0]}" style="left:${i % 2 ? 252 : 12}px;top:${68 + Math.floor(i / 2) * 19 - 6}px;cursor:pointer;font:bold 12px Arial"><span style="display:inline-block;width:15px;height:11px;background:${c[2]};border:1px solid #333;vertical-align:middle;margin-right:12px"></span>${c[1]}</div>`).join('')}</div>`;
+  const go = k => { const hab = $('lH').checked; const c = cls.find(x => x[0] === k); setPanel(c[1] + ' in Western ghats(' + (hab ? 'Habitat' : 'Political') + ' Distributionwise)', S.land[k + (hab ? 'H' : 'P')]); };
+  $('left').querySelectorAll('[data-c]').forEach(b => b.onclick = () => go(b.dataset.c));
+  $('left').querySelectorAll('input[name=lm]').forEach(r => r.onchange = () => { if (P && P.land) go(P.land); });
+  const old = setPanel; // remember the last class
+  $('left').querySelectorAll('[data-c]').forEach(b => { const f = b.onclick; b.onclick = () => { f(); P.land = b.dataset.c; }; });
+}
+
+/* thematic maps */
+function thematicModule() {
+  $('srchBg').src = 'img/ui/lake.webp';
+  const opts = [['fam', 'FAMILY DISTRIBUTION', 6], ['gen', 'GENERA DISTRIBUTION', 7], ['sp', 'SPECIES DISTRIBUTION', 8], ['co', 'CONSERVATION VALUE', 0]];
+  const views = [['WG_fa', '3D VIEW OF FAMILY DISTRIBUTION'], ['WG_ge', '3D VIEW OF GENERA DISTRIBUTION'], ['WG_Sp', '3D VIEW OF SPECIES DISTRIBUTION'], ['wg_co', '3D VIEW OF CONSERVATION VALUE']];
+  $('left').innerHTML = `<div class="abs" id="tm" style="left:0;top:0;width:500px;height:768px;background:#e6e6e6;overflow:hidden"></div>
+  <div class="abs" style="left:517px;top:22px;width:235px;height:176px;background:#008080;color:#fff;font:10.5px Arial;padding:6px 6px;box-sizing:border-box;line-height:17px;white-space:nowrap">
+  ${opts.map((o, i) => `<div><input type="radio" name="tmr" data-k="${o[0]}" ${i === 0 ? 'checked' : ''} style="margin:0 4px 0 0;vertical-align:middle">${o[1]}</div>`).join('')}<div style="height:4px"></div>
+  ${views.map(v => `<div><input type="radio" name="tmr" data-v="${v[0]}" style="margin:0 4px 0 0;vertical-align:middle">${v[1]}</div>`).join('')}</div>`;
+  const G = k => GR.map(g => g[{fam: 6, gen: 7, sp: 8}[k]]);
+  const title = {fam: 'Number of families per grid', gen: 'Number of Genera per grid', sp: 'Number of Species per grid'};
+  const pal = ['#e00000', '#ff4a00', '#ff8000', '#ffaa00', '#ffdd00', '#ffff66', '#c8d848', '#98c050', '#c0a868', '#a07050'];
+  const draw = k => {
+    const host = $('tm');
+    if (k === 'co') { host.innerHTML = `<div style="margin:14px 0 0 14px;font:bold 16px Arial;color:#222">Conservation value of the grids</div><div style="margin:8px 14px;font:13px Arial">This map shows the relative conservation value of each 100 sq. km grid. Use the 3D view option to see the conservation value surface.</div>` + gridSvg(GR.map(g => g[8]), pal, 'Conservation value (species per grid)'); return; }
+    host.innerHTML = gridSvg(G(k), pal, title[k]);
+  };
+  function gridSvg(vals, pal, ttl) {
+    const sorted = vals.slice().sort((a, b) => b - a), n = pal.length; const cuts = []; for (let i = 0; i <= n; i++) cuts.push(sorted[Math.min(sorted.length - 1, Math.round(i * (sorted.length - 1) / n))]);
+    const cl = v => { for (let i = 0; i < n; i++) if (v >= cuts[i + 1]) return i; return n - 1; };
+    let a = 999, b = 0, c = 999, d = 0; GR.forEach(g => { a = Math.min(a, g[9]); b = Math.max(b, g[10]); c = Math.min(c, g[11]); d = Math.max(d, g[12]); });
+    const W = b - a, H = d - c, sc = 740 / H;
+    const rects = GR.map((g, i) => `<rect x="${g[9]}" y="${-g[12]}" width="${g[10] - g[9] + .002}" height="${g[12] - g[11] + .002}" fill="${pal[cl(vals[i])]}"/>`).join('');
+    const leg = pal.map((p, i) => `<div style="margin:2px 0;font:bold 12px Arial;color:#003"><span style="display:inline-block;width:13px;height:13px;background:${p};vertical-align:middle;margin-right:12px"></span>${cuts[i]} to ${cuts[i + 1]}</div>`).join('');
+    return `<div style="position:absolute;left:120px;top:20px;width:370px;text-align:center;font:bold 14px Arial;color:#000">${ttl}<br>(100 sq. Km)</div><div style="position:absolute;left:130px;top:70px">${leg}</div><svg xmlns="${NS}" viewBox="${a} ${-d} ${W} ${H}" width="${W * sc}" height="${H * sc}" style="position:absolute;left:8px;top:14px">${rects}</svg>`;
+  }
+  $('left').querySelectorAll('input[name=tmr]').forEach(r => r.onchange = () => { if (r.dataset.v) $('tm').innerHTML = `<img src="img/ui/${r.dataset.v}.webp" style="width:500px;height:768px;object-fit:contain;background:#000" alt="">`; else draw(r.dataset.k); });
+  draw('fam');
+}
+
+/* ---------- detail window ---------- */
+const TABS = {species: ['Taxonomic Hierarchy', 'Maps', 'Images', 'Distribution Data', 'Synonym Data', 'Common Names', 'Flora'], genus: ['Taxonomic Hierarchy', 'Maps', 'Distribution Data', 'Flora'], family: ['Taxonomic Hierarchy', 'Maps', 'Distribution Data', 'Flora']};
+let DET = null;
+function openDetail(kind, key) {
+  DET = {kind, key, ids: members(kind, key)}; show('det');
+  const ttl = kind === 'species' ? `Digitized Inventory of <i>${esc(nm(+key))}</i> with its synonyms in Western Ghats` : `Digitized Inventory of <i>${esc(key)}</i> in Western Ghats`;
+  $('dTitle').innerHTML = ttl.replace(/<\/?i>/g, '').replace(/^Digitized Inventory of (.*?)( with| in)/, (m, a, b) => `Digitized Inventory of&nbsp; ${a}&nbsp;${b}`);
+  const names = TABS[kind], w = 1024 / names.length;
+  $('tabs').innerHTML = names.map((t, i) => `<div class="tab" data-t="${t}" style="left:${i * w}px;width:${w}px">${t}</div>`).join('');
+  $('tps').innerHTML = names.map(t => `<div class="tp" data-p="${t}"></div>`).join('');
+  $('tabs').querySelectorAll('.tab').forEach(t => t.onclick = () => tab(t.dataset.t));
+  tab('Taxonomic Hierarchy');
+}
+$('dBack').onclick = () => show('srch');
+const BUILT = {};
+function tab(t) {
+  document.querySelectorAll('#tabs .tab').forEach(e => e.classList.toggle('on', e.dataset.t === t));
+  document.querySelectorAll('#tps .tp').forEach(e => e.classList.toggle('on', e.dataset.p === t));
+  const host = document.querySelector(`#tps .tp[data-p="${t}"]`), k = DET.kind + DET.key + '|' + t;
+  if (host.dataset.k === k) return; host.dataset.k = k;
+  ({'Taxonomic Hierarchy': tHier, 'Maps': tMaps, 'Images': tImages, 'Distribution Data': tDist, 'Synonym Data': tSyn, 'Common Names': tCommon, 'Flora': tFlora})[t](host);
+}
+function floraOf(ids) { const s = new Set(); ids.forEach(n => recsOf(n).forEach(r => s.add(S.rec[r][0]))); return [...s].filter(f => FLORA[f]).sort((a, b) => cmp(FLORA[a][0].toLowerCase(), FLORA[b][0].toLowerCase())); }
+function tHier(h) {
+  const fam = DET.kind === 'family' ? DET.key : DET.kind === 'genus' ? genusFam.get(DET.key) : famOf(+DET.key);
+  const fi = FAMS.indexOf(fam), hi = S.hier[fi] || ['', '', '', '', ''];
+  const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : '';
+  const rows = [['Kingdom', hi[4] || 'Plants'], ['Phylum', hi[3]], ['Class', hi[2]], ['Subclass', hi[1]], ['Order', hi[0]], ['Family', cap(fam)]];
+  const extra = DET.kind === 'species' ? [] : [];
+  h.innerHTML = `<img class="bg" src="img/ui/mount.webp" alt="" style="height:692px">` + rows.map((r, i) => `<div class="abs" style="left:263px;top:${186 + i * 31}px;color:#fff;font:bold 13px Arial">${r[0]}</div><div class="abs" style="left:351px;top:${184 + i * 31}px;width:232px;height:22px;border:2px solid #fff;border-right-color:#444;border-bottom-color:#444;box-sizing:border-box;color:#2bff2b;font:bold 14px/18px Arial;padding-left:3px;background:rgba(0,0,0,.18)">${esc(r[1])}</div>`).join('');
+}
+function tMaps(h) { mapTab(DET.ids, DET.kind === 'species', h); }
+function tImages(h) {
+  const L = S.img[DET.key] || []; let i = 0;
+  const draw = () => {
+    if (!L.length) { h.innerHTML = `<div class="blue" style="top:6px;width:1002px">Images</div><div class="abs" style="left:14px;top:40px;font:14px Arial">No picture is available for this species.</div>`; return; }
+    const [f, src] = L[i];
+    h.innerHTML = `<div class="blue" style="top:6px;width:1002px">Images</div><div class="abs" style="left:10px;top:23px;width:1004px;height:620px;background:#c0c0c0;overflow:hidden"><img src="img/${f}.webp" style="max-width:700px;max-height:600px;display:block" alt=""><div style="position:absolute;left:325px;bottom:6px;color:#f00;font:20px Arial;text-shadow:0 0 2px #000">${src ? 'Courtesy:&nbsp; ' + esc(src) : ''}</div></div>
+    <div class="abs" style="left:10px;top:652px;width:1004px;height:18px;background:#fff;border:1px solid #444;font:bold 12px/16px Arial;padding-left:56px;box-sizing:border-box">${i + 1} of ${L.length}</div>
+    <div class="btn" data-n="0" style="left:10px;top:652px;width:16px;height:18px;line-height:14px">|&lt;</div><div class="btn" data-n="-1" style="left:28px;top:652px;width:16px;height:18px;line-height:14px">&lt;</div><div class="btn" data-n="1" style="left:980px;top:652px;width:16px;height:18px;line-height:14px">&gt;</div><div class="btn" data-n="9" style="left:998px;top:652px;width:16px;height:18px;line-height:14px">&gt;|</div>`;
+    h.querySelectorAll('[data-n]').forEach(b => b.onclick = () => { const n = +b.dataset.n; i = n === 0 ? 0 : n === 9 ? L.length - 1 : Math.max(0, Math.min(L.length - 1, i + n)); draw(); });
+  };
+  draw();
+}
+function tDist(h) {
+  const ids = DET.ids; let mode = 2, selP = null, selFlora = null;
+  const recs = uniq(ids.flatMap(recsOf));
+  const draw = () => {
+    // places of these records
+    const rows = new Map(); const polRows = new Map(), bioRows = new Map();
+    const floraSet = new Map();
+    recs.forEach(r => { const f = S.rec[r][0]; S.rec[r][1].forEach(p => { const t = S.places[p]; const pk = [t[0], t[1], t[2], t[3], t[4]].join('|'), bk = [t[5], t[6]].join('|'); const ok = (!selP || (selP.k === 'p' ? selP.v === pk : selP.v === bk)); if (!ok) return; if (!floraSet.has(f)) floraSet.set(f, new Set()); if (t[7]) floraSet.get(f).add(t[7] + (t[4] ? ',' + t[4] : '')); }); });
+    S.__ = null;
+    const allPol = new Map(), allBio = new Map();
+    recs.forEach(r => S.rec[r][1].forEach(p => { const t = S.places[p]; allPol.set([t[0], t[1], t[2], t[3], t[4]].join('|'), [t[0], t[1], t[2], t[3], t[4]]); allBio.set([t[5], t[6]].join('|'), [t[5], t[6]]); }));
+    const pol = [...allPol.values()].sort((a, b) => cmp(a.join('|'), b.join('|'))), bio = [...allBio.values()].sort((a, b) => cmp(a.join('|'), b.join('|')));
+    const blank = (rows, i, k) => i > 0 && rows[i].slice(0, k + 1).join('|') === rows[i - 1].slice(0, k + 1).join('|');
+    const floras = [...floraSet.keys()].filter(f => FLORA[f]).sort((a, b) => cmp(FLORA[a][0].toLowerCase(), FLORA[b][0].toLowerCase()));
+    const fl = floras.map(f => { const x = FLORA[f]; return `<tr data-f="${f}" style="background:${selFlora == f ? '#ffd0d0' : '#fff'};cursor:pointer"><td style="width:20px;text-align:center;background:#ff8080">${floraSet.get(f).size ? (selFlora == f ? '--' : '+') : ''}</td><td style="width:260px;text-align:left">${esc(x[0])}</td><td style="width:50px;text-align:right">${esc(x[1])}</td><td style="width:260px">${esc(x[2])}</td><td style="width:60px;text-align:right">${esc(x[3])}</td><td style="width:40px;text-align:right">${esc(x[4])}</td></tr>${selFlora == f ? `<tr><td></td><td colspan="5"><select size="4" style="width:240px;font:12px Arial;background:#e0e0e0">${[...floraSet.get(f)].sort().map(m => `<option>${esc(m)}</option>`).join('')}</select></td></tr>` : ''}`; }).join('');
+    const cell = (v, show, sel) => `<td style="background:${show ? '#fff' : '#c8c8c8'};border-color:#999;${sel ? 'font-weight:bold' : ''}">${show ? esc(v) : ''}</td>`;
+    const polT = pol.map((r, i) => `<tr data-pk="${esc(r.join('|'))}" style="cursor:pointer;${selP && selP.k === 'p' && selP.v === r.join('|') ? 'background:#cde' : ''}">${cell(r[0], !blank(pol, i, 0))}${cell(r[1], !blank(pol, i, 1))}${cell(r[2], !blank(pol, i, 2))}${cell(r[3], !blank(pol, i, 3))}${cell(r[4], !blank(pol, i, 4) && r[4])}</tr>`).join('');
+    const bioT = bio.map((r, i) => `<tr data-bk="${esc(r.join('|'))}" style="cursor:pointer;${selP && selP.k === 'b' && selP.v === r.join('|') ? 'background:#cde' : ''}">${cell(r[0], !blank(bio, i, 0) && r[0])}${cell(r[1], true)}</tr>`).join('');
+    const sf = DET.kind === 'species' ? [famOf(+DET.key), SP[+DET.key][2], SP[+DET.key][3]] : DET.kind === 'genus' ? [genusFam.get(DET.key), DET.key, ''] : [DET.key, '', ''];
+    const sel = selP ? selP.v.split('|') : ['', '', '', '', ''];
+    h.innerHTML = `<div class="blue" style="top:6px;width:1002px">Distribution Data</div>
+    <div class="abs" style="left:12px;top:30px;width:520px;height:40px;background:#c0c0ff;border:1px solid #889"><div style="font:bold 13px/15px Arial;padding:3px 2px"><label><input type="radio" name="dm" value="0" ${mode === 0 ? 'checked' : ''}> Political Zone</label> <label style="display:inline-block;vertical-align:top;margin-left:4px"><input type="radio" name="dm" value="1" ${mode === 1 ? 'checked' : ''}> Biotic and habitat<br>&nbsp;&nbsp;&nbsp;&nbsp;Zone</label> <label style="display:inline-block;vertical-align:top"><input type="radio" name="dm" value="2" ${mode === 2 ? 'checked' : ''}> Political,habitat and Biotic<br>&nbsp;&nbsp;&nbsp;&nbsp;Zone</label></div></div>
+    ${sf.map((v, i) => `<div class="abs" style="left:${540 + i * 156}px;top:32px;width:150px;height:20px;background:#fff;border:1px solid #888;color:#777;font:12px/18px Arial;padding-left:2px;box-sizing:border-box">${esc(v)}</div>`).join('')}
+    <div class="abs" style="left:12px;top:72px;width:760px;text-align:center;color:#aaffff;background:#0a0;font:bold 11px Arial;display:none">x</div>
+    <div class="abs" style="left:12px;top:72px;width:760px;font:11px Arial;color:#0ff;text-align:center;background:#80c0ff;padding:1px 0">Click on '+' to view the Miscelleneous Place Recordings.</div>
+    <div class="abs" style="left:12px;top:88px;width:765px;height:182px;overflow:auto;background:#e0e0e0;border:1px solid #666"><table class="wt" style="width:100%;font-size:12.5px"><tr style="background:#ff8080;color:#000"><th style="width:20px"></th><th>Flora Name</th><th>Volume</th><th>Author</th><th>Edition</th><th>YOP</th></tr>${fl}</table></div>
+    <div class="abs" style="left:12px;top:278px;width:1000px;font:11px Arial;color:#fff;background:#80c0ff;text-align:center;padding:1px 0;color:#000">Click on the required country,zone,state,district,taluk,Biotic Zone,Habitat to view its corresponding flora</div>
+    <div class="abs" style="left:12px;top:296px;width:630px;height:375px;overflow:auto;background:#fff;border:1px solid #666;${mode === 1 ? 'opacity:.4' : ''}"><table class="wt" style="width:100%"><tr style="background:#008080;color:#fff;position:sticky;top:0"><th>Country/Continent</th><th>Zone</th><th>State</th><th>District</th><th>Taluk</th></tr>${polT}</table></div>
+    <div class="abs" style="left:652px;top:296px;width:358px;height:375px;overflow:auto;background:#fff;border:1px solid #666;${mode === 0 ? 'opacity:.4' : ''}"><table class="wt" style="width:100%"><tr style="background:#008080;color:#fff;position:sticky;top:0"><th>Biotic Zone</th><th>Habitat</th></tr>${bioT}</table></div>`;
+    h.querySelectorAll('[name=dm]').forEach(r => r.onchange = () => { mode = +r.value; draw(); });
+    h.querySelectorAll('[data-f]').forEach(r => r.onclick = () => { selFlora = selFlora == r.dataset.f ? null : r.dataset.f; draw(); });
+    h.querySelectorAll('[data-pk]').forEach(r => r.onclick = () => { selP = {k: 'p', v: r.dataset.pk}; selFlora = null; draw(); });
+    h.querySelectorAll('[data-bk]').forEach(r => r.onclick = () => { selP = {k: 'b', v: r.dataset.bk}; selFlora = null; draw(); });
+  };
+  draw();
+}
+function tSyn(h) {
+  const n = +DET.key, st = SP[n][4], pairs = S.syn[n] || [], syn = uniq(pairs.map(x => x[0]));
+  const byName = a => a.filter(f => FLORA[f]).sort((x, y) => cmp(FLORA[x][0].toLowerCase(), FLORA[y][0].toLowerCase()));
+  const fl = byName(uniq(S.sfl[n] || []));
+  const synFlora = t => byName(uniq(pairs.filter(x => x[0] === t).map(x => x[1])));
+  const lab = ['Correct Name', 'Probably Correct', 'Synonym', 'Probably Synonym', 'Undecided'];
+  const labCol = ['#008000', '#808080', '#ff0000', '#c000c0', '#0000ff'];
+  const fl_ = f => `${esc(FLORA[f][0])} ${esc(FLORA[f][2])}`;
+  h.innerHTML = `<div class="blue" style="top:6px;width:1002px">Synonyms</div><img class="bg" src="img/ui/hill.webp" alt="" style="top:23px;height:669px">
+  <div class="abs" style="left:10px;top:36px;width:714px;text-align:center;font:bold 18px Arial;color:#008000;letter-spacing:2px">CORRECT NAME</div>
+  <div class="abs" style="left:176px;top:68px;width:392px;height:36px;background:#fff;border:2px inset #aaa;text-align:center;font:bold 18px/34px Arial;color:${STCOL[st]}">${esc(nm(n))}</div>
+  <div class="abs" style="left:27px;top:116px;width:690px;height:22px;background:#e0e0e0;border:2px inset #aaa"><div style="position:absolute;left:${[0, 24, 48, 72, 96][st] * 6.6}px;top:1px;width:12px;height:18px;background:#c8c8c8;border:2px outset #fff"></div></div>
+  <div class="abs" style="left:8px;top:142px;font:bold 17px Arial;white-space:nowrap">${lab.map((l, i) => `<span class="lb" data-i="${i}" style="color:${labCol[i]};margin-right:10px;letter-spacing:1px">${l}</span>`).join('')}</div>
+  <div class="abs" style="left:120px;top:176px;font:bold 17px Arial;text-decoration:underline;letter-spacing:1px;color:#000">MOVE ON THE LABELS TO VIEW THE DEFINATIONS</div>
+  <div class="abs" id="defb" style="left:14px;top:204px;width:704px;height:30px;background:#fff;border:2px inset #aaa;font:bold 15px/28px Arial;color:#00f;padding-left:4px;box-sizing:border-box;letter-spacing:.5px">${['EQUAL NUMBER OF FLORA DEFINED AS CORRECT NAME AND SYNONYM', 'EQUAL NUMBER OF FLORA DEFINED AS CORRECT NAME AND SYNONYM', 'EQUAL NUMBER OF FLORA DEFINED AS CORRECT NAME AND SYNONYM', 'EQUAL NUMBER OF FLORA DEFINED AS CORRECT NAME AND SYNONYM', 'EQUAL NUMBER OF FLORA DEFINED AS CORRECT NAME AND SYNONYM'][st]}</div>
+  <div class="tree" id="syTree" style="left:14px;top:246px;width:704px;height:340px"></div>`;
+  const defs = ['Defined as the correct name in the floras', 'Probably the correct name (more floras treat it as correct than as a synonym)', 'Defined as a synonym in the floras', 'Probably a synonym (more floras treat it as a synonym than as correct)', 'The floras are equally divided: undecided'];
+  h.querySelectorAll('.lb').forEach(l => l.onmouseenter = () => { $('defb') && ($('defb').textContent = defs[+l.dataset.i].toUpperCase()); });
+  const T = h.querySelector('#syTree'); const open = new Set(['root', 'n', 'syn', 'flora']);
+  const node = (id, depth, label, kids, color) => `<div class="row" style="padding-left:${depth * 22}px">${kids ? `<span class="tg" data-o="${id}">${open.has(id) ? '−' : '+'}</span>` : '<span style="display:inline-block;width:18px"></span>'}<span style="color:${color || '#000'}">${label}</span></div>`;
+  const draw = () => {
+    let s = `<div style="background:#000080;color:#fff;font:15px/22px Arial;padding-left:2px">Valid Names,Synonym and its Corresponding Flora for ' ${esc(nm(n))} '</div>`;
+    s += node('n', 1, esc(nm(n)), true, STCOL[st]);
+    if (open.has('n')) {
+      s += `<div class="row" style="padding-left:66px">valid names</div>`;
+      s += node('syn', 3, 'synonyms', syn.length > 0);
+      if (open.has('syn')) syn.sort((a, b) => cmp(S.synn[a][0], S.synn[b][0])).forEach(x => { s += node('s' + x, 5, esc(S.synn[x][0]), true, STCOL[S.synn[x][1]]); if (open.has('s' + x)) synFlora(x).forEach(f => s += `<div class="row" style="padding-left:${6 * 22 + 10}px;font-size:14px">${fl_(f)}</div>`); });
+      s += node('flora', 3, `flora valid [${fl.length}]`, fl.length > 0);
+      if (open.has('flora')) fl.forEach(f => s += `<div class="row" style="padding-left:${5 * 22}px">${node('x', 0, fl_(f), false).replace('padding-left:0px', '')}</div>`);
+    }
+    T.innerHTML = s;
+    T.querySelectorAll('[data-o]').forEach(t => t.onclick = () => { const k = t.dataset.o; open.has(k) ? open.delete(k) : open.add(k); draw(); });
+  };
+  draw();
+}
+function tCommon(h) {
+  const L = S.cm[DET.key] || [], by = new Map(); L.forEach(x => { if (!by.has(x[1])) by.set(x[1], []); by.get(x[1]).push(x[0]); });
+  const rows = [...by].sort((a, b) => cmp(a[0], b[0])).map(([lang, ns]) => ns.sort().map((n, i) => `<tr>${i === 0 ? `<td rowspan="${ns.length}" style="width:220px;background:#fff;vertical-align:middle">${esc(lang)}</td>` : ''}<td style="background:#fff">${esc(n)}</td></tr>`).join('')).join('');
+  h.innerHTML = `<img class="bg" src="img/ui/forest.webp" alt="" style="height:692px"><div class="abs" style="left:258px;top:34px;width:474px;height:640px;background:#c0c0c0;border:2px outset #fff"><div style="background:#00008b;color:#fff;font:bold 11px Arial;padding:2px 3px">Common Names</div><table class="wt" style="width:446px;margin:2px 0 0 0;font-size:17px"><tr style="background:#008080;color:#fff"><td style="font-size:17px;letter-spacing:.5px">LANGUAGE</td><td>NAME</td></tr>${rows || ''}</table></div>`;
+}
+function tFlora(h) {
+  const fl = floraOf(DET.ids); const what = DET.kind === 'species' ? `species '${nm(+DET.key)}'` : DET.kind === 'genus' ? `genus '${DET.key}'` : `family '${DET.key}'`;
+  const icon = '<svg width="26" height="30" viewBox="0 0 26 30" style="vertical-align:middle;margin-right:8px"><rect x="2" y="1" width="22" height="27" fill="#fff" stroke="#000" stroke-width="2"/><path d="M6 8h14M6 13h14M6 18h14M6 23h10" stroke="#00007a" stroke-width="2.4"/></svg>';
+  h.innerHTML = `<div class="blue" style="top:6px;width:1002px;font-size:12px">Flora List with Flora Name; Flora Volume; Author; Edition; Year Of Publication Respectively</div>
+  <div class="tree" style="left:10px;top:24px;width:1004px;height:660px;font-size:13.5px"><div style="background:#000080;color:#fff;font:bold 13px/26px Arial;margin:2px 0 4px 36px;padding-left:2px;width:max-content;min-width:330px"><span style="position:absolute;left:2px;top:4px;font-size:22px">&#127822;</span>List of Flora for the ${esc(what)} at Western Ghats ( ${fl.length} )</div>
+  ${fl.map(f => { const x = FLORA[f]; return `<div style="padding:3px 0 3px 40px;line-height:26px">${icon}${esc(x[0])} ; ${esc(x[1])} ; ${esc(x[2] || '0')} ; ${esc(x[3] || '0')} ; ${esc(x[4])}</div>`; }).join('')}</div>`;
+}
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body></html>
