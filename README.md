@@ -16,6 +16,7 @@ Finished apps only. Source code and raw data live in private repositories.
 | Vrikshayurveda — Version 3 – Search-first (2026) | https://sachinrosario.github.io/ibin-apps/vrikshayurveda-3/ | [Releases page](https://github.com/Sachinrosario/ibin-apps/releases/tag/vrikshayurveda-3-v3.0.0) |
 | Vrikshayurveda — Version 2 – Scientific names updated (2026) | https://sachinrosario.github.io/ibin-apps/vrikshayurveda-2/ | [Releases page](https://github.com/Sachinrosario/ibin-apps/releases/tag/vrikshayurveda-2-v2.0.0) |
 | Vrikshayurveda — Version 1 – Original (2011 screens) | https://sachinrosario.github.io/ibin-apps/vrikshayurveda/ | [Releases page](https://github.com/Sachinrosario/ibin-apps/releases/tag/vrikshayurveda-v1.0.0) |
+| Sasya Sahyadri — Version 1 – Original (2003–04 screens) | https://sachinrosario.github.io/ibin-apps/sasya-sahyadri/ | [Releases page](https://github.com/Sachinrosario/ibin-apps/releases/tag/sasya-sahyadri-v1.0.1) |
 
 ## Which file do I download?
 
