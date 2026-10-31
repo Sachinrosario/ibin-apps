@@ -1,0 +1,24 @@
+# Checks the plant names of Sasya Sahyadri against today's taxonomy (GBIF Backbone / Catalogue of Life).
+# Runs by itself when the tool or the name list changes, or by hand from Actions -> "Plant names" -> Run workflow.
+# The result is pushed to the branch names-out (out/names-check.json and the summary in out/log.txt).
+name: Plant names
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['tools/names_check.py', 'input/names.json', '.github/workflows/names.yml']
+permissions:
+  contents: write
+jobs:
+  names:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - name: Look up every name
+        run: python3 tools/names_check.py input/names.json out/names-check.json | tee out-log.txt
+      - name: Push the result to branch names-out
+        run: |
+          mv out-log.txt out/log.txt
+          cd out && git init -q -b names-out && git add -A && git -c user.name=ci -c user.email=ci@local commit -qm "Name check $(date -u +%F)"
+          git push -f -q "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" names-out
