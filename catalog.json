@@ -851,35 +851,35 @@
               "os": "windows",
               "kind": "Installer",
               "file": "SasyaSahyadri_1.0.1_Setup.exe",
-              "size": "96 MB",
+              "size": "95 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password."
             },
             {
               "os": "windows",
               "kind": "No-install",
               "file": "SasyaSahyadri.exe",
-              "size": "110 MB",
+              "size": "108 MB",
               "note": "Runs straight from a folder or pen drive."
             },
             {
               "os": "mac",
               "kind": "App",
               "file": "SasyaSahyadri_1.0.1_universal.dmg",
-              "size": "192 MB",
+              "size": "189 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
               "file": "SasyaSahyadri_1.0.1_amd64.deb",
-              "size": "95 MB",
+              "size": "94 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
               "file": "SasyaSahyadri_1.0.1_offline.zip",
-              "size": "95 MB",
+              "size": "94 MB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
