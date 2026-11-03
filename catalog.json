@@ -990,35 +990,35 @@
               "os": "windows",
               "kind": "Installer",
               "file": "AndamanMapping_1.0.0_Setup.exe",
-              "size": "",
+              "size": "32 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password."
             },
             {
               "os": "windows",
               "kind": "No-install",
               "file": "AndamanMapping.exe",
-              "size": "",
+              "size": "42 MB",
               "note": "Runs straight from a folder or pen drive."
             },
             {
               "os": "mac",
               "kind": "App",
               "file": "AndamanMapping_1.0.0_universal.dmg",
-              "size": "",
+              "size": "68 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
               "file": "AndamanMapping_1.0.0_amd64.deb",
-              "size": "",
+              "size": "32 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
               "file": "AndamanMapping_1.0.0_offline.zip",
-              "size": "",
+              "size": "33 MB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
