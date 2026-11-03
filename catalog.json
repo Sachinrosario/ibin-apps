@@ -960,6 +960,77 @@
           ]
         }
       ]
+    },
+    {
+      "name": "Andaman Mapping",
+      "icon": "apps/andaman-mapping.png",
+      "origin": "Andaman Mapping: Distribution, Taxonomy & Diversity of Plants of Andaman (2015). Andaman Resource Assessment and Mapping, School of Ecology and Conservation, UAS Bangalore, with the Botanical Survey of India and partners.",
+      "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
+      "editions": [
+        {
+          "id": "andaman-mapping",
+          "key": "v1",
+          "label": "Version 1 – Original (2015 screens)",
+          "versionName": "Version 1 – Original",
+          "version": "1.0.0",
+          "released": "2026-11-04",
+          "published": true,
+          "summary": "The 2015 program rebuilt screen for screen, without MapInfo: search the plants of the Andaman Islands by genus, species, habit or common name, or select map grids to list the species recorded there; see each species' taxonomy, distribution map, picture, distribution data, synonyms and common names.",
+          "facts": [
+            "2,213 species",
+            "1,038 map grids",
+            "35,000 common names",
+            "20,000 synonyms",
+            "Thematic maps"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/andaman-mapping/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "AndamanMapping_1.0.0_Setup.exe",
+              "size": "",
+              "note": "Adds Start-menu and desktop shortcuts. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "AndamanMapping.exe",
+              "size": "",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "AndamanMapping_1.0.0_universal.dmg",
+              "size": "",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "AndamanMapping_1.0.0_amd64.deb",
+              "size": "",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "AndamanMapping_1.0.0_offline.zip",
+              "size": "",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "1.0.0",
+              "date": "2026-11-04",
+              "text": "Faithful rebuild of Andaman Mapping (2015) with the same screens and data; no MapInfo needed. One representative picture per species; the original images and fliers are in the IBIN data repository on Google Drive."
+            }
+          ]
+        }
+      ]
     }
   ],
   "upcoming": [

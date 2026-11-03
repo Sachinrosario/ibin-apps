@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Andaman Mapping",
+  "mainBinaryName": "andaman-mapping",
+  "version": "1.0.0",
+  "identifier": "in.ibinapps.andamanmapping",
+  "build": {
+    "frontendDist": "../web"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Andaman Mapping",
+        "width": 1100,
+        "height": 840,
+        "minWidth": 380,
+        "minHeight": 560,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "publisher": "IBIN Apps",
+    "copyright": "Andaman Mapping (c) K.N. Ganeshaiah (proprietary right holder). Updated in 2026 by Sachin A. Rosario.",
+    "category": "Education",
+    "shortDescription": "Plants of the Andaman Islands: names, synonyms, distribution maps and pictures",
+    "longDescription": "Version 1 (original): the 2015 Andaman Mapping program rebuilt. Search the plants of the Andaman Islands by genus, species, habit, common name or map grid; see taxonomy, distribution maps, pictures, distribution data, synonyms and common names. Works offline.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    }
+  }
+}

@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Andaman Mapping</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#7a0a4c">
+<style>
+/* Andaman Mapping - Version 1 (original). The screens follow the 2015 program inside a 1024x768 stage scaled to the browser. */
+html,body{margin:0;height:100%;background:#000;overflow:hidden}
+body{font:13px/1.25 "MS Sans Serif","Microsoft Sans Serif",Tahoma,Arial,sans-serif;color:#000}
+#stage{position:absolute;width:1024px;height:768px;transform-origin:0 0;overflow:hidden;user-select:none;-webkit-user-select:none}
+#stage img{-webkit-user-drag:none}
+.scr{position:absolute;inset:0;overflow:hidden;display:none}
+.scr.on{display:block}
+.abs{position:absolute}
+.ib{position:absolute;cursor:pointer;display:block}
+.ib.off{cursor:default}
+button,select,input{font:inherit}
+.btn{position:absolute;background:#c0c0c0;border:2px outset #fff;border-right-color:#404040;border-bottom-color:#404040;padding:0;text-align:center;line-height:16px;cursor:pointer;color:#000}
+.btn:active{border-style:inset}
+.btn.dis{color:#808080;text-shadow:1px 1px #fff;pointer-events:none}
+/* splash */
+#splash{background:#06223f}
+#splash .bgi{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55}
+#splash .t1{position:absolute;left:0;top:70px;width:100%;text-align:center;font:italic bold 54px "Monotype Corsiva","Palatino Linotype",Georgia,serif;color:#ffff00;text-shadow:2px 2px 4px #000}
+#splash .t2{position:absolute;left:0;top:160px;width:100%;text-align:center;font:bold 26px "Times New Roman",serif;color:#fff;text-shadow:2px 2px 4px #000}
+#splash .ft{position:absolute;left:0;bottom:12px;width:100%;text-align:center;color:#cfe;font:12px Arial}
+/* credits */
+#credits{background:#a8ecf4}
+#credits h2{position:absolute;left:0;top:26px;width:100%;text-align:center;font:bold 26px Arial;color:#7a0a4c;margin:0;text-decoration:underline}
+#credits .col{position:absolute;left:90px;top:100px;width:840px;font:15px/1.7 Arial;color:#00205a}
+#credits .col b{color:#7a0a4c}
+/* modules */
+#mods{background:#bfeef6}
+#mods h1{position:absolute;left:0;top:44px;width:100%;text-align:center;font:normal 30px Arial;color:#0000cd;text-decoration:underline;letter-spacing:1px;margin:0}
+#mods .fr{position:absolute;left:30px;top:100px;width:964px;height:620px;border:1px dashed #fff}
+/* details */
+#det{background:#6f93c8 url(img/ui/mdi_316.png)}
+#det .top{position:absolute;left:0;top:0;width:100%;height:46px;background:#7a0a4c;color:#fff;font:bold 20px/46px Arial;text-indent:14px;white-space:nowrap;overflow:hidden}
+#det .bar{position:absolute;left:0;top:46px;width:100%;height:70px;background:#c0c0c0;border-bottom:2px solid #7a0a4c}
+#det .bar img{position:absolute;top:10px;height:46px;cursor:pointer}
+#det .body{position:absolute;left:14px;top:128px;width:996px;height:626px;background:#fff;border:2px solid #7a0a4c;overflow:hidden}
+.pg{position:absolute;inset:0;display:none;overflow:auto;-webkit-user-select:text;user-select:text}
+.pg.on{display:block}
+.pg h3{margin:10px 14px 4px;font:bold 17px Arial;color:#7a0a4c}
+.pg .note{margin:4px 14px;color:#444;font:13px Arial}
+table.t{border-collapse:collapse;margin:8px 14px;font:14px Arial;min-width:560px}
+table.t th{background:#7a0a4c;color:#fff;text-align:left;padding:4px 10px;position:sticky;top:0}
+table.t td{padding:3px 10px;border-bottom:1px solid #ddd;vertical-align:top}
+table.t tr:nth-child(even) td{background:#f4eef2}
+/* taxonomy */
+.tx{margin:40px auto;width:520px}
+.tx div{background:#e9c8dc;border:2px solid #7a0a4c;border-radius:20px;text-align:center;padding:9px;margin:0 0 20px;font:bold 17px Arial;color:#00205a;position:relative}
+.tx div small{position:absolute;left:-96px;top:11px;font:13px Arial;color:#7a0a4c;width:84px;text-align:right}
+.tx div:not(:last-child)::after{content:"";position:absolute;left:50%;bottom:-20px;height:20px;border-left:2px solid #7a0a4c}
+/* images */
+.gal{display:flex;gap:14px;margin:14px;flex-wrap:wrap;align-items:flex-start}
+.gal figure{margin:0;background:#f4eef2;border:1px solid #bbb;padding:6px;width:300px;font:13px Arial}
+.gal img{width:300px;display:block}
+/* search panels */
+.panel{position:absolute;background:#d4e8f0;border:2px groove #fff;padding:0}
+.panel>legend,.cap{position:absolute;margin:0;padding:0 4px;background:#d4e8f0;font:bold 13px Arial;color:#000}
+.lb{position:absolute;background:#fff;border:2px inset #fff;border-right-color:#fff;overflow:auto;font:14px Arial;color:#000}
+.lb div{padding:1px 6px;cursor:default;white-space:nowrap}
+.lb div.sel{background:#000080;color:#fff}
+select.cb{position:absolute;height:24px;background:#fff;border:2px inset #fff;color:#000;font:14px Arial}
+.lbl{position:absolute;font:13px Arial}
+/* map */
+#mapcv{position:absolute;background:#9fd3e8;cursor:crosshair;touch-action:none}
+.tool{position:absolute;width:30px;height:28px;background:#d4d0c8;border:2px outset #fff;cursor:pointer;font:16px/24px Arial;text-align:center;color:#000;padding:0}
+.tool.on{border-style:inset;background:#e8e4dc}
+.lyr{position:absolute;font:13px Arial}
+.lyr input{vertical-align:middle}
+.leg{position:absolute;font:12px Arial;color:#000}
+.leg i{display:inline-block;width:14px;height:12px;border:1px solid #444;vertical-align:middle;margin-right:5px}
+#msg{position:absolute;left:300px;top:300px;width:424px;background:#c0c0c0;border:2px outset #fff;padding:10px;font:14px Arial;display:none;z-index:9;text-align:center}
+#msg button{margin-top:8px;width:80px}
+a{color:#00e}
+</style></head>
+<body>
+<div id="stage">
+
+<!-- opening screen -->
+<div id="splash" class="scr on">
+  <img class="bgi" src="img/ui/untitled1.png" alt="">
+  <div class="t1">Andaman Resource Assessment and Mapping</div>
+  <div class="t2">Distribution, Taxonomy &amp; Diversity of Plants of Andaman</div>
+  <img id="spCred" class="ib" src="img/ui/credits1.png" style="left:352px;top:640px" title="Click here to view the Team.">
+  <img id="spNext" class="ib" src="img/ui/next.png" style="left:464px;top:640px" title="Click here to Continue">
+  <img id="spExit" class="ib" src="img/ui/exit.png" style="left:576px;top:640px" title="Click here to Quit">
+  <div class="ft" id="ftVer"></div>
+</div>
+
+<!-- team -->
+<div id="credits" class="scr">
+  <h2>Team</h2>
+  <div class="col" id="creditsTxt"></div>
+  <img id="crBack" class="ib" src="img/ui/back.png" style="left:470px;top:690px" title="Click here to go for Previous Screen">
+</div>
+
+<!-- modules -->
+<div id="mods" class="scr">
+  <h1>Data Recovery Modules</h1>
+  <div class="fr"></div>
+  <img id="mGrid" class="ib" src="img/ui/gridd.png" style="left:130px;top:250px;width:259px" title="Click here to Recover the Data through Gridwise Search">
+  <img id="mThe" class="ib" src="img/ui/map.png" style="left:380px;top:430px;width:259px" title="Click here to View Thematic Maps">
+  <img id="mTxt" class="ib" src="img/ui/textt.png" style="left:635px;top:250px;width:259px" title="Click here to Recover the Data through Common Name or Taluk or Scientific Name">
+  <img id="mExit" class="ib" src="img/ui/exit1.png" style="left:468px;top:660px" title="Click here to Quit">
+</div>
+
+<!-- text search -->
+<div id="txt" class="scr" style="background:#bfeef6">
+  <div class="panel" style="left:24px;top:30px;width:430px;height:130px"></div><span class="cap" style="left:34px;top:22px">Search by Species</span>
+  <span class="lbl" style="left:44px;top:62px">Genus</span><select id="cGenus" class="cb" style="left:130px;top:58px;width:300px"></select>
+  <span class="lbl" style="left:44px;top:108px">Species</span><select id="cSpecies" class="cb" style="left:130px;top:104px;width:300px"></select>
+  <div class="panel" style="left:24px;top:180px;width:430px;height:84px"></div><span class="cap" style="left:34px;top:172px">Search by Habit</span>
+  <span class="lbl" style="left:44px;top:220px">Habit</span><select id="cHabit" class="cb" style="left:130px;top:216px;width:300px"></select>
+  <div class="panel" style="left:24px;top:284px;width:430px;height:130px"></div><span class="cap" style="left:34px;top:276px">Search by Common Name</span>
+  <span class="lbl" style="left:44px;top:316px">Language</span><select id="cLang" class="cb" style="left:130px;top:312px;width:300px"></select>
+  <span class="lbl" style="left:44px;top:362px">Name</span><select id="cName" class="cb" style="left:130px;top:358px;width:300px"></select>
+  <button id="tSearch" class="btn" style="left:24px;top:436px;width:130px;height:34px">Search</button>
+  <span class="lbl" id="tCount" style="left:24px;top:488px;font-weight:bold">Number of Species matched :</span>
+  <div id="tList" class="lb" style="left:474px;top:30px;width:520px;height:560px"></div>
+  <button id="tMore" class="btn" style="left:474px;top:604px;width:520px;height:34px">Select species and click for more details</button>
+  <button id="tBack" class="btn" style="left:474px;top:660px;width:120px;height:32px">Back</button>
+  <button id="tExit" class="btn" style="left:874px;top:660px;width:120px;height:32px">Exit</button>
+</div>
+
+<!-- grid / thematic search -->
+<div id="grd" class="scr" style="background:#bfeef6">
+  <canvas id="mapcv" width="640" height="640" style="left:14px;top:60px"></canvas>
+  <div class="abs" id="gTitle" style="left:14px;top:14px;font:bold 18px Arial;color:#7a0a4c"></div>
+  <button class="tool" data-t="sel" style="left:14px;top:706px;width:44px" title="Select grids (click or drag a box)">&#9633;</button>
+  <button class="tool" data-t="zin" style="left:62px;top:706px;width:44px" title="Zoom In Tool">+</button>
+  <button class="tool" data-t="zout" style="left:110px;top:706px;width:44px" title="Zoom Out Tool">&minus;</button>
+  <button class="tool" data-t="pan" style="left:158px;top:706px;width:44px" title="Grabber Tool">&#9995;</button>
+  <button class="tool" data-t="all" style="left:206px;top:706px;width:64px;font-size:13px" title="View Entire Layer">Entire</button>
+  <button class="tool" data-t="clr" style="left:274px;top:706px;width:84px;font-size:13px" title="Clear selected grids">Clear</button>
+  <div class="abs" style="left:672px;top:60px;width:340px">
+    <div class="abs" style="left:0;top:0;font:bold 13px Arial">Layers:</div>
+    <div class="lyr" style="left:0;top:22px"><label><input type="checkbox" id="lyG" checked> Andaman Grids</label><br><label><input type="checkbox" id="lyP" checked> Andaman Places</label><br><label><input type="checkbox" id="lyR" checked> Roads</label><br><label><input type="checkbox" id="lyV" checked> Rivers</label></div>
+    <div class="abs" id="gMode" style="left:0;top:112px;font:bold 13px Arial"></div>
+    <div class="abs" id="gOpts" style="left:0;top:132px;width:340px;font:14px Arial;display:grid;grid-template-columns:1fr 1fr;row-gap:2px"></div>
+  </div>
+  <div class="leg" id="gLeg" style="left:24px;top:540px;background:rgba(255,255,255,.8);padding:4px 8px;border:1px solid #888"></div>
+  <div class="abs" id="gStats" style="left:672px;top:274px;width:340px;font:13px/1.6 Arial"></div>
+  <div id="gList" class="lb" style="left:672px;top:340px;width:340px;height:310px"></div>
+  <button id="gMore" class="btn" style="left:672px;top:658px;width:340px;height:30px">Select species and click for more details</button>
+  <button id="gBack" class="btn" style="left:672px;top:706px;width:100px;height:30px">Back</button>
+  <button id="gExit" class="btn" style="left:912px;top:706px;width:100px;height:30px">Exit</button>
+</div>
+
+<!-- species details -->
+<div id="det" class="scr">
+  <div class="top" id="dTitle"></div>
+  <div class="bar">
+    <img data-p="tax" src="img/ui/taxo.png" style="left:10px" title="Taxonomic Hierarchy">
+    <img data-p="map" src="img/ui/mapo.png" style="left:152px" title="Distribution map">
+    <img data-p="img" id="dImg" src="img/ui/imao.png" style="left:294px" title="Images">
+    <img data-p="fl" id="dFl" src="img/ui/flier.png" style="left:436px" title="Fliers">
+    <img data-p="dis" src="img/ui/diso.png" style="left:578px" title="Distribution data">
+    <img data-p="syn" src="img/ui/syno.png" style="left:720px" title="Synonym data">
+    <img data-p="com" src="img/ui/como.png" style="left:862px" title="Common Names">
+  </div>
+  <img id="dBack" class="ib" src="img/ui/back.png" style="left:850px;top:8px;height:32px" title="Back">
+  <img id="dExit" class="ib" src="img/ui/exit1.png" style="left:940px;top:8px;height:32px" title="Exit">
+  <div class="body">
+    <div class="pg" id="p_tax"></div><div class="pg" id="p_map"></div><div class="pg" id="p_img"></div>
+    <div class="pg" id="p_fl"></div><div class="pg" id="p_dis"></div><div class="pg" id="p_syn"></div><div class="pg" id="p_com"></div>
+  </div>
+</div>
+
+<div id="msg"><div id="msgT"></div><button id="msgB" class="btn" style="position:static;display:inline-block;padding:2px 10px">OK</button></div>
+</div>
+
+<script src="data/core.js"></script>
+<script src="data/detail.js"></script>
+<script src="data/images.js"></script>
+<script src="data/map.js"></script>
+<script>
+"use strict";
+const C = window.AM_CORE, D = window.AM_DETAIL, IM = window.AM_IMAGES, M = window.AM_MAP;
+const DRIVE = 'https://drive.google.com/drive/folders/1k79zvKXm8XNy_aZAZRoBom4JuVF8zDBS';
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const cap = s => s ? s[0].toUpperCase() + s.slice(1) : s;
+const SP = C.sp.map(r => ({id:r[0], genus:r[1], name:r[2], fam:C.fams[r[3]], hab:r[4].map(i => C.habits[i]), mask:r[5], fl:r[6], rep:r[7]}));
+const byName = new Map(SP.map(s => [s.name, s])), byId = new Map(SP.map(s => [s.id, s]));
+const HAB_ORDER = [['tree','Trees'],['herb','Herbs'],['shrub','Shrubs'],['epiphyte','Epiphytes'],['regeneration','Regeneration']];
+
+// ---- stage scaling -------------------------------------------------------------------
+const stage = $('stage');
+function fit() { const s = Math.min(innerWidth / 1024, innerHeight / 768); stage.style.transform = `scale(${s})`; stage.style.left = (innerWidth - 1024 * s) / 2 + 'px'; stage.style.top = (innerHeight - 768 * s) / 2 + 'px'; }
+addEventListener('resize', fit); fit();
+const screens = ['splash','credits','mods','txt','grd','det'];
+let prev = 'splash';
+function show(id) { screens.forEach(s => $(s).classList.toggle('on', s === id)); cur = id; }
+let cur = 'splash';
+function say(t, cb) { $('msgT').textContent = t; $('msg').style.display = 'block'; $('msgB').onclick = () => { $('msg').style.display = 'none'; cb && cb(); }; }
+function quit() { say('Thank you for using Andaman Mapping. You can close this window or tab.', () => { try { window.close(); } catch (e) {} show('splash'); }); }
+
+// ---- splash, credits, modules -----------------------------------------------------------
+$('ftVer').textContent = 'Andaman Mapping · Version ' + C.version + ' (original screens) · IBIN Apps';
+$('spNext').onclick = () => show('mods');
+$('spExit').onclick = quit; $('mExit').onclick = quit;
+$('spCred').onclick = () => show('credits');
+$('crBack').onclick = () => show('splash');
+$('creditsTxt').innerHTML =
+  '<b>Project Co-ordinator</b><br>Dr. K. N. Ganeshaiah, School of Ecology and Conservation, University of Agricultural Sciences, Bangalore<br><br>' +
+  '<b>Principal and Co-Principal Investigators</b><br>' +
+  ['Dr. B. Ravi Prasad Rao, Department of Botany, Anantapur','Dr. Sanjappa, Botanical Survey of India, Kolkata','Dr. Rajesh, Botanical Survey of India, Port Blair','Dr. Karuppusamy, Department of Botany, Madurai','Dr. Murugan, Botanical Survey of India, Port Blair','Dr. S. R. Yadav, Shivaji University, Kolhapur, Maharashtra','Dr. R. Uma Shaankar, University of Agricultural Sciences, Bangalore','Prof. T V R S Sharma, Central Agricultural Research Institute, Port Blair','Dr. Pandey, Botanical Survey of India, Port Blair'].map(esc).join('<br>') +
+  '<br><br><b>Rebuilt for the web</b><br>Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario';
+const hov = (el, a, b) => { el.onmouseenter = () => { el.src = 'img/ui/' + b + '.png'; }; el.onmouseleave = () => { el.src = 'img/ui/' + a + '.png'; }; };
+hov($('mGrid'), 'gridd', 'overgrid'); hov($('mThe'), 'map', 'overmap'); hov($('mTxt'), 'textt', 'overtext');
+hov($('spCred'), 'credits1', 'overcredits1'); hov($('spNext'), 'next', 'overnext');
+$('mTxt').onclick = () => { initText(); show('txt'); };
+$('mGrid').onclick = () => openGrid('grid');
+$('mThe').onclick = () => openGrid('the');
+
+// ---- text search -----------------------------------------------------------------------
+let tInit = false, tSel = null;
+const fill = (sel, items, blank = true) => { sel.innerHTML = (blank ? '<option value=""></option>' : '') + items.map(i => `<option>${esc(i)}</option>`).join(''); };
+function initText() {
+  if (tInit) return; tInit = true;
+  fill($('cGenus'), [...new Set(SP.map(s => s.genus).filter(Boolean))].sort());
+  fill($('cHabit'), C.habits.map(cap).sort());
+  fill($('cLang'), D.langs);
+  const clr = ids => ids.forEach(i => { $(i).value = ''; });
+  $('cGenus').onchange = () => {
+    clr(['cLang','cName','cHabit']); fill($('cName'), []);
+    fill($('cSpecies'), $('cGenus').value ? SP.filter(s => s.genus === $('cGenus').value).map(s => s.name).sort() : []);
+  };
+  $('cSpecies').onchange = () => clr(['cLang','cName','cHabit']);
+  $('cHabit').onchange = () => { clr(['cGenus','cSpecies','cLang','cName']); fill($('cSpecies'), []); fill($('cName'), []); };
+  $('cLang').onchange = () => {
+    clr(['cGenus','cSpecies','cHabit']); fill($('cSpecies'), []);
+    const names = new Set(); const li = D.langs.indexOf($('cLang').value);
+    if (li >= 0) for (const k in D.d) D.d[k][0].forEach(([l, n]) => { if (l === li) names.add(n); });
+    fill($('cName'), [...names].sort((a, b) => a.localeCompare(b)));
+  };
+  $('cName').onchange = () => clr(['cGenus','cSpecies','cHabit']);
+  $('tSearch').onclick = () => {
+    let r = [];
+    if ($('cHabit').value) r = SP.filter(s => s.hab.includes($('cHabit').value.toLowerCase())).map(s => s.name);
+    else if ($('cName').value) {
+      const li = D.langs.indexOf($('cLang').value), n = $('cName').value;
+      r = SP.filter(s => (D.d[s.id]?.[0] || []).some(([l, x]) => l === li && x === n)).map(s => s.name);
+    } else if ($('cSpecies').value) r = [$('cSpecies').value];
+    r = [...new Set(r)].sort();
+    tSel = null; $('tList').innerHTML = r.map(n => `<div>${esc(n)}</div>`).join('');
+    $('tCount').textContent = 'Number of Species matched : ' + r.length;
+  };
+  $('tList').onclick = e => { const d = e.target.closest('div[class!="lb"]'); if (!d || d.parentNode !== $('tList')) return; [...$('tList').children].forEach(x => x.classList.remove('sel')); d.classList.add('sel'); tSel = d.textContent; };
+  $('tList').ondblclick = () => $('tMore').click();
+  $('tMore').onclick = () => tSel ? openSpecies(tSel, 'txt') : say('Please select a species');
+  $('tBack').onclick = () => show('mods'); $('tExit').onclick = quit;
+}
+
+// ---- grid / thematic map -----------------------------------------------------------------
+const cv = $('mapcv'), g2 = cv.getContext('2d');
+const B = {x0: 92.15, x1: 94.05, y0: 6.7, y1: 13.75};
+let view = {...B}, tool = 'sel', gmode = 'grid', gHabit = 'total', selG = new Set(), spGrid = null, gSel = null;
+const KX = Math.cos(10 * Math.PI / 180);
+const lyShow = {};
+function proj(x, y) { const w = cv.width, h = cv.height; const sx = w / ((view.x1 - view.x0) * KX), sy = h / (view.y1 - view.y0); const s = Math.min(sx, sy); return [(x - view.x0) * KX * s, h - (y - view.y0) * s]; }
+function unproj(px, py) { const w = cv.width, h = cv.height; const sx = w / ((view.x1 - view.x0) * KX), sy = h / (view.y1 - view.y0); const s = Math.min(sx, sy); return [px / (KX * s) + view.x0, (h - py) / s + view.y0]; }
+function pathPoly(c) { // GeoJSON polygon / multipolygon coordinates
+  const polys = c.t === 'Polygon' ? [c.c] : c.c;
+  for (const p of polys) for (const ring of p) { ring.forEach(([x, y], i) => { const [a, b] = proj(x, y); i ? g2.lineTo(a, b) : g2.moveTo(a, b); }); g2.closePath(); }
+}
+const gridCount = i => gmode === 'the' ? thematicVal(i) : (spGrid ? spGrid.get(i) || 0 : 0);
+function thematicVal(i) { const c = C.grids[i][4]; if (gHabit === 'total') return c.reduce((a, b) => a + b, 0); return c[HAB_ORDER.findIndex(h => h[0] === gHabit)] || 0; }
+const RAMP = ['#fff7bc','#fee391','#fec44f','#fe9929','#ec7014','#cc4c02','#8c2d04'];
+function legendBreaks() { let mx = 0; for (let i = 0; i < C.grids.length; i++) mx = Math.max(mx, gridCount(i)); return mx; }
+function drawMap() {
+  const w = cv.width, h = cv.height; g2.fillStyle = '#9fd3e8'; g2.fillRect(0, 0, w, h);
+  g2.lineJoin = 'round';
+  // land
+  g2.fillStyle = '#e9e4c4'; g2.strokeStyle = '#6b6a4a'; g2.lineWidth = 1;
+  M.border.forEach(f => { g2.beginPath(); pathPoly(f.g); g2.fill(); g2.stroke(); });
+  // grids
+  const mx = legendBreaks();
+  C.grids.forEach((gr, i) => {
+    const v = gridCount(i), isSel = selG.has(i);
+    if (v > 0 || isSel) {
+      g2.beginPath(); pathPoly(M.grid[i]);
+      if (v > 0) { const k = Math.min(RAMP.length - 1, Math.floor((v - 1) / Math.max(1, mx) * RAMP.length)); g2.fillStyle = RAMP[k]; g2.globalAlpha = .85; g2.fill(); g2.globalAlpha = 1; }
+      if (isSel) { g2.fillStyle = 'rgba(0,0,255,.35)'; g2.fill(); g2.strokeStyle = '#00f'; g2.lineWidth = 1.5; g2.stroke(); }
+    }
+  });
+  if ($('lyG').checked) { g2.strokeStyle = view.x1 - view.x0 > 1.5 ? 'rgba(80,80,80,.2)' : 'rgba(80,80,80,.45)'; g2.lineWidth = .5; g2.beginPath(); M.grid.forEach(c => pathPoly(c)); g2.stroke(); }
+  if ($('lyV').checked) { g2.strokeStyle = '#1e78d8'; g2.lineWidth = 1; M.rivers.forEach(f => { g2.beginPath(); lines(f.g); g2.stroke(); }); }
+  if ($('lyR').checked) { g2.strokeStyle = '#a02020'; g2.lineWidth = 1.4; M.roads.forEach(f => { g2.beginPath(); lines(f.g); g2.stroke(); }); }
+  if ($('lyP').checked) { g2.fillStyle = '#000'; g2.font = '11px Arial'; M.places.forEach(f => { const [x, y] = f.g.c; const [a, b] = proj(x, y); if (a < 0 || b < 0 || a > w || b > h) return; g2.beginPath(); g2.arc(a, b, 2.5, 0, 6.3); g2.fill(); if (view.x1 - view.x0 < 1.2) g2.fillText(f.n, a + 4, b - 3); }); }
+  legend();
+}
+function lines(g) { const ls = g.t === 'LineString' ? [g.c] : g.t === 'MultiLineString' ? g.c : []; ls.forEach(l => l.forEach(([x, y], i) => { const [a, b] = proj(x, y); i ? g2.lineTo(a, b) : g2.moveTo(a, b); })); }
+function legend() {
+  const mx = legendBreaks(); let t = '';
+  $('gLeg').style.display = mx > 0 ? '' : 'none';
+  if (mx > 0) { t = `<b>${gmode === 'the' ? 'Species per grid' : 'Records per grid'}</b><br>`; RAMP.forEach((c, k) => { const a = Math.floor(k * mx / RAMP.length) + 1, b = Math.floor((k + 1) * mx / RAMP.length); if (b >= a) t += `<i style="background:${c}"></i>${a === b ? a : a + ' - ' + b}<br>`; }); }
+  $('gLeg').innerHTML = t;
+}
+function openGrid(mode) {
+  gmode = mode; show('grd'); gSel = null; spGrid = null; selG = new Set(); view = {...B};
+  $('gTitle').textContent = mode === 'the' ? 'Thematic Maps' : 'Gridwise Search';
+  $('gMode').textContent = mode === 'the' ? 'Show species counts of:' : 'Habit of species to list:';
+  $('gOpts').innerHTML = [...HAB_ORDER, ['total', mode === 'the' ? 'Total Species' : 'TOTAL']].map(([k, n]) => `<label><input type="radio" name="hb" value="${k}" ${k === gHabit ? 'checked' : ''}> ${n}</label>`).join('');
+  $('gOpts').onchange = e => { gHabit = e.target.value; refreshGrid(); };
+  $('gStats').innerHTML = ''; $('gList').innerHTML = '';
+  $('gMore').style.display = mode === 'the' ? 'none' : ''; $('gList').style.display = mode === 'the' ? 'none' : '';
+  drawMap(); if (mode === 'the') refreshGrid();
+}
+function refreshGrid() {
+  if (gmode === 'the') { drawMap(); return; }
+  const ids = new Set();
+  const grids2sp = gridSpecies();
+  selG.forEach(i => (grids2sp.get(i) || []).forEach(s => ids.add(s)));
+  const list = [...ids].map(s => byId.get(s)).filter(s => s && (gHabit === 'total' || s.hab.includes(gHabit)));
+  list.sort((a, b) => a.name.localeCompare(b.name));
+  gSel = null; $('gList').innerHTML = list.map(s => `<div data-n="${esc(s.name)}">${esc(s.name)}</div>`).join('');
+  const gen = new Set(list.map(s => s.genus)), fam = new Set(list.map(s => s.fam));
+  $('gStats').innerHTML = `Selected grids : <b>${selG.size}</b><br>Species count : <b>${list.length}</b> &nbsp; Genus count : <b>${gen.size}</b> &nbsp; Family count : <b>${fam.size}</b>`;
+  drawMap();
+}
+let _g2s = null;
+function gridSpecies() { if (_g2s) return _g2s; _g2s = new Map(); for (const sid in M.sg) M.sg[sid].forEach(([g]) => { if (!_g2s.has(g)) _g2s.set(g, []); _g2s.get(g).push(+sid); }); return _g2s; }
+$('gList').onclick = e => { const d = e.target.closest('[data-n]'); if (!d) return; [...$('gList').children].forEach(x => x.classList.remove('sel')); d.classList.add('sel'); gSel = d.dataset.n; };
+$('gList').ondblclick = () => $('gMore').click();
+$('gMore').onclick = () => gSel ? openSpecies(gSel, 'grd') : say('Please select a species');
+$('gBack').onclick = () => show('mods'); $('gExit').onclick = quit;
+['lyG','lyP','lyR','lyV'].forEach(i => $(i).onchange = drawMap);
+document.querySelectorAll('.tool').forEach(b => b.onclick = () => {
+  const t = b.dataset.t;
+  if (t === 'all') { view = {...B}; drawMap(); }
+  else if (t === 'clr') { selG = new Set(); refreshGrid(); }
+  else if (t === 'zin') zoom(.5); else if (t === 'zout') zoom(2);
+  else { tool = t; document.querySelectorAll('.tool').forEach(x => x.classList.toggle('on', x.dataset.t === t)); }
+});
+document.querySelector('.tool[data-t="sel"]').classList.add('on');
+function zoom(f, cx, cy) { const [mx, my] = cx == null ? [(view.x0 + view.x1) / 2, (view.y0 + view.y1) / 2] : [cx, cy]; view = {x0: mx - (mx - view.x0) * f, x1: mx + (view.x1 - mx) * f, y0: my - (my - view.y0) * f, y1: my + (view.y1 - my) * f}; drawMap(); }
+function pt(e) { const r = cv.getBoundingClientRect(), k = cv.width / r.width; return [(e.clientX - r.left) * k, (e.clientY - r.top) * k]; }
+function gridAt(x, y) { for (let i = 0; i < C.grids.length; i++) { const c = M.grid[i], ring = (c.t === 'Polygon' ? c.c[0] : c.c[0][0]); let xs = ring.map(p => p[0]), ys = ring.map(p => p[1]); if (x >= Math.min(...xs) && x <= Math.max(...xs) && y >= Math.min(...ys) && y <= Math.max(...ys)) return i; } return -1; }
+let drag = null;
+cv.onpointerdown = e => { cv.setPointerCapture(e.pointerId); drag = {p: pt(e), q: pt(e), v: {...view}}; };
+cv.onpointermove = e => {
+  if (!drag) return; drag.q = pt(e);
+  if (tool === 'pan') { const [a, b] = drag.p, [c, d] = drag.q; const [x0, y0] = unproj(a, b), [x1, y1] = unproj(c, d); const dx = x0 - x1, dy = y0 - y1; view = {x0: drag.v.x0 + dx, x1: drag.v.x1 + dx, y0: drag.v.y0 + dy, y1: drag.v.y1 + dy}; drag.p = drag.q; drag.v = {...view}; drawMap(); }
+  else { drawMap(); g2.strokeStyle = '#00f'; g2.setLineDash([4, 3]); g2.strokeRect(drag.p[0], drag.p[1], drag.q[0] - drag.p[0], drag.q[1] - drag.p[1]); g2.setLineDash([]); }
+};
+cv.onpointerup = e => {
+  if (!drag) return; const [a, b] = drag.p, [c, d] = drag.q; const moved = Math.hypot(c - a, d - b) > 5; const [wx, wy] = unproj(c, d);
+  if (tool === 'zin' || tool === 'zout') { if (moved && tool === 'zin') { const [x0, y1] = unproj(Math.min(a, c), Math.min(b, d)), [x1, y0] = unproj(Math.max(a, c), Math.max(b, d)); view = {x0, x1, y0, y1}; drawMap(); } else zoom(tool === 'zin' ? .5 : 2, wx, wy); }
+  else if (tool === 'sel') {
+    if (moved) { const [x0, y1] = unproj(Math.min(a, c), Math.min(b, d)), [x1, y0] = unproj(Math.max(a, c), Math.max(b, d)); C.grids.forEach((gr, i) => { const cx = gr_cx(i), cy = gr_cy(i); if (cx >= x0 && cx <= x1 && cy >= y0 && cy <= y1) selG.add(i); }); }
+    else { const i = gridAt(wx, wy); if (i >= 0) selG.has(i) ? selG.delete(i) : selG.add(i); }
+    if (gmode === 'grid') refreshGrid(); else drawMap();
+  } else drawMap();
+  drag = null;
+};
+const _c = [];
+function ctr(i) { if (_c[i]) return _c[i]; const c = M.grid[i], ring = (c.t === 'Polygon' ? c.c[0] : c.c[0][0]); let sx = 0, sy = 0; ring.forEach(p => { sx += p[0]; sy += p[1]; }); return (_c[i] = [sx / ring.length, sy / ring.length]); }
+const gr_cx = i => ctr(i)[0], gr_cy = i => ctr(i)[1];
+cv.onwheel = e => { e.preventDefault(); const [a, b] = pt(e), [x, y] = unproj(a, b); zoom(e.deltaY < 0 ? .8 : 1.25, x, y); };
+
+// ---- species details -----------------------------------------------------------------------
+let SPCUR = null, from = 'txt', dpage = 'tax';
+const PAGES = ['tax','map','img','fl','dis','syn','com'];
+function openSpecies(name, f) {
+  const s = byName.get(name); if (!s) return; SPCUR = s; from = f;
+  $('dTitle').textContent = 'Digitized Inventory of ' + s.name + ' in Andaman';
+  $('dImg').src = s.mask ? 'img/ui/imao.png' : 'img/ui/imao1.png'; $('dFl').src = s.fl ? 'img/ui/flier.png' : 'img/ui/flier1.png';
+  show('det'); built = {}; page('tax');
+}
+let built = {};
+function page(p) {
+  if (p === 'img' && !SPCUR.mask) return; if (p === 'fl' && !SPCUR.fl) return;
+  dpage = p; PAGES.forEach(k => $('p_' + k).classList.toggle('on', k === p));
+  document.querySelectorAll('#det .bar img').forEach(i => i.style.outline = i.dataset.p === p ? '3px solid #7a0a4c' : 'none');
+  if (!built[p]) { built[p] = true; BUILD[p](); }
+  if (p === 'map') mapPage();
+}
+document.querySelectorAll('#det .bar img').forEach(i => i.onclick = () => page(i.dataset.p));
+$('dBack').onclick = () => show(from); $('dExit').onclick = quit;
+const det = () => D.d[SPCUR.id] || [[], [], [], []];
+const clean = v => (v == null || String(v).toLowerCase() === 'none') ? '' : v;
+const BUILD = {
+  tax() {
+    const t = C.tax[C.fams.indexOf(SPCUR.fam)] || [];
+    const lv = ['Kingdom','Phylum','Class','Subclass','Order','Family'];
+    $('p_tax').innerHTML = '<div class="tx">' + lv.map((n, i) => `<div><small>${n}</small>${esc(t[i] || '')}</div>`).join('') + '</div>';
+  },
+  map() { $('p_map').innerHTML = '<canvas id="spcv" width="640" height="560" style="margin:8px 14px;border:1px solid #444;background:#9fd3e8"></canvas><div class="abs" id="spInfo" style="left:680px;top:14px;width:300px;font:14px Arial"></div>'; },
+  img() {
+    const rows = IM[SPCUR.id] || [], names = {F:'Photographs', H:'Herbarium Images', L:'Line Diagrams', P:'Paintings'};
+    const n = {}; rows.forEach(r => n[r[0]] = (n[r[0]] || 0) + 1);
+    $('p_img').innerHTML = `<h3>Images of ${esc(SPCUR.name)}</h3><div class="note">${Object.keys(names).filter(k => n[k]).map(k => `${names[k]}: <b>${n[k]}</b>`).join(' &nbsp;·&nbsp; ')}</div>` +
+      `<div class="gal">${SPCUR.rep ? `<figure><img src="img/s/${SPCUR.id}.webp" alt="${esc(SPCUR.name)}"><figcaption>Representative picture</figcaption></figure>` : ''}</div>` +
+      `<div class="note">This web version shows one representative picture. All ${rows.length} original images of this species (herbarium sheets, line diagrams, paintings and field photographs) are in the <a href="${DRIVE}" target="_blank" rel="noopener">IBIN data repository on Google Drive</a>, folder <b>Andaman Mapping Application &rsaquo; Photos &rsaquo; ${esc(SPCUR.name)}</b>.</div>`;
+  },
+  fl() { $('p_fl').innerHTML = `<h3>Flier of ${esc(SPCUR.name)}</h3><div class="note">The flier (a short illustrated slide set) is kept in the <a href="${DRIVE}" target="_blank" rel="noopener">IBIN data repository on Google Drive</a>, folder <b>Andaman Mapping Application &rsaquo; Fliers &rsaquo; ${esc(SPCUR.name)}</b>.</div>`; },
+  dis() {
+    const r = det()[2].filter(x => x.some(clean)), fr = det()[3].filter(x => x.some(clean));
+    $('p_dis').innerHTML = `<h3>Distribution data</h3><h3 style="font-size:14px">Flora distribution</h3>` + (r.length ? '<table class="t"><tr><th>Country</th><th>State</th><th>District</th><th>Taluk</th><th>Place</th></tr>' + r.map(x => '<tr>' + x.map(v => `<td>${esc(clean(v))}</td>`).join('') + '</tr>').join('') + '</table>' : '<div class="note">No records.</div>') +
+      `<h3 style="font-size:14px">Grid distribution</h3>` + (fr.length ? '<table class="t"><tr><th>Forest Range</th><th>Forest Division</th></tr>' + fr.map(x => '<tr>' + x.map(v => `<td>${esc(clean(v))}</td>`).join('') + '</tr>').join('') + '</table>' : '<div class="note">No records.</div>');
+  },
+  syn() {
+    const sy = det()[1];
+    $('p_syn').innerHTML = `<h3>Synonym data</h3>` + (sy.length ? sy.map(([n, fl]) => `<div class="note" style="margin-top:12px"><b>${esc(n)}</b></div><table class="t"><tr><th>Flora</th><th>Volume</th><th>Author</th><th>Edition</th><th>Year</th></tr>${fl.map(f => '<tr>' + f.map(v => `<td>${esc(clean(v) === '-' ? '' : clean(v))}</td>`).join('') + '</tr>').join('')}</table>`).join('') : '<div class="note">No synonyms recorded.</div>');
+  },
+  com() {
+    const cm = det()[0];
+    $('p_com').innerHTML = `<h3>Common Names</h3>` + (cm.length ? '<table class="t"><tr><th>Language</th><th>Local Name</th></tr>' + cm.map(([l, n]) => `<tr><td>${esc(D.langs[l])}</td><td>${esc(n)}</td></tr>`).join('') + '</table>' : '<div class="note">No common names recorded.</div>');
+  }
+};
+function mapPage() {
+  const c = $('spcv'), x = c.getContext('2d'), sg = new Map((M.sg[SPCUR.id] || []));
+  const vw = {x0: B.x0, x1: B.x1, y0: B.y0, y1: B.y1}, s = Math.min(c.width / ((vw.x1 - vw.x0) * KX), c.height / (vw.y1 - vw.y0));
+  const P = (a, b) => [(a - vw.x0) * KX * s, c.height - (b - vw.y0) * s];
+  const path = (g) => { const ps = g.t === 'Polygon' ? [g.c] : g.c; ps.forEach(p => p.forEach(r => { r.forEach(([a, b], i) => { const [u, v] = P(a, b); i ? x.lineTo(u, v) : x.moveTo(u, v); }); x.closePath(); })); };
+  x.fillStyle = '#9fd3e8'; x.fillRect(0, 0, c.width, c.height);
+  x.fillStyle = '#e9e4c4'; x.strokeStyle = '#6b6a4a'; M.border.forEach(f => { x.beginPath(); path(f.g); x.fill(); x.stroke(); });
+  x.strokeStyle = 'rgba(80,80,80,.35)'; x.lineWidth = .5; x.beginPath(); M.grid.forEach(g => path(g)); x.stroke();
+  let mx = 0; sg.forEach(v => mx = Math.max(mx, v));
+  x.lineWidth = 1; sg.forEach((v, i) => { x.beginPath(); path(M.grid[i]); x.fillStyle = RAMP[Math.min(RAMP.length - 1, Math.floor((v - 1) / Math.max(1, mx) * RAMP.length))]; x.globalAlpha = .9; x.fill(); x.globalAlpha = 1; x.strokeStyle = '#7a0a4c'; x.stroke(); });
+  sg.forEach((v, i) => { const [cx, cy] = ctr(i), [u, w] = P(cx, cy); x.beginPath(); x.arc(u, w, 5, 0, 6.3); x.fillStyle = '#7a0a4c'; x.fill(); x.strokeStyle = '#fff'; x.lineWidth = 1.5; x.stroke(); });
+  const gs = [...sg.keys()].map(i => C.grids[i]);
+  const divs = [...new Set(gs.map(g => g[3]).filter(Boolean))].map(d => d), bnd = [...new Set(gs.map(g => g[2]).filter(Boolean))];
+  $('spInfo').innerHTML = `<b>${esc(SPCUR.name)}</b><br>Grids with records: <b>${sg.size}</b><br>${bnd.length ? 'Islands / areas: ' + esc(bnd.join(', ')) : ''}<br><br>` + (sg.size ? `<div class="leg" style="position:static">${RAMP.map((c, k) => { const a = Math.floor(k * mx / RAMP.length) + 1, b = Math.floor((k + 1) * mx / RAMP.length); return b >= a ? `<i style="background:${c}"></i>${a === b ? a : a + ' - ' + b}<br>` : ''; }).join('')}</div><div class="note" style="margin:6px 0">Number of records in each grid</div>` : '<div class="note" style="margin:0">No grid records for this species.</div>');
+}
+// start
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body></html>
