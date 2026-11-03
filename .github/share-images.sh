@@ -18,6 +18,8 @@ if [ -z "$SKIP_MEDIA_SHARE" ]; then
     cp -n "$src"/img/*.webp "$dst/img/" 2>/dev/null || true
     [ -d "$src/img/t" ] && cp -rn "$src/img/t" "$dst/img/"
     [ -d "$src/audio" ] && cp -rn "$src/audio" "$dst/"
+    # Andaman Mapping: one picture per species (img/s) and flier pictures (img/f)
+    for d in s f; do [ -d "$src/img/$d" ] && mkdir -p "$dst/img/$d" && cp -rn "$src/img/$d/." "$dst/img/$d/"; done
     echo "shared media: $src -> $dst"
   done
 fi
