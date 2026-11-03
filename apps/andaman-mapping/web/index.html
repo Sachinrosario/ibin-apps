@@ -54,6 +54,10 @@ table.t tr:nth-child(even) td{background:#f4eef2}
 .tx div small{position:absolute;left:-96px;top:11px;font:13px Arial;color:#7a0a4c;width:84px;text-align:right}
 .tx div:not(:last-child)::after{content:"";position:absolute;left:50%;bottom:-20px;height:20px;border-left:2px solid #7a0a4c}
 /* images */
+.th{float:right;margin:12px 16px;width:200px;background:#f4eef2;border:1px solid #bbb;padding:5px;font:12px Arial}
+.th img{width:200px;display:block}
+.th figcaption{margin-top:3px;color:#444}
+.card{margin:10px 14px;border:2px solid #7a0a4c;background:#fbf6f9;padding:10px 14px;font:14px/1.6 Arial;max-width:640px}
 .gal{display:flex;gap:14px;margin:14px;flex-wrap:wrap;align-items:flex-start}
 .gal figure{margin:0;background:#f4eef2;border:1px solid #bbb;padding:6px;width:300px;font:13px Arial}
 .gal img{width:300px;display:block}
@@ -66,7 +70,8 @@ table.t tr:nth-child(even) td{background:#f4eef2}
 select.cb{position:absolute;height:24px;background:#fff;border:2px inset #fff;color:#000;font:14px Arial}
 .lbl{position:absolute;font:13px Arial}
 /* map */
-#mapcv{position:absolute;background:#9fd3e8;cursor:crosshair;touch-action:none}
+#mapcv,#spcv{position:absolute;background:#9fd3e8;cursor:grab;touch-action:none}
+#spcv{position:static;margin:8px 14px;border:1px solid #444;display:block}
 .tool{position:absolute;width:30px;height:28px;background:#d4d0c8;border:2px outset #fff;cursor:pointer;font:16px/24px Arial;text-align:center;color:#000;padding:0}
 .tool.on{border-style:inset;background:#e8e4dc}
 .lyr{position:absolute;font:13px Arial}
@@ -130,12 +135,14 @@ a{color:#00e}
 <div id="grd" class="scr" style="background:#bfeef6">
   <canvas id="mapcv" width="640" height="640" style="left:14px;top:60px"></canvas>
   <div class="abs" id="gTitle" style="left:14px;top:14px;font:bold 18px Arial;color:#7a0a4c"></div>
-  <button class="tool" data-t="sel" style="left:14px;top:706px;width:44px" title="Select grids (click or drag a box)">&#9633;</button>
+  <button class="tool" data-t="sel" style="left:14px;top:706px;width:44px" title="Select grids: click a grid, drag to move the map">&#9633;</button>
   <button class="tool" data-t="zin" style="left:62px;top:706px;width:44px" title="Zoom In Tool">+</button>
   <button class="tool" data-t="zout" style="left:110px;top:706px;width:44px" title="Zoom Out Tool">&minus;</button>
-  <button class="tool" data-t="pan" style="left:158px;top:706px;width:44px" title="Grabber Tool">&#9995;</button>
+  <button class="tool" data-t="pan" style="left:158px;top:706px;width:44px" title="Grabber Tool: drag to move the map">&#9995;</button>
   <button class="tool" data-t="all" style="left:206px;top:706px;width:64px;font-size:13px" title="View Entire Layer">Entire</button>
-  <button class="tool" data-t="clr" style="left:274px;top:706px;width:84px;font-size:13px" title="Clear selected grids">Clear</button>
+  <button class="tool" data-t="box" style="left:274px;top:706px;width:54px;font-size:13px" title="Select all grids inside a dragged box">Box</button>
+  <button class="tool" data-t="clr" style="left:332px;top:706px;width:64px;font-size:13px" title="Clear selected grids">Clear</button>
+  <div class="abs" style="left:404px;top:704px;width:250px;font:12px/1.35 Arial;color:#222">Drag = move the map &nbsp;·&nbsp; wheel = zoom<br>Click a grid = select &nbsp;·&nbsp; Shift+drag = box</div>
   <div class="abs" style="left:672px;top:60px;width:340px">
     <div class="abs" style="left:0;top:0;font:bold 13px Arial">Layers:</div>
     <div class="lyr" style="left:0;top:22px"><label><input type="checkbox" id="lyG" checked> Andaman Grids</label><br><label><input type="checkbox" id="lyP" checked> Andaman Places</label><br><label><input type="checkbox" id="lyR" checked> Roads</label><br><label><input type="checkbox" id="lyV" checked> Rivers</label></div>
@@ -342,20 +349,28 @@ function zoom(f, cx, cy) { const [mx, my] = cx == null ? [(view.x0 + view.x1) / 
 function pt(e) { const r = cv.getBoundingClientRect(), k = cv.width / r.width; return [(e.clientX - r.left) * k, (e.clientY - r.top) * k]; }
 function gridAt(x, y) { for (let i = 0; i < C.grids.length; i++) { const c = M.grid[i], ring = (c.t === 'Polygon' ? c.c[0] : c.c[0][0]); let xs = ring.map(p => p[0]), ys = ring.map(p => p[1]); if (x >= Math.min(...xs) && x <= Math.max(...xs) && y >= Math.min(...ys) && y <= Math.max(...ys)) return i; } return -1; }
 let drag = null;
-cv.onpointerdown = e => { cv.setPointerCapture(e.pointerId); drag = {p: pt(e), q: pt(e), v: {...view}}; };
+const scaleOf = v => Math.min(cv.width / ((v.x1 - v.x0) * KX), cv.height / (v.y1 - v.y0));
+cv.onpointerdown = e => { cv.setPointerCapture(e.pointerId); drag = {p: pt(e), q: pt(e), v: {...view}, shift: e.shiftKey, moved: false}; };
 cv.onpointermove = e => {
   if (!drag) return; drag.q = pt(e);
-  if (tool === 'pan') { const [a, b] = drag.p, [c, d] = drag.q; const [x0, y0] = unproj(a, b), [x1, y1] = unproj(c, d); const dx = x0 - x1, dy = y0 - y1; view = {x0: drag.v.x0 + dx, x1: drag.v.x1 + dx, y0: drag.v.y0 + dy, y1: drag.v.y1 + dy}; drag.p = drag.q; drag.v = {...view}; drawMap(); }
-  else { drawMap(); g2.strokeStyle = '#00f'; g2.setLineDash([4, 3]); g2.strokeRect(drag.p[0], drag.p[1], drag.q[0] - drag.p[0], drag.q[1] - drag.p[1]); g2.setLineDash([]); }
+  const dx = drag.q[0] - drag.p[0], dy = drag.q[1] - drag.p[1];
+  if (Math.hypot(dx, dy) > 4) drag.moved = true;
+  const boxing = tool === 'box' || tool === 'zin' || drag.shift;
+  if (!drag.moved) return;
+  if (!boxing) { const s = scaleOf(drag.v); const wx = dx / (KX * s), wy = dy / s; view = {x0: drag.v.x0 - wx, x1: drag.v.x1 - wx, y0: drag.v.y0 + wy, y1: drag.v.y1 + wy}; drawMap(); cv.style.cursor = 'grabbing'; }
+  else { drawMap(); g2.strokeStyle = '#00f'; g2.setLineDash([4, 3]); g2.strokeRect(drag.p[0], drag.p[1], dx, dy); g2.setLineDash([]); }
 };
 cv.onpointerup = e => {
-  if (!drag) return; const [a, b] = drag.p, [c, d] = drag.q; const moved = Math.hypot(c - a, d - b) > 5; const [wx, wy] = unproj(c, d);
-  if (tool === 'zin' || tool === 'zout') { if (moved && tool === 'zin') { const [x0, y1] = unproj(Math.min(a, c), Math.min(b, d)), [x1, y0] = unproj(Math.max(a, c), Math.max(b, d)); view = {x0, x1, y0, y1}; drawMap(); } else zoom(tool === 'zin' ? .5 : 2, wx, wy); }
-  else if (tool === 'sel') {
-    if (moved) { const [x0, y1] = unproj(Math.min(a, c), Math.min(b, d)), [x1, y0] = unproj(Math.max(a, c), Math.max(b, d)); C.grids.forEach((gr, i) => { const cx = gr_cx(i), cy = gr_cy(i); if (cx >= x0 && cx <= x1 && cy >= y0 && cy <= y1) selG.add(i); }); }
-    else { const i = gridAt(wx, wy); if (i >= 0) selG.has(i) ? selG.delete(i) : selG.add(i); }
-    if (gmode === 'grid') refreshGrid(); else drawMap();
-  } else drawMap();
+  if (!drag) return; cv.style.cursor = '';
+  const [a, b] = drag.p, [c, d] = drag.q, [wx, wy] = unproj(c, d), boxing = tool === 'box' || tool === 'zin' || drag.shift;
+  if (!drag.moved) {
+    if (tool === 'zin') zoom(.5, wx, wy); else if (tool === 'zout') zoom(2, wx, wy);
+    else if (tool !== 'pan') { const i = gridAt(wx, wy); if (i >= 0) { selG.has(i) ? selG.delete(i) : selG.add(i); gmode === 'grid' ? refreshGrid() : drawMap(); } }
+  } else if (boxing) {
+    const [x0, y1] = unproj(Math.min(a, c), Math.min(b, d)), [x1, y0] = unproj(Math.max(a, c), Math.max(b, d));
+    if (tool === 'zin') { view = {x0, x1, y0, y1}; drawMap(); }
+    else { C.grids.forEach((gr, i) => { const cx = gr_cx(i), cy = gr_cy(i); if (cx >= x0 && cx <= x1 && cy >= y0 && cy <= y1) selG.add(i); }); gmode === 'grid' ? refreshGrid() : drawMap(); }
+  }
   drag = null;
 };
 const _c = [];
@@ -369,12 +384,11 @@ const PAGES = ['tax','map','img','fl','dis','syn','com'];
 function openSpecies(name, f) {
   const s = byName.get(name); if (!s) return; SPCUR = s; from = f;
   $('dTitle').textContent = 'Digitized Inventory of ' + s.name + ' in Andaman';
-  $('dImg').src = s.mask ? 'img/ui/imao.png' : 'img/ui/imao1.png'; $('dFl').src = s.fl ? 'img/ui/flier.png' : 'img/ui/flier1.png';
+  $('dImg').src = 'img/ui/imao.png'; $('dFl').src = 'img/ui/flier.png';
   show('det'); built = {}; page('tax');
 }
 let built = {};
 function page(p) {
-  if (p === 'img' && !SPCUR.mask) return; if (p === 'fl' && !SPCUR.fl) return;
   dpage = p; PAGES.forEach(k => $('p_' + k).classList.toggle('on', k === p));
   document.querySelectorAll('#det .bar img').forEach(i => i.style.outline = i.dataset.p === p ? '3px solid #7a0a4c' : 'none');
   if (!built[p]) { built[p] = true; BUILD[p](); }
@@ -383,50 +397,87 @@ function page(p) {
 document.querySelectorAll('#det .bar img').forEach(i => i.onclick = () => page(i.dataset.p));
 $('dBack').onclick = () => show(from); $('dExit').onclick = quit;
 const det = () => D.d[SPCUR.id] || [[], [], [], []];
+const GEN = new Map(), FAM = new Map();
+SP.forEach(s => { (GEN.get(s.genus) || GEN.set(s.genus, []).get(s.genus)).push(s); (FAM.get(s.fam) || FAM.set(s.fam, []).get(s.fam)).push(s); });
+// the species' own picture, else a picture of another species of the same genus, else of the same family (always labelled)
+function pic(s) {
+  if (s.rep) return {src: 'img/s/' + s.id + '.webp', cap: 'Representative picture', own: true};
+  const r = (GEN.get(s.genus) || []).find(x => x.rep) || (FAM.get(s.fam) || []).find(x => x.rep);
+  return r ? {src: 'img/s/' + r.id + '.webp', cap: 'No picture of this species. Shown: ' + r.name + ', ' + (r.genus === s.genus ? 'same genus' : 'same family'), own: false} : null;
+}
+const NOPIC = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="140" viewBox="0 0 200 140"><rect width="200" height="140" fill="#e9e4c4"/><path d="M100 118V62M100 92c-26-4-38-22-38-40 22 2 38 16 38 40zm0-8c22-2 36-16 38-34-20 2-36 14-38 34z" fill="#7a9a4a" stroke="#4a6a2a" stroke-width="2"/></svg>');
+const thumb = () => { const p = pic(SPCUR); return p ? `<figure class="th"><img src="${p.src}" alt=""><figcaption>${esc(p.cap)}</figcaption></figure>` : `<figure class="th"><img src="${NOPIC}" alt=""><figcaption>No picture of this species or its relatives in the original program</figcaption></figure>`; };
+const gridInfo = () => { const gs = (M.sg[SPCUR.id] || []).map(([i]) => C.grids[i]); return {n: gs.length, isl: [...new Set(gs.map(g => g[2]).filter(Boolean))], div: [...new Set(gs.map(g => g[3]).filter(Boolean))]}; };
 const clean = v => (v == null || String(v).toLowerCase() === 'none') ? '' : v;
 const BUILD = {
   tax() {
     const t = C.tax[C.fams.indexOf(SPCUR.fam)] || [];
     const lv = ['Kingdom','Phylum','Class','Subclass','Order','Family'];
-    $('p_tax').innerHTML = '<div class="tx">' + lv.map((n, i) => `<div><small>${n}</small>${esc(t[i] || '')}</div>`).join('') + '</div>';
+    const gn = (GEN.get(SPCUR.genus) || []).length, fn = (FAM.get(SPCUR.fam) || []).length;
+    $('p_tax').innerHTML = thumb() + '<div class="tx">' + lv.map((n, i) => `<div><small>${n}</small>${esc(t[i] || '')}</div>`).join('') + '</div>' +
+      `<div class="card">Genus <b>${esc(SPCUR.genus)}</b> has ${gn} species in this inventory; family <b>${esc(SPCUR.fam)}</b> has ${fn}.${SPCUR.hab.length ? '<br>Habit: <b>' + SPCUR.hab.map(cap).join(', ') + '</b>' : ''}</div>`;
   },
-  map() { $('p_map').innerHTML = '<canvas id="spcv" width="640" height="560" style="margin:8px 14px;border:1px solid #444;background:#9fd3e8"></canvas><div class="abs" id="spInfo" style="left:680px;top:14px;width:300px;font:14px Arial"></div>'; },
+  map() { $('p_map').innerHTML = '<canvas id="spcv" width="640" height="540"></canvas><div class="abs" style="left:14px;top:560px;font:12px Arial;color:#333">Drag to move the map · wheel or + / − to zoom</div>' +
+      '<div class="abs" style="left:520px;top:560px"><button class="btn" id="spIn" style="position:static;width:36px;height:24px">+</button> <button class="btn" id="spOut" style="position:static;width:36px;height:24px">&minus;</button> <button class="btn" id="spAll" style="position:static;width:60px;height:24px">Entire</button></div>' +
+      '<div class="abs" id="spInfo" style="left:680px;top:14px;width:300px;font:14px Arial"></div>'; },
   img() {
     const rows = IM[SPCUR.id] || [], names = {F:'Photographs', H:'Herbarium Images', L:'Line Diagrams', P:'Paintings'};
-    const n = {}; rows.forEach(r => n[r[0]] = (n[r[0]] || 0) + 1);
-    $('p_img').innerHTML = `<h3>Images of ${esc(SPCUR.name)}</h3><div class="note">${Object.keys(names).filter(k => n[k]).map(k => `${names[k]}: <b>${n[k]}</b>`).join(' &nbsp;·&nbsp; ')}</div>` +
-      `<div class="gal">${SPCUR.rep ? `<figure><img src="img/s/${SPCUR.id}.webp" alt="${esc(SPCUR.name)}"><figcaption>Representative picture</figcaption></figure>` : ''}</div>` +
-      `<div class="note">This web version shows one representative picture. All ${rows.length} original images of this species (herbarium sheets, line diagrams, paintings and field photographs) are in the <a href="${DRIVE}" target="_blank" rel="noopener">IBIN data repository on Google Drive</a>, folder <b>Andaman Mapping Application &rsaquo; Photos &rsaquo; ${esc(SPCUR.name)}</b>.</div>`;
+    const n = {}; rows.forEach(r => n[r[0]] = (n[r[0]] || 0) + 1); const p = pic(SPCUR);
+    $('p_img').innerHTML = `<h3>Images of ${esc(SPCUR.name)}</h3><div class="note">${rows.length ? Object.keys(names).filter(k => n[k]).map(k => `${names[k]}: <b>${n[k]}</b>`).join(' &nbsp;·&nbsp; ') : 'No images of this species were recorded in the original program.'}</div>` +
+      `<div class="gal">${p ? `<figure><img src="${p.src}" alt="${esc(SPCUR.name)}"><figcaption>${esc(p.cap)}</figcaption></figure>` : ''}</div>` +
+      `<div class="note">This web version shows one picture. ${rows.length ? `All ${rows.length} original images of this species (herbarium sheets, line diagrams, paintings and field photographs) are in the` : 'Pictures of the other species are in the'} <a href="${DRIVE}" target="_blank" rel="noopener">IBIN data repository on Google Drive</a>, folder <b>Andaman Mapping Application &rsaquo; Photos &rsaquo; ${esc(SPCUR.name)}</b>.</div>`;
   },
-  fl() { $('p_fl').innerHTML = `<h3>Flier of ${esc(SPCUR.name)}</h3><div class="note">The flier (a short illustrated slide set) is kept in the <a href="${DRIVE}" target="_blank" rel="noopener">IBIN data repository on Google Drive</a>, folder <b>Andaman Mapping Application &rsaquo; Fliers &rsaquo; ${esc(SPCUR.name)}</b>.</div>`; },
+  fl() {
+    const gi = gridInfo(), cm = det()[0];
+    const link = `<div class="note">${SPCUR.fl ? 'The full flier (illustrated slides) is' : 'Fliers of other species are'} in the <a href="${DRIVE}" target="_blank" rel="noopener">IBIN data repository on Google Drive</a>, folder <b>Andaman Mapping Application &rsaquo; Fliers${SPCUR.fl ? ' &rsaquo; ' + esc(SPCUR.name) : ''}</b>.</div>`;
+    if (SPCUR.fl) $('p_fl').innerHTML = `<h3>Flier of ${esc(SPCUR.name)}</h3><div class="gal"><figure style="width:520px"><img src="img/f/${SPCUR.id}.webp" alt="Flier" style="width:520px"><figcaption>First slide of the original flier</figcaption></figure></div>` + link;
+    else $('p_fl').innerHTML = thumb() + `<h3>Flier of ${esc(SPCUR.name)}</h3><div class="note">The original program has no flier for this species. A summary from its data:</div><div class="card"><b>${esc(SPCUR.name)}</b><br>Family: ${esc(SPCUR.fam)}<br>${SPCUR.hab.length ? 'Habit: ' + SPCUR.hab.map(cap).join(', ') + '<br>' : ''}${gi.n ? `Recorded in ${gi.n} map grids${gi.isl.length ? ' (' + esc(gi.isl.join(', ')) + ')' : ''}<br>` : ''}${cm.length ? 'Common names: ' + esc(cm.slice(0, 6).map(c => c[1]).join(', ')) : ''}</div>` + link;
+  },
   dis() {
-    const r = det()[2].filter(x => x.some(clean)), fr = det()[3].filter(x => x.some(clean));
-    $('p_dis').innerHTML = `<h3>Distribution data</h3><h3 style="font-size:14px">Flora distribution</h3>` + (r.length ? '<table class="t"><tr><th>Country</th><th>State</th><th>District</th><th>Taluk</th><th>Place</th></tr>' + r.map(x => '<tr>' + x.map(v => `<td>${esc(clean(v))}</td>`).join('') + '</tr>').join('') + '</table>' : '<div class="note">No records.</div>') +
-      `<h3 style="font-size:14px">Grid distribution</h3>` + (fr.length ? '<table class="t"><tr><th>Forest Range</th><th>Forest Division</th></tr>' + fr.map(x => '<tr>' + x.map(v => `<td>${esc(clean(v))}</td>`).join('') + '</tr>').join('') + '</table>' : '<div class="note">No records.</div>');
+    const r = det()[2].filter(x => x.some(clean)), fr = det()[3].filter(x => x.some(clean)), gi = gridInfo();
+    $('p_dis').innerHTML = thumb() + `<h3>Distribution data</h3><h3 style="font-size:14px">Flora distribution</h3>` + (r.length ? '<table class="t"><tr><th>Country</th><th>State</th><th>District</th><th>Taluk</th><th>Place</th></tr>' + r.map(x => '<tr>' + x.map(v => `<td>${esc(clean(v))}</td>`).join('') + '</tr>').join('') + '</table>' : '<div class="note">No flora records for this species.</div>') +
+      `<h3 style="font-size:14px">Grid distribution</h3>` + (fr.length ? '<table class="t"><tr><th>Forest Range</th><th>Forest Division</th></tr>' + fr.map(x => '<tr>' + x.map(v => `<td>${esc(clean(v))}</td>`).join('') + '</tr>').join('') + '</table>' : '<div class="note">No forest range records for this species.</div>') +
+      `<div class="card">${gi.n ? `Recorded in <b>${gi.n}</b> map grid${gi.n > 1 ? 's' : ''}${gi.isl.length ? ' of ' + esc(gi.isl.join(', ')) : ''}${gi.div.length ? ' (division: ' + esc(gi.div.join(', ')) + ')' : ''}. See the Maps tab.` : 'No map-grid records for this species.'}</div>`;
   },
   syn() {
     const sy = det()[1];
-    $('p_syn').innerHTML = `<h3>Synonym data</h3>` + (sy.length ? sy.map(([n, fl]) => `<div class="note" style="margin-top:12px"><b>${esc(n)}</b></div><table class="t"><tr><th>Flora</th><th>Volume</th><th>Author</th><th>Edition</th><th>Year</th></tr>${fl.map(f => '<tr>' + f.map(v => `<td>${esc(clean(v) === '-' ? '' : clean(v))}</td>`).join('') + '</tr>').join('')}</table>`).join('') : '<div class="note">No synonyms recorded.</div>');
+    $('p_syn').innerHTML = thumb() + `<h3>Synonym data</h3>` + (sy.length ? sy.map(([n, fl]) => `<div class="note" style="margin-top:12px"><b>${esc(n)}</b></div><table class="t"><tr><th>Flora</th><th>Volume</th><th>Author</th><th>Edition</th><th>Year</th></tr>${fl.map(f => '<tr>' + f.map(v => `<td>${esc(clean(v) === '-' ? '' : clean(v))}</td>`).join('') + '</tr>').join('')}</table>`).join('') : `<div class="card">No synonyms are recorded for <b>${esc(SPCUR.name)}</b> in the original program. Name used: <b>${esc(SPCUR.name)}</b> (family ${esc(SPCUR.fam)}).</div>`);
   },
   com() {
     const cm = det()[0];
-    $('p_com').innerHTML = `<h3>Common Names</h3>` + (cm.length ? '<table class="t"><tr><th>Language</th><th>Local Name</th></tr>' + cm.map(([l, n]) => `<tr><td>${esc(D.langs[l])}</td><td>${esc(n)}</td></tr>`).join('') + '</table>' : '<div class="note">No common names recorded.</div>');
+    let extra = '';
+    if (!cm.length) { const mates = (GEN.get(SPCUR.genus) || []).filter(x => x !== SPCUR).flatMap(x => (D.d[x.id]?.[0] || []).slice(0, 2).map(c => esc(c[1]) + ' (' + esc(x.name) + ')')).slice(0, 12); extra = `<div class="card">No local names are recorded for <b>${esc(SPCUR.name)}</b>.${mates.length ? '<br>Names recorded for other species of ' + esc(SPCUR.genus) + ': ' + mates.join('; ') : ''}</div>`; }
+    $('p_com').innerHTML = thumb() + `<h3>Common Names</h3>` + (cm.length ? '<table class="t"><tr><th>Language</th><th>Local Name</th></tr>' + cm.map(([l, n]) => `<tr><td>${esc(D.langs[l])}</td><td>${esc(n)}</td></tr>`).join('') + '</table>' : extra);
   }
 };
+let sv = null;
 function mapPage() {
-  const c = $('spcv'), x = c.getContext('2d'), sg = new Map((M.sg[SPCUR.id] || []));
-  const vw = {x0: B.x0, x1: B.x1, y0: B.y0, y1: B.y1}, s = Math.min(c.width / ((vw.x1 - vw.x0) * KX), c.height / (vw.y1 - vw.y0));
-  const P = (a, b) => [(a - vw.x0) * KX * s, c.height - (b - vw.y0) * s];
-  const path = (g) => { const ps = g.t === 'Polygon' ? [g.c] : g.c; ps.forEach(p => p.forEach(r => { r.forEach(([a, b], i) => { const [u, v] = P(a, b); i ? x.lineTo(u, v) : x.moveTo(u, v); }); x.closePath(); })); };
-  x.fillStyle = '#9fd3e8'; x.fillRect(0, 0, c.width, c.height);
-  x.fillStyle = '#e9e4c4'; x.strokeStyle = '#6b6a4a'; M.border.forEach(f => { x.beginPath(); path(f.g); x.fill(); x.stroke(); });
-  x.strokeStyle = 'rgba(80,80,80,.35)'; x.lineWidth = .5; x.beginPath(); M.grid.forEach(g => path(g)); x.stroke();
-  let mx = 0; sg.forEach(v => mx = Math.max(mx, v));
-  x.lineWidth = 1; sg.forEach((v, i) => { x.beginPath(); path(M.grid[i]); x.fillStyle = RAMP[Math.min(RAMP.length - 1, Math.floor((v - 1) / Math.max(1, mx) * RAMP.length))]; x.globalAlpha = .9; x.fill(); x.globalAlpha = 1; x.strokeStyle = '#7a0a4c'; x.stroke(); });
-  sg.forEach((v, i) => { const [cx, cy] = ctr(i), [u, w] = P(cx, cy); x.beginPath(); x.arc(u, w, 5, 0, 6.3); x.fillStyle = '#7a0a4c'; x.fill(); x.strokeStyle = '#fff'; x.lineWidth = 1.5; x.stroke(); });
-  const gs = [...sg.keys()].map(i => C.grids[i]);
-  const divs = [...new Set(gs.map(g => g[3]).filter(Boolean))].map(d => d), bnd = [...new Set(gs.map(g => g[2]).filter(Boolean))];
+  const c = $('spcv'); sv = {x0: B.x0, x1: B.x1, y0: B.y0, y1: B.y1};
+  const sg = new Map((M.sg[SPCUR.id] || []));
+  const sc = v => Math.min(c.width / ((v.x1 - v.x0) * KX), c.height / (v.y1 - v.y0));
+  const draw = () => {
+    const x = c.getContext('2d'), s = sc(sv), P = (a, b) => [(a - sv.x0) * KX * s, c.height - (b - sv.y0) * s];
+    const path = g => { const ps = g.t === 'Polygon' ? [g.c] : g.c; ps.forEach(p => p.forEach(r => { r.forEach(([a, b], i) => { const [u, v] = P(a, b); i ? x.lineTo(u, v) : x.moveTo(u, v); }); x.closePath(); })); };
+    x.fillStyle = '#9fd3e8'; x.fillRect(0, 0, c.width, c.height); x.lineWidth = 1;
+    x.fillStyle = '#e9e4c4'; x.strokeStyle = '#6b6a4a'; M.border.forEach(f => { x.beginPath(); path(f.g); x.fill(); x.stroke(); });
+    x.strokeStyle = sv.x1 - sv.x0 > 1.5 ? 'rgba(80,80,80,.2)' : 'rgba(80,80,80,.4)'; x.lineWidth = .5; x.beginPath(); M.grid.forEach(g => path(g)); x.stroke();
+    let mx = 0; sg.forEach(v => mx = Math.max(mx, v)); x.lineWidth = 1;
+    sg.forEach((v, i) => { x.beginPath(); path(M.grid[i]); x.fillStyle = RAMP[Math.min(RAMP.length - 1, Math.floor((v - 1) / Math.max(1, mx) * RAMP.length))]; x.globalAlpha = .9; x.fill(); x.globalAlpha = 1; x.strokeStyle = '#7a0a4c'; x.stroke(); });
+    sg.forEach((v, i) => { const [cx, cy] = ctr(i), [u, w] = P(cx, cy); x.beginPath(); x.arc(u, w, 5, 0, 6.3); x.fillStyle = '#7a0a4c'; x.fill(); x.strokeStyle = '#fff'; x.lineWidth = 1.5; x.stroke(); });
+    x.fillStyle = '#000'; x.font = '11px Arial'; if (sv.x1 - sv.x0 < 1.2) M.places.forEach(f => { const [a, b] = P(f.g.c[0], f.g.c[1]); x.beginPath(); x.arc(a, b, 2.5, 0, 6.3); x.fill(); x.fillText(f.n, a + 4, b - 3); });
+  };
+  draw();
+  const gs = [...sg.keys()].map(i => C.grids[i]), bnd = [...new Set(gs.map(g => g[2]).filter(Boolean))]; let mx = 0; sg.forEach(v => mx = Math.max(mx, v));
   $('spInfo').innerHTML = `<b>${esc(SPCUR.name)}</b><br>Grids with records: <b>${sg.size}</b><br>${bnd.length ? 'Islands / areas: ' + esc(bnd.join(', ')) : ''}<br><br>` + (sg.size ? `<div class="leg" style="position:static">${RAMP.map((c, k) => { const a = Math.floor(k * mx / RAMP.length) + 1, b = Math.floor((k + 1) * mx / RAMP.length); return b >= a ? `<i style="background:${c}"></i>${a === b ? a : a + ' - ' + b}<br>` : ''; }).join('')}</div><div class="note" style="margin:6px 0">Number of records in each grid</div>` : '<div class="note" style="margin:0">No grid records for this species.</div>');
+  const zm = (f, cx, cy) => { const mx = cx ?? (sv.x0 + sv.x1) / 2, my = cy ?? (sv.y0 + sv.y1) / 2; sv = {x0: mx - (mx - sv.x0) * f, x1: mx + (sv.x1 - mx) * f, y0: my - (my - sv.y0) * f, y1: my + (sv.y1 - my) * f}; draw(); };
+  const w2 = (px, py) => { const s = sc(sv); return [px / (KX * s) + sv.x0, (c.height - py) / s + sv.y0]; };
+  const loc = e => { const r = c.getBoundingClientRect(), k = c.width / r.width; return [(e.clientX - r.left) * k, (e.clientY - r.top) * k]; };
+  let d = null;
+  c.onpointerdown = e => { c.setPointerCapture(e.pointerId); d = {p: loc(e), v: {...sv}}; };
+  c.onpointermove = e => { if (!d) return; const q = loc(e), s = sc(d.v), wx = (q[0] - d.p[0]) / (KX * s), wy = (q[1] - d.p[1]) / s; sv = {x0: d.v.x0 - wx, x1: d.v.x1 - wx, y0: d.v.y0 + wy, y1: d.v.y1 + wy}; draw(); };
+  c.onpointerup = () => { d = null; };
+  c.onwheel = e => { e.preventDefault(); const [a, b] = loc(e), [x, y] = w2(a, b); zm(e.deltaY < 0 ? .8 : 1.25, x, y); };
+  $('spIn').onclick = () => zm(.5); $('spOut').onclick = () => zm(2); $('spAll').onclick = () => { sv = {x0: B.x0, x1: B.x1, y0: B.y0, y1: B.y1}; draw(); };
 }
 // start
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
