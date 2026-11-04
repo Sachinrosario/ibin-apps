@@ -77,7 +77,8 @@ footer{border-top:1px solid var(--line);padding:16px;text-align:center;color:var
 .sim a{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:5px 10px;text-decoration:none;font-style:italic;color:var(--gd)}
 .cn{columns:2 240px;column-gap:24px}
 .cn p{margin:0 0 8px;break-inside:avoid}
-.old{color:var(--mut);font-style:italic}
+.old{color:var(--mut);font-weight:400}
+.sci .old{font-size:.68em}
 .cols>*,.hero>*{min-width:0}
 @media (max-width:820px){.hero{grid-template-columns:minmax(0,1fr)}.cols{grid-template-columns:minmax(0,1fr)}.mapcol .map{height:56vh}.sci{font-size:23px}.res{grid-template-columns:1fr}.brand small{display:none}h1{font-size:23px}}
 @media print{.top,footer,.srch,.ctl{display:none}}
@@ -131,11 +132,13 @@ const byId = new Map(SP.map(s => [s.id, s]));
 const GEN = new Map(), FAM = new Map();
 SP.forEach(s => { (GEN.get(s.genus) || GEN.set(s.genus, []).get(s.genus)).push(s); (FAM.get(s.fam) || FAM.set(s.fam, []).get(s.fam)).push(s); });
 SP.sort((a, b) => a.cur.localeCompare(b.cur));
-const sci = s => `<i>${esc(s.cur)}</i>`;
+// Rule for every updated name: the current accepted name first, the 2015 name kept beside it in brackets
+const nameTxt = s => s.changed ? `${s.cur} (${s.name15})` : s.cur;
+const nameHtml = s => s.changed ? `<i>${esc(s.cur)}</i> <span class="old">(<i>${esc(s.name15)}</i>)</span>` : `<i>${esc(s.cur)}</i>`;
 const picOf = s => {
   if (s.rep) return {src: MB + 'img/s/' + s.id + '.webp', cap: 'Representative picture', own: true};
   const r = (GEN.get(s.genus) || []).find(x => x.rep) || (FAM.get(s.fam) || []).find(x => x.rep);
-  return r ? {src: MB + 'img/s/' + r.id + '.webp', cap: 'No picture of this species. Shown: ' + r.cur + ' (' + (r.genus === s.genus ? 'same genus' : 'same family') + ')', own: false} : null;
+  return r ? {src: MB + 'img/s/' + r.id + '.webp', cap: 'No picture of this species. Shown: ' + nameTxt(r) + ' (' + (r.genus === s.genus ? 'same genus' : 'same family') + ')', own: false} : null;
 };
 const NOPIC = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><rect width="200" height="200" fill="#dfeee8"/><path d="M100 160V80M100 120c-34-6-48-30-48-54 28 3 48 22 48 54zm0-10c28-3 46-20 48-44-26 3-46 18-48 44z" fill="#7fb08a" stroke="#3f7a52" stroke-width="3"/></svg>');
 const thumbSrc = s => s.rep ? MB + 'img/s/' + s.id + '.webp' : NOPIC;
@@ -167,8 +170,8 @@ function why(s, toks) {
   const y = s.syn.find(x => fold(x[0]).includes(t)); if (y) return `<span class="badge">Synonym</span><i>${esc(y[0])}</i>`;
   return '';
 }
-const resultItem = (s, toks) => `<li><a href="#/s/${s.id}"><img loading="lazy" src="${thumbSrc(s)}" alt=""><div><div class="t">${esc(s.cur)}</div>
-  <div class="s">${s.changed ? `<span class="old">2015: ${esc(s.name15)}</span> · ` : ''}${esc(s.fam)}${s.hab.length ? ' · ' + s.hab.map(h => HAB[h]).join(', ') : ''}</div>
+const resultItem = (s, toks) => `<li><a href="#/s/${s.id}"><img loading="lazy" src="${thumbSrc(s)}" alt=""><div><div class="t">${nameHtml(s)}</div>
+  <div class="s">${esc(s.fam)}${s.hab.length ? ' · ' + s.hab.map(h => HAB[h]).join(', ') : ''}</div>
   <div class="s">${why(s, toks)}</div></div></a></li>`;
 
 function viewSearch(app) {
@@ -281,7 +284,7 @@ function nameBlock(s) {
 }
 function viewSpecies(app, id) {
   const s = byId.get(+id); if (!s) { app.innerHTML = '<h1>Not found</h1><p><a href="#/">Back to search</a></p>'; return; }
-  document.title = s.cur + ' · Andaman Mapping 2';
+  document.title = nameTxt(s) + ' · Andaman Mapping 2';
   const p = picOf(s), dd = D.d[s.id] || [[], [], [], []], sg = new Map(M.sg[s.id] || []);
   const gs = [...sg.keys()].map(i => C.grids[i]), areas = [...new Set(gs.map(g => g[2]).filter(Boolean))], divs = [...new Set(gs.map(g => g[3]).filter(Boolean))];
   const t = C.tax[C.fams.indexOf(s.fam)] || [];
@@ -291,7 +294,7 @@ function viewSpecies(app, id) {
   const mates = (GEN.get(s.genus) || []).filter(x => x !== s);
   app.innerHTML = `<p><a href="#/">&larr; Search</a></p>
   <div class="hero"><figure>${p ? `<img src="${p.src}" alt="${esc(s.cur)}">` : `<img src="${NOPIC}" alt="">`}<figcaption>${p ? esc(p.cap) : 'No picture of this species or its relatives in the original program'}</figcaption></figure>
-  <div><div class="sci">${esc(s.cur)}</div>${s.changed ? `<div class="old">2015 name: ${esc(s.name15)}</div>` : ''}
+  <div><div class="sci">${nameHtml(s)}</div>
   <dl class="kv"><dt>Family</dt><dd>${esc(s.fam)}${s.gfam && fold(s.gfam) !== fold(s.fam) ? ` <span class="old">(GBIF: ${esc(s.gfam)})</span>` : ''}</dd><dt>Genus</dt><dd><i>${esc(s.genus)}</i></dd>${s.hab.length ? `<dt>Habit</dt><dd>${s.hab.map(h => HAB[h]).join(', ')}</dd>` : ''}<dt>Recorded in</dt><dd>${sg.size ? plural(sg.size, 'map grid', 'map grids') + (areas.length ? ' · ' + esc(areas.join(', ')) : '') : 'no map grids'}</dd></dl>
   ${nameBlock(s)}</div></div>
   <h2>Where it grows</h2>
@@ -307,7 +310,7 @@ function viewSpecies(app, id) {
   <div class="note ok" style="margin-bottom:0"><b>For a better experience, download all the images from Google Drive.</b> Open the folder <b>Andaman Mapping Application › Photos › ${esc(s.name15)}</b>${s.fl ? ' and <b>Fliers › ' + esc(s.name15) + '</b> for the full flier' : ''}.<br><a class="btn sm" style="margin-top:8px" href="${DRIVE}" target="_blank" rel="noopener">Open Google Drive folder</a></div></div>
   ${s.fl ? `<figure style="margin:8px 0;max-width:520px"><img src="${MB}img/f/${s.id}.webp" alt="Flier, first slide" style="width:100%;border-radius:10px;border:1px solid var(--line)"><figcaption class="lead">First slide of the original flier</figcaption></figure>` : ''}
   <h2>Classification</h2><div class="card">${['Kingdom','Phylum','Class','Subclass','Order','Family'].map((n, i) => t[i] ? `<b>${n}</b> ${esc(t[i])}` : '').filter(Boolean).join(' &rsaquo; ')}</div>
-  ${mates.length ? `<h2>Other species of <i>${esc(s.genus)}</i></h2><div class="sim">${mates.slice(0, 30).map(x => `<a href="#/s/${x.id}">${esc(x.cur)}</a>`).join('')}${mates.length > 30 ? '<span class="lead">…and ' + (mates.length - 30) + ' more</span>' : ''}</div>` : ''}`;
+  ${mates.length ? `<h2>Other species of <i>${esc(s.genus)}</i></h2><div class="sim">${mates.slice(0, 30).map(x => `<a href="#/s/${x.id}">${nameHtml(x)}</a>`).join('')}${mates.length > 30 ? '<span class="lead">…and ' + (mates.length - 30) + ' more</span>' : ''}</div>` : ''}`;
   const mv = new MapView($('#sm'), {dots: true, legendTitle: 'Records per grid'}); mapsToClean.push(mv);
   const v = new Array(C.grids.length).fill(0); sg.forEach((n, i) => { v[i] = n; }); mv.setVal(sg.size ? v : null); mv.fitSet([...sg.keys()]);
   app.querySelectorAll('[data-ex]').forEach(b => b.onclick = () => exportGrids(b.dataset.ex, [...sg.entries()], 'andaman_' + s.cur.replace(/\W+/g, '_') + '_grids', 'records'));
@@ -339,7 +342,7 @@ function viewMap(app) {
       <div class="tiles"><div class="tile"><b>${mp.sel.size}</b><span>grids selected</span></div><div class="tile"><b>${list.length}</b><span>species</span></div><div class="tile"><b>${gen.size}</b><span>genera</span></div><div class="tile"><b>${fam.size}</b><span>families</span></div></div>
       ${mp.sel.size ? `<div class="row"><button class="btn alt sm" id="clr">Clear selection</button></div>` : '<p class="lead" style="margin:0">Tap or click grids on the map to select them.</p>'}
       ${mp.sel.size ? exBtns('') : ''}</div>
-      ${list.length ? `<div class="list">${list.map(s => `<a href="#/s/${s.id}">${esc(s.cur)}</a>`).join('')}</div><div class="row" style="margin-top:8px"><button class="btn alt sm" id="csv">Download this plant list (CSV)</button></div>` : ''}`;
+      ${list.length ? `<div class="list">${list.map(s => `<a href="#/s/${s.id}">${nameHtml(s)}</a>`).join('')}</div><div class="row" style="margin-top:8px"><button class="btn alt sm" id="csv">Download this plant list (CSV)</button></div>` : ''}`;
       if ($('#clr')) $('#clr').onclick = () => { mp.sel.clear(); mv.sel = mp.sel; side(); mv.draw(); };
       if ($('#csv')) $('#csv').onclick = () => download('andaman_plants_in_selected_grids.csv', 'text/csv', 'scientific_name,name_2015,family,habit,records_in_selected_grids\n' + list.map(s => [s.cur, s.name15, s.fam, s.hab.join('; '), ids.get(s.id)].map(csvq).join(',')).join('\n'));
       document.querySelectorAll('[data-ex]').forEach(b => b.onclick = () => exportGrids(b.dataset.ex, [...mp.sel].map(i => [i, (g2s.get(i) || []).length]), 'andaman_selected_grids', 'species_recorded'));
@@ -359,7 +362,7 @@ function viewChanges(app) {
   document.title = "What's changed · Andaman Mapping 2";
   const nw = SP.filter(s => s.code === 2), ok = SP.filter(s => s.code === 1), ck = SP.filter(s => s.code === 3), gn = SP.filter(s => !s.code);
   const lists = {new: nw, check: ck, genus: gn};
-  app.innerHTML = `<h1>What's changed since 2015</h1><p class="lead">Every plant name was checked against the <b>${esc(NM.source)}</b> on ${esc(NM.date)}. The 2015 name is always kept and shown beside the current one.</p>
+  app.innerHTML = `<h1>What's changed since 2015</h1><p class="lead">Every plant name was checked against the <b>${esc(NM.source)}</b> on ${esc(NM.date)}. Where a name changed, the current accepted name comes first and the 2015 name is kept beside it in brackets, for example <i>Senegalia andamanica</i> (<i>Acacia andamanica</i>). Old names still work in search.</p>
   <div class="tiles"><div class="tile"><b>${ok.length}</b><span>names confirmed as they were</span></div><div class="tile"><b>${nw.length}</b><span>names updated</span></div><div class="tile"><b>${ck.length}</b><span>left unchanged for a taxonomist to check</span></div><div class="tile"><b>${gn.length}</b><span>genus-level entries (“… spp”), not matched</span></div></div>
   <div class="card"><b>What is new in Version 2</b><ul><li>Search first: one box finds plants by scientific name, family, local name in any language, synonym or habit.</li><li>Works on phones, tablets and computers, and offline.</li><li>One page per plant: picture, names, local names by language, synonyms, flier, where it grows, other species of the genus.</li><li>A map you can drag and pinch, with area shortcuts and species-count maps by habit.</li><li>GIS export of a plant's grids or of selected grids (GeoJSON, KML, CSV) for QGIS and ArcGIS, and a CSV list of plants.</li></ul>
   Everything from Version 1 is still here: the same ${plural(SP.length, 'plant', 'plants')}, ${plural(C.grids.length, 'grid', 'grids')}, local names, synonyms and distribution records.</div>

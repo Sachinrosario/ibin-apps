@@ -5,7 +5,7 @@ The 2015 Andaman Mapping program (Andaman Resource Assessment and Mapping, Schoo
 Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario
 
 ### What is new
-- **Current plant names.** All names were checked against the GBIF Backbone (Catalogue of Life) on 4 November 2026: 1,213 confirmed, 309 updated to the current accepted name (the 2015 name is always shown beside it), 340 left unchanged for a taxonomist to check, and 351 genus-level entries ("… spp") not matched. See the **What's changed** page.
+- **Current plant names.** All names were checked against the GBIF Backbone (Catalogue of Life) on 4 November 2026: 1,213 confirmed, 309 updated to the current accepted name (the 2015 name is kept in brackets beside it everywhere, and still works in search), 340 left unchanged for a taxonomist to check, and 351 genus-level entries ("… spp") not matched. See the **What's changed** page.
 - **Search first.** One search box finds plants by scientific name, family, local name in any language (35,000 names), synonym (20,000) or habit.
 - **Works on phones and tablets**, and offline.
 - **One page per plant:** picture, names, local names by language, synonyms with the floras that use them, flier, where it grows, other species of the genus.

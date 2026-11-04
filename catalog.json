@@ -975,7 +975,7 @@
           "version": "2.0.0",
           "released": "2026-11-04",
           "published": true,
-          "summary": "Search first, on phones too: find plants by scientific name, family, local name in any language, synonym or habit. Current names (GBIF / Catalogue of Life, 2015 names kept), one page per plant, a draggable map with species-count maps, and GIS export of grids as GeoJSON, KML or CSV.",
+          "summary": "Search first, on phones too: find plants by scientific name, family, local name in any language, synonym or habit. Current names (GBIF / Catalogue of Life, 2015 names kept in brackets), one page per plant, a draggable map with species-count maps, and GIS export of grids as GeoJSON, KML or CSV.",
           "facts": [
             "2,213 plants",
             "309 names updated",
