@@ -106,13 +106,74 @@ jobs:
           sed -i "s/1,0,0,0/$C,0/g; s/\"1\.0\.0\"/\"$V\"/g; s/1\.0\.0 Original/$V/g" app.rc
           x86_64-w64-mingw32-windres --preprocessor=cat -O coff -i app.rc -o rsrc_windows_amd64.syso
           GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -ldflags "-s -w -H windowsgui" -o ${{ steps.info.outputs.base }}.exe .
-          makensis -V2 -DVERSION=${{ steps.info.outputs.version }} installer.nsi
+          # an app with installer.iss gets its Setup from the windows-inno job instead
+          if [ ! -f installer.iss ]; then makensis -V2 -DVERSION=${{ steps.info.outputs.version }} installer.nsi; fi
           ls -la *.exe
       - name: Attach to release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: apps/${{ matrix.app }}/windows
-        run: gh release upload "${{ steps.info.outputs.tag }}" ${{ steps.info.outputs.base }}.exe ${{ steps.info.outputs.base }}_${{ steps.info.outputs.version }}_Setup.exe --clobber
+        run: |
+          FILES="${{ steps.info.outputs.base }}.exe"
+          SETUP="${{ steps.info.outputs.base }}_${{ steps.info.outputs.version }}_Setup.exe"
+          if [ -f "$SETUP" ]; then FILES="$FILES $SETUP"; fi
+          gh release upload "${{ steps.info.outputs.tag }}" $FILES --clobber
+      - name: Keep the exe for the Inno Setup build
+        if: hashFiles(format('apps/{0}/windows/installer.iss', matrix.app)) != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.app }}-exe
+          path: apps/${{ matrix.app }}/windows/${{ steps.info.outputs.base }}.exe
+          retention-days: 1
+
+  # Inno Setup only runs on Windows; used by apps that have windows/installer.iss
+  windows-inno:
+    needs: [prepare, windows]
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJSON(needs.prepare.outputs.apps) }}
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: apps/${{ matrix.app }}
+      - id: info
+        name: Version and file names
+        run: |
+          A=apps/${{ matrix.app }}
+          VER=$(jq -r .version $A/release.json)
+          echo "version=$VER" >> $GITHUB_OUTPUT
+          echo "base=$(jq -r .fileBase $A/release.json)" >> $GITHUB_OUTPUT
+          echo "tag=${{ matrix.app }}-v$VER" >> $GITHUB_OUTPUT
+          if [ -f $A/windows/installer.iss ]; then echo "inno=yes" >> $GITHUB_OUTPUT; fi
+      - name: Fetch the exe
+        if: steps.info.outputs.inno == 'yes'
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ matrix.app }}-exe
+          path: apps/${{ matrix.app }}/windows
+      - name: Build Setup and attach to release
+        if: steps.info.outputs.inno == 'yes'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        working-directory: apps/${{ matrix.app }}/windows
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          # pinned: the wizard images and look come from this exact version
+          $is = "$env:RUNNER_TEMP\innosetup-6.7.4.exe"
+          Invoke-WebRequest -Uri 'https://github.com/jrsoftware/issrc/releases/download/is-6_7_4/innosetup-6.7.4.exe' -OutFile $is
+          if ((Get-FileHash $is -Algorithm SHA256).Hash -ne 'A549929319F9120716677C685535CA4671E4B937B5FDC87E2585F32D8EB30E8C') { throw 'Inno Setup download does not match the expected checksum' }
+          $dir = "$env:RUNNER_TEMP\inno"
+          $p = Start-Process -FilePath $is -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/CURRENTUSER','/NOICONS',"/DIR=`"$dir`"" -Wait -PassThru
+          if ($p.ExitCode -ne 0) { throw "Inno Setup install failed: $($p.ExitCode)" }
+          & "$dir\ISCC.exe" /Qp "/DVERSION=${{ steps.info.outputs.version }}" installer.iss
+          if ($LASTEXITCODE -ne 0) { throw "ISCC failed: $LASTEXITCODE" }
+          gh release upload "${{ steps.info.outputs.tag }}" "${{ steps.info.outputs.base }}_${{ steps.info.outputs.version }}_Setup.exe" --clobber
 
   ubuntu:
     needs: [prepare, release]
