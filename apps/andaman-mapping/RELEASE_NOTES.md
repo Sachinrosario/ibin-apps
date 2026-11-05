@@ -1,4 +1,6 @@
-## Andaman Mapping – Version 1 – Original (1.0.0)
+## Andaman Mapping – Version 1 – Original (1.0.1)
+
+The Windows Setup now uses the same kind of installer wizard as the 2015 program, built with Inno Setup. It still installs without an administrator password. The program itself is unchanged.
 
 The 2015 Andaman Mapping program ("Distribution, Taxonomy & Diversity of Plants of Andaman", Andaman Resource Assessment and Mapping) rebuilt so that it looks and works as the original did, and now runs on Windows, Mac and Ubuntu, in a browser, and offline. It no longer needs MapInfo.
 
@@ -15,10 +17,10 @@ Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A
 ### Downloads
 | File | For |
 |---|---|
-| `AndamanMapping_1.0.0_Setup.exe` | Windows 10/11: installs, no administrator password |
+| `AndamanMapping_1.0.1_Setup.exe` | Windows 10/11: installs, no administrator password |
 | `AndamanMapping.exe` | Windows: runs without installing |
-| `AndamanMapping_1.0.0_universal.dmg` | macOS (Intel and Apple silicon) |
-| `AndamanMapping_1.0.0_amd64.deb` | Ubuntu 22.04 or newer |
-| `AndamanMapping_1.0.0_offline.zip` | Any computer: extract, then open `Open Kit.html` |
+| `AndamanMapping_1.0.1_universal.dmg` | macOS (Intel and Apple silicon) |
+| `AndamanMapping_1.0.1_amd64.deb` | Ubuntu 22.04 or newer |
+| `AndamanMapping_1.0.1_offline.zip` | Any computer: extract, then open `Open Kit.html` |
 
 Version 1 keeps the original's screens and behaviour. Updated plant names (Catalogue of Life), phone-friendly design and GIS export are planned for Version 2.

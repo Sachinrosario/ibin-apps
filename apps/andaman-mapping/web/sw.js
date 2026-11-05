@@ -1,5 +1,5 @@
 // Offline support: keeps the app, data and every picture that has been viewed.
-const CACHE = 'am1-v1';
+const CACHE = 'am1-v2';
 const CORE = ['./', 'index.html', 'data/core.js', 'data/detail.js', 'data/images.js', 'data/map.js', 'manifest.webmanifest'];
 self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting())));
 // All IBIN apps share one website, so only this app's own older copies are removed (never another app's offline copy).
