@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Western Ghats Mapping 2</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0a6b5a">
+<style>
+:root{--g:#0a6b5a;--g2:#0d8a73;--gd:#074c40;--ink:#1b2a25;--mut:#5b6b65;--bg:#f5f3ec;--card:#fff;--line:#dcd8cb;--acc:#b3541e;--soft:#e6f2ee;--warn:#fff4dd;--warnl:#e8c97a}
+@media (prefers-color-scheme:dark){:root{--g:#37b79c;--g2:#2a9f86;--gd:#9be0cf;--ink:#e8eeeb;--mut:#a3b3ad;--bg:#10171a;--card:#182125;--line:#2b3a3f;--acc:#f0a070;--soft:#173a33;--warn:#3a3118;--warnl:#7a6a2c}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Source Sans 3","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif}
+a{color:var(--g)}
+img{max-width:100%}
+.top{position:sticky;top:0;z-index:20;background:var(--g);color:#fff;display:flex;align-items:center;gap:12px;padding:8px 16px;padding-left:max(16px,env(safe-area-inset-left));flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;margin-right:auto}
+.brand img{width:38px;height:38px;border-radius:9px}
+.brand b{display:block;font:700 19px/1.1 Georgia,"Spectral",serif}
+.brand small{display:block;font-size:12px;opacity:.85}
+.top nav{display:flex;gap:2px;flex-wrap:wrap}
+.top nav a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:8px;font-weight:600;font-size:15px}
+.top nav a.on,.top nav a:hover{background:rgba(255,255,255,.18)}
+main{max-width:1180px;margin:0 auto;padding:16px 16px 40px}
+h1{font:700 26px/1.2 Georgia,"Spectral",serif;margin:8px 0 4px;color:var(--gd)}
+h2{font:700 20px/1.25 Georgia,"Spectral",serif;margin:26px 0 8px;color:var(--gd)}
+.lead{color:var(--mut);margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0}
+.note{background:var(--warn);border:1px solid var(--warnl);border-radius:10px;padding:10px 14px;margin:12px 0;font-size:15px}
+.note.ok{background:var(--soft);border-color:var(--g2)}
+.btn{display:inline-block;background:var(--g);color:#fff;border:0;border-radius:9px;padding:9px 14px;font:600 15px/1.2 inherit;cursor:pointer;text-decoration:none}
+.btn:hover{background:var(--g2)}
+.btn.alt{background:transparent;color:var(--g);border:1.5px solid var(--g)}
+.btn.sm{padding:6px 10px;font-size:14px}
+.btn:disabled{opacity:.45;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 12px;font:600 14px/1.2 inherit;cursor:pointer}
+.chip.on{background:var(--g);border-color:var(--g);color:#fff}
+.srch{display:flex;gap:8px;margin:10px 0}
+.srch input{flex:1;font:inherit;font-size:18px;padding:12px 14px;border:2px solid var(--g);border-radius:12px;background:var(--card);color:var(--ink);min-width:0}
+select,.fi{font:inherit;padding:8px 10px;border:1.5px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink);max-width:100%}
+.res{list-style:none;margin:10px 0;padding:0;display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
+.res a{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px;text-decoration:none;color:var(--ink);height:100%}
+.res a:hover{border-color:var(--g)}
+.res img{width:64px;height:64px;object-fit:cover;border-radius:8px;background:var(--soft);flex:none}
+.res .t{font-style:italic;font-weight:700;color:var(--gd)}
+.res .s{font-size:13.5px;color:var(--mut)}
+.badge{display:inline-block;font:600 12px/1 inherit;padding:3px 7px;border-radius:6px;background:var(--soft);color:var(--gd);margin-right:4px}
+.badge.w{background:var(--warn);color:var(--ink);border:1px solid var(--warnl)}
+.hero{display:grid;grid-template-columns:minmax(0,320px) 1fr;gap:18px;align-items:start}
+.hero figure{margin:0}
+.hero img{width:100%;border-radius:12px;display:block;background:var(--soft)}
+.hero figcaption{font-size:13px;color:var(--mut);margin-top:4px}
+.sci{font:italic 700 28px/1.2 Georgia,"Spectral",serif;color:var(--gd);margin:4px 0}
+.kv{display:grid;grid-template-columns:max-content 1fr;gap:4px 14px;margin:8px 0}
+.kv dt{color:var(--mut)}.kv dd{margin:0}
+table.t{border-collapse:collapse;width:100%;font-size:15px}
+table.t th{background:var(--soft);color:var(--gd);text-align:left;padding:6px 10px;position:sticky;top:0}
+table.t td{padding:5px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.tw{overflow:auto;max-height:420px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+.map{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#a9d6ea;touch-action:none}
+.map canvas{display:block;width:100%;height:100%;cursor:grab}
+.map .ctl{position:absolute;right:8px;top:8px;display:flex;flex-direction:column;gap:4px}
+.map .ctl button{width:36px;height:36px;border-radius:8px;border:1px solid #888;background:rgba(255,255,255,.92);font:700 18px/1 inherit;cursor:pointer;color:#111}
+.leg{font-size:12.5px;background:rgba(255,255,255,.92);color:#111;border:1px solid #999;border-radius:8px;padding:5px 8px;position:absolute;left:8px;bottom:8px;max-width:60%}
+.leg i{display:inline-block;width:13px;height:11px;margin-right:4px;border:1px solid #555;vertical-align:-1px}
+.cols{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:16px;align-items:start}
+.mapcol .map{height:min(74vh,720px)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.tile b{display:block;font:700 26px/1.1 Georgia,serif;color:var(--gd)}
+.tile span{font-size:13.5px;color:var(--mut)}
+.list{max-height:360px;overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+.list a{display:block;padding:6px 12px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);font-style:italic}
+.list a:hover{background:var(--soft)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+footer{border-top:1px solid var(--line);padding:16px;text-align:center;color:var(--mut);font-size:14px}
+.sim{display:flex;gap:8px;flex-wrap:wrap}
+.sim a{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:5px 10px;text-decoration:none;font-style:italic;color:var(--gd)}
+.cn{columns:2 240px;column-gap:24px}
+.cn p{margin:0 0 8px;break-inside:avoid}
+.old{color:var(--mut);font-weight:400}
+.sci .old{font-size:.68em}
+.cols>*,.hero>*{min-width:0}
+@media (max-width:820px){.hero{grid-template-columns:minmax(0,1fr)}.cols{grid-template-columns:minmax(0,1fr)}.mapcol .map{height:56vh}.sci{font-size:23px}.res{grid-template-columns:1fr}.brand small{display:none}h1{font-size:23px}}
+@media print{.top,footer,.srch,.ctl{display:none}}
+</style></head>
+<body>
+<header class="top">
+  <a class="brand" href="#/"><img src="img/ui/icon.png" alt=""><span><b>Western Ghats Mapping</b><small>Plants of the Western Ghats · Version 2</small></span></a>
+  <nav id="nav"><a href="#/" data-r="search">Search</a><a href="#/map" data-r="map">Map</a><a href="#/changes" data-r="changes">What's changed</a><a href="#/about" data-r="about">About</a></nav>
+</header>
+<main id="app"><p class="lead">Loading…</p></main>
+<footer>
+  Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario · IBIN Apps<br>
+  <b>Pictures:</b> this app shows one picture per plant so that it stays small and works offline.
+</footer>
+<script src="data/media-base.js"></script>
+<script src="data/core.js"></script>
+<script src="data/detail.js"></script>
+<script src="data/images.js"></script>
+<script src="data/map.js"></script>
+<script src="data/names.js"></script>
+<script>
+"use strict";
+const C = AM_CORE, D = AM_DETAIL, IM = AM_IMAGES, M = AM_MAP, NM = AM_NAMES;
+const MB = window.MEDIA_BASE || '';
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fold = s => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const cap = s => s ? s[0].toUpperCase() + s.slice(1) : s;
+const plural = (n, a, b) => n.toLocaleString() + ' ' + (n === 1 ? a : b);
+const clean = v => (v == null || String(v).toLowerCase() === 'none' || v === '-') ? '' : String(v);
+const HAB = {tree:'Tree', herb:'Herb', shrub:'Shrub', epiphyte:'Epiphyte', regeneration:'Regeneration'};
+const HAB_KEYS = ['tree','herb','shrub','epiphyte','regeneration'];
+
+/* ---------- species ---------- */
+const SP = C.sp.map(r => {
+  const id = r[0], n = NM.n[id] || null, name15 = r[2];
+  const s = {id, genus: r[1], name15, fam: C.fams[r[3]], hab: r[4].map(i => C.habits[i]), mask: r[5], fl: r[6], rep: r[7], code: n ? n[0] : 0};
+  s.cur = n && n[0] === 2 ? n[1] : name15;
+  s.auth = n && n[0] !== 3 ? n[2] : ''; s.key = n && n[3] ? n[3] : ''; s.gfam = n && n[0] !== 3 ? n[4] : ''; s.sug = n && n[0] === 3 ? n[1] : ''; s.why = n && n[0] === 3 ? n[2] : '';
+  s.changed = s.cur !== name15;
+  const dd = D.d[id] || [[], [], [], []];
+  s.cm = dd[0]; s.syn = dd[1];
+  s.fCur = fold(s.cur); s.f15 = fold(name15); s.fGen = fold(s.genus); s.fFam = fold(s.fam);
+  s.fCm = fold(s.cm.map(c => c[1]).join(' | ')); s.fSyn = fold(s.syn.map(x => x[0]).join(' | '));
+  s.hay = [s.fCur, s.f15, s.fGen, s.fFam, s.hab.join(' '), s.fCm, s.fSyn].join(' | ');
+  return s;
+});
+const byId = new Map(SP.map(s => [s.id, s]));
+const GEN = new Map(), FAM = new Map();
+SP.forEach(s => { (GEN.get(s.genus) || GEN.set(s.genus, []).get(s.genus)).push(s); (FAM.get(s.fam) || FAM.set(s.fam, []).get(s.fam)).push(s); });
+SP.sort((a, b) => a.cur.localeCompare(b.cur));
+// Rule for every updated name: the current accepted name first, the 2015 name kept beside it in brackets
+const nameTxt = s => s.changed ? `${s.cur} (${s.name15})` : s.cur;
+const nameHtml = s => s.changed ? `<i>${esc(s.cur)}</i> <span class="old">(<i>${esc(s.name15)}</i>)</span>` : `<i>${esc(s.cur)}</i>`;
+const picOf = s => {
+  if (s.rep) return {src: MB + 'img/s/' + s.id + '.webp', cap: 'Representative picture', own: true};
+  const r = (GEN.get(s.genus) || []).find(x => x.rep) || (FAM.get(s.fam) || []).find(x => x.rep);
+  return r ? {src: MB + 'img/s/' + r.id + '.webp', cap: 'No picture of this species. Shown: ' + nameTxt(r) + ' (' + (r.genus === s.genus ? 'same genus' : 'same family') + ')', own: false} : null;
+};
+const NOPIC = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><rect width="200" height="200" fill="#dfeee8"/><path d="M100 160V80M100 120c-34-6-48-30-48-54 28 3 48 22 48 54zm0-10c28-3 46-20 48-44-26 3-46 18-48 44z" fill="#7fb08a" stroke="#3f7a52" stroke-width="3"/></svg>');
+const thumbSrc = s => s.rep ? MB + 'img/s/' + s.id + '.webp' : NOPIC;
+
+/* ---------- search ---------- */
+const st = {q: '', hab: '', fam: '', pic: false, shown: 40};
+function search() {
+  const toks = fold(st.q).split(/\s+/).filter(Boolean);
+  let out = [];
+  for (const s of SP) {
+    if (st.hab && !s.hab.includes(st.hab)) continue;
+    if (st.fam && s.fam !== st.fam) continue;
+    if (st.pic && !s.rep) continue;
+    let score = 0, ok = true;
+    for (const t of toks) {
+      if (!s.hay.includes(t)) { ok = false; break; }
+      score += s.fCur.startsWith(t) || s.f15.startsWith(t) ? 3 : s.fCur.includes(t) || s.f15.includes(t) ? 2 : s.fGen.includes(t) ? 1 : 0;
+    }
+    if (ok) out.push([score, s]);
+  }
+  if (toks.length) out.sort((a, b) => b[0] - a[0] || a[1].cur.localeCompare(b[1].cur));
+  return {list: out.map(x => x[1]), toks};
+}
+function why(s, toks) {
+  if (!toks.length) return '';
+  const t = toks[0];
+  if (s.fCur.includes(t) || s.f15.includes(t) || s.fGen.includes(t) || s.fFam.includes(t)) return '';
+  const c = s.cm.find(c => fold(c[1]).includes(t)); if (c) return `<span class="badge">${esc(D.langs[c[0]])}</span>${esc(c[1])}`;
+  const y = s.syn.find(x => fold(x[0]).includes(t)); if (y) return `<span class="badge">Synonym</span><i>${esc(y[0])}</i>`;
+  return '';
+}
+const resultItem = (s, toks) => `<li><a href="#/s/${s.id}"><img loading="lazy" src="${thumbSrc(s)}" alt=""><div><div class="t">${nameHtml(s)}</div>
+  <div class="s">${esc(s.fam)}${s.hab.length ? ' · ' + s.hab.map(h => HAB[h]).join(', ') : ''}</div>
+  <div class="s">${why(s, toks)}</div></div></a></li>`;
+
+function viewSearch(app) {
+  const fams = [...new Set(SP.map(s => s.fam))].sort();
+  app.innerHTML = `<h1>Plants of the Western Ghats</h1><p class="lead">${plural(SP.length, 'plant', 'plants')} · search by scientific name, family, local name in any language, synonym or habit.</p>
+  <div class="srch"><input id="q" type="search" placeholder="Try: Terminalia, bhindi, Papilionaceae, Pithecellobium…" value="${esc(st.q)}" autocomplete="off" autofocus></div>
+  <div class="row" id="chips">${['', ...HAB_KEYS].map(h => `<button class="chip ${st.hab === h ? 'on' : ''}" data-h="${h}">${h ? HAB[h] : 'All habits'}</button>`).join('')}
+    <select id="fam" aria-label="Family"><option value="">All families</option>${fams.map(f => `<option ${st.fam === f ? 'selected' : ''}>${esc(f)}</option>`).join('')}</select>
+    <label class="row" style="gap:5px"><input type="checkbox" id="pic" ${st.pic ? 'checked' : ''}> With picture</label></div>
+  <div id="cnt" class="lead" style="margin-top:12px"></div><ul class="res" id="res"></ul><div id="more" style="text-align:center"></div>`;
+  const draw = () => {
+    const {list, toks} = search();
+    $('#cnt').textContent = plural(list.length, 'plant matches', 'plants match');
+    $('#res').innerHTML = list.slice(0, st.shown).map(s => resultItem(s, toks)).join('');
+    $('#more').innerHTML = list.length > st.shown ? `<button class="btn alt" id="mb">Show more (${list.length - st.shown} left)</button>` : '';
+    if ($('#mb')) $('#mb').onclick = () => { st.shown += 60; draw(); };
+  };
+  let tm; $('#q').oninput = e => { clearTimeout(tm); tm = setTimeout(() => { st.q = e.target.value; st.shown = 40; draw(); }, 120); };
+  $('#chips').onclick = e => { const b = e.target.closest('[data-h]'); if (!b) return; st.hab = b.dataset.h; st.shown = 40; [...$('#chips').querySelectorAll('.chip')].forEach(c => c.classList.toggle('on', c.dataset.h === st.hab)); draw(); };
+  $('#fam').onchange = e => { st.fam = e.target.value; st.shown = 40; draw(); };
+  $('#pic').onchange = e => { st.pic = e.target.checked; st.shown = 40; draw(); };
+  draw();
+}
+
+/* ---------- map engine ---------- */
+const KX = Math.cos(14.8 * Math.PI / 180), BND = {x0: 72.7, x1: 78.7, y0: 8.0, y1: 21.5};
+const RAMP = ['#fff0a8','#fed976','#feb24c','#fd8d3c','#f03b20','#bd0026','#800026'];
+const _ctr = [];
+function ctr(i) { if (_ctr[i]) return _ctr[i]; const g = M.grid[i], ring = g.t === 'Polygon' ? g.c[0] : g.c[0][0]; let x = 0, y = 0; ring.forEach(p => { x += p[0]; y += p[1]; }); return (_ctr[i] = [x / ring.length, y / ring.length]); }
+const gridBox = i => { const g = M.grid[i], ring = g.t === 'Polygon' ? g.c[0] : g.c[0][0]; const xs = ring.map(p => p[0]), ys = ring.map(p => p[1]); return [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)]; };
+const AREAS = [...new Set(C.grids.map(g => g[2]).filter(Boolean))].sort();
+
+class MapView {
+  constructor(el, o = {}) {
+    this.el = el; this.o = o; this.cv = document.createElement('canvas'); el.appendChild(this.cv);
+    this.view = {...BND}; this.val = null; this.sel = new Set(); this.layers = {grid: true, places: false, roads: !!o.roads, rails: false, taluks: false, districts: false, states: true}; this.max = 0; this.hi = new Set();
+    el.insertAdjacentHTML('beforeend', '<div class="ctl"><button data-z="in" aria-label="Zoom in">+</button><button data-z="out" aria-label="Zoom out">&minus;</button><button data-z="all" aria-label="Show everything" style="font-size:13px">&#8634;</button></div><div class="leg" hidden></div>');
+    this.leg = el.querySelector('.leg');
+    el.querySelector('.ctl').onclick = e => { const b = e.target.closest('[data-z]'); if (!b) return; const z = b.dataset.z; if (z === 'all') this.fit(); else this.zoom(z === 'in' ? .5 : 2); };
+    this.ptrs = new Map(); this.bind(); this.ro = new ResizeObserver(() => this.resize()); this.ro.observe(el); this.resize();
+  }
+  resize() { const r = this.el.getBoundingClientRect(), d = devicePixelRatio || 1; this.w = Math.max(50, r.width); this.h = Math.max(50, r.height); this.cv.width = this.w * d; this.cv.height = this.h * d; this.d = d; if (!this._fitted) { this.fit(true); this._fitted = true; } this.draw(); }
+  scale(v = this.view) { return Math.min(this.w / ((v.x1 - v.x0) * KX), this.h / (v.y1 - v.y0)); }
+  px(x, y) { const s = this.scale(), v = this.view; return [(x - v.x0) * KX * s, this.h - (y - v.y0) * s]; }
+  wd(px, py) { const s = this.scale(), v = this.view; return [px / (KX * s) + v.x0, (this.h - py) / s + v.y0]; }
+  fit(quiet, box = [BND.x0, BND.x1, BND.y0, BND.y1]) {
+    const [x0, x1, y0, y1] = box, pad = .04; let w = (x1 - x0) * (1 + pad * 2), h = (y1 - y0) * (1 + pad * 2); const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+    const k = this.w / this.h; if (w * KX / h < k) w = h * k / KX; else h = w * KX / k;
+    this.view = {x0: cx - w / 2, x1: cx + w / 2, y0: cy - h / 2, y1: cy + h / 2}; if (!quiet) this.draw();
+  }
+  fitSet(ids) { if (!ids.length) return this.fit(); let b = [99, 0, 99, 0]; ids.forEach(i => { const g = gridBox(i); b = [Math.min(b[0], g[0]), Math.max(b[1], g[1]), Math.min(b[2], g[2]), Math.max(b[3], g[3])]; }); const m = .06; this.fit(false, [b[0] - m, b[1] + m, b[2] - m, b[3] + m]); }
+  zoom(f, cx, cy) { const v = this.view; const mx = cx ?? (v.x0 + v.x1) / 2, my = cy ?? (v.y0 + v.y1) / 2; let nv = {x0: mx - (mx - v.x0) * f, x1: mx + (v.x1 - mx) * f, y0: my - (my - v.y0) * f, y1: my + (v.y1 - my) * f}; if (nv.x1 - nv.x0 < .02 || nv.x1 - nv.x0 > 6) return; this.view = nv; this.draw(); }
+  bind() {
+    const cv = this.cv, loc = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+    cv.addEventListener('pointerdown', e => { cv.setPointerCapture(e.pointerId); this.ptrs.set(e.pointerId, loc(e)); this.g = {v: {...this.view}, p: loc(e), moved: false, n: this.ptrs.size}; if (this.ptrs.size === 2) { const [a, b] = [...this.ptrs.values()]; this.pin = {d: Math.hypot(a[0] - b[0], a[1] - b[1]), v: {...this.view}, m: [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]}; } });
+    cv.addEventListener('pointermove', e => {
+      if (!this.ptrs.has(e.pointerId)) return; this.ptrs.set(e.pointerId, loc(e));
+      if (this.ptrs.size >= 2 && this.pin) { const [a, b] = [...this.ptrs.values()], d = Math.hypot(a[0] - b[0], a[1] - b[1]); const f = this.pin.d / Math.max(10, d); const v0 = this.pin.v, s0 = this.scale(v0), m = this.pin.m; const mx = m[0] / (KX * s0) + v0.x0, my = (this.h - m[1]) / s0 + v0.y0; const nv = {x0: mx - (mx - v0.x0) * f, x1: mx + (v0.x1 - mx) * f, y0: my - (my - v0.y0) * f, y1: my + (v0.y1 - my) * f}; if (nv.x1 - nv.x0 > .02 && nv.x1 - nv.x0 < 6) { this.view = nv; this.draw(); } this.g.moved = true; return; }
+      if (!this.g || this.ptrs.size !== 1) return; const p = loc(e), dx = p[0] - this.g.p[0], dy = p[1] - this.g.p[1]; if (Math.hypot(dx, dy) > 5) this.g.moved = true; if (!this.g.moved) return;
+      const s = this.scale(this.g.v), wx = dx / (KX * s), wy = dy / s, v = this.g.v; this.view = {x0: v.x0 - wx, x1: v.x1 - wx, y0: v.y0 + wy, y1: v.y1 + wy}; this.draw();
+    });
+    const up = e => { const g = this.g, had = this.ptrs.has(e.pointerId); this.ptrs.delete(e.pointerId); if (!had) return; if (this.ptrs.size === 0) { if (g && !g.moved && g.n === 1 && this.o.onPick) { const [wx, wy] = this.wd(...g.p); this.o.onPick(this.gridAt(wx, wy)); } this.g = null; this.pin = null; } else { this.g = {v: {...this.view}, p: [...this.ptrs.values()][0], moved: true, n: 2}; this.pin = null; } };
+    cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+    cv.addEventListener('wheel', e => { e.preventDefault(); const [px, py] = loc(e), [x, y] = this.wd(px, py); this.zoom(e.deltaY < 0 ? .8 : 1.25, x, y); }, {passive: false});
+  }
+  gridAt(x, y) { for (let i = 0; i < C.grids.length; i++) { const b = gridBox(i); if (x >= b[0] && x <= b[1] && y >= b[2] && y <= b[3]) return i; } return -1; }
+  path(x, g) { const ps = g.t === 'Polygon' ? [g.c] : g.c; ps.forEach(p => p.forEach(r => { r.forEach(([a, b], i) => { const [u, v] = this.px(a, b); i ? x.lineTo(u, v) : x.moveTo(u, v); }); x.closePath(); })); }
+  lines(x, g) { const ls = g.t === 'LineString' ? [g.c] : g.t === 'MultiLineString' ? g.c : []; ls.forEach(l => l.forEach(([a, b], i) => { const [u, v] = this.px(a, b); i ? x.lineTo(u, v) : x.moveTo(u, v); })); }
+  draw() {
+    const x = this.cv.getContext('2d'); x.setTransform(this.d, 0, 0, this.d, 0, 0); x.fillStyle = '#a9d6ea'; x.fillRect(0, 0, this.w, this.h); x.lineJoin = 'round';
+    x.fillStyle = '#ece6c8'; x.strokeStyle = '#6b6a4a'; x.lineWidth = 1; M.border.forEach(f => { x.beginPath(); this.path(x, f.g); x.fill(); x.stroke(); });
+    const wide = this.view.x1 - this.view.x0 > 1.5;
+    if (this.val) { this.val.forEach((v, i) => { if (!v) return; x.beginPath(); this.path(x, M.grid[i]); x.fillStyle = RAMP[Math.min(RAMP.length - 1, Math.floor((v - 1) / Math.max(1, this.max) * RAMP.length))]; x.globalAlpha = .92; x.fill(); x.globalAlpha = 1; }); }
+    if (this.layers.grid) { x.strokeStyle = wide ? 'rgba(60,60,60,.18)' : 'rgba(60,60,60,.4)'; x.lineWidth = .6; x.beginPath(); M.grid.forEach(g => this.path(x, g)); x.stroke(); }
+    [['taluks', '#8a6d3b', .7], ['districts', '#3b5f8a', 1], ['states', '#5a1d6e', 1.6]].forEach(([k, c, w]) => { if (this.layers[k]) { x.strokeStyle = c; x.lineWidth = w; x.beginPath(); M[k].forEach(f => this.path(x, f.g)); x.stroke(); } });
+    if (this.layers.rails) { x.strokeStyle = '#222'; x.lineWidth = 1.2; x.setLineDash([5, 3]); M.rails.forEach(f => { x.beginPath(); this.lines(x, f.g); x.stroke(); }); x.setLineDash([]); }
+    if (this.layers.roads) { x.strokeStyle = '#a02020'; x.lineWidth = 1.4; M.roads.forEach(f => { x.beginPath(); this.lines(x, f.g); x.stroke(); }); }
+    this.sel.forEach(i => { x.beginPath(); this.path(x, M.grid[i]); x.fillStyle = 'rgba(20,70,230,.35)'; x.fill(); x.strokeStyle = '#1446e6'; x.lineWidth = 1.6; x.stroke(); });
+    if (this.o.dots && this.val) { this.val.forEach((v, i) => { if (!v) return; const [a, b] = this.px(...ctr(i)); x.beginPath(); x.arc(a, b, wide ? 3.5 : 6, 0, 6.3); x.fillStyle = '#0a6b5a'; x.fill(); x.strokeStyle = '#fff'; x.lineWidth = 1.5; x.stroke(); }); }
+    if (this.layers.places) { x.fillStyle = '#111'; x.font = '12px system-ui,Arial'; M.places.forEach(f => { const [a, b] = this.px(f.g.c[0], f.g.c[1]); if (a < -5 || b < -5 || a > this.w + 5 || b > this.h + 5) return; x.beginPath(); x.arc(a, b, 2.5, 0, 6.3); x.fill(); if (!wide) { x.lineWidth = 3; x.strokeStyle = 'rgba(255,255,255,.85)'; x.strokeText(f.n, a + 5, b - 4); x.fillText(f.n, a + 5, b - 4); } }); }
+    this.legend();
+  }
+  legend() { if (!this.val || this.max <= 0) { this.leg.hidden = true; return; } this.leg.hidden = false; const mx = this.max; this.leg.innerHTML = `<b>${esc(this.o.legendTitle || 'Per grid')}</b><br>` + RAMP.map((c, k) => { const a = Math.floor(k * mx / RAMP.length) + 1, b = Math.floor((k + 1) * mx / RAMP.length); return b >= a ? `<i style="background:${c}"></i>${a === b ? a : a + ' – ' + b}` : ''; }).filter(Boolean).join('<br>'); }
+  setVal(v) { this.val = v; this.max = 0; if (v) v.forEach(n => { if (n > this.max) this.max = n; }); this.draw(); }
+  destroy() { this.ro.disconnect(); }
+}
+
+/* ---------- GIS export ---------- */
+function gridProps(i, n) { const g = C.grids[i]; const [lon, lat] = ctr(i); return {grid: g[0], code: g[1], state: g[2], district: g[5], taluk: g[6], lon: +lon.toFixed(5), lat: +lat.toFixed(5), count: n}; }
+const csvq = v => /[",\n]/.test(String(v)) ? '"' + String(v).replace(/"/g, '""') + '"' : String(v);
+function download(name, mime, text) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], {type: mime})); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); }
+function exportGrids(kind, items, base, label) { // items: [[gridIndex, count]]
+  const rows = items.map(([i, n]) => [i, gridProps(i, n)]);
+  if (kind === 'geojson') return download(base + '.geojson', 'application/geo+json', JSON.stringify({type: 'FeatureCollection', name: base, features: rows.map(([i, p]) => ({type: 'Feature', properties: p, geometry: {type: M.grid[i].t, coordinates: M.grid[i].c}}))}));
+  if (kind === 'csv') return download(base + '.csv', 'text/csv', 'grid,code,state,district,taluk,longitude,latitude,' + (label || 'count') + '\n' + rows.map(([i, p]) => [p.grid, p.code, p.state, p.district, p.taluk, p.lon, p.lat, p.count].map(csvq).join(',')).join('\n'));
+  const ring = r => r.map(([a, b]) => a + ',' + b + ',0').join(' '), poly = c => `<Polygon><outerBoundaryIs><LinearRing><coordinates>${ring(c[0])}</coordinates></LinearRing></outerBoundaryIs></Polygon>`;
+  const geom = g => g.t === 'Polygon' ? poly(g.c) : '<MultiGeometry>' + g.c.map(poly).join('') + '</MultiGeometry>';
+  download(base + '.kml', 'application/vnd.google-earth.kml+xml', `<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>${esc(base)}</name><Style id="g"><LineStyle><color>ffe64614</color><width>1.5</width></LineStyle><PolyStyle><color>66e64614</color></PolyStyle></Style>` +
+    rows.map(([i, p]) => `<Placemark><name>${esc(p.grid)}</name><styleUrl>#g</styleUrl><description>${esc(p.state)} ${esc(p.district)} ${esc(p.taluk)} · ${p.count}</description>${geom(M.grid[i])}</Placemark>`).join('') + '</Document></kml>');
+}
+const exBtns = id => `<div class="row"><span class="lead" style="margin:0">GIS export:</span><button class="btn alt sm" data-ex="geojson" ${id}>GeoJSON</button><button class="btn alt sm" data-ex="kml" ${id}>KML</button><button class="btn alt sm" data-ex="csv" ${id}>CSV</button></div>`;
+
+/* ---------- species page ---------- */
+const mapsToClean = [];
+function nameBlock(s) {
+  const gb = s.key ? `<a href="https://www.gbif.org/species/${s.key}" target="_blank" rel="noopener">GBIF ${esc(s.key)}</a>` : '';
+  if (s.code === 2) return `<div class="note ok"><b>Name updated in 2026.</b> Current accepted name: <i>${esc(s.cur)}</i> ${esc(s.auth.replace(s.cur, '').trim())}. The 2015 program used <b><i>${esc(s.name15)}</i></b>. ${gb}</div>`;
+  if (s.code === 1) return `<div class="note ok">Name confirmed against the GBIF Backbone (Catalogue of Life) in 2026: ${esc(s.auth)}. ${gb}</div>`;
+  if (s.code === 3) return `<div class="note"><b>Name left as in 2015 for a taxonomist to check.</b> ${esc(s.why)}${s.sug ? ' · GBIF suggests: <i>' + esc(s.sug) + '</i>' : ''}</div>`;
+  return `<div class="note">This entry names a genus only (“${esc(s.name15)}”), so it was not matched.</div>`;
+}
+function viewSpecies(app, id) {
+  const s = byId.get(+id); if (!s) { app.innerHTML = '<h1>Not found</h1><p><a href="#/">Back to search</a></p>'; return; }
+  document.title = nameTxt(s) + ' · Western Ghats Mapping 2';
+  const p = picOf(s), dd = D.d[s.id] || [[], [], [], []], sg = new Map(M.sg[s.id] || []);
+  const gs = [...sg.keys()].map(i => C.grids[i]), areas = [...new Set(gs.map(g => g[2]).filter(Boolean))], divs = [...new Set(gs.map(g => g[5]).filter(Boolean))];
+  const t = C.tax[C.fams.indexOf(s.fam)] || [];
+  const dist = dd[2].filter(r => r.some(clean)), rng = dd[3].filter(r => r.some(clean));
+  const byLang = new Map(); s.cm.forEach(([l, n]) => { (byLang.get(l) || byLang.set(l, []).get(l)).push(n); });
+  const rows = IM[s.id] || [], cn = {F: 'field photographs', H: 'herbarium images', L: 'line diagrams', P: 'paintings'}, cc = {}; rows.forEach(r => cc[r[0]] = (cc[r[0]] || 0) + 1);
+  const mates = (GEN.get(s.genus) || []).filter(x => x !== s);
+  app.innerHTML = `<p><a href="#/">&larr; Search</a></p>
+  <div class="hero"><figure>${p ? `<img src="${p.src}" alt="${esc(s.cur)}">` : `<img src="${NOPIC}" alt="">`}<figcaption>${p ? esc(p.cap) : 'No picture of this species or its relatives in the original program'}</figcaption></figure>
+  <div><div class="sci">${nameHtml(s)}</div>
+  <dl class="kv"><dt>Family</dt><dd>${esc(s.fam)}${s.gfam && fold(s.gfam) !== fold(s.fam) ? ` <span class="old">(GBIF: ${esc(s.gfam)})</span>` : ''}</dd><dt>Genus</dt><dd><i>${esc(s.genus)}</i></dd>${s.hab.length ? `<dt>Habit</dt><dd>${s.hab.map(h => HAB[h]).join(', ')}</dd>` : ''}<dt>Recorded in</dt><dd>${sg.size ? plural(sg.size, 'map grid', 'map grids') + (areas.length ? ' · ' + esc(areas.join(', ')) : '') : 'no map grids'}</dd></dl>
+  ${nameBlock(s)}</div></div>
+  <h2>Where it grows</h2>
+  <div class="cols"><div class="mapcol"><div class="map" id="sm" style="height:380px"></div><div style="margin-top:8px">${sg.size ? exBtns('') : ''}</div></div>
+  <div>${sg.size ? `<div class="card">Recorded in <b>${plural(sg.size, 'grid', 'grids')}</b>${divs.length ? ' in the district(s) ' + esc(divs.join(', ')) : ''}. Each grid is about 7 km across (3.75 minutes).</div>` : '<div class="card">No map-grid records for this species.</div>'}
+  ${rng.length ? `<div class="tw"><table class="t"><tr><th>Forest range</th><th>Forest division</th></tr>${rng.map(r => '<tr>' + r.map(v => `<td>${esc(clean(v))}</td>`).join('') + '</tr>').join('')}</table></div>` : ''}
+  ${dist.length ? `<h2 style="margin-top:14px">Flora records</h2><div class="tw"><table class="t"><tr><th>Country</th><th>State</th><th>District</th><th>Taluk</th><th>Place</th></tr>${dist.map(r => '<tr>' + r.map(v => `<td>${esc(clean(v))}</td>`).join('') + '</tr>').join('')}</table></div>` : ''}</div></div>
+  <h2>Local names</h2>${s.cm.length ? `<div class="card cn">${[...byLang.entries()].sort((a, b) => D.langs[a[0]].localeCompare(D.langs[b[0]])).map(([l, ns]) => `<p><span class="badge">${esc(D.langs[l])}</span>${esc([...new Set(ns)].join(', '))}</p>`).join('')}</div>` : `<div class="card">No local names are recorded for this species${mates.length ? '. Names recorded for other species of <i>' + esc(s.genus) + '</i>: ' + esc(mates.flatMap(x => x.cm.slice(0, 2).map(c => c[1] + ' (' + x.cur + ')')).slice(0, 10).join('; ')) : ''}.</div>`}
+  <h2>Synonyms and the floras that use them</h2>${s.syn.length ? s.syn.map(([n, fl]) => `<div class="card"><b><i>${esc(n)}</i></b><div class="tw" style="margin-top:8px;max-height:260px"><table class="t"><tr><th>Flora</th><th>Volume</th><th>Author</th><th>Edition</th><th>Year</th></tr>${fl.map(f => '<tr>' + f.map(v => `<td>${esc(clean(v))}</td>`).join('') + '</tr>').join('')}</table></div></div>`).join('') : '<div class="card">No synonyms are recorded for this species in the original program.</div>'}
+  <h2>Images and flier</h2>
+  <div class="card">${rows.length ? `The original program holds <b>${rows.length}</b> images of this species (${Object.keys(cn).filter(k => cc[k]).map(k => cc[k] + ' ' + cn[k]).join(', ')}).` : 'No images of this species were recorded in the original program.'}
+  This page shows one picture${s.fl ? ' and the first slide of the flier' : ''}.
+  <div class="note ok" style="margin-bottom:0">This app shows one picture per plant so that it stays small and works offline.</div></div>
+  ${s.fl ? `<figure style="margin:8px 0;max-width:520px"><img src="${MB}img/f/${s.id}.webp" alt="Flier, first slide" style="width:100%;border-radius:10px;border:1px solid var(--line)"><figcaption class="lead">First slide of the original flier</figcaption></figure>` : ''}
+  <h2>Classification</h2><div class="card">${['Kingdom','Phylum','Class','Subclass','Order','Family'].map((n, i) => t[i] ? `<b>${n}</b> ${esc(t[i])}` : '').filter(Boolean).join(' &rsaquo; ')}</div>
+  ${mates.length ? `<h2>Other species of <i>${esc(s.genus)}</i></h2><div class="sim">${mates.slice(0, 30).map(x => `<a href="#/s/${x.id}">${nameHtml(x)}</a>`).join('')}${mates.length > 30 ? '<span class="lead">…and ' + (mates.length - 30) + ' more</span>' : ''}</div>` : ''}`;
+  const mv = new MapView($('#sm'), {dots: true, legendTitle: 'Records per grid'}); mapsToClean.push(mv);
+  const v = new Array(C.grids.length).fill(0); sg.forEach((n, i) => { v[i] = n; }); mv.setVal(sg.size ? v : null); mv.fitSet([...sg.keys()]);
+  app.querySelectorAll('[data-ex]').forEach(b => b.onclick = () => exportGrids(b.dataset.ex, [...sg.entries()], 'westernghats_' + s.cur.replace(/\W+/g, '_') + '_grids', 'records'));
+}
+
+/* ---------- map page ---------- */
+const mp = {mode: 'pick', hab: 'total', sel: new Set()};
+function gridSpecies() { if (mp._g2s) return mp._g2s; const m = new Map(); for (const sid in M.sg) M.sg[sid].forEach(([g, n]) => { (m.get(g) || m.set(g, []).get(g)).push([+sid, n]); }); return (mp._g2s = m); }
+function viewMap(app) {
+  document.title = 'Map · Western Ghats Mapping 2';
+  app.innerHTML = `<h1>Map</h1><p class="lead">Drag to move, pinch or scroll to zoom. Tap grids to select them and list the plants recorded there, or switch to the species-count map.</p>
+  <div class="tabs"><button class="chip" data-m="pick">Pick grids, list plants</button><button class="chip" data-m="count">Species count per grid</button></div>
+  <div class="cols"><div class="mapcol"><div class="map" id="mm"></div>
+  <div class="row" style="margin-top:8px"><span class="lead" style="margin:0">Go to:</span><select id="area" aria-label="Area"><option value="">Whole Western Ghats</option>${AREAS.map(a => `<option>${esc(a)}</option>`).join('')}</select>
+  <label><input type="checkbox" id="lG" checked> Grids</label><label><input type="checkbox" id="lS" checked> States</label><label><input type="checkbox" id="lD"> Districts</label><label><input type="checkbox" id="lT"> Taluks</label><label><input type="checkbox" id="lR"> Roads</label><label><input type="checkbox" id="lL"> Railways</label><label><input type="checkbox" id="lP"> Places</label></div></div>
+  <div id="side"></div></div>`;
+  const mv = new MapView($('#mm'), {onPick: i => { if (mp.mode !== 'pick' || i < 0) return; mp.sel.has(i) ? mp.sel.delete(i) : mp.sel.add(i); mv.sel = mp.sel; side(); mv.draw(); }}); mapsToClean.push(mv); mv.sel = mp.sel;
+  const counts = () => C.grids.map((g, i) => mp.hab === 'total' ? g[4].reduce((a, b) => a + b, 0) : g[4][C.habits.indexOf(mp.hab)] || 0);
+  const habSel = () => `<div class="row" id="hb">${['total', ...HAB_KEYS].map(h => `<button class="chip ${mp.hab === h ? 'on' : ''}" data-h="${h}">${h === 'total' ? 'All habits' : HAB[h]}</button>`).join('')}</div>`;
+  function side() {
+    document.querySelectorAll('[data-m]').forEach(b => b.classList.toggle('on', b.dataset.m === mp.mode));
+    if (mp.mode === 'count') { mv.o.legendTitle = 'Species per grid'; mv.setVal(counts()); $('#side').innerHTML = `<div class="card"><b>Species recorded per grid</b>${habSel()}<p class="lead" style="margin:8px 0 0">Darker grids have more plant species recorded by the survey. Counts come from the original program.</p></div>`; }
+    else {
+      mv.setVal(null); const g2s = gridSpecies(), ids = new Map();
+      mp.sel.forEach(i => (g2s.get(i) || []).forEach(([sid, n]) => ids.set(sid, (ids.get(sid) || 0) + n)));
+      const list = [...ids.keys()].map(i => byId.get(i)).filter(s => s && (mp.hab === 'total' || s.hab.includes(mp.hab))).sort((a, b) => a.cur.localeCompare(b.cur));
+      mv.o.legendTitle = ''; const gen = new Set(list.map(s => s.genus)), fam = new Set(list.map(s => s.fam));
+      $('#side').innerHTML = `<div class="card"><b>Plants in the selected grids</b>${habSel()}
+      <div class="tiles"><div class="tile"><b>${mp.sel.size}</b><span>grids selected</span></div><div class="tile"><b>${list.length}</b><span>species</span></div><div class="tile"><b>${gen.size}</b><span>genera</span></div><div class="tile"><b>${fam.size}</b><span>families</span></div></div>
+      ${mp.sel.size ? `<div class="row"><button class="btn alt sm" id="clr">Clear selection</button></div>` : '<p class="lead" style="margin:0">Tap or click grids on the map to select them.</p>'}
+      ${mp.sel.size ? exBtns('') : ''}</div>
+      ${list.length ? `<div class="list">${list.map(s => `<a href="#/s/${s.id}">${nameHtml(s)}</a>`).join('')}</div><div class="row" style="margin-top:8px"><button class="btn alt sm" id="csv">Download this plant list (CSV)</button></div>` : ''}`;
+      if ($('#clr')) $('#clr').onclick = () => { mp.sel.clear(); mv.sel = mp.sel; side(); mv.draw(); };
+      if ($('#csv')) $('#csv').onclick = () => download('westernghats_plants_in_selected_grids.csv', 'text/csv', 'scientific_name,name_2015,family,habit,records_in_selected_grids\n' + list.map(s => [s.cur, s.name15, s.fam, s.hab.join('; '), ids.get(s.id)].map(csvq).join(',')).join('\n'));
+      document.querySelectorAll('[data-ex]').forEach(b => b.onclick = () => exportGrids(b.dataset.ex, [...mp.sel].map(i => [i, (g2s.get(i) || []).length]), 'westernghats_selected_grids', 'species_recorded'));
+    }
+    $('#hb') && ($('#hb').onclick = e => { const b = e.target.closest('[data-h]'); if (!b) return; mp.hab = b.dataset.h; side(); });
+    mv.draw();
+  }
+  app.querySelectorAll('[data-m]').forEach(b => b.onclick = () => { mp.mode = b.dataset.m; side(); });
+  $('#area').onchange = e => { const a = e.target.value; mv.fitSet(a ? C.grids.map((g, i) => g[2] === a ? i : -1).filter(i => i >= 0) : []); };
+  [['lG', 'grid'], ['lS', 'states'], ['lD', 'districts'], ['lT', 'taluks'], ['lR', 'roads'], ['lL', 'rails'], ['lP', 'places']].forEach(([id, k]) => { $('#' + id).onchange = e => { mv.layers[k] = e.target.checked; mv.draw(); }; });
+  side();
+}
+
+/* ---------- what's changed ---------- */
+let chTab = 'new';
+function viewChanges(app) {
+  document.title = "What's changed · Western Ghats Mapping 2";
+  const nw = SP.filter(s => s.code === 2), ok = SP.filter(s => s.code === 1), ck = SP.filter(s => s.code === 3), gn = SP.filter(s => !s.code);
+  const lists = {new: nw, check: ck, genus: gn};
+  app.innerHTML = `<h1>What's changed since 2015</h1><p class="lead">Every plant name was checked against the <b>${esc(NM.source)}</b> on ${esc(NM.date)}. Where a name changed, the current accepted name comes first and the 2015 name is kept beside it in brackets, for example <i>Senegalia catechu</i> (<i>Acacia catechu</i>). Old names still work in search.</p>
+  <div class="tiles"><div class="tile"><b>${ok.length}</b><span>names confirmed as they were</span></div><div class="tile"><b>${nw.length}</b><span>names updated</span></div><div class="tile"><b>${ck.length}</b><span>left unchanged for a taxonomist to check</span></div><div class="tile"><b>${gn.length}</b><span>genus-level entries (“… spp”), not matched</span></div></div>
+  <div class="card"><b>What is new in Version 2</b><ul><li>Search first: one box finds plants by scientific name, family, local name in any language, synonym or habit.</li><li>Works on phones, tablets and computers, and offline.</li><li>One page per plant: picture, names, local names by language, synonyms, flier, where it grows, other species of the genus.</li><li>A map you can drag and pinch, with area shortcuts and species-count maps by habit.</li><li>GIS export of a plant's grids or of selected grids (GeoJSON, KML, CSV) for QGIS and ArcGIS, and a CSV list of plants.</li></ul>
+  Everything from Version 1 is still here: the same ${plural(SP.length, 'plant', 'plants')}, ${plural(C.grids.length, 'grid', 'grids')}, local names, synonyms and distribution records.</div>
+  <div class="tabs"><button class="chip" data-t="new">Updated names (${nw.length})</button><button class="chip" data-t="check">To check (${ck.length})</button><button class="chip" data-t="genus">Genus-level (${gn.length})</button></div>
+  <div class="row"><input class="fi" id="cf" placeholder="Filter this list…" style="flex:1;min-width:200px"><button class="btn alt sm" id="cdl">Download all as CSV</button></div><div class="tw" style="margin-top:10px;max-height:640px"><table class="t" id="ct"></table></div>
+  <p class="lead" style="margin-top:12px">Names were matched automatically. Where the match was uncertain (a spelling variant, no species match, or an accepted name that is not a species) the 2015 name is kept and listed under “To check”.</p>`;
+  const draw = () => {
+    document.querySelectorAll('[data-t]').forEach(b => b.classList.toggle('on', b.dataset.t === chTab));
+    const f = fold($('#cf').value), l = lists[chTab].filter(s => !f || (s.fCur + ' ' + s.f15 + ' ' + s.fFam).includes(f));
+    $('#ct').innerHTML = chTab === 'new' ? `<tr><th>2015 name</th><th>Current accepted name</th><th>Family</th></tr>` + l.map(s => `<tr><td><a href="#/s/${s.id}"><i>${esc(s.name15)}</i></a></td><td><i>${esc(s.cur)}</i></td><td>${esc(s.fam)}</td></tr>`).join('')
+      : chTab === 'check' ? `<tr><th>Name (kept)</th><th>Family</th><th>Why it needs a check</th></tr>` + l.map(s => `<tr><td><a href="#/s/${s.id}"><i>${esc(s.name15)}</i></a></td><td>${esc(s.fam)}</td><td>${esc(s.why)}${s.sug ? ' · GBIF suggests <i>' + esc(s.sug) + '</i>' : ''}</td></tr>`).join('')
+      : `<tr><th>Entry</th><th>Family</th></tr>` + l.map(s => `<tr><td><a href="#/s/${s.id}"><i>${esc(s.name15)}</i></a></td><td>${esc(s.fam)}</td></tr>`).join('');
+  };
+  app.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { chTab = b.dataset.t; draw(); }); $('#cf').oninput = draw; draw();
+  $('#cdl').onclick = () => download('westernghats_name_changes.csv', 'text/csv', 'status,name_2015,current_name,family,note\n' + SP.map(s => [['', 'confirmed', 'updated', 'to_check'][s.code] || 'genus_level', s.name15, s.cur, s.fam, s.why || (s.sug ? 'GBIF suggests ' + s.sug : '')].map(csvq).join(',')).join('\n'));
+}
+
+/* ---------- about ---------- */
+function viewAbout(app) {
+  document.title = 'About · Western Ghats Mapping 2';
+  app.innerHTML = `<h1>About Western Ghats Mapping</h1>
+  <div class="card"><p><b>Western Ghats Mapping</b> (“Distribution, Taxonomy &amp; Diversity of Plants of Western Ghats”, Western Ghat Resource Assessment and Mapping) is a 2015 program of the School of Ecology and Conservation, University of Agricultural Sciences, Bangalore, with partner institutions across the Western Ghats. It recorded the plants of the Western Ghats in map grids of 3.75 minutes (about 7 km).</p>
+  <p>This is Version 2 of its 2026 rebuild by IBIN Apps: the original data with current plant names, a search-first design that works on phones, and GIS export. Version 1 (the original screens) is still available on the <a href="../">IBIN Apps page</a>.</p></div>
+  <div class="note ok">This app shows one picture per plant so that it stays small and works offline.</div>
+  <h2>Team</h2><div class="card"><b>Project Co-ordinator</b><br>Dr. K. N. Ganeshaiah, School of Ecology and Conservation, University of Agricultural Sciences, GKVK Campus, Bangalore-560065<br><br><div style="display:flex;gap:12px;flex-wrap:wrap"><img src="img/ui/team1.jpg" alt="The Western Ghat team" style="max-width:100%;width:380px"><img src="img/ui/team2.jpg" alt="The Western Ghat team" style="max-width:100%;width:380px"></div></div>
+  <h2>Credits</h2><div class="card">Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario.<br>Plant names checked against the ${esc(NM.source)}, ${esc(NM.date)}. Map layers and species records are from the original program.</div>
+  <h2>How to use</h2><div class="card"><ul><li><b>Search</b>: type any part of a name. Local names are searched in every language.</li><li><b>Map</b>: tap grids to list the plants recorded there; use <i>Species count per grid</i> for a thematic map.</li><li><b>GIS</b>: on a plant page or the map page, download grids as GeoJSON, KML or CSV and open them in QGIS, ArcGIS or Google Earth.</li></ul></div>`;
+}
+
+/* ---------- router ---------- */
+function route() {
+  mapsToClean.splice(0).forEach(m => m.destroy());
+  const h = location.hash.replace(/^#\/?/, ''), [r, a] = h.split('/'), app = $('#app');
+  document.querySelectorAll('#nav a').forEach(x => x.classList.toggle('on', x.dataset.r === (r === 's' ? 'search' : r || 'search')));
+  scrollTo(0, 0); document.title = 'Western Ghats Mapping 2';
+  if (r === 's') viewSpecies(app, a); else if (r === 'map') viewMap(app); else if (r === 'changes') viewChanges(app); else if (r === 'about') viewAbout(app); else viewSearch(app);
+}
+addEventListener('hashchange', route); route();
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body></html>
