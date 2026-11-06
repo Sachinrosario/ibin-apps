@@ -1253,6 +1253,77 @@
           ]
         }
       ]
+    },
+    {
+      "name": "Jeeva Sampada",
+      "icon": "apps/jeeva-sampada.png",
+      "origin": "Jeeva Sampada (2012): biodiversity databases of India under one roof, pooled by the DBT assembling project from databases made by scientists at centres across the country.",
+      "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
+      "editions": [
+        {
+          "id": "jeeva-sampada",
+          "key": "v1",
+          "label": "Version 1 – Original (2026 rebuild)",
+          "versionName": "Version 1",
+          "version": "1.0.0",
+          "released": "2026-11-06",
+          "published": true,
+          "summary": "The pooled database of the original program: species of plants, microbes, crop pests, vectors, silkworms, amphibians, reptiles, birds, mammals, domestic animals, fishes, crabs, prawns and molluscs by state and district; a name search across all groups; medicinal plant names with 11,306 patents. The 12 separate databases are added in updates.",
+          "facts": [
+            "21,814 species names",
+            "225,326 place records",
+            "1,997 medicinal plants",
+            "11,306 patents",
+            "16 groups"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/jeeva-sampada/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "JeevaSampada_1.0.0_Setup.exe",
+              "size": "4 MB",
+              "note": "Adds Start-menu and desktop shortcuts. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "JeevaSampada.exe",
+              "size": "16 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "JeevaSampada_1.0.0_universal.dmg",
+              "size": "8 MB",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "JeevaSampada_1.0.0_amd64.deb",
+              "size": "4 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "JeevaSampada_1.0.0_offline.zip",
+              "size": "3 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "1.0.0",
+              "date": "2026-11-06",
+              "text": "First release: the pooled database (by place and by name), medicinal plants with patents, and the page for the separate databases, which follow in updates."
+            }
+          ]
+        }
+      ]
     }
   ],
   "upcoming": [
