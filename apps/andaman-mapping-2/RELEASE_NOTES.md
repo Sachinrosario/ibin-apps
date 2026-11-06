@@ -1,4 +1,6 @@
-## Andaman Mapping – Version 2 – Updated (2.0.0)
+## Andaman Mapping – Version 2 – Updated (2.0.1)
+
+2.0.1: the link to the Google Drive image folder is removed. Everything else is as 2.0.0.
 
 The 2015 Andaman Mapping program (Andaman Resource Assessment and Mapping, School of Ecology and Conservation, UAS Bangalore) with current plant names, a search-first design that works on phones, and GIS export. Runs on Windows, Mac and Ubuntu, in a browser, and offline.
 

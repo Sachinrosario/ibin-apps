@@ -91,7 +91,7 @@ footer{border-top:1px solid var(--line);padding:16px;text-align:center;color:var
 <main id="app"><p class="lead">Loading…</p></main>
 <footer>
   Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario · IBIN Apps<br>
-  <b>For a better experience, download all the images from <a id="driveF" target="_blank" rel="noopener">Google Drive</a>.</b>
+  <b>Pictures:</b> this app shows one picture per plant so that it stays small and works offline.
 </footer>
 <script src="data/media-base.js"></script>
 <script src="data/core.js"></script>
@@ -103,14 +103,12 @@ footer{border-top:1px solid var(--line);padding:16px;text-align:center;color:var
 "use strict";
 const C = AM_CORE, D = AM_DETAIL, IM = AM_IMAGES, M = AM_MAP, NM = AM_NAMES;
 const MB = window.MEDIA_BASE || '';
-const DRIVE = 'https://drive.google.com/drive/folders/1k79zvKXm8XNy_aZAZRoBom4JuVF8zDBS';
 const $ = (s, r = document) => r.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fold = s => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 const cap = s => s ? s[0].toUpperCase() + s.slice(1) : s;
 const plural = (n, a, b) => n.toLocaleString() + ' ' + (n === 1 ? a : b);
 const clean = v => (v == null || String(v).toLowerCase() === 'none' || v === '-') ? '' : String(v);
-$('#driveF').href = DRIVE;
 const HAB = {tree:'Tree', herb:'Herb', shrub:'Shrub', epiphyte:'Epiphyte', regeneration:'Regeneration'};
 const HAB_KEYS = ['tree','herb','shrub','epiphyte','regeneration'];
 
@@ -307,7 +305,7 @@ function viewSpecies(app, id) {
   <h2>Images and flier</h2>
   <div class="card">${rows.length ? `The original program holds <b>${rows.length}</b> images of this species (${Object.keys(cn).filter(k => cc[k]).map(k => cc[k] + ' ' + cn[k]).join(', ')}).` : 'No images of this species were recorded in the original program.'}
   This page shows one picture${s.fl ? ' and the first slide of the flier' : ''}.
-  <div class="note ok" style="margin-bottom:0"><b>For a better experience, download all the images from Google Drive.</b> Open the folder <b>Andaman Mapping Application › Photos › ${esc(s.name15)}</b>${s.fl ? ' and <b>Fliers › ' + esc(s.name15) + '</b> for the full flier' : ''}.<br><a class="btn sm" style="margin-top:8px" href="${DRIVE}" target="_blank" rel="noopener">Open Google Drive folder</a></div></div>
+  <div class="note ok" style="margin-bottom:0">This app shows one picture per plant so that it stays small and works offline.</div></div>
   ${s.fl ? `<figure style="margin:8px 0;max-width:520px"><img src="${MB}img/f/${s.id}.webp" alt="Flier, first slide" style="width:100%;border-radius:10px;border:1px solid var(--line)"><figcaption class="lead">First slide of the original flier</figcaption></figure>` : ''}
   <h2>Classification</h2><div class="card">${['Kingdom','Phylum','Class','Subclass','Order','Family'].map((n, i) => t[i] ? `<b>${n}</b> ${esc(t[i])}` : '').filter(Boolean).join(' &rsaquo; ')}</div>
   ${mates.length ? `<h2>Other species of <i>${esc(s.genus)}</i></h2><div class="sim">${mates.slice(0, 30).map(x => `<a href="#/s/${x.id}">${nameHtml(x)}</a>`).join('')}${mates.length > 30 ? '<span class="lead">…and ' + (mates.length - 30) + ' more</span>' : ''}</div>` : ''}`;
@@ -386,7 +384,7 @@ function viewAbout(app) {
   app.innerHTML = `<h1>About Andaman Mapping</h1>
   <div class="card"><p><b>Andaman Mapping</b> (“Distribution, Taxonomy &amp; Diversity of Plants of Andaman”, Andaman Resource Assessment and Mapping) is a 2015 program of the School of Ecology and Conservation, University of Agricultural Sciences, Bangalore, with the Botanical Survey of India and partners. It recorded the plants of the Andaman Islands in map grids of 3.75 minutes (about 7 km).</p>
   <p>This is Version 2 of its 2026 rebuild by IBIN Apps: the original data with current plant names, a search-first design that works on phones, and GIS export. Version 1 (the original screens) is still available on the <a href="../">IBIN Apps page</a>.</p></div>
-  <div class="note ok"><b>For a better experience, download all the images from Google Drive.</b> This app shows one picture per plant so that it stays small and works offline. The original 19,000 photographs (herbarium sheets, line diagrams, paintings and field photographs) and the plant fliers are in the IBIN data repository.<br><a class="btn sm" style="margin-top:8px" href="${DRIVE}" target="_blank" rel="noopener">Open the Google Drive folder</a></div>
+  <div class="note ok">This app shows one picture per plant so that it stays small and works offline.</div>
   <h2>Team</h2><div class="card"><b>Project Co-ordinator</b><br>Dr. K. N. Ganeshaiah, School of Ecology and Conservation, University of Agricultural Sciences, Bangalore<br><br><b>Principal and Co-Principal Investigators</b><br>Dr. B. Ravi Prasad Rao, Department of Botany, Anantapur<br>Dr. Sanjappa, Botanical Survey of India, Kolkata<br>Dr. Rajesh, Botanical Survey of India, Port Blair<br>Dr. Karuppusamy, Department of Botany, Madurai<br>Dr. Murugan, Botanical Survey of India, Port Blair<br>Dr. S. R. Yadav, Shivaji University, Kolhapur, Maharashtra<br>Dr. R. Uma Shaankar, University of Agricultural Sciences, Bangalore<br>Prof. T V R S Sharma, Central Agricultural Research Institute, Port Blair<br>Dr. Pandey, Botanical Survey of India, Port Blair</div>
   <h2>Credits</h2><div class="card">Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario.<br>Plant names checked against the ${esc(NM.source)}, ${esc(NM.date)}. Map layers and species records are from the original program.</div>
   <h2>How to use</h2><div class="card"><ul><li><b>Search</b>: type any part of a name. Local names are searched in every language.</li><li><b>Map</b>: tap grids to list the plants recorded there; use <i>Species count per grid</i> for a thematic map.</li><li><b>GIS</b>: on a plant page or the map page, download grids as GeoJSON, KML or CSV and open them in QGIS, ArcGIS or Google Earth.</li></ul></div>`;
