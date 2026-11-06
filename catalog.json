@@ -1119,6 +1119,140 @@
           ]
         }
       ]
+    },
+    {
+      "name": "Western Ghats Mapping",
+      "icon": "apps/western-ghats-mapping.png",
+      "origin": "Western Ghats Mapping: Distribution, Taxonomy & Diversity of Plants of Western Ghats (2015). Western Ghat Resource Assessment and Mapping, School of Ecology and Conservation, UAS Bangalore, with partner institutions.",
+      "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
+      "editions": [
+        {
+          "id": "western-ghats-mapping-2",
+          "key": "v2",
+          "label": "Version 2 – Updated (2026)",
+          "versionName": "Version 2 – Updated",
+          "version": "2.0.0",
+          "released": "2026-11-06",
+          "published": true,
+          "summary": "Search first, on phones too: find plants by scientific name, family, local name in any language, synonym or habit. Current names (GBIF / Catalogue of Life, 2015 names kept in brackets), one page per plant, a draggable map with states, districts and taluks, species-count maps, and GIS export of grids as GeoJSON, KML or CSV.",
+          "facts": [
+            "5,103 plants",
+            "1,667 names updated",
+            "68,895 local names",
+            "Works on phones",
+            "GIS export"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/western-ghats-mapping-2/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "WesternGhatsMapping2_2.0.0_Setup.exe",
+              "size": "62 MB",
+              "note": "Installs beside Version 1. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "WesternGhatsMapping2.exe",
+              "size": "86 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "WesternGhatsMapping2_2.0.0_universal.dmg",
+              "size": "127 MB",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "WesternGhatsMapping2_2.0.0_amd64.deb",
+              "size": "61 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "WesternGhatsMapping2_2.0.0_offline.zip",
+              "size": "62 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "2.0.0",
+              "date": "2026-11-06",
+              "text": "Plant names checked against the GBIF Backbone (1,667 updated, 2015 names kept; 381 left for a taxonomist to check); search first; works on phones; one page per plant; draggable and pinchable map with state, district and taluk layers; GIS export (GeoJSON, KML, CSV)."
+            }
+          ]
+        },
+        {
+          "id": "western-ghats-mapping",
+          "key": "v1",
+          "label": "Version 1 – Original (2015 screens)",
+          "versionName": "Version 1 – Original",
+          "version": "1.0.0",
+          "released": "2026-11-06",
+          "published": true,
+          "summary": "The 2015 program rebuilt screen for screen, without MapInfo: search the plants of the Western Ghats by genus, species, habit, common name or taluk, or select map grids to list the species recorded there; ten thematic maps including disturbance and threat indices; see each species' taxonomy, distribution map, picture, flier, distribution data, synonyms and common names.",
+          "facts": [
+            "5,103 species",
+            "3,231 map grids",
+            "68,895 common names",
+            "49,758 synonyms",
+            "Thematic maps"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/western-ghats-mapping/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "WesternGhatsMapping_1.0.0_Setup.exe",
+              "size": "67 MB",
+              "note": "Adds Start-menu and desktop shortcuts. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "WesternGhatsMapping.exe",
+              "size": "88 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "WesternGhatsMapping_1.0.0_universal.dmg",
+              "size": "132 MB",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "WesternGhatsMapping_1.0.0_amd64.deb",
+              "size": "64 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "WesternGhatsMapping_1.0.0_offline.zip",
+              "size": "65 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "1.0.0",
+              "date": "2026-11-06",
+              "text": "Faithful rebuild of Western Ghats Mapping (2015) with the same screens and data; no MapInfo needed. One representative picture per species; all original images and fliers come from the separate Pictures and Fliers pack."
+            }
+          ]
+        }
+      ]
     }
   ],
   "upcoming": [
