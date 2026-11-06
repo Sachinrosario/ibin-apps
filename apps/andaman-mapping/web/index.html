@@ -142,10 +142,11 @@ a{color:#00e}
   <button class="tool" data-t="zin" style="left:62px;top:706px;width:44px" title="Zoom In Tool">+</button>
   <button class="tool" data-t="zout" style="left:110px;top:706px;width:44px" title="Zoom Out Tool">&minus;</button>
   <button class="tool" data-t="pan" style="left:158px;top:706px;width:44px" title="Grabber Tool: drag to move the map">&#9995;</button>
-  <button class="tool" data-t="all" style="left:206px;top:706px;width:64px;font-size:13px" title="View Entire Layer">Entire</button>
-  <button class="tool" data-t="box" style="left:274px;top:706px;width:54px;font-size:13px" title="Select all grids inside a dragged box">Box</button>
-  <button class="tool" data-t="clr" style="left:332px;top:706px;width:64px;font-size:13px" title="Clear selected grids">Clear</button>
-  <div class="abs" style="left:404px;top:704px;width:250px;font:12px/1.35 Arial;color:#222">Drag = move the map &nbsp;·&nbsp; wheel = zoom<br>Click a grid = select &nbsp;·&nbsp; Shift+drag = box</div>
+  <button class="tool" data-t="info" style="left:206px;top:706px;width:44px" title="Point Select Info Tool: click a grid to see its details">i</button>
+  <button class="tool" data-t="all" style="left:254px;top:706px;width:64px;font-size:13px" title="View Entire Layer">Entire</button>
+  <button class="tool" data-t="box" style="left:318px;top:706px;width:54px;font-size:13px" title="Select all grids inside a dragged box">Box</button>
+  <button class="tool" data-t="clr" style="left:376px;top:706px;width:60px;font-size:13px" title="Clear selected grids">Clear</button>
+  <div class="abs" id="gStatus" style="left:442px;top:704px;width:216px;font:11px/1.35 Arial;color:#222"></div><div class="abs" id="gInfo" style="display:none;left:24px;top:70px;width:250px;background:#fffbe6;border:1px solid #777;padding:6px 8px;font:12px/1.5 Arial;z-index:5"></div>
   <div class="abs" style="left:672px;top:60px;width:340px">
     <div class="abs" style="left:0;top:0;font:bold 13px Arial">Layers:</div>
     <div class="lyr" style="left:0;top:22px"><label><input type="checkbox" id="lyG" checked> Andaman Grids</label><br><label><input type="checkbox" id="lyP" checked> Andaman Places</label><br><label><input type="checkbox" id="lyR" checked> Roads</label><br><label><input type="checkbox" id="lyV" checked> Rivers</label></div>
@@ -280,7 +281,25 @@ function pathPoly(c) { // GeoJSON polygon / multipolygon coordinates
 const gridCount = i => gmode === 'the' ? thematicVal(i) : (spGrid ? spGrid.get(i) || 0 : 0);
 function thematicVal(i) { const c = C.grids[i][4]; if (gHabit === 'total') return c.reduce((a, b) => a + b, 0); return c[HAB_ORDER.findIndex(h => h[0] === gHabit)] || 0; }
 const RAMP = ['#fff7bc','#fee391','#fec44f','#fe9929','#ec7014','#cc4c02','#8c2d04'];
+const RAMP6 = ['#00ffff','#0080ff','#0020c0','#003080','#005040','#006000']; // the six shades of the 2015 program
+let _br = null;
 function legendBreaks() { let mx = 0; for (let i = 0; i < C.grids.length; i++) mx = Math.max(mx, gridCount(i)); return mx; }
+function jenks(vals, k) { // natural breaks (Jenks) on sorted values
+  const n = vals.length; if (n <= k) return null;
+  const lc = Array.from({length: n + 1}, () => new Array(k + 1).fill(0)), vr = Array.from({length: n + 1}, () => new Array(k + 1).fill(Infinity));
+  for (let i = 1; i <= k; i++) { lc[1][i] = 1; vr[1][i] = 0; for (let j = 2; j <= n; j++) vr[j][i] = Infinity; }
+  for (let l = 2; l <= n; l++) { let s1 = 0, s2 = 0, w = 0; for (let m = 1; m <= l; m++) { const i3 = l - m + 1, v = vals[i3 - 1]; s2 += v * v; s1 += v; w++; const vv = s2 - s1 * s1 / w, i4 = i3 - 1; if (i4 !== 0) for (let j = 2; j <= k; j++) if (vr[l][j] >= vv + vr[i4][j - 1]) { lc[l][j] = i3; vr[l][j] = vv + vr[i4][j - 1]; } } lc[l][1] = 1; vr[l][1] = s2 - s1 * s1 / w; }
+  const br = new Array(k + 1); br[k] = vals[n - 1]; br[0] = vals[0]; let kk = n; for (let j = k; j >= 2; j--) { const id = lc[kk][j] - 2; br[j - 1] = vals[id]; kk = lc[kk][j] - 1; } return br;
+}
+function classEdges() { // 7 edges -> 6 classes, like MapInfo 'shade ... ranges'
+  const v = []; for (let i = 0; i < C.grids.length; i++) v.push(gridCount(i)); v.sort((a, b) => a - b);
+  const mx = v[v.length - 1] || 0; if (mx <= 0) return null;
+  const u = [...new Set(v)]; let e;
+  if (u.length <= 6) e = [...u, mx + 1].slice(0, 7); else { const j = jenks(v, 6); e = j ? j : u; }
+  e = [...new Set(e)].sort((a, b) => a - b); return e;
+}
+function classOf(val, e) { for (let k = e.length - 2; k >= 0; k--) if (val >= e[k]) return Math.min(k, 5); return 0; }
+const FIELD = {tree: 'Trees', herb: 'Herbs', shrub: 'Shrubs', epiphyte: 'Epiphytes', regeneration: 'Regeneration', total: 'Totalspecies'};
 function drawMap() {
   const w = cv.width, h = cv.height; g2.fillStyle = '#9fd3e8'; g2.fillRect(0, 0, w, h);
   g2.lineJoin = 'round';
@@ -288,12 +307,12 @@ function drawMap() {
   g2.fillStyle = '#e9e4c4'; g2.strokeStyle = '#6b6a4a'; g2.lineWidth = 1;
   M.border.forEach(f => { g2.beginPath(); pathPoly(f.g); g2.fill(); g2.stroke(); });
   // grids
-  const mx = legendBreaks();
+  _br = classEdges();
   C.grids.forEach((gr, i) => {
-    const v = gridCount(i), isSel = selG.has(i);
-    if (v > 0 || isSel) {
+    const v = gridCount(i), isSel = selG.has(i), shade = _br && (gmode === 'the' || v > 0);
+    if (shade || isSel) {
       g2.beginPath(); pathPoly(M.grid[i]);
-      if (v > 0) { const k = Math.min(RAMP.length - 1, Math.floor((v - 1) / Math.max(1, mx) * RAMP.length)); g2.fillStyle = RAMP[k]; g2.globalAlpha = .85; g2.fill(); g2.globalAlpha = 1; }
+      if (shade) { g2.fillStyle = RAMP6[classOf(v, _br)]; g2.globalAlpha = .9; g2.fill(); g2.globalAlpha = 1; }
       if (isSel) { g2.fillStyle = 'rgba(0,0,255,.35)'; g2.fill(); g2.strokeStyle = '#00f'; g2.lineWidth = 1.5; g2.stroke(); }
     }
   });
@@ -301,17 +320,17 @@ function drawMap() {
   if ($('lyV').checked) { g2.strokeStyle = '#1e78d8'; g2.lineWidth = 1; M.rivers.forEach(f => { g2.beginPath(); lines(f.g); g2.stroke(); }); }
   if ($('lyR').checked) { g2.strokeStyle = '#a02020'; g2.lineWidth = 1.4; M.roads.forEach(f => { g2.beginPath(); lines(f.g); g2.stroke(); }); }
   if ($('lyP').checked) { g2.fillStyle = '#000'; g2.font = '11px Arial'; M.places.forEach(f => { const [x, y] = f.g.c; const [a, b] = proj(x, y); if (a < 0 || b < 0 || a > w || b > h) return; g2.beginPath(); g2.arc(a, b, 2.5, 0, 6.3); g2.fill(); if (view.x1 - view.x0 < 1.2) g2.fillText(f.n, a + 4, b - 3); }); }
-  legend();
+  legend(); status(_lx, _ly);
 }
 function lines(g) { const ls = g.t === 'LineString' ? [g.c] : g.t === 'MultiLineString' ? g.c : []; ls.forEach(l => l.forEach(([x, y], i) => { const [a, b] = proj(x, y); i ? g2.lineTo(a, b) : g2.moveTo(a, b); })); }
 function legend() {
-  const mx = legendBreaks(); let t = '';
-  $('gLeg').style.display = mx > 0 ? '' : 'none';
-  if (mx > 0) { t = `<b>${gmode === 'the' ? 'Species per grid' : 'Records per grid'}</b><br>`; RAMP.forEach((c, k) => { const a = Math.floor(k * mx / RAMP.length) + 1, b = Math.floor((k + 1) * mx / RAMP.length); if (b >= a) t += `<i style="background:${c}"></i>${a === b ? a : a + ' - ' + b}<br>`; }); }
+  const e = _br; let t = '';
+  $('gLeg').style.display = e ? '' : 'none';
+  if (e) { t = `<b>Andaman_Grid by ${gmode === 'the' ? FIELD[gHabit] : 'species in the listed habit'}</b><br>`; for (let k = 0; k < e.length - 1; k++) t += `<i style="background:${RAMP6[k]}"></i>${e[k]} to ${e[k + 1]}<br>`; }
   $('gLeg').innerHTML = t;
 }
 function openGrid(mode) {
-  gmode = mode; show('grd'); gSel = null; spGrid = null; selG = new Set(); view = {...B};
+  gmode = mode; show('grd'); $('gInfo').style.display = 'none'; status(); gSel = null; spGrid = null; selG = new Set(); view = {...B};
   $('gTitle').textContent = mode === 'the' ? 'Thematic Maps' : 'Gridwise Search';
   $('gMode').textContent = mode === 'the' ? 'Show species counts of:' : 'Habit of species to list:';
   $('gOpts').innerHTML = [...HAB_ORDER, ['total', mode === 'the' ? 'Total Species' : 'TOTAL']].map(([k, n]) => `<label><input type="radio" name="hb" value="${k}" ${k === gHabit ? 'checked' : ''}> ${n}</label>`).join('');
@@ -348,12 +367,16 @@ document.querySelectorAll('.tool').forEach(b => b.onclick = () => {
 });
 document.querySelector('.tool[data-t="sel"]').classList.add('on');
 function zoom(f, cx, cy) { const [mx, my] = cx == null ? [(view.x0 + view.x1) / 2, (view.y0 + view.y1) / 2] : [cx, cy]; view = {x0: mx - (mx - view.x0) * f, x1: mx + (view.x1 - mx) * f, y0: my - (my - view.y0) * f, y1: my + (view.y1 - my) * f}; drawMap(); }
+let _lx = null, _ly = null;
+function status(wx, wy) { _lx = wx; _ly = wy; const wm = (view.x1 - view.x0) * KX * 69.17, ppm = cv.width / wm; $('gStatus').innerHTML = `Zoom: ${wm.toFixed(0)} mi &nbsp; Scale: 1 in = ${(96 / ppm).toFixed(1)} mi<br>Cursor: ${wx == null ? '—' : wx.toFixed(3) + ' E, ' + wy.toFixed(3) + ' N'}<br>Click a grid = select · Shift+drag = box`; }
+function info(i) { const g = C.grids[i], c = g[4], tot = c.reduce((a, b) => a + b, 0); $('gInfo').style.display = 'block'; $('gInfo').innerHTML = `<b>Grid ${esc(g[1])}</b> <a href="#" id="gInfoX" style="float:right">close</a><br>Sheet: ${esc(g[0])}<br>Area: ${esc(g[2])}<br>${HAB_ORDER.map(([k, n], j) => n + ': <b>' + c[j] + '</b>').join(' &nbsp; ')}<br>Total species: <b>${tot}</b>`; $('gInfoX').onclick = ev => { ev.preventDefault(); $('gInfo').style.display = 'none'; }; }
 function pt(e) { const r = cv.getBoundingClientRect(), k = cv.width / r.width; return [(e.clientX - r.left) * k, (e.clientY - r.top) * k]; }
 function gridAt(x, y) { for (let i = 0; i < C.grids.length; i++) { const c = M.grid[i], ring = (c.t === 'Polygon' ? c.c[0] : c.c[0][0]); let xs = ring.map(p => p[0]), ys = ring.map(p => p[1]); if (x >= Math.min(...xs) && x <= Math.max(...xs) && y >= Math.min(...ys) && y <= Math.max(...ys)) return i; } return -1; }
 let drag = null;
 const scaleOf = v => Math.min(cv.width / ((v.x1 - v.x0) * KX), cv.height / (v.y1 - v.y0));
 cv.onpointerdown = e => { cv.setPointerCapture(e.pointerId); drag = {p: pt(e), q: pt(e), v: {...view}, shift: e.shiftKey, moved: false}; };
 cv.onpointermove = e => {
+  { const [a, b] = pt(e), [x, y] = unproj(a, b); status(x, y); }
   if (!drag) return; drag.q = pt(e);
   const dx = drag.q[0] - drag.p[0], dy = drag.q[1] - drag.p[1];
   if (Math.hypot(dx, dy) > 4) drag.moved = true;
@@ -367,6 +390,7 @@ cv.onpointerup = e => {
   const [a, b] = drag.p, [c, d] = drag.q, [wx, wy] = unproj(c, d), boxing = tool === 'box' || tool === 'zin' || drag.shift;
   if (!drag.moved) {
     if (tool === 'zin') zoom(.5, wx, wy); else if (tool === 'zout') zoom(2, wx, wy);
+    else if (tool === 'info') { const i = gridAt(wx, wy); i >= 0 ? info(i) : $('gInfo').style.display = 'none'; }
     else if (tool !== 'pan') { const i = gridAt(wx, wy); if (i >= 0) { selG.has(i) ? selG.delete(i) : selG.add(i); gmode === 'grid' ? refreshGrid() : drawMap(); } }
   } else if (boxing) {
     const [x0, y1] = unproj(Math.min(a, c), Math.min(b, d)), [x1, y0] = unproj(Math.max(a, c), Math.max(b, d));

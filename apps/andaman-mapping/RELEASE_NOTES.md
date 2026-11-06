@@ -1,4 +1,6 @@
-## Andaman Mapping – Version 1 – Original (1.0.3)
+## Andaman Mapping – Version 1 – Original (1.0.4)
+
+1.0.4: closer to the 2015 program. Thematic and grid maps use the original's six shades (cyan to dark green) with natural-break ranges and an "Andaman_Grid by …" legend ("0 to 3", "3 to 18" …). New Point Select Info tool (the "i" button) shows a grid's sheet, area and species counts. A readout under the map shows zoom, scale and cursor position. Everything else is as 1.0.3 (below).
 
 1.0.3: the link to the Google Drive image folder is removed from the Images and Fliers tabs. Everything else is as 1.0.2 (below).
 
