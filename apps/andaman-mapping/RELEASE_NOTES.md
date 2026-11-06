@@ -1,4 +1,6 @@
-## Andaman Mapping – Version 1 – Original (1.0.2)
+## Andaman Mapping – Version 1 – Original (1.0.3)
+
+1.0.3: the link to the Google Drive image folder is removed from the Images and Fliers tabs. Everything else is as 1.0.2 (below).
 
 **New in 1.0.2: the Pictures and Fliers pack.** The program can now show all the original images (19,502: herbarium sheets, line diagrams, paintings, field photographs) and all the fliers (2,218 slides) of each species, from a separate pack kept on your own computer.
 - The pack is **independent of the program**: it is installed once, with its own Setup (Windows), and is not re-downloaded when the program is updated.

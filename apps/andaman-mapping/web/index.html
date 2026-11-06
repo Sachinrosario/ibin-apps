@@ -190,7 +190,6 @@ a{color:#00e}
 <script>
 "use strict";
 const C = window.AM_CORE, D = window.AM_DETAIL, IM = window.AM_IMAGES, M = window.AM_MAP;
-const DRIVE = 'https://drive.google.com/drive/folders/1k79zvKXm8XNy_aZAZRoBom4JuVF8zDBS';
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const cap = s => s ? s[0].toUpperCase() + s.slice(1) : s;
@@ -435,7 +434,7 @@ const BUILD = {
     const counts = rows.length ? Object.keys(names).filter(k => n[k]).map(k => `${names[k]}: <b>${n[k]}</b>`).join(' &nbsp;·&nbsp; ') : 'No images of this species were recorded in the original program.';
     const basic = () => { if (SPCUR !== cur) return; $('p_img').innerHTML = `<h3>Images of ${esc(cur.name)}</h3><div class="note">${counts}</div>` +
       `<div class="gal">${p ? `<figure><img src="${p.src}" alt="${esc(cur.name)}"><figcaption>${esc(p.cap)}</figcaption></figure>` : ''}</div>` +
-      `<div class="note">This copy shows one picture. ${rows.length ? `All ${rows.length} original images of this species (herbarium sheets, line diagrams, paintings and field photographs) come with the <b>Pictures and Fliers pack</b> (once the pack is installed they show here), and are also in the` : 'Pictures of the other species are in the'} <a href="${DRIVE}" target="_blank" rel="noopener">IBIN data repository on Google Drive</a>, folder <b>Andaman Mapping Application &rsaquo; Photos &rsaquo; ${esc(cur.name)}</b>.</div>`; };
+      `<div class="note">This copy shows one picture per species.${rows.length ? ` All ${rows.length} original images of this species (herbarium sheets, line diagrams, paintings and field photographs) show here once the <b>Pictures and Fliers pack</b> is installed.` : ''}</div>`; };
     basic();
     if (!rows.length) return;
     pkProbe('Images/' + rows[0][2], () => { if (SPCUR !== cur) return;
@@ -445,7 +444,7 @@ const BUILD = {
   },
   fl() {
     const gi = gridInfo(), cm = det()[0];
-    const link = `<div class="note">${SPCUR.fl ? 'The full flier (illustrated slides) is' : 'Fliers of other species are'} in the <a href="${DRIVE}" target="_blank" rel="noopener">IBIN data repository on Google Drive</a>, folder <b>Andaman Mapping Application &rsaquo; Fliers${SPCUR.fl ? ' &rsaquo; ' + esc(SPCUR.name) : ''}</b>.</div>`;
+    const link = `<div class="note">${SPCUR.fl ? 'The complete flier (all slides) shows here once the <b>Pictures and Fliers pack</b> is installed.' : ''}</div>`;
     if (SPCUR.fl) { const cur = SPCUR; $('p_fl').innerHTML = `<h3>Flier of ${esc(SPCUR.name)}</h3><div class="gal"><figure style="width:520px"><img src="img/f/${SPCUR.id}.webp" alt="Flier" style="width:520px"><figcaption>First slide of the original flier</figcaption></figure></div>` + link;
       pkProbe('Fliers/' + cur.name + '/Slide1.JPG', () => { if (SPCUR !== cur) return;
         $('p_fl').innerHTML = `<h3>Flier of ${esc(cur.name)}</h3><div class="note">Complete original flier, from the installed Pictures and Fliers pack (click a slide to enlarge)</div><div class="gal" id="pkfl"></div>`;
