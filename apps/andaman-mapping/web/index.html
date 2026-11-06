@@ -435,7 +435,7 @@ const BUILD = {
     const counts = rows.length ? Object.keys(names).filter(k => n[k]).map(k => `${names[k]}: <b>${n[k]}</b>`).join(' &nbsp;·&nbsp; ') : 'No images of this species were recorded in the original program.';
     const basic = () => { if (SPCUR !== cur) return; $('p_img').innerHTML = `<h3>Images of ${esc(cur.name)}</h3><div class="note">${counts}</div>` +
       `<div class="gal">${p ? `<figure><img src="${p.src}" alt="${esc(cur.name)}"><figcaption>${esc(p.cap)}</figcaption></figure>` : ''}</div>` +
-      `<div class="note">This copy shows one picture. ${rows.length ? `All ${rows.length} original images of this species (herbarium sheets, line diagrams, paintings and field photographs) come with the <b>Pictures and Fliers pack</b> (install it to see them here), and are also in the` : 'Pictures of the other species are in the'} <a href="${DRIVE}" target="_blank" rel="noopener">IBIN data repository on Google Drive</a>, folder <b>Andaman Mapping Application &rsaquo; Photos &rsaquo; ${esc(cur.name)}</b>.</div>`; };
+      `<div class="note">This copy shows one picture. ${rows.length ? `All ${rows.length} original images of this species (herbarium sheets, line diagrams, paintings and field photographs) come with the <b>Pictures and Fliers pack</b> (once the pack is installed they show here), and are also in the` : 'Pictures of the other species are in the'} <a href="${DRIVE}" target="_blank" rel="noopener">IBIN data repository on Google Drive</a>, folder <b>Andaman Mapping Application &rsaquo; Photos &rsaquo; ${esc(cur.name)}</b>.</div>`; };
     basic();
     if (!rows.length) return;
     pkProbe('Images/' + rows[0][2], () => { if (SPCUR !== cur) return;

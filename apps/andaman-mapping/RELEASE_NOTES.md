@@ -1,4 +1,11 @@
-## Andaman Mapping – Version 1 – Original (1.0.1)
+## Andaman Mapping – Version 1 – Original (1.0.2)
+
+**New in 1.0.2: the Pictures and Fliers pack.** The program can now show all the original images (19,502: herbarium sheets, line diagrams, paintings, field photographs) and all the fliers (2,218 slides) of each species, from a separate pack kept on your own computer.
+- The pack is **independent of the program**: it is installed once, with its own Setup (Windows), and is not re-downloaded when the program is updated.
+- **Windows:** run `AndamanMapping_Pictures_1.0.0_Setup.exe` (with its `-1.bin`, `-2.bin`, `-3.bin` files in the same folder). It installs into `%LOCALAPPDATA%\AndamanMapping\pack`, which the program finds by itself. Or put a folder called `pack` next to `AndamanMapping.exe`.
+- **Offline folder (any computer):** put the `pack` folder next to `Open Kit.html`.
+- Without the pack nothing changes: one picture per species, as before.
+
 
 The Windows Setup now uses the same kind of installer wizard as the 2015 program, built with Inno Setup. It still installs without an administrator password. The program itself is unchanged.
 
