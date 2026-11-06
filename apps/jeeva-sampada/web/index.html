@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jeeva Sampada</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1f5f3a">
+<style>
+:root{--g:#1f5f3a;--g2:#2b7c4e;--gd:#164529;--ink:#1b2a25;--mut:#5b6b65;--bg:#f4f3ec;--card:#fff;--line:#dcd8cb;--acc:#b3541e;--soft:#e4f1e8;--warn:#fff4dd;--warnl:#e8c97a}
+@media (prefers-color-scheme:dark){:root{--g:#4cc17d;--g2:#38a566;--gd:#a6e6c0;--ink:#e8eeeb;--mut:#a3b3ad;--bg:#10171a;--card:#182125;--line:#2b3a3f;--acc:#f0a070;--soft:#173a28;--warn:#3a3118;--warnl:#7a6a2c}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Source Sans 3","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif}
+a{color:var(--g)}
+.top{position:sticky;top:0;z-index:20;background:var(--g);color:#fff;display:flex;align-items:center;gap:12px;padding:8px 16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;margin-right:auto}
+.brand img{width:38px;height:38px;border-radius:9px}
+.brand b{display:block;font:700 19px/1.1 Georgia,serif}
+.brand small{display:block;font-size:12px;opacity:.85}
+.top nav{display:flex;gap:2px;flex-wrap:wrap}
+.top nav a{color:#fff;text-decoration:none;padding:8px 12px;border-radius:8px;font-weight:600;font-size:15px}
+.top nav a.on,.top nav a:hover{background:rgba(255,255,255,.18)}
+main{max-width:1180px;margin:0 auto;padding:16px 16px 40px}
+h1{font:700 26px/1.2 Georgia,serif;margin:8px 0 4px;color:var(--gd)}
+h2{font:700 20px/1.25 Georgia,serif;margin:26px 0 8px;color:var(--gd)}
+.lead{color:var(--mut);margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0}
+.note{background:var(--warn);border:1px solid var(--warnl);border-radius:10px;padding:10px 14px;margin:12px 0;font-size:15px}
+.note.ok{background:var(--soft);border-color:var(--g2)}
+.btn{display:inline-block;background:var(--g);color:#fff;border:0;border-radius:9px;padding:9px 14px;font:600 15px/1.2 inherit;cursor:pointer;text-decoration:none}
+.btn:hover{background:var(--g2)}
+.btn.alt{background:transparent;color:var(--g);border:1.5px solid var(--g)}
+.btn.sm{padding:6px 10px;font-size:14px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.chip{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 12px;font:600 14px/1.2 inherit;cursor:pointer}
+.chip.on{background:var(--g);border-color:var(--g);color:#fff}
+.srch{display:flex;gap:8px;margin:10px 0}
+.srch input{flex:1;font:inherit;font-size:18px;padding:12px 14px;border:2px solid var(--g);border-radius:12px;background:var(--card);color:var(--ink);min-width:0}
+select,.fi{font:inherit;padding:8px 10px;border:1.5px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink);max-width:100%}
+.res{list-style:none;margin:10px 0;padding:0;display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+.res a{display:block;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px;text-decoration:none;color:var(--ink);height:100%}
+.res a:hover{border-color:var(--g)}
+.res .t{font-style:italic;font-weight:700;color:var(--gd)}
+.res .s{font-size:13.5px;color:var(--mut)}
+.badge{display:inline-block;font:600 12px/1 inherit;padding:3px 7px;border-radius:6px;background:var(--soft);color:var(--gd);margin-right:4px}
+.badge.w{background:var(--warn);color:var(--ink);border:1px solid var(--warnl)}
+.kv{display:grid;grid-template-columns:max-content 1fr;gap:4px 14px;margin:8px 0}
+.kv dt{color:var(--mut)}.kv dd{margin:0}
+table.t{border-collapse:collapse;width:100%;font-size:15px}
+table.t th{background:var(--soft);color:var(--gd);text-align:left;padding:6px 10px;position:sticky;top:0}
+table.t td{padding:5px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.tw{overflow:auto;max-height:480px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin:12px 0}
+.tile{display:block;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+a.tile:hover{border-color:var(--g)}
+.tile b{display:block;font:700 24px/1.1 Georgia,serif;color:var(--gd)}
+.tile span{font-size:13.5px;color:var(--mut)}
+.tile.off{opacity:.8}
+.list{max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+.list a,.list div{display:block;padding:6px 12px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink)}
+.list a:hover{background:var(--soft)}
+.sci{font:italic 700 26px/1.2 Georgia,serif;color:var(--gd);margin:4px 0}
+.hero{background:linear-gradient(135deg,var(--g),var(--g2));color:#fff;border-radius:14px;padding:22px 22px 18px;margin:8px 0 14px}
+.hero h1{color:#fff;font-size:34px}
+.hero ul{margin:10px 0 0;padding-left:20px}
+.hero li{margin:3px 0}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:820px){.cols{grid-template-columns:minmax(0,1fr)}.res{grid-template-columns:1fr}.brand small{display:none}h1{font-size:23px}.hero h1{font-size:27px}}
+footer{border-top:1px solid var(--line);padding:16px;text-align:center;color:var(--mut);font-size:14px}
+.pt{border:1px solid var(--line);border-radius:10px;background:var(--card);padding:10px 14px;margin:8px 0}
+.pt b{color:var(--gd)}
+.pt p{margin:4px 0;font-size:14.5px}
+@media print{.top,footer,.srch{display:none}}
+</style></head>
+<body>
+<header class="top">
+  <a class="brand" href="#/"><img src="img/ui/icon.png" alt=""><span><b>Jeeva Sampada</b><small>Biodiversity databases of India</small></span></a>
+  <nav id="nav"><a href="#/" data-r="home">Home</a><a href="#/place" data-r="place">By place</a><a href="#/find" data-r="find">Find a species</a><a href="#/med" data-r="med">Medicinal plants</a><a href="#/programs" data-r="programs">Databases</a><a href="#/about" data-r="about">About</a></nav>
+</header>
+<main id="app"><p class="lead">Loading…</p></main>
+<footer>Proprietary right holder - Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario · IBIN Apps</footer>
+<script src="data/core.js"></script>
+<script src="data/med.js"></script>
+<script>
+"use strict";
+const C = JS_CORE, MD = JS_MED, G = C.groups, $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const fold = s => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const num = n => n.toLocaleString('en-IN');
+const csvq = v => /[",\n]/.test(String(v)) ? '"' + String(v).replace(/"/g, '""') + '"' : String(v);
+function download(name, text) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], {type: 'text/csv'})); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); }
+const place = d => { const [s, n] = C.dis[d]; return n ? `${C.st[s]}, ${n}` : C.st[s]; };
+const GI = Object.fromEntries(G.map((g, i) => [g.k, i]));
+const spName = (g, i) => { const s = G[g].sp[i]; return s[1] ? s.join(' ') : s[0]; };
+// species -> places (per group), place -> species (per group)
+const bySp = G.map(() => new Map()), byDis = G.map(() => new Map());
+G.forEach((g, gi) => { for (let j = 0; j < g.r.length; j += 2) { const s = g.r[j], d = g.r[j + 1]; (bySp[gi].get(s) || bySp[gi].set(s, []).get(s)).push(d); (byDis[gi].get(d) || byDis[gi].set(d, []).get(d)).push(s); } });
+const totalSp = G.reduce((a, g) => a + g.sp.length, 0), totalRec = G.reduce((a, g) => a + g.r.length / 2, 0);
+
+function home(app) {
+  document.title = 'Jeeva Sampada';
+  app.innerHTML = `<div class="hero"><h1>Jeeva Sampada</h1><p style="margin:0;font-size:18px">Biodiversity databases of India under one roof</p>
+  <ul><li>Species of plants, animals, microbes and pests recorded by state and district</li><li>${num(totalSp)} species names and ${num(totalRec)} place records in this first version</li><li>Common names and patents of medicinal plants</li><li>Compiled by scientists from many centres across the country</li></ul></div>
+  <div class="row"><a class="btn" href="#/place">Find species by place</a><a class="btn alt" href="#/find">Find a species</a><a class="btn alt" href="#/med">Medicinal plants</a><a class="btn alt" href="#/programs">The separate databases</a></div>
+  <h2>Groups in the pooled database</h2><div class="tiles">${G.map(g => `<a class="tile" href="#/group/${g.k}"><b>${num(g.sp.length)}</b><span>${esc(g.l)}</span></a>`).join('')}</div>`;
+}
+
+function viewPlace(app) {
+  document.title = 'By place · Jeeva Sampada';
+  const st = {s: +sessionStorage.getItem('jsS') || 0, d: -1, g: ''};
+  app.innerHTML = `<h1>Find species by place</h1><p class="lead">Choose a state and a district to see which groups have been recorded there, then open a group for the species list.</p>
+  <div class="row"><label>State <select id="ps">${C.st.map((s, i) => `<option value="${i}">${esc(s)}</option>`).join('')}</select></label><label>District <select id="pd"></select></label></div><div id="pr"></div>`;
+  const dsOf = s => C.dis.map((d, i) => d[0] === s ? i : -1).filter(i => i >= 0);
+  function fillD() { const ds = dsOf(st.s); $('#pd').innerHTML = `<option value="-1">All districts of the state</option>` + ds.map(i => `<option value="${i}">${esc(C.dis[i][1] || '(district not stated)')}</option>`).join(''); st.d = -1; }
+  function show() {
+    const ds = st.d >= 0 ? [st.d] : dsOf(st.s);
+    const per = G.map((g, gi) => { const set = new Set(); ds.forEach(d => (byDis[gi].get(d) || []).forEach(s => set.add(s))); return set; });
+    let h = `<div class="card"><b>${esc(C.st[st.s])}${st.d >= 0 ? ', ' + esc(C.dis[st.d][1] || '(district not stated)') : ''}</b><div class="tiles">` + G.map((g, gi) => per[gi].size ? `<a class="tile" href="#/place" data-g="${gi}"><b>${num(per[gi].size)}</b><span>${esc(g.l)}</span></a>` : '').join('') + `</div></div>`;
+    if (st.g !== '') {
+      const gi = +st.g, ids = [...per[gi]].sort((a, b) => a - b);
+      h += `<h2>${esc(G[gi].l)} (${num(ids.length)})</h2><div class="row"><input class="fi" id="pf" placeholder="Filter this list" style="flex:1"><button class="btn alt sm" id="pcsv">Download list (CSV)</button></div><div class="list" id="pl"></div>`;
+      $('#pr').innerHTML = h; paint(); $('#pf').oninput = paint; $('#pcsv').onclick = () => download('jeeva_sampada_' + G[gi].k + '.csv', `${G[gi].c[0]},${G[gi].c[1]}\n` + ids.map(i => G[gi].sp[i].map(csvq).join(',')).join('\n'));
+      function paint() { const q = fold($('#pf').value); $('#pl').innerHTML = ids.filter(i => !q || fold(spName(gi, i)).includes(q)).slice(0, 1500).map(i => `<a href="#/sp/${G[gi].k}/${i}">${esc(spName(gi, i))}</a>`).join('') || '<div>No match.</div>'; }
+    } else $('#pr').innerHTML = h;
+    $('#pr').querySelectorAll('[data-g]').forEach(a => a.onclick = e => { e.preventDefault(); st.g = a.dataset.g; show(); });
+  }
+  $('#ps').value = st.s; fillD();
+  $('#ps').onchange = e => { st.s = +e.target.value; sessionStorage.setItem('jsS', st.s); st.g = ''; fillD(); show(); };
+  $('#pd').onchange = e => { st.d = +e.target.value; show(); };
+  show();
+}
+
+let SIDX = null;
+function viewFind(app, q0) {
+  document.title = 'Find a species · Jeeva Sampada';
+  app.innerHTML = `<h1>Find a species</h1><p class="lead">Type part of a scientific name (genus or species). All groups are searched.</p><div class="srch"><input id="q" type="search" placeholder="Try: Tiger, Panthera, Ocimum, Culex" value="${esc(q0 || '')}" autocomplete="off"></div><div id="fr"></div>`;
+  if (!SIDX) { SIDX = []; G.forEach((g, gi) => g.sp.forEach((s, i) => SIDX.push([gi, i, fold(s.join(' '))]))); }
+  const go = () => {
+    const q = fold($('#q').value).trim(); if (q.length < 2) { $('#fr').innerHTML = '<p class="lead">Type at least two letters.</p>'; return; }
+    const hit = SIDX.filter(x => x[2].includes(q)); hit.sort((a, b) => (a[2].startsWith(q) ? 0 : 1) - (b[2].startsWith(q) ? 0 : 1) || a[2].localeCompare(b[2]));
+    $('#fr').innerHTML = `<p class="lead">${num(hit.length)} match${hit.length === 1 ? '' : 'es'}${hit.length > 300 ? ' (first 300 shown)' : ''}</p><ul class="res">` + hit.slice(0, 300).map(([gi, i]) => `<li><a href="#/sp/${G[gi].k}/${i}"><span class="t">${esc(spName(gi, i))}</span><div class="s"><span class="badge">${esc(G[gi].l)}</span>${new Set((bySp[gi].get(i) || []).map(d => C.dis[d][0])).size} state(s)</div></a></li>`).join('') + '</ul>';
+  };
+  $('#q').oninput = go; go(); $('#q').focus();
+}
+
+function viewGroup(app, k) {
+  const gi = GI[k]; if (gi == null) { app.innerHTML = '<h1>Not found</h1>'; return; }
+  const g = G[gi]; document.title = g.l + ' · Jeeva Sampada';
+  app.innerHTML = `<h1>${esc(g.l)}</h1><p class="lead">${num(g.sp.length)} species · ${num(g.r.length / 2)} place records</p>
+  <div class="row"><input class="fi" id="gf" placeholder="Filter by name" style="flex:1"><select id="gs"><option value="-1">All states</option>${C.st.map((s, i) => `<option value="${i}">${esc(s)}</option>`).join('')}</select><button class="btn alt sm" id="gcsv">Download (CSV)</button></div><div class="list" id="gl"></div>`;
+  let cur = [];
+  const paint = () => {
+    const q = fold($('#gf').value), s = +$('#gs').value;
+    cur = g.sp.map((_, i) => i).filter(i => (!q || fold(spName(gi, i)).includes(q)) && (s < 0 || (bySp[gi].get(i) || []).some(d => C.dis[d][0] === s)));
+    $('#gl').innerHTML = cur.slice(0, 1500).map(i => `<a href="#/sp/${k}/${i}">${esc(spName(gi, i))}</a>`).join('') + (cur.length > 1500 ? `<div>… ${num(cur.length - 1500)} more: narrow the filter.</div>` : '') || '<div>No match.</div>';
+  };
+  $('#gf').oninput = paint; $('#gs').onchange = paint; paint();
+  $('#gcsv').onclick = () => download('jeeva_sampada_' + k + '.csv', `${g.c[0]},${g.c[1]},states\n` + cur.map(i => [...g.sp[i], [...new Set((bySp[gi].get(i) || []).map(d => C.st[C.dis[d][0]]))].join('; ')].map(csvq).join(',')).join('\n'));
+}
+
+function viewSp(app, k, i) {
+  const gi = GI[k], g = G[gi]; if (gi == null || !g.sp[i]) { app.innerHTML = '<h1>Not found</h1>'; return; }
+  const name = spName(gi, +i); document.title = name + ' · Jeeva Sampada';
+  const ds = [...new Set(bySp[gi].get(+i) || [])].sort((a, b) => a - b);
+  const bySt = new Map(); ds.forEach(d => { const [s, n] = C.dis[d]; (bySt.get(s) || bySt.set(s, []).get(s)).push(n || '(not stated)'); });
+  const med = k === 'plants' ? MD.p.filter(p => p[4].toLowerCase() === g.sp[i][0].toLowerCase() && p[5].toLowerCase() === g.sp[i][1].toLowerCase()) : [];
+  app.innerHTML = `<p><a href="#/group/${k}">← ${esc(g.l)}</a></p><div class="sci">${esc(name)}</div><span class="badge">${esc(g.l)}</span>
+  ${med.length ? `<div class="note ok">Listed as a medicinal plant: ${med.map(p => `<a href="#/med/${p[0]}">${esc(p[3])}${p[1] ? ' (' + esc(p[1]) + ')' : ''}</a>`).join('; ')}</div>` : ''}
+  <h2>Recorded in ${num(bySt.size)} state(s), ${num(ds.length)} place(s)</h2>
+  <div class="row"><button class="btn alt sm" id="dcsv">Download places (CSV)</button></div>
+  <div class="tw"><table class="t"><tr><th>State</th><th>Districts</th></tr>${[...bySt].sort((a, b) => C.st[a[0]].localeCompare(C.st[b[0]])).map(([s, n]) => `<tr><td>${esc(C.st[s])}</td><td>${esc(n.sort().join(', '))}</td></tr>`).join('')}</table></div>`;
+  $('#dcsv').onclick = () => download(name.replace(/\W+/g, '_') + '_places.csv', 'state,district\n' + ds.map(d => [C.st[C.dis[d][0]], C.dis[d][1]].map(csvq).join(',')).join('\n'));
+}
+
+function viewMed(app, id) {
+  if (id) return medOne(app, +id);
+  document.title = 'Medicinal plants · Jeeva Sampada';
+  app.innerHTML = `<h1>Medicinal plants</h1><p class="lead">${num(MD.p.length)} plants with local names, English names and patents. Search any name.</p><div class="srch"><input id="q" type="search" placeholder="Try: Amalaki, gooseberry, Emblica, neem" autocomplete="off"></div><div id="mr"></div>`;
+  const idx = MD.p.map(p => [p, fold(p.slice(1, 8).join(' '))]);
+  const go = () => { const q = fold($('#q').value).trim(); const hit = q.length < 2 ? idx.slice(0, 200) : idx.filter(x => x[1].includes(q)); $('#mr').innerHTML = `<p class="lead">${num(hit.length)} plant${hit.length === 1 ? '' : 's'}${hit.length > 300 ? ' (first 300 shown)' : ''}</p><ul class="res">` + hit.slice(0, 300).map(([p]) => `<li><a href="#/med/${p[0]}"><span class="t">${esc(p[3])}</span><div class="s">${esc(p[1])}${p[2] ? ' · ' + esc(p[2]) : ''}</div>${MD.pat[p[0]] ? `<div class="s"><span class="badge w">${MD.pat[p[0]].length} patent(s)</span></div>` : ''}</a></li>`).join('') + '</ul>'; };
+  $('#q').oninput = go; go();
+}
+let PAT = null;
+function loadPat() { return PAT ? Promise.resolve(PAT) : new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'data/patents.js'; s.onload = () => res(PAT = JS_PAT); s.onerror = rej; document.head.appendChild(s); }); }
+function medOne(app, id) {
+  const p = MD.p.find(x => x[0] === id); if (!p) { app.innerHTML = '<h1>Not found</h1><p><a href="#/med">Back</a></p>'; return; }
+  document.title = p[3] + ' · Jeeva Sampada';
+  const pl = MD.pat[id] || [];
+  const gi = GI.plants, si = G[gi].sp.findIndex(s => s[0].toLowerCase() === p[4].toLowerCase() && s[1].toLowerCase() === p[5].toLowerCase());
+  app.innerHTML = `<p><a href="#/med">← Medicinal plants</a></p><div class="sci">${esc(p[3])} <span style="font:400 16px sans-serif">${esc(p[6])}</span></div>
+  <dl class="kv">${p[1] ? `<dt>Local names</dt><dd>${esc(p[1])}</dd>` : ''}${p[2] ? `<dt>English names</dt><dd>${esc(p[2])}</dd>` : ''}${p[7] ? `<dt>Synonym</dt><dd><i>${esc(p[7])}</i></dd>` : ''}</dl>
+  ${si >= 0 ? `<p><a class="btn alt sm" href="#/sp/plants/${si}">Where it is recorded</a></p>` : ''}
+  <h2>Patents (${pl.length})</h2><div id="pats">${pl.length ? 'Loading…' : '<p class="lead">No patents are linked to this plant.</p>'}</div>`;
+  if (pl.length) loadPat().then(P => { $('#pats') && ($('#pats').innerHTML = pl.map(n => { const t = P[n]; return `<div class="pt"><b>${esc(t[1])}</b><p>${esc(t[0])}${t[6] ? ' · ' + esc(t[6]) : ''}${t[4] ? ' · issued ' + esc(t[4]) : ''}</p>${t[2] ? `<p><i>Inventors:</i> ${esc(t[2])}</p>` : ''}${t[3] ? `<p><i>Applicant:</i> ${esc(t[3])}</p>` : ''}${t[8] ? `<p>${esc(t[8])}</p>` : ''}${t[9] ? `<details><summary>Claim</summary><p>${esc(t[9])}</p></details>` : ''}</div>`; }).join('')); }).catch(() => { $('#pats').textContent = 'Patent data could not be loaded.'; });
+}
+
+const PROGRAMS = [
+  ['Sasya Sampada', 'Medicinal plants of India', 'sasya'], ['Pest', 'Insect and other pests', 'pest'], ['Crop pest, natural enemies and pollinators', 'Crop pests, their natural enemies and pollinators', 'croppest'],
+  ['Insects', 'Predators and parasitoids', 'insects'], ['Silkworm', 'Silkworms and their products', 'silkworm'], ['Microbial resources', 'Microbes of India', 'microbial'],
+  ['Birds', 'Indian birds', 'birds'], ['Amphibia, Mammals, Reptiles', 'Amphibians, mammals, lizards, snakes and turtles', 'amr'], ['Finfishes and shellfishes', 'Fishes, molluscs, crabs and prawns', 'fish'],
+  ['Marine', 'Marine organisms', 'marine'], ['Domestic animals', 'Breeds of domestic animals', 'domestic'], ['Laboratory animal resources', 'Laboratory animals', 'labanimal']];
+function viewPrograms(app) {
+  document.title = 'Databases · Jeeva Sampada';
+  const have = window.JS_MODULES || [];
+  app.innerHTML = `<h1>The separate databases</h1><p class="lead">Jeeva Sampada brings the original databases under one roof. Each one has its own pages, photographs and maps. They are being added to this app one by one.</p>
+  <div class="tiles">${PROGRAMS.map(p => `<div class="tile off"><b style="font-size:17px">${esc(p[0])}</b><span>${esc(p[1])}</span><br><span class="badge w">Coming in a later update</span></div>`).join('')}</div>
+  <div class="note ok">Meanwhile every group of these databases can already be searched by place and by name in the pooled database (see Home).</div>`;
+}
+
+function viewAbout(app) {
+  document.title = 'About · Jeeva Sampada';
+  app.innerHTML = `<h1>About Jeeva Sampada</h1>
+  <div class="card"><p><b>Jeeva Sampada</b> is a collection of biodiversity databases of India under one roof: plants, microbes, crop pests, vectors, silkworms, amphibians, reptiles, birds, mammals, domestic animals, fishes, crabs, prawns and molluscs, with their common names and patents of medicinal plants. The original program (the DBT assembling project) pooled the databases made by many scientists at centres across the country, and opened each separate database from one main screen.</p>
+  <p>This is version 1 of its 2026 rebuild by IBIN Apps. It contains the pooled place records of the original program and the medicinal plant names and patents. The separate databases will be added in updates.</p></div>
+  <h2>Notes on the data</h2><div class="card"><ul><li>Records are as in the original program. Only the names of states were made uniform (for example “Maharastra” and “Maharashtra” are one state) and shown with their present names.</li><li>Species names are those of the original; they have not been updated to current scientific names.</li></ul></div>
+  <h2>Credits</h2><div class="card">Proprietary right holder - Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario.</div>`;
+}
+
+function route() {
+  const h = location.hash.replace(/^#\/?/, ''), [r, a, b] = h.split('/'), app = $('#app');
+  scrollTo(0, 0);
+  document.querySelectorAll('#nav a').forEach(x => x.classList.toggle('on', x.dataset.r === (r || 'home') || (x.dataset.r === 'find' && (r === 'sp' || r === 'group'))));
+  ({'': home, place: viewPlace, find: viewFind, group: viewGroup, sp: viewSp, med: viewMed, programs: viewPrograms, about: viewAbout}[r || ''] || home)(app, a, b);
+}
+addEventListener('hashchange', route); route();
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script></body></html>

@@ -1,0 +1,12 @@
+{
+  "name": "jeeva-sampada",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Jeeva Sampada (2026)",
+  "scripts": {
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "2.12.4"
+  }
+}
