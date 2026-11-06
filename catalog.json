@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-01",
+  "updated": "2026-11-06",
   "owner": "Sachinrosario",
   "releasesRepo": "ibin-apps",
   "apps": [
@@ -1035,8 +1035,8 @@
           "key": "v1",
           "label": "Version 1 – Original (2015 screens)",
           "versionName": "Version 1 – Original",
-          "version": "1.0.1",
-          "released": "2026-11-05",
+          "version": "1.0.2",
+          "released": "2026-11-06",
           "published": true,
           "summary": "The 2015 program rebuilt screen for screen, without MapInfo: search the plants of the Andaman Islands by genus, species, habit or common name, or select map grids to list the species recorded there; see each species' taxonomy, distribution map, picture, distribution data, synonyms and common names.",
           "facts": [
@@ -1052,8 +1052,8 @@
             {
               "os": "windows",
               "kind": "Installer",
-              "file": "AndamanMapping_1.0.1_Setup.exe",
-              "size": "32 MB",
+              "file": "AndamanMapping_1.0.2_Setup.exe",
+              "size": "34 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password."
             },
             {
@@ -1066,26 +1066,31 @@
             {
               "os": "mac",
               "kind": "App",
-              "file": "AndamanMapping_1.0.1_universal.dmg",
+              "file": "AndamanMapping_1.0.2_universal.dmg",
               "size": "68 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
-              "file": "AndamanMapping_1.0.1_amd64.deb",
+              "file": "AndamanMapping_1.0.2_amd64.deb",
               "size": "32 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
-              "file": "AndamanMapping_1.0.1_offline.zip",
+              "file": "AndamanMapping_1.0.2_offline.zip",
               "size": "33 MB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
           "changes": [
+            {
+              "version": "1.0.2",
+              "date": "2026-11-06",
+              "text": "Shows all original images (19,502) and fliers (2,218 slides) of each species when the separate Pictures and Fliers pack is installed; without the pack nothing changes."
+            },
             {
               "version": "1.0.1",
               "date": "2026-11-05",
