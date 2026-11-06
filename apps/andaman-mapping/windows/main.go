@@ -57,6 +57,18 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
+	// Optional Pictures and Fliers pack: the first of these folders that holds pack.json is served at /pack/
+	// (installed by the separate "Pictures and Fliers" Setup, or copied beside the program).
+	for _, d := range []string{filepath.Join(exeDir(), "pack"), filepath.Join(os.Getenv("LOCALAPPDATA"), "AndamanMapping", "pack")} {
+		if _, err := os.Stat(filepath.Join(d, "pack.json")); err == nil {
+			pk := http.StripPrefix("/pack/", http.FileServer(http.Dir(d)))
+			mux.HandleFunc("/pack/", func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Cache-Control", "max-age=3600")
+				pk.ServeHTTP(w, r)
+			})
+			break
+		}
+	}
 	mux.HandleFunc("/__alive", func(w http.ResponseWriter, r *http.Request) {
 		q := r.URL.Query()
 		if id := q.Get("id"); id != "" {
@@ -130,4 +142,12 @@ func openWindow(url string) {
 	c := exec.Command("rundll32", "url.dll,FileProtocolHandler", url)
 	c.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
 	c.Start()
+}
+
+func exeDir() string {
+	p, err := os.Executable()
+	if err != nil {
+		return "."
+	}
+	return filepath.Dir(p)
 }

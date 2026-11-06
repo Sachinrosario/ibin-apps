@@ -61,6 +61,9 @@ table.t tr:nth-child(even) td{background:#f4eef2}
 .gal{display:flex;gap:14px;margin:14px;flex-wrap:wrap;align-items:flex-start}
 .gal figure{margin:0;background:#f4eef2;border:1px solid #bbb;padding:6px;width:300px;font:13px Arial}
 .gal img{width:300px;display:block}
+.gal figure.pk{cursor:zoom-in}.gal figure.pk img{height:225px;object-fit:contain;background:#fff}
+.pkh{margin:14px 14px 0;font:bold 14px Arial;color:#4a2a3a}
+#lb{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:99;display:none;align-items:center;justify-content:center;cursor:zoom-out}#lb img{max-width:96vw;max-height:94vh}
 /* search panels */
 .panel{position:absolute;background:#d4e8f0;border:2px groove #fff;padding:0}
 .panel>legend,.cap{position:absolute;margin:0;padding:0 4px;background:#d4e8f0;font:bold 13px Arial;color:#000}
@@ -405,6 +408,12 @@ function pic(s) {
   const r = (GEN.get(s.genus) || []).find(x => x.rep) || (FAM.get(s.fam) || []).find(x => x.rep);
   return r ? {src: 'img/s/' + r.id + '.webp', cap: 'No picture of this species. Shown: ' + r.name + ', ' + (r.genus === s.genus ? 'same genus' : 'same family'), own: false} : null;
 }
+
+// Pictures pack (optional, installed separately): all original images and fliers in a folder called  pack/  beside the page.
+// Without it the program shows the one built-in picture per species, as before.
+const PACK = 'pack/', pkUrl = rel => PACK + rel.split('/').map(encodeURIComponent).join('/');
+function pkProbe(rel, ok, bad) { const i = new Image(); i.onload = ok; i.onerror = bad; i.src = pkUrl(rel); }
+function lightbox(src) { let b = $('lb'); if (!b) { b = document.createElement('div'); b.id = 'lb'; b.innerHTML = '<img alt="">'; b.onclick = () => b.style.display = 'none'; document.body.appendChild(b); } b.firstChild.src = src; b.style.display = 'flex'; }
 const NOPIC = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="140" viewBox="0 0 200 140"><rect width="200" height="140" fill="#e9e4c4"/><path d="M100 118V62M100 92c-26-4-38-22-38-40 22 2 38 16 38 40zm0-8c22-2 36-16 38-34-20 2-36 14-38 34z" fill="#7a9a4a" stroke="#4a6a2a" stroke-width="2"/></svg>');
 const thumb = () => { const p = pic(SPCUR); return p ? `<figure class="th"><img src="${p.src}" alt=""><figcaption>${esc(p.cap)}</figcaption></figure>` : `<figure class="th"><img src="${NOPIC}" alt=""><figcaption>No picture of this species or its relatives in the original program</figcaption></figure>`; };
 const gridInfo = () => { const gs = (M.sg[SPCUR.id] || []).map(([i]) => C.grids[i]); return {n: gs.length, isl: [...new Set(gs.map(g => g[2]).filter(Boolean))], div: [...new Set(gs.map(g => g[3]).filter(Boolean))]}; };
@@ -422,15 +431,27 @@ const BUILD = {
       '<div class="abs" id="spInfo" style="left:680px;top:14px;width:300px;font:14px Arial"></div>'; },
   img() {
     const rows = IM[SPCUR.id] || [], names = {F:'Photographs', H:'Herbarium Images', L:'Line Diagrams', P:'Paintings'};
-    const n = {}; rows.forEach(r => n[r[0]] = (n[r[0]] || 0) + 1); const p = pic(SPCUR);
-    $('p_img').innerHTML = `<h3>Images of ${esc(SPCUR.name)}</h3><div class="note">${rows.length ? Object.keys(names).filter(k => n[k]).map(k => `${names[k]}: <b>${n[k]}</b>`).join(' &nbsp;·&nbsp; ') : 'No images of this species were recorded in the original program.'}</div>` +
-      `<div class="gal">${p ? `<figure><img src="${p.src}" alt="${esc(SPCUR.name)}"><figcaption>${esc(p.cap)}</figcaption></figure>` : ''}</div>` +
-      `<div class="note">This web version shows one picture. ${rows.length ? `All ${rows.length} original images of this species (herbarium sheets, line diagrams, paintings and field photographs) are in the` : 'Pictures of the other species are in the'} <a href="${DRIVE}" target="_blank" rel="noopener">IBIN data repository on Google Drive</a>, folder <b>Andaman Mapping Application &rsaquo; Photos &rsaquo; ${esc(SPCUR.name)}</b>.</div>`;
+    const n = {}; rows.forEach(r => n[r[0]] = (n[r[0]] || 0) + 1); const p = pic(SPCUR), cur = SPCUR;
+    const counts = rows.length ? Object.keys(names).filter(k => n[k]).map(k => `${names[k]}: <b>${n[k]}</b>`).join(' &nbsp;·&nbsp; ') : 'No images of this species were recorded in the original program.';
+    const basic = () => { if (SPCUR !== cur) return; $('p_img').innerHTML = `<h3>Images of ${esc(cur.name)}</h3><div class="note">${counts}</div>` +
+      `<div class="gal">${p ? `<figure><img src="${p.src}" alt="${esc(cur.name)}"><figcaption>${esc(p.cap)}</figcaption></figure>` : ''}</div>` +
+      `<div class="note">This copy shows one picture. ${rows.length ? `All ${rows.length} original images of this species (herbarium sheets, line diagrams, paintings and field photographs) come with the <b>Pictures and Fliers pack</b> (install it to see them here), and are also in the` : 'Pictures of the other species are in the'} <a href="${DRIVE}" target="_blank" rel="noopener">IBIN data repository on Google Drive</a>, folder <b>Andaman Mapping Application &rsaquo; Photos &rsaquo; ${esc(cur.name)}</b>.</div>`; };
+    basic();
+    if (!rows.length) return;
+    pkProbe('Images/' + rows[0][2], () => { if (SPCUR !== cur) return;
+      let h = `<h3>Images of ${esc(cur.name)}</h3><div class="note">${counts} &nbsp;·&nbsp; from the installed Pictures and Fliers pack (click a picture to enlarge)</div>`;
+      Object.keys(names).filter(k => n[k]).forEach(k => { h += `<div class="pkh">${names[k]} (${n[k]})</div><div class="gal">` + rows.filter(r => r[0] === k).map(r => { const cap = (r[1] && r[1] !== '0' ? r[1] + ' · ' : '') + r[2].split('/').pop().replace(/\.[^.]+$/, ''); return `<figure class="pk" onclick="lightbox(pkUrl(${esc(JSON.stringify('Images/' + r[2]))}))"><img loading="lazy" src="${pkUrl('Images/' + r[2])}" alt="" onerror="this.parentNode.style.display='none'"><figcaption>${esc(cap)}${r[3] ? ' · ' + esc(r[3]) : ''}</figcaption></figure>`; }).join('') + '</div>'; });
+      $('p_img').innerHTML = h; }, () => {});
   },
   fl() {
     const gi = gridInfo(), cm = det()[0];
     const link = `<div class="note">${SPCUR.fl ? 'The full flier (illustrated slides) is' : 'Fliers of other species are'} in the <a href="${DRIVE}" target="_blank" rel="noopener">IBIN data repository on Google Drive</a>, folder <b>Andaman Mapping Application &rsaquo; Fliers${SPCUR.fl ? ' &rsaquo; ' + esc(SPCUR.name) : ''}</b>.</div>`;
-    if (SPCUR.fl) $('p_fl').innerHTML = `<h3>Flier of ${esc(SPCUR.name)}</h3><div class="gal"><figure style="width:520px"><img src="img/f/${SPCUR.id}.webp" alt="Flier" style="width:520px"><figcaption>First slide of the original flier</figcaption></figure></div>` + link;
+    if (SPCUR.fl) { const cur = SPCUR; $('p_fl').innerHTML = `<h3>Flier of ${esc(SPCUR.name)}</h3><div class="gal"><figure style="width:520px"><img src="img/f/${SPCUR.id}.webp" alt="Flier" style="width:520px"><figcaption>First slide of the original flier</figcaption></figure></div>` + link;
+      pkProbe('Fliers/' + cur.name + '/Slide1.JPG', () => { if (SPCUR !== cur) return;
+        $('p_fl').innerHTML = `<h3>Flier of ${esc(cur.name)}</h3><div class="note">Complete original flier, from the installed Pictures and Fliers pack (click a slide to enlarge)</div><div class="gal" id="pkfl"></div>`;
+        const add = k => { if (k > 40 || SPCUR !== cur) return; const rel = 'Fliers/' + cur.name + '/Slide' + k + '.JPG', i = new Image();
+          i.onload = () => { const f = document.createElement('figure'); f.className = 'pk'; f.style.width = '520px'; f.onclick = () => lightbox(i.src); i.style.cssText = 'width:520px;height:auto'; f.appendChild(i); const c = document.createElement('figcaption'); c.textContent = 'Slide ' + k; f.appendChild(c); const g = $('pkfl'); if (g) g.appendChild(f); add(k + 1); };
+          i.onerror = () => {}; i.src = pkUrl(rel); }; add(1); }, () => {}); }
     else $('p_fl').innerHTML = thumb() + `<h3>Flier of ${esc(SPCUR.name)}</h3><div class="note">The original program has no flier for this species. A summary from its data:</div><div class="card"><b>${esc(SPCUR.name)}</b><br>Family: ${esc(SPCUR.fam)}<br>${SPCUR.hab.length ? 'Habit: ' + SPCUR.hab.map(cap).join(', ') + '<br>' : ''}${gi.n ? `Recorded in ${gi.n} map grids${gi.isl.length ? ' (' + esc(gi.isl.join(', ')) + ')' : ''}<br>` : ''}${cm.length ? 'Common names: ' + esc(cm.slice(0, 6).map(c => c[1]).join(', ')) : ''}</div>` + link;
   },
   dis() {
