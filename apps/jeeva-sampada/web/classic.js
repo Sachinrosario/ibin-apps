@@ -33,7 +33,7 @@ const CL = (() => {
     img(src, 0, 0, d);
     d.addEventListener('mousedown', () => { d.style.zIndex = ++zTop; });
     const bar = el('div', `position:absolute;${box(4, 4, w - 28, 18)}`, d);
-    if (opts.title != null) el('div', `position:absolute;left:20px;top:2px;font:bold 11px Tahoma,Verdana,Arial,sans-serif;color:#fff;white-space:nowrap;`, bar).textContent = opts.title;
+    if (opts.title != null) d.titleEl = el('div', `position:absolute;left:20px;top:2px;font:bold 11px Tahoma,Verdana,Arial,sans-serif;color:#fff;white-space:nowrap;`, bar).textContent = opts.title;
     let drag = null;
     bar.addEventListener('pointerdown', e => { drag = {x: e.clientX, y: e.clientY, l: d.offsetLeft, t: d.offsetTop, s: stage.getBoundingClientRect().width / 1024}; bar.setPointerCapture(e.pointerId); });
     bar.addEventListener('pointermove', e => { if (!drag) return; d.style.left = drag.l + (e.clientX - drag.x) / drag.s + 'px'; d.style.top = drag.t + (e.clientY - drag.y) / drag.s + 'px'; });

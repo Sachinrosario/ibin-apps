@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitized Inventory of Domestic Animal Resources of India</title>
+<link rel="icon" href="../ui/icon.png">
+<style>
+html,body{margin:0;height:100%;background:#000;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1024px;height:768px;transform-origin:0 0;background:#d0c8ac;overflow:hidden;user-select:none;-webkit-user-select:none;font-family:Tahoma,Verdana,Arial,sans-serif}
+.lst::-webkit-scrollbar,.rv::-webkit-scrollbar{width:16px;background:#e8e6e0}
+.lst::-webkit-scrollbar-thumb,.rv::-webkit-scrollbar-thumb{background:#d4d0c8;border:2px outset #fff}
+.rp{font-family:"Times New Roman",Times,serif;color:#000}
+.rp h1{font:bold 22px "Times New Roman",Times,serif;color:#800000;text-align:center;margin:14px 0 8px}
+.rp h2{font:20px "Times New Roman",Times,serif;color:#0000a0;text-align:center;text-decoration:underline;margin:0 0 16px;font-weight:normal}
+.rp table{border-collapse:collapse;width:100%;font-size:13px}
+.rp th{color:#800000;font-weight:normal;font-size:15px;text-align:left;padding:4px 6px;border-bottom:1px solid #000}
+.rp td{padding:8px 6px;vertical-align:top}
+.rp tr.g td{color:#800000;font-size:15px;padding-top:12px}
+.rp tr.g td span{color:#000;text-decoration:underline;margin-left:14px}
+.rp tr.sep td{border-bottom:1px dashed #000}
+</style></head>
+<body>
+<script src="../classic.js"></script>
+<script src="data.js"></script>
+<script src="map.js"></script>
+<script>
+"use strict";
+const {stage, el, img, hot, win, text, list, combo, label} = CL;
+const U = 'ui/';
+const F12 = '12px Arial,Helvetica,sans-serif', FB12 = 'bold 12px Arial,Helvetica,sans-serif';
+let LAY = null;
+fetch(U + 'layout.json').then(r => r.json()).then(j => { LAY = j; start(); });
+const W = n => LAY.windows[n];
+function openWin(n, opts = {}) { const [x, y, w, h] = W(n).rect; if (child) child.close(); const d = win(U + n + '.png', x, y, w, h, Object.assign({onclose: () => { if (child === d) child = null; }}, opts)); child = d; banner.style.display = 'none'; return d; }
+const F = (n, i) => W(n).fields[i];
+let banner, tb, status, cur = null, child = null, pressed = null, menu = null, menuKey = '';
+const breed = id => DD.sb.find(b => b[0] === id);
+const name = id => { const b = breed(id); return b ? b[1] + ' ' + b[2] : ''; };
+function start() {
+  img(U + 'top.png', 0, 0); img(U + 'status.png', 0, 743);
+  banner = img(U + 'banner.png', 78, 38);
+  tb = img(U + 'tb_off.png', 0, 38, stage, 'pointer-events:none;');
+  status = label(stage, 348, 744, 670, 22, '', 'bold 15px Arial,Helvetica,sans-serif', '#000', 'left');
+  const B = LAY.toolbars.tb.btns;
+  const ACT = [showMorph, showDist, showSyn, showLive, showPerf, showRemarks, showImages, () => {}];
+  B.forEach(([y0, y1], i) => hot(1, y0, 74, y1 - y0 + 1, stage, () => { if (!cur || !enabled(i)) return; press(i); ACT[i](); }));
+  // menu bar: Species Details · Search · Reports · Documents · Credits
+  addEventListener('click', closeMenu);
+  hot(13, 19, 88, 18, stage, () => { closeMenu(); dlgSpecies(); });
+  hot(101, 19, 47, 18, stage, () => dropdown('search', ['Search by Distribution', 'Search Patent Details'], [dlgSearchDist, dlgPatent]));
+  hot(148, 19, 51, 18, stage, () => dropdown('reports', ['Value Products', 'Hatcheries', 'Market Information', 'Poultry Farms', 'Production Information', 'Patent List', 'Availability Reports'],
+    [() => repDlg('value'), () => report('hatch'), () => repDlg('market'), () => repDlg('poultry'), () => repDlg('production'), () => report('patent'), null]));
+  hot(199, 19, 68, 18, stage, () => dropdown('documents', ['Data Sources', 'Patent Processes', 'Hatcheries'], [() => doc('datasources'), () => doc('patent'), () => doc('hatch')]));
+  hot(267, 19, 47, 18, stage, () => { closeMenu(); openWin('credits'); });
+  hot(1006, 4, 16, 14, stage, () => { location.href = '../index.html'; }, 'Close');
+  const q = new URLSearchParams(location.search), g = q.get('g'), s = q.get('s');
+  if (g) { const b = DD.sb.find(b => b[1].toLowerCase() === g.trim().toLowerCase() && b[2].toLowerCase() === (s || '').trim().toLowerCase()); if (b) setBreed(b[0]); }
+}
+// a button is greyed, as in the original, when the breed has nothing for it
+function enabled(i) {
+  const has = v => v != null && String(v).trim() !== '';
+  return [true, !!(DD.di[cur] || []).length, has(((DD.mo[cur] || [])[14] || '').replace(/^-$/, '')), !!DD.lf[cur], !!DD.pf[cur], true, !!(DD.im[cur] || []).length, false][i];
+}
+const tbImgs = [];
+function setBreed(id) {
+  cur = id; banner.style.display = 'none'; status.textContent = name(id);
+  tbImgs.forEach(x => x.remove()); tbImgs.length = 0;
+  LAY.toolbars.tb.btns.forEach(([y0], i) => tbImgs.push(img(U + `tb_b${i}_${enabled(i) ? 'on' : 'off'}.png`, 0, y0, stage, 'pointer-events:none;')));
+  if (child) child.close();
+  press(0); showMorph();   // the original opens the Morphology window as soon as a breed is chosen
+}
+function press(i) { if (pressed) pressed.remove(); pressed = img(U + `tb_b${i}_down.png`, 0, LAY.toolbars.tb.btns[i][0]); pressed.style.pointerEvents = 'none'; }
+function closeMenu() { if (menu) { menu.remove(); menu = null; menuKey = ''; } }
+function dropdown(key, items, fns, sub) {
+  const was = menuKey; closeMenu(); if (was === key) return; menuKey = key;
+  const [x0, y0, x1, y1] = LAY.menus[key];
+  menu = el('div', `position:absolute;left:${x0}px;top:${y0}px;width:${x1 - x0}px;height:${y1 - y0}px;z-index:99999;`);
+  img(U + `menu_${key}.png`, 0, 0, menu);
+  items.forEach((t, i) => {
+    const r = el('div', `position:absolute;left:3px;top:${21 + i * 16}px;width:${(key === 'reports' ? 141 : x1 - x0 - 6)}px;height:16px;font:11px Tahoma,Verdana,Arial,sans-serif;line-height:16px;padding-left:14px;box-sizing:border-box;color:transparent;white-space:nowrap;`, menu);
+    r.textContent = t;
+    r.addEventListener('mouseenter', () => { r.style.background = '#0a246a'; r.style.color = '#fff'; if (key === 'reports') { if (i === 6) showAvail(); else hideAvail(); } });
+    r.addEventListener('mouseleave', () => { if (!(key === 'reports' && i === 6)) { r.style.background = ''; r.style.color = 'transparent'; } });
+    r.addEventListener('click', e => { e.stopPropagation(); if (key === 'reports' && i === 6) return; closeMenu(); fns[i] && fns[i](); });
+  });
+  let av = null;
+  function showAvail() {
+    if (av) return;
+    av = el('div', 'position:absolute;left:140px;top:114px;width:203px;height:54px;overflow:hidden;', menu);
+    img(U + 'menu_avail.png', -140, -114, av);
+    ['Availability Byproducts', 'Availability Tissue Fallen Animals', 'Availibility Byproducts Slaughtered'].forEach((t, i) => {
+      const r = el('div', `position:absolute;left:3px;top:${3 + i * 16}px;width:197px;height:16px;font:11px Tahoma,Verdana,Arial,sans-serif;line-height:16px;padding-left:14px;box-sizing:border-box;color:transparent;white-space:nowrap;`, av);
+      r.textContent = t;
+      r.addEventListener('mouseenter', () => { r.style.background = '#0a246a'; r.style.color = '#fff'; });
+      r.addEventListener('mouseleave', () => { r.style.background = ''; r.style.color = 'transparent'; });
+      r.addEventListener('click', e => { e.stopPropagation(); closeMenu(); repDlg('avail' + (i + 1)); });
+    });
+  }
+  function hideAvail() { if (av) { av.remove(); av = null; } }
+}
+function doc(n) { window.open('documents/' + n + '.htm', '_blank'); }
+// ---- Species – Breed ----
+function dlgSpecies() {
+  const d = openWin('spdlg');
+  const species = [...new Set(DD.sb.map(b => b[1]))];
+  let sp = '', br = '';
+  const cb = combo(d, 155, 94, 169, 25, [], '15px Arial,Helvetica,sans-serif', '#0000c0', v => { br = v; }, {rows: 8});
+  combo(d, 155, 46, 169, 25, species, '15px Arial,Helvetica,sans-serif', '#0000c0', v => { sp = v; br = ''; cb.set(DD.sb.filter(b => b[1] === sp).map(b => b[2])); }, {rows: 8});
+  hot(131, 142, 66, 34, d, () => { const b = DD.sb.find(b => b[1] === sp && b[2] === br); if (!b) return alert('Please select the Breed'); d.close(); setBreed(b[0]); });
+  hot(211, 142, 66, 34, d, () => d.close());
+}
+// ---- the eight buttons ----
+const box = (d, n, i, v, font, color, wrap) => { const [x, y, w, h] = F(n, i); return text(d, x, y, w, h, v, font || F12, color || '#000', {white: true, wrap: wrap !== false}); };
+function showMorph() {
+  const m = DD.mo[cur] || [], d = openWin('morph');
+  box(d, 'morph', 0, m[0]); box(d, 'morph', 1, m[1]);
+  for (let i = 2; i < 12; i++) box(d, 'morph', i, m[i], F12, '#000', false);
+}
+function showSyn() { const d = openWin('syn'); box(d, 'syn', 0, (DD.mo[cur] || [])[14]); }
+function showLive() { const l = DD.lf[cur] || [], d = openWin('live'); box(d, 'live', 0, (l[0] || '').replace(/\t/g, '      ')); box(d, 'live', 1, (l[1] || '').replace(/\t/g, '      ')); }
+function showRemarks() { const m = DD.mo[cur] || [], d = openWin('remarks'); box(d, 'remarks', 0, m[12]); box(d, 'remarks', 1, m[13]); }
+const PERF = {performance_online: 'perf_buffalo', pergoat_online: 'perf_goat', performance_sheep: 'perf_sheep', performance_poultry: 'perf_poultry'};
+function showPerf() {
+  const p = DD.pf[cur], form = LAY.windows[PERF[p[0]]] ? PERF[p[0]] : 'perf_buffalo';
+  const d = openWin(form);
+  W(form).fields.forEach((r, i) => { box(d, form, i, p[i + 1], F12, '#000', false).style.padding = '2px 1px'; });
+}
+function showImages() {
+  const pics = DD.im[cur] || [];
+  let i = 0;
+  const ttl = n => name(cur) + (/F\./i.test(n) ? ' (Female)' : /M\./i.test(n) ? ' (Male)' : '');
+  const d = openWin('images', {title: ttl(pics[0] || '')});
+  const t = d.titleEl;
+  const p = img('', 6, 26, d);
+  const cnt = label(d, 400, 668, 149, 24, '', F12, '#808080', 'center');
+  function show() { p.src = 'photo/' + encodeURIComponent(pics[i]); cnt.textContent = `[${i + 1}/${pics.length} ]`; if (t) t.textContent = ttl(pics[i]); }
+  hot(335, 666, 27, 28, d, () => { i = 0; show(); });
+  hot(365, 666, 30, 28, d, () => { if (i > 0) { i--; show(); } });
+  hot(551, 666, 27, 28, d, () => { if (i < pics.length - 1) { i++; show(); } });
+  hot(581, 666, 30, 28, d, () => { i = pics.length - 1; show(); });
+  show();
+}
+function showDist() {
+  const d = openWin('dist');
+  const cv = el('canvas', 'position:absolute;left:3px;top:104px;', d); cv.width = 936; cv.height = 596;
+  const x = cv.getContext('2d');
+  const on = new Set((DD.di[cur] || []).map(r => DD.lab.indexOf(r[0].trim().toUpperCase())).filter(i => i >= 0));
+  let labels = true;
+  const P = (lon, lat) => [38 - 3 + (lon - 68.0801) * 19.47, 99 - 104 + 32 + (37.0922 - lat) * 19.45];
+  function draw() {
+    x.clearRect(0, 0, 936, 596);
+    BMAP.f.forEach((polys, i) => {
+      x.beginPath();
+      polys.forEach(rings => rings.forEach(r => r.forEach(([lo, la], k) => { const [px, py] = P(lo, la); k ? x.lineTo(px, py) : x.moveTo(px, py); })));
+      x.fillStyle = on.has(i) ? 'rgb(255,255,192)' : 'rgb(227,253,230)'; x.fill('evenodd'); x.strokeStyle = '#000'; x.lineWidth = 1; x.stroke();
+    });
+    if (labels) { x.font = '10px Arial'; x.fillStyle = '#000'; x.textAlign = 'center'; x.textBaseline = 'middle'; BMAP.l.forEach(([lo, la], i) => { const [px, py] = P(lo, la); x.fillText(String(i + 1), px, py); }); }
+    x.textAlign = 'left'; x.textBaseline = 'top'; x.font = '10px Arial';
+    DD.lab.forEach((n, i) => { const col = i < 23 ? 652 : 788, row = i < 23 ? i : i - 23; x.fillStyle = on.has(i) ? '#ff0000' : '#000'; x.fillText(`${i + 1}. ${n}`, col - 3, 394 - 104 + row * 13.1); });
+  }
+  draw();
+}
+// ---- Search by Distribution ----
+function dlgSearchDist() {
+  const d = openWin('srch_dist');
+  let st = '', ds = '', ids = [], pick = -1;
+  const [lx, ly, lw, lh] = F('srch_dist', 2);
+  const lst = list(d, lx, ly, lw, lh, [], 'bold 12px Arial,Helvetica,sans-serif', '#008000', i => { pick = i; }, {ondbl: () => ok()});
+  const [dx, dy, dw, dh] = F('srch_dist', 1), [sx, sy, sw, sh] = F('srch_dist', 0);
+  const cD = combo(d, dx - 2, dy - 2, dw + 22, dh + 4, [], 'bold 12px Arial,Helvetica,sans-serif', '#000', v => { ds = v; }, {rows: 12});
+  combo(d, sx - 2, sy - 2, sw + 22, sh + 4, [...new Set(DD.dat.map(r => r[0]))], 'bold 12px Arial,Helvetica,sans-serif', '#000', v => { st = v; ds = ''; cD.set([...new Set(DD.dat.filter(r => r[0] === st).map(r => r[1]))]); }, {rows: 12});
+  hot(179, 109, 64, 33, d, () => {
+    ids = Object.keys(DD.di).filter(id => DD.di[id].some(r => r[0] === st && (!ds || r[1] === ds)));
+    pick = -1; lst.set(ids.map(name));
+  });
+  hot(259, 109, 64, 33, d, () => { ids = []; lst.set([]); });
+  function ok() { if (pick < 0) return; const id = ids[pick]; d.close(); setBreed(id); }
+  hot(179, 301, 66, 34, d, ok); hot(259, 301, 66, 34, d, () => d.close());
+}
+// ---- Search Patent Details ----
+function dlgPatent() {
+  const d = openWin('srch_pat');
+  const P = DD.rep.Patent_Processes;
+  const [cx, cy, cw, ch] = F('srch_pat', 0);
+  const fl = [1, 2, 3, 4].map(i => { const [x, y, w, h] = F('srch_pat', i); return el('div', `position:absolute;left:${x}px;top:${y}px;width:${w}px;height:${h}px;font:${F12};color:#000;padding:1px 2px;white-space:pre-wrap;overflow:hidden;box-sizing:border-box;`, d); });
+  const dmy = (dd, mm, yy) => [dd, mm, yy].map(v => v === '0' ? '' : v).join('/').replace(/^\/\/$/, '') || '';
+  combo(d, cx - 2, cy - 2, cw + 22, ch + 4, P.map(p => p[0]), 'bold 12px Arial,Helvetica,sans-serif', '#000', (v, i) => {
+    const p = P[i]; fl[0].textContent = p[1]; fl[1].textContent = p[2]; fl[2].textContent = dmy(p[3], p[4], p[7]); fl[3].textContent = dmy(p[8], p[5], p[6]);
+  }, {rows: 12});
+}
+// ---- report option windows and the report viewer ----
+const OPT = {value: ['Entire', 'Statewise search', 'Itemwise search'], market: ['Entire', 'Itemwise search', 'Yearwise search'], poultry: ['Entire', 'Statewise search', 'Districtwise search'], production: ['Entire', 'Specieswise search', 'Yearwise search'], avail1: ['Entire', 'Byproductwise search', 'Specieswise search'], avail2: ['Entire', 'Tissuewise search', 'Specieswise search'], avail3: ['Entire', 'Byproductwise search', 'Specieswise search']};
+const TABLE = {value: 'value_products', market: 'market_information', poultry: 'Poultry_farms', production: 'production', avail1: 'availability_byproducts', avail2: 'Availability_Tissues_Fallen_Animals', avail3: 'Availibility_Byproducts_Slaughtered'};
+// which column each search option filters on
+const COL = {value: [null, 0, 3], market: [null, 0, 2], poultry: [null, 0, 1], production: [null, 0, 3], avail1: [null, 2, 0], avail2: [null, 2, 0], avail3: [null, 2, 0]};
+const RAD = {"value": [[45, 76], [133, 230], [309, 400]], "market": [[45, 76], [133, 224], [309, 402]], "poultry": [[45, 76], [133, 230], [309, 416]], "production": [[45, 76], [133, 246], [309, 402]], "avail1": [[45, 76], [133, 258], [309, 422]], "avail2": [[45, 76], [132, 237], [309, 422]], "avail3": [[45, 76], [133, 258], [309, 422]]};
+const LBL = {value: ['', 'State :', 'Item :'], market: ['', 'Item :', 'Year :'], poultry: ['', 'State :', 'District :'], production: ['', 'Species :', 'Year :'], avail1: ['', 'Byproduct :', 'Species :'], avail2: ['', 'Tissue :', 'Species :'], avail3: ['', 'Byproduct :', 'Species :']};
+function repDlg(k) {
+  const d = openWin(k);
+  let opt = 0, val = '';
+  const CX = [30, 118, 294];
+  // the radio dot (Windows classic: a 4 x 4 rounded dot) and the dotted focus rectangle around the chosen option
+  const dot = el('div', 'position:absolute;width:4px;height:4px;', d);
+  el('div', 'position:absolute;left:0;top:1px;width:4px;height:2px;background:#000;', dot);
+  el('div', 'position:absolute;left:1px;top:0;width:2px;height:4px;background:#000;', dot);
+  const foc = el('div', 'position:absolute;top:55px;height:15px;border:1px dotted #000;box-sizing:border-box;', d);
+  // the label and combo below appear only for a search option (the original shows an empty frame for "Entire")
+  const cover = el('div', 'position:absolute;left:20px;top:88px;width:440px;height:46px;background:#d4d0c8;', d);
+  const lab = label(d, 20, 112, 120, 19, '', 'bold 11px Tahoma,Verdana,Arial,sans-serif', '#000', 'right');
+  const rows = DD.rep[TABLE[k]];
+  let cb = null;
+  function choose(i) {
+    opt = i; val = '';
+    dot.style.left = CX[i] + 2 + 'px'; dot.style.top = '60px';
+    const [t0, t1] = RAD[k][i]; foc.style.left = t0 - 2 + 'px'; foc.style.width = t1 - t0 + 6 + 'px';
+    if (cb) { cb.remove(); cb = null; }
+    cover.style.display = i ? 'none' : ''; lab.textContent = LBL[k][i]; lab.style.display = i && k !== 'value' ? '' : 'none';
+    if (k === 'value' && i === 1) { lab.style.display = ''; lab.style.background = '#d4d0c8'; lab.style.left = '60px'; lab.style.width = '80px'; }
+    if (i > 0) {
+      const c = COL[k][i];
+      cb = combo(d, 155, 110, 267, 23, [...new Set(rows.map(r => r[c]))].sort(), F12, '#000', v => { val = v; }, {rows: 12});
+    }
+  }
+  CX.forEach((x, i) => hot(x - 2, 54, RAD[k][i][1] - x + 6, 17, d, () => choose(i)));
+  choose(0);
+  hot(156, 158, 78, 46, d, () => {
+    const c = COL[k][opt];
+    if (opt && !val) return;
+    const sel = opt ? rows.filter(r => r[c] === val) : rows;
+    report(k, sel);
+  });
+  hot(243, 158, 72, 46, d, () => d.close());
+}
+function report(k, rowsIn) {
+  closeMenu();
+  const R = {
+    hatch: {t: 'List of Hatcheries in India', h: ['Sl.No', 'State', 'Hatcheries'], rows: DD.rep.Hatcheries, w: [8, 22, 70]},
+    patent: {t: 'Report for Patent Details ', h: ['Sl.No', 'Patent No', 'Patent Title', 'Patent Holder'], rows: DD.rep.Patent_Processes.map(p => [p[0], p[1], p[2]]), w: [7, 13, 40, 40], sep: true},
+    value: {t: 'Value of Products', h: ['Sl.No', 'State', 'Year', 'Status', 'Value (Lakh Rs)'], group: 3, cols: [0, 1, 2, 4], gl: 'Item'},
+    market: {t: 'Market Information ', h: ['Sl.No', 'Status', 'Year', 'Quantity (kg)', 'Value (Rs)'], group: 0, cols: [1, 2, 3, 4], gl: 'Item'},
+    poultry: {t: 'List of Poultry Farms ', h: ['Sl.No', 'State', 'District', 'Poultry Farms'], cols: [0, 1, 2], w: [7, 18, 20, 55]},
+    production: {t: 'Production Information ', h: ['Sl.No', 'Item', 'State', 'Year', 'Quantity (in Tons)'], group: 0, cols: [1, 2, 3, 4], gl: 'Species'},
+    avail1: {t: 'Availability of Byproducts', h: ['Sl.No', 'Year', 'Byproduct', 'Fallen', 'Non recovered', 'Availability', 'Slaughtered', 'Total'], group: 0, cols: [1, 2, 3, 4, 5, 6, 7], gl: 'Species'},
+    avail2: {t: 'Availability of Tissues from Fallen Animals', h: ['Sl.No', 'Year', 'Tissues', 'Yield', 'Availability'], group: 0, cols: [1, 2, 3, 4], gl: 'Species'},
+    avail3: {t: 'Availability of Byproducts from Slaughtered Animals', h: ['Sl.No', 'Year', 'Byproduct', 'Population', 'Slaughtered Age', 'Animals Slaughtered', 'Yield', 'Availability'], group: 0, cols: [1, 2, 3, 4, 5, 6, 7], gl: 'Species'}
+  }[k];
+  const rows = rowsIn || R.rows || DD.rep[TABLE[k]];
+  const v = el('div', 'position:absolute;left:0;top:0;width:1024px;height:768px;z-index:5000;');
+  img(U + 'viewer.png', 0, 0, v);
+  hot(1006, 4, 16, 14, v, () => v.remove(), 'Close');
+  const tree = el('div', 'position:absolute;left:3px;top:50px;width:94px;height:698px;overflow:hidden;font:9px Tahoma,Verdana,Arial,sans-serif;color:#000;white-space:nowrap;', v);
+  const panel = el('div', 'position:absolute;left:103px;top:47px;width:921px;height:721px;overflow:auto;background:#808080;', v, 'rv');
+  const page = el('div', 'position:relative;left:41px;top:26px;width:790px;min-height:1000px;background:#fff;box-shadow:6px 6px 0 #000;padding:40px 26px 60px;box-sizing:border-box;margin-bottom:40px;', panel, 'rp');
+  const d = new Date();
+  let h = `<div style="display:flex;justify-content:space-between;font-size:17px"><span>${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}</span><span style="margin-right:20px;font-size:13px">1</span></div><h1>Digitized Inventory of&nbsp; Domestic Animal Resources of India</h1><h2>${R.t}</h2><table><tr>${R.h.map(x => `<th>${x}</th>`).join('')}</tr>`;
+  const e = s => CL.esc(s).replace(/\n/g, '<br>');
+  let n = 0;
+  const groups = [];
+  if (R.group != null) {
+    const by = new Map(); rows.forEach(r => { const g = r[R.group]; (by.get(g) || by.set(g, []).get(g)).push(r); });
+    for (const [g, rs] of by) { groups.push(g); h += `<tr class="g"><td colspan="${R.h.length}">${R.gl}<span>${e(g)}</span></td></tr>`; rs.forEach(r => { h += `<tr><td style="text-align:center">${++n}</td>${R.cols.map(c => `<td>${e(r[c])}</td>`).join('')}</tr>`; }); }
+  } else {
+    const cols = R.cols || rows[0].map((_, i) => i);
+    rows.forEach(r => { h += `<tr${R.sep ? ' class="sep"' : ''}><td style="text-align:center">${++n}</td>${cols.map((c, j) => `<td${j === 0 && k === 'hatch' ? ' style="font-weight:bold"' : ''}>${e(r[c])}</td>`).join('')}</tr>`; });
+  }
+  page.innerHTML = h + '</table>';
+  tree.innerHTML = '<div>⊟ ·· How to maintain runni</div>' + groups.map(g => `<div style="padding-left:14px">·· ${CL.esc(g)}</div>`).join('');
+  label(v, 80, 26, 46, 14, '1 of 1+', '9px Tahoma,Verdana,Arial,sans-serif', '#000', 'center');
+  label(v, 392, 26, 70, 14, 'Total:' + n, '9px Tahoma,Verdana,Arial,sans-serif', '#000', 'center');
+  label(v, 462, 26, 40, 14, '100%', '9px Tahoma,Verdana,Arial,sans-serif', '#000', 'center');
+  label(v, 512, 26, 80, 14, `${n} of ${n}`, '9px Tahoma,Verdana,Arial,sans-serif', '#000', 'center');
+  hot(214, 21, 22, 22, v, () => window.print(), 'Print');
+}
+</script>
+</body></html>
