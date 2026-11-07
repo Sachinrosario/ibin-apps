@@ -1,0 +1,35 @@
+SALIENT FEATURES:
+Morphological:
+Diagnostic characters: Mouth when protracted forms a downward directed tube. Scales small, all over body except head and breast. A brown blotch on nape and a conspicuous golden yellow patch on belly, about midway between the pelvic and anal fin origin.
+
+Sex attributes: Undistinguishable externally
+
+Descriptive characters:
+Body oval and compressed. Dorsal and abdominal profiles equally convex. Presence of a distinct notch at the commencement of the nuchal crest. Mouth big, lips broad and thick. Gape of mouth immediately below or opposite to lower margin of the eye. Tip of maxilla ending far in front of front border of eye. Lower jaw concave inferiorly. Teeth small , numerous in a single row in each jaw. The ridges which form the boundaries of  the interorbital space  continue posteriorly and  become continuous with the nuchal spine. The median portion of the nuchal spine is elevated especially at its anterior end, forming a notch in the dorsal profile. Two small spines at the top of the head opposite the front border of the eye., the outer spine more prominent than the inner. The lower margin of the pre-opercle finely serrate. Scales small , all over the body except head and breast. First part of lateral line, concave, later runs less convex to the  dorsal profile  extending posteriorly upto the base of the caudal fin. Dorsal and anal spines weak and compressed. 3rd and 4th dorsal spine and the 3rd anal spine serrated anteriorly for about half length from the base. Ventrals with axillary scales not reaching the origin of the anal fins. Caudal fin deeply forked.
+
+Colour:
+Belly silvery. Back with  dark wavy vertical lines extending down to about or a little below the lateral line, anteriorly to below origin of dorsal fin and posteriorly to end of the soft dorsal. A brown blotch on nape which becomes diffuse on preservation in formalin. A conspicuous golden yellow patch on belly, about mid-way between the pelvics and the anal fin origin. Tip of snout dotted black. Pectoral posteriorly black at its base. Spinous part of dorsal fin golden at mid-height.        Ref no: (7,8).
+
+Meristic Characters:D.VIII; A.III, 14.Ll.55-60.     Ref no : (7,11,12).
+
+Feeding Habit:
+Main food: Coscinodiscus, Pleurosigma,, Copepods, Nematodes and Polychaetes.
+
+Feeding type: Bottom  and column feeding.
+
+Additional remarks: Apart from the above mentioned items , bivalves , gastropods were also represented in small quantities in addition to Lucifer. No appreciable variation in food intake with season and age.  Ref no: 9
+
+Size and Age :
+Maximum Length (Unsexed): 135mm
+Average Length                     :  111mm
+Maximum weight                  :  20-24gms                    Ref no: (8,9).
+Average weight                      : 10-12gms
+Longevity                               :   3 years
+Length Weight Relationships:
+ Log W= -4.8512+3.004Log L    Ref no: 5.           
+
+Growth Parameters:
+
+L(infinity) :  120                       Ref no: 4
+K                :  0.95             
+

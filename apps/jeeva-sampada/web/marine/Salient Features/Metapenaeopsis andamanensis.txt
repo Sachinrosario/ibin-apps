@@ -1,0 +1,24 @@
+ SALIENT FEATURES:								Ref No:184
+
+Morphological:     Rostrum extending to or surpassing tip of antennular peduncle and armed dorsally with 7-9 teeth; carapace with well defined antennal, hepatic and pterygostomian spines, no stridulating organ;3rd to 6th abdominal somites strongly carinated, 4th to 6th sometimes with blunt subcarinae ; telson slightly shorter than inner uropod, terminating in sharp spine and armed with 3 pairs of movable and a distal pair of fixed spines; lower antennular flagella 0.8 to 1.1 times length of peduncle , stylocerite extending slightly beyond eye; 3rd maxilliped with a well developed basial spine, 1st pereopod with basial and ischial spines, 2nd pereopod with a small basial spine. Petasma asymmetrical, about ½ as long as carapace. Thelycum with the median plate extending posteriorly and occupying about half of that plate, with a shallow longitudinal depression in central region; its posterior margin free and recurved with angular lateral corners.
+
+
+Size and age:
+   Maximum length(cm)(male/female/unsexed): Male:11.5				   Ref. No: 184
+						     Female:13.5
+   Average length(cm)(male/female/unsexed):  Monthly mean lengths(TL in cm):	   Ref. No: 184
+						   Male: 7.3 to 9.7,  Female: 7.0 to 11.9
+   Maximum weight (g)(male/female/unsexed):					   Ref. No:
+
+   Average weight (g)(male/female/unsexed):						   Ref. No:
+
+   Longevity (y) (wild):			(captivity):				   Ref. No:
+   Length/weight relationships: Male: log W = -5.69465+3.1713 log L		   Ref. No: 184
+				 Female: log W = -6.13549+3.3861 log L
+
+
+Abundance:    Larvae of this species occur in abundance in the coastal regions of the Indian Ocean 
+bordering the southwest coast of India and the east coast off Madras to Orissa (Paulinose & George, 1976).
+
+
+

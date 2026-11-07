@@ -1,0 +1,46 @@
+SALIENT FEATURES:
+Morphological:
+Diagnostic characters: It superficially resembles L. splendens  in the general shape of body, blotch on the spinous dorsal fin and other body marks, but differs from it mainly in two aspects-1. Blotch on the spinous dorsal membrane is grey and 2.The dorsal and anal spines are weak , compared to L.splendens.     
+ 
+Sex attributes: Sexes are undistinguishable externally.
+
+Descriptive characters: Compressed, dorsal profile more convex than ventral, the former almost forming a straight line opposite front border of eye to origin of dorsal fin. Interorbital space flat, bounded by two ridges which continue posteriorly as outer edges of nuchal spine and joins the outer ridge posteriorly on either side. The median portion of the nuchal spine is elevated slightly. Two small spines on head, opposite front border of the eye, the outer one more prominent than the inner, which is opposite the ridge bounding the inter-orbital space. Mouth when protracted forms a tube directed downwards , gape of mouth below lower border of eye, maxillae reaching the front border of the eye. Lower margin of lower jaw almost straight. Pre-opercle with an obtuse angle, its lower margin finely serrate. Teeth small and numerous. Scales prominent , all over the body , but absent on head. First part of lateral line straight, followed by a convex portion which is less convex than the dorsal profile. Lateral line extends beyond end of soft dorsal and anal fins , but stops short of the base of the caudal. Dorsal and anal spines weak  and laterally compresed. The 3rd and 4th dorsal spines and the 3rd  anal spine serrated anteriorly for about half length from the base.  Ventral do not reach the origin of the anal fin and have an axillary scale. Caudal deeply forked, lobes round with the hind margins convex.
+Colour: Generally silvery; abdomen more silvery than back which has a background of  brown with close-set grey zig-zag lines. End of snout dotted grey, base of pectorals black, membrane between second and sixth dorsal spines grey in the distal half which may be very faint at times.                         Ref no: (4,6)
+
+Meristic Characters:D.VIII,16; A.III,14; Ll. 40-53 to 35-45         Ref no: 6
+Feeding Habit 
+Main food: Pleurosigma (main food). Other food items include nematodes, copepods, foraminiferans,  Coscinodiscus and Triceratium. Still other food items items which are occasionally found in certain months in small quantities were  Nitzchia,  polychaetes, bivalves and radiolarians.
+Feeding type: Zooplankton  and Benthic feeding.
+Additional Remarks: The major food items are fed upon by fishes of a wider size range, though their maximum quantities are found in limited size groups. The minor items are restricted in their occurrence to certain size ranges, inconsistent in their occurrence and their dominance was in a wider range of fish  unlike that of the major items. In general no specific changes in food habits have been noticed in relation to age and the feeding was also uniform in different months.                          Ref no: 7
+Maximum Length : 152mm
+Average Length    : 40-80mm 
+Longevity             : More than 4years.
+		: 60mm    - 1st  year 		72mm-1st year
+		90mm  - 2nd year		108mm-2nd year
+  	103mm  - 3rd  year
+It reaches an average length of 116mm when 28 months old. 	Ref no:16
+  		115mm  - 4th year
+		Ref no: 7
+
+
+Length Weight Relationships:
+Indeterminates 
+Log W= -6.0821+3.7238 log L.
+Females
+Log W= 5.2058+3.2206 log L.
+Males 
+Log W= 5.1129+3.1648 Log L.
+The combined length weight relationship can be given as 
+Log W = -5.2021+3.2167 log L.             
+(Locality:Palk Bay and Gulf of Mannar)  Ref no: 7
+Log W= -6.6094+2.9276 Log L
+(Locality: Mandapam, Ref no: 16.)
+Log W= -4.5181+2.887 Log L.
+(Locality: Rameshwaram, Ref no: 10)
+
+Growth Parameters:
+L (infinity)		  K
+146.617		0.917  	Karthikeyan 1989                  Ref no: 10
+161.2		0.528 	Venketaraman,1981              Ref no: 16
+155		0.70  	Murty et al, 1992                  Ref no: 14
+

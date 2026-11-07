@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitized Inventory of Silkworm Resources</title>
+<link rel="icon" href="../ui/icon.png">
+<style>
+html,body{margin:0;height:100%;background:#000;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1024px;height:768px;transform-origin:0 0;background:#d4d0c8;overflow:hidden;user-select:none;-webkit-user-select:none;font-family:Tahoma,Verdana,Arial,sans-serif}
+.lst::-webkit-scrollbar{width:16px;background:#e8e6e0}
+.lst::-webkit-scrollbar-thumb{background:#d4d0c8;border:2px outset #fff}
+.sk{position:absolute;box-sizing:border-box;border:1px solid;border-color:#808080 #fff #fff #808080;box-shadow:inset 1px 1px 0 #404040}
+.lb{position:absolute;box-sizing:border-box;border:1px solid;border-color:#808080 #fff #fff #808080;font:11px Arial,Helvetica,sans-serif;color:#c00000;text-align:right;padding-right:4px;line-height:15px;white-space:nowrap;overflow:hidden}
+.vl{position:absolute;box-sizing:border-box;background:#fff;border:2px solid;border-color:#808080 #fff #fff #808080;font:bold 11px Arial,Helvetica,sans-serif;color:#0000ff;padding-left:2px;line-height:14px;white-space:nowrap;overflow:hidden}
+.ln{color:#008000;font:bold 12px Arial,Helvetica,sans-serif;text-decoration:underline;cursor:pointer}
+</style></head>
+<body>
+<script src="../classic.js"></script>
+<script src="data.js"></script>
+<script src="pics.js"></script>
+<script>
+"use strict";
+const {stage, el, img, hot, label} = CL;
+const U = 'ui/';
+let LAY = null;
+fetch(U + 'layout.json').then(r => r.json()).then(j => { LAY = j; splash(); });
+// the five silkworms, their tables and the titles of their breed lists
+const T = {MULBERRY: 'Mulberry', 'TROPICAL TASAR': 'TropicalTasar', 'OAK TASAR': 'OakTasar', ERI: 'Eri', MUGA: 'Muga'};
+const PAGE = {MULBERRY: 'htmlf/ML-MAIN.HTM', 'TROPICAL TASAR': 'htmlf/tt-main.htm', 'OAK TASAR': 'htmlf/tasaroak.htm', ERI: 'htmlf/eri.htm', MUGA: 'htmlf/muga.htm'};
+const open = p => window.open(p.split('/').map(encodeURIComponent).join('/'), '_blank');
+let screen = null;
+function newScreen(bgSrc) { if (screen) screen.remove(); screen = el('div', 'position:absolute;left:0;top:0;width:1024px;height:768px;'); if (bgSrc) img(bgSrc, 0, 0, screen); return screen; }
+// ---- the opening picture, then the main screen ----
+function splash() { const s = newScreen(U + 'splash.png'); hot(378, 440, 90, 26, s, main); }
+function main() {
+  const s = newScreen(U + 'main.png');
+  hot(1006, 4, 16, 14, s, () => { location.href = '../index.html'; }, 'Close');
+  [[192, 198, 112, 32, 'htmlf/aboutus.htm'], [144, 270, 112, 32, 'htmlf/foreword.htm'], [96, 342, 112, 32, 'htmlf/prelude.htm'], [64, 422, 112, 32, 'htmlf/Preface.htm'], [48, 502, 112, 32, 'htmlf/Credits.htm']]
+    .forEach(([x, y, w, h, p]) => hot(x, y, w, h, s, () => open(p)));
+  [[384, 172, 160, 100, PAGE.MULBERRY], [552, 198, 160, 100, PAGE['TROPICAL TASAR']], [294, 290, 200, 150, 'htmlf/genintro.htm'], [552, 308, 160, 100, PAGE['OAK TASAR']], [386, 454, 160, 100, PAGE.ERI], [552, 422, 160, 100, PAGE.MUGA]]
+    .forEach(([x, y, w, h, p]) => { const e = hot(x, y, w, h, s, () => open(p)); e.style.borderRadius = '50%'; });
+  addEventListener('click', closeMenu);
+  [['file', 16, 30], ['sw', 82, 64], ['search', 183, 50], ['movies', 270, 46], ['help', 362, 36]].forEach(([k, x, w]) => hot(x, 19, w, 18, s, () => dropdown(k)));
+}
+// ---- menus ----
+const KINDS = Object.keys(T);
+const MOV = f => () => movie(f);
+const MENU = {
+  file: {pic: 'file', x: 18, w: 84, items: [['Exit', () => { location.href = '../index.html'; }]]},
+  sw: {pic: 'sw', x: 83, w: 124, items: KINDS.map(k => [k, {pic: 'sw_t', x: 210, w: 110, items: [['Information', () => open(PAGE[k])],
+    ['Breeds / Hybrids', k === 'MULBERRY' ? {pic: 'sw_b', x: 323, w: 81, items: [['Bivoltine', () => breeds(k, 'BIVOLTINE')], ['Multivoltine', () => breeds(k, 'MULTIVOLTINE')]]} : () => breeds(k)]]}])},
+  search: {pic: 'search', x: 184, w: 124, items: KINDS.map(k => [k, () => search(k)])},
+  movies: {pic: 'movies', x: 270, w: 125, items: [['Mulberry Cultivation', MOV('Mulberry Cultivation')], ['Egg laying', MOV('Egg Laying')], ['Chawki Rearing', MOV('Chawki Rearing')], ['Late Age Rearing', MOV('Shoot Rearing')], ['Cocooning', MOV('Cocooning')],
+    ['Cocoon Harvesting', {pic: 'mov_h', x: 398, w: 79, items: [['Traditional', MOV('Cc Harvest Manual')], ['Improved', MOV('Cc Harvest Improved')]]}], ['Cocoon Auctioning', MOV('Cocoon Market')],
+    ['Cocoon Reeling', {pic: 'mov_r', x: 398, w: 96, items: [['Charkha', MOV('charkha')], ['Cottage Basin', MOV('cottage')], ['Multi-end', MOV('Multi-end')]]}], ['Rewinding', MOV('rewinding')]]},
+  help: {pic: 'help', x: 362, w: 78, items: [['Help', () => open('htmlf/hintro.htm')], ['About this', about]]}
+};
+let menu = null, menuKey = '';
+function closeMenu() { if (menu) { menu.remove(); menu = null; menuKey = ''; } }
+function dropdown(k) {
+  const was = menuKey; closeMenu(); if (was === k) return; menuKey = k;
+  menu = el('div', 'position:absolute;left:0;top:0;width:1024px;height:0;z-index:99999;');
+  const pic = img(U + `menu_${MENU[k].pic}.png`, LAY.menus[MENU[k].pic][0], LAY.menus[MENU[k].pic][1], menu, 'pointer-events:none;');
+  const levels = [];
+  function setPic(p) { pic.src = U + `menu_${p}.png`; pic.style.left = LAY.menus[p][0] + 'px'; pic.style.top = LAY.menus[p][1] + 'px'; }
+  function level(node, depth, y0) {
+    levels.slice(depth).forEach(l => l.remove()); levels.length = depth;
+    const box = el('div', 'position:absolute;left:0;top:0;', menu); levels[depth] = box;
+    let hl = null;
+    node.items.forEach(([t, v], i) => {
+      const y = y0 + 16 * i, r = el('div', `position:absolute;left:${node.x}px;top:${y}px;width:${node.w}px;height:16px;`, box);
+      r.addEventListener('mouseenter', () => {
+        if (typeof v === 'object') { setPic(v.pic); if (hl) { hl.remove(); hl = null; } level(v, depth + 1, y); return; }
+        setPic(node.pic); levels.slice(depth + 1).forEach(l => l.remove()); levels.length = depth + 1;
+        if (hl) hl.remove();
+        hl = el('div', `position:absolute;left:${node.x}px;top:${y}px;width:${node.w}px;height:16px;background:#0a246a;color:#fff;font:11px Tahoma,Verdana,Arial,sans-serif;line-height:16px;padding-left:14px;box-sizing:border-box;white-space:nowrap;pointer-events:none;`, box);
+        hl.textContent = t;
+      });
+      r.addEventListener('click', e => { e.stopPropagation(); if (typeof v === 'function') { closeMenu(); v(); } });
+    });
+  }
+  level(MENU[k], 0, 41);
+}
+function about() {
+  const [x, y, w, h] = LAY.windows.about.rect;
+  const d = CL.win(U + 'about.png', x, y, w, h, {parent: screen});
+}
+function movie(f) {
+  const v = el('div', 'position:absolute;left:0;top:0;width:1024px;height:768px;background:#000;z-index:200000;');
+  const vid = el('video', 'position:absolute;left:112px;top:54px;width:800px;height:655px;background:#000;', v);
+  vid.src = 'movies/' + encodeURIComponent(f) + '.mp4'; vid.controls = true; vid.autoplay = true;
+  const x = el('div', 'position:absolute;right:8px;top:6px;width:70px;height:22px;background:#d4d0c8;border:2px outset #fff;font:11px Tahoma,Verdana,Arial,sans-serif;text-align:center;line-height:20px;box-sizing:border-box;cursor:default;', v);
+  x.textContent = 'Close'; x.onclick = () => { vid.pause(); v.remove(); };
+}
+// ---- breed lists ----
+const tab = k => SD[T[k]], col = (k, n) => tab(k).c.indexOf(n);
+const breedName = (k, r) => `${r[0]} - ${r[col(k, 'NAME')]}`;
+function breeds(k, volt, rows, titleText) {
+  const t = tab(k), vc = t.c.findIndex(c => /^Volt/i.test(c));
+  rows = rows || t.r.filter(r => !volt || (r[vc] || '').toUpperCase() === volt);
+  const title = titleText || (volt ? `${k} - ${volt} Silkworm Breeds/ Hybrids` : `${k} Silkworm Breeds/ Hybrids`);
+  const s = newScreen(U + 'list.png');
+  // title in its raised box
+  const tb = el('div', 'position:absolute;top:58px;height:34px;box-sizing:border-box;border:1px solid;border-color:#808080 #fff #fff #808080;font:italic bold 20px Arial,Helvetica,sans-serif;color:#c000c0;padding:0 5px;line-height:30px;white-space:nowrap;', s);
+  tb.textContent = title;
+  const cols = rows.length > 13 ? 3 : 1, cw = cols === 3 ? 236 : 310, gx = cols === 3 ? 24 : 233, gw = cols * cw + 4;
+  const g = el('div', `position:absolute;left:${gx}px;top:${cols === 3 ? 108 : 124}px;width:${gw}px;height:${cols === 3 ? 386 : 366}px;background:#808080;border:2px solid;border-color:#404040 #fff #fff #404040;box-sizing:border-box;overflow-y:auto;`, s, 'lst');
+  requestAnimationFrame(() => { tb.style.left = (cols === 3 ? 24 : 128) + 'px'; });
+  rows.forEach((r, i) => {
+    const c = cols === 3 ? i % 3 : 0, ro = cols === 3 ? Math.floor(i / 3) : i;
+    const cell = el('div', `position:absolute;left:${c * cw}px;top:${ro * 30}px;width:${cw - 1}px;height:29px;background:#ddffdd;border-bottom:1px solid #000;${c < cols - 1 ? 'border-right:1px solid #000;' : ''}padding:7px 2px 0;box-sizing:border-box;white-space:nowrap;overflow:hidden;`, g);
+    const a = el('span', '', cell, 'ln'); a.textContent = breedName(k, r);
+    a.onclick = () => detail(k, r, () => breeds(k, volt, rows, titleText));
+  });
+  const ry = cols === 3 ? 504 : 481, rx = cols === 3 ? 644 : 647; img(U + 'return.png', rx, ry, s); hot(rx, ry, 91, 27, s, main);
+}
+// ---- one breed: eight picture buttons, one page each ----
+const PAGES = ['Origin', 'Egg', 'Larva', 'Cocoon', 'Pupa', 'Moth', 'Reeling', 'Images'];
+const PICS = ['EGG', 'LARVA', 'COCOON', 'PUPA', 'MOTH', 'WING', 'MALE MOTH', 'FEMALE MOTH'];
+function pageOf(c) {
+  if (/^(SRN|NAME)$/.test(c) || PICS.includes(c) || c === 'DiagnosticFeatures') return -1;
+  if (/^Egg|Fecund/i.test(c)) return 1;
+  if (/^Lar|FifthInstar|Tubercle|Tubercular|^TS-/i.test(c)) return 2;
+  if (/^Cocoon|^Cc|Pupation|ShellWt|ShellRatio|^MaleCc|^FemaleCc|^MaleShell|^FemaleShell/i.test(c)) return 3;
+  if (/Pupa|Emergence/i.test(c)) return 4;
+  if (/Moth|Wing|Ocelli|Hyaline|BodyLength/i.test(c)) return 5;
+  if (/Boil|RawSilk|Filament|Denier|Reelab|Neatness|^Count|SilkRecovery|Elongation|Tenacity/i.test(c)) return 6;
+  return 0;
+}
+const picFile = v => { const p = SP[(v || '').replace(/\\/g, '/').toLowerCase()]; return p ? p.split('/').map(encodeURIComponent).join('/') : ''; };
+function detail(k, r, back) {
+  const s = newScreen(U + 'detail.png'), t = tab(k);
+  const title = el('div', 'position:absolute;left:143px;top:42px;width:578px;height:26px;font:italic bold 20px Arial,Helvetica,sans-serif;color:#0000ff;text-align:center;line-height:26px;', s);
+  title.textContent = breedName(k, r);
+  const area = el('div', 'position:absolute;left:95px;top:95px;width:700px;height:445px;', s);
+  let pressed = null;
+  const field = (lab, val, x, y, w) => { el('div', `left:${x}px;top:${y}px;width:128px;height:18px;`, area, 'lb').textContent = lab; el('div', `left:${x + 136}px;top:${y}px;width:${w || 208}px;height:18px;`, area, 'vl').textContent = val; };
+  const pic = (lab, v, x, y) => { el('div', `left:${x}px;top:${y + 6}px;width:128px;height:18px;`, area, 'lb').textContent = lab; const f = picFile(v); if (f) img(f, x + 132, y, area, 'width:116px;height:116px;object-fit:cover;border:1px solid #000;'); };
+  function show(p) {
+    area.innerHTML = '';
+    if (pressed) pressed.remove();
+    pressed = el('div', `position:absolute;left:13px;top:${40 + 67 * p}px;width:72px;height:65px;box-sizing:border-box;border:2px solid;border-color:#404040 #fff #fff #404040;pointer-events:none;`, s);
+    if (p === 7) {
+      t.c.filter(c => PICS.includes(c) && r[t.c.indexOf(c)]).forEach((c, i) => pic(c, r[t.c.indexOf(c)], i % 2 ? 343 : 5, 5 + 140 * Math.floor(i / 2)));
+      return;
+    }
+    const cs = t.c.map((c, i) => [c, i]).filter(([c]) => pageOf(c) === p);
+    if (p === 0) {
+      field('SRN', r[0], 5, 7); field('NAME', r[col(k, 'NAME')], 5, 39);
+      const vo = cs.filter(([c]) => /Volt|Molt|Moult/i.test(c)), rest = cs.filter(([c]) => !/Volt|Molt|Moult/i.test(c));
+      vo.forEach(([c, i], j) => field(c, r[i], 357, 7 + 32 * j, 200));
+      rest.forEach(([c, i], j) => j < 10 ? field(c, r[i], 5, 71 + 32 * j) : field(c, r[i], 357, 71 + 32 * (j - 10), 200));
+      const dg = col(k, 'DiagnosticFeatures'); field('DiagnosticFeatures', r[dg], 5, 71 + 32 * Math.min(rest.length, 10), 552);
+      return;
+    }
+    cs.forEach(([c, i], j) => j < 12 ? field(c, r[i], 5, 7 + 32 * j) : field(c, r[i], 357, 167 + 32 * (j - 12), 200));
+    const pc = ['', 'EGG', 'LARVA', 'COCOON', 'PUPA', p === 5 && col(k, 'MOTH') < 0 ? 'MALE MOTH' : 'MOTH', ''][p];
+    if (pc && col(k, pc) >= 0) pic(pc, r[col(k, pc)], 343, 1);
+  }
+  PAGES.forEach((n, i) => hot(13, 40 + 67 * i, 72, 65, s, () => show(i), n));
+  hot(691, 550, 78, 27, s, back);
+  show(0);
+}
+// ---- Search Form ----
+const QF = [['Host Plant', /^HostPlant/i], ['Fecundity', /^Fecundity$/i], ['Larval Marking', /^LarvalMarking$/i], ['Pupation Rate (%)', /^Pupation/i], ['Cocoon Colour', /^CocoonColour$/i], ['Cocoon Shape', /^CocoonShape$/i],
+  ['Cocoon Weight (g)', /^(CcWeight|FemaleCcWeight)/i], ['Shell Weight (g)', /^(CcShellWeight|FemaleShellWt)/i], ['Shell Ratio (%)', /^(CcShellRatio|FemaleShellRatio)/i], ['Filament Length (m)', /^FilamentLength/i], ['Denier', /^Denier$/i]];
+const num = v => { const m = String(v).replace(/\s/g, '').match(/\d+(\.\d+)?/); return m ? parseFloat(m[0]) : NaN; };
+function search(k) {
+  const s = newScreen(U + 'search.png'), t = tab(k);
+  const ci = re => t.c.findIndex(c => re.test(c));
+  let field = -1, op = '', val = '', join = '', terms = [], dots = {};
+  const qbox = el('div', 'position:absolute;left:34px;top:470px;width:724px;height:42px;font:11px Arial,Helvetica,sans-serif;color:#000;overflow:hidden;', s);
+  const dot = (key, x, y) => { if (dots[key]) dots[key].remove(); dots[key] = img(U + 'rad_on.png', x, y, s, 'pointer-events:none;'); };
+  const used = new Set();
+  // a field this silkworm's table does not have is shown greyed, as the original greys Host Plant for mulberry
+  QF.forEach(([n, re], i) => {
+    const y = 156 + 24 * i;
+    if (ci(re) < 0) { const c = el('div', `position:absolute;left:41px;top:${y + 1}px;width:12px;height:12px;`, s); return; }
+    hot(38, y, 180, 20, s, () => { if (used.has(i)) return; field = i; op = ''; val = ''; dot('f', 40, y + 1); cb.set([...new Set(t.r.map(r => r[ci(re)]).filter(Boolean))].sort((a, b) => num(a) - num(b) || a.localeCompare(b))); render(); });
+  });
+  [['=', 0], ['>', 1], ['<', 2], ['>=', 3], ['<=', 4], ['Not=', 5]].forEach(([o, i]) => hot(296, 156 + 24 * i, 60, 20, s, () => { if (field < 0) return; op = o; dot('o', 297, 157 + 24 * i); render(); }));
+  const cb = CL.combo(s, 425, 150, 208, 21, [], '11px Arial,Helvetica,sans-serif', '#000', v => { val = v; render(); }, {rows: 12, lh: 14});
+  [['AND', 0], ['OR', 1]].forEach(([j, i]) => hot(703, 156 + 24 * i, 56, 20, s, () => { if (field < 0 || !op || !val) return; terms.push([field, op, val, j]); used.add(field); field = -1; op = ''; val = ''; Object.values(dots).forEach(d => d.remove()); dots = {}; cb.set([]); render(); }));
+  function render() { qbox.textContent = [...terms.map(([f, o, v, j]) => `${QF[f][0]} ${o} ${v} ${j}`), field >= 0 ? `${QF[field][0]} ${op} ${val}` : ''].join('  ').trim(); }
+  function test(r, [f, o, v]) {
+    const x = r[ci(QF[f][1])];
+    if (o === '=') return String(x).toUpperCase() === String(v).toUpperCase();
+    if (o === 'Not=') return String(x).toUpperCase() !== String(v).toUpperCase();
+    const a = num(x), b = num(v); if (isNaN(a) || isNaN(b)) return false;
+    return o === '>' ? a > b : o === '<' ? a < b : o === '>=' ? a >= b : a <= b;
+  }
+  hot(472, 539, 80, 24, s, () => {
+    const all = [...terms]; if (field >= 0 && op && val) all.push([field, op, val, '']);
+    if (!all.length) return;
+    const rows = t.r.filter(r => { let ok = test(r, all[0]); for (let i = 1; i < all.length; i++) ok = all[i - 1][3] === 'OR' ? ok || test(r, all[i]) : ok && test(r, all[i]); return ok; });
+    breeds(k, null, rows, `${k} Silkwom Breeds/ Hybrids`);
+  });
+  hot(576, 539, 80, 24, s, () => search(k));
+  hot(680, 539, 80, 24, s, main);
+}
+</script>
+</body></html>

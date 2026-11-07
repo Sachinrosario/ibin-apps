@@ -1,0 +1,52 @@
+SALIENT FEATURES:
+Morphological:
+
+Diagnostic characters: Mouth when protracted forms a horizontal tube. Mandible ascending at an angle of about 45° with the horizontal. A single series of sharp teeth on the upper jaw, with a curved canine of different size on on each side of the symphysis. In the lower jaw , a series of curved pointed teeth becoming larger anteriorly with a pair of symphysial canines. Scales all over body except for breast ahead of a line from the base of pectoral to the origin of anal fin.
+
+Sex Attributes: According to McFall-Ngai and Dunlap,1984, Gazza minuta exhibits internal sexual dimorphism in the structure of light organs and external sexual dimorphism by the visibility of these light organs externally by the presence of clear patches of skin. These fishes have  a small, clear patch of skin on the posterior margin of each opercular cavity that is clearly defined by the surrounding silvery guanine –rich skin (Ref no: 22). The patches are dimorphic in size and shape. In fishes between 80-90mm Standard Length , the clear patches of  skin are significantly larger in area than those of the females by about 1.4 times.   
+
+Descriptive characters: Body oval , compressed, moderately deep. Dorsal and ventral profiles equally convex. Rostro-occipital profile almost a straight line continued into the dorsal profile. Snout pointed. Height 2.27-3.14 , head 2.85-3.19 in Standard length (2.27-3.2 and 3.5-4 in Total Length respectively), eye 2.43-3.04 in head. Mouth large , lips thick and broad. Gape of mouth oblique and opposite lower margin of eye. Tip of maxilla reaches front border of eye. Pre-operculum with an obtuse or rounded angle; its lower margin finely serrated. Gill rakers 62.5-106mm standard length (77-134mm Total  Length) on left outermost arch (14-16)+(0-1)+(3-6) , total 18-21. Gill rakers curved and bent at the tips, the spines on inner surface of each gill raker are also curved. 
+Interorbital space divided into two concavities by the pre-maxillary shaft,  bounded two ridges which form the outer edges of the nuchal spine. Median portion of dorsal spine is not elevated. Two small spines on the top of the head , immeadiately above the eye and opposite its front margin, the outer larger than the inner. The ridge forming the boundary of the inter orbital space arises opposite these spines.Lateral line complete, convex from the origin and is parallel to the dorsal profile, extending posteriorly to the base of  the caudal fin. Dorsal and anal spines weak and compressed, the 2nd dorsal and the 2nd anal being the longest. Second anal spine shorter than the 2nd dorsal ,but stronger. 3rd and 4th dorsal spine and the 3rd anal spine serrated along the anterior margin for a short distance from the base. Pectorals short, ventrals with axillary scales; tip of the ventral not reaching the origin of the anals.Caudal fin deeply forked.
+
+Colour:  Sivery , back grayish, upper half of the body with grayish irregular marks, or vertical wavy lines or faint irregular blotches, extending to below lateral line. Membrane of spinous dorsal, black at the edge. Soft dorsal and anal edged grey. Snout margin dotted black.Inner side of pectoral base with black dots. Posterior edges of caudal fins dusky. Edge of the ventral half of the opercular flap with fine black dots  which in larger specimens may coalesce to form a dark band.        Ref no: (6,7,27)
+
+ Meristic Characters:D.VIII,16; A.III, 14; P.20; V.1,5; C.24.         Ref no: 18
+
+Feeding Habit:
+Main food: Fishes (mainly Stolephorus and others like Pseudorhombus, Cynoglossus, Apogon  and Thryssa) , followed by prawns (Penaeus indicus, Metapenaeus monoceros, M. dobsoni and M.affinis), other crustaceans (squilla, Isopods , Amphipods (Podoceros sp, Maera sp, Pantharpinia sp, Hyperia sp), copepods (Acartia sp,  Oithona sp) and crabs, polychaetes (Nereis sp, Eunice sp), nematodes, filamentous algae and diatoms (Coscinodiscus sp and Asterionella sp).    
+Juveniles of 3-6 cm in length feed on copepods, other crustaceans and pteropods like Creseis              
+Feeding type: Bottom  and column feeding.
+
+Additional remarks: Smaller individuals of G. minuta are omnivorous feeding on diatoms , algae , copepods and amphipods, since the canine teeth in younger specimens are weak. Larger specimens, with wide gape of mouth and canine teeth on both jaws are carnivorous feeding on bigger and actively moving prey like other fishes, polychates, Squilla and molluscs. No relation of feeding intensity with maturity stages were noticed.
+                         Ref no: 15, 28.
+Size and Age :
+
+Maximum Length (Unsexed): 155mm     (Ref no:16)
+Average Length                     :  100mm    (Ref no: 7)
+Maximum weight            :  
+Average weight                : 
+Longevity                         : 2-3 years
+                                            98mm –1st year                        (Ref no:16)
+                                            138mm-2nd year 
+
+Growth parameters:
+L(infinity)  160mm                                   Ref no:   16
+K                0.8649
+
+Length Weight Relationships:
+Immature females   : LogW= -4.0348+2.5939 log L
+Mature females       :  LogW= -4.9217+3.0526 log L  (Ref no: 11)
+Immature males     :   LogW= -5.0078+3.0920 log L
+Mature males         :    LogW=  -5.1448+3.1629 log L 
+Eggs and Larvae:
+Characteristics: 
+Biochemical aspects:
+
+Proximate Composition:
+
+As percentage of wet weight       As percentage of dry weight
+
+       Moisture                            Protein    Fat   Carbohydrate   Ash
+          73.67                                  75.91    5.45        1.04                19        
+
+           (Ref no:14)

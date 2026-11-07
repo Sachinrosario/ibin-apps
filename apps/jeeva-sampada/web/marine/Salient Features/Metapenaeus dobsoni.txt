@@ -1,0 +1,60 @@
+SALIENT FEATURES:							Ref No: 52,103,220
+
+Morphological:  Body almost entirely pubescent, but pubescence can be patchy; rostrum long, 
+extending beyond antennular peduncle, armed with 7 to 9 dorsal teeth, toothless on distal half; carapace with postrostral carina ending near posterior margin, adrostral carina reaching as far as epigastric tooth and adrostral sulcus a little beyond, branchiocardiac groove almost reaching to middle of carapace; telson armed only with spinules; no ischial spine on 1st pereoped; in adult males, basial spine on 3rd pereopod extremely long and barbed, and merus of 5th pereopod with 1 or 2 large triangular teeth; in females, 5th pereopod often reduced to coxa and basis. Distomedian projections of petasma with a short filament on ventral surface and another on dorsal  surface on each; distolateral projections directed forward. Thelycum with white conjoined pads in impregnated females; anterior plate long, grooved tongue-like and partially ensheathed in a horse-shoe-like process formed by lateral plates.
+
+
+Diagnostic characteristics:  Rostrum extending beyond antennular peduncle, distal half toothless; 
+adrostral sulcus extending beyond epigastric tooth; in adult males, basial spine on 3rd pereopod extremely long and barbed, and merus of 5th pereopod with 1or 2 large triangular teeth; in females, 5th pereopod often reduced to coxa and basis; apical filaments on petasma short; anterior thelycal plate tongue-like.
+
+            Colour: Body pale yellow to brownish with red, brownish or greenish specks; uropods 
+grey-browinish, darker distally with external  part of exopods red.
+
+Sex attributes:
+       Descriptive characters: In adult males, the basial spine on 3rd pereopod is extremely long and 
+barbed, and the merus of 5th pereopod bears 1 or 2 large triangular teeth. In adult females, the 5th pereopod is often reduced to a stump formed of coxa and basis; the thelycum is covered by conjoined pads after impregnation.
+
+Feeding habit:									Ref. No:220
+    
+ Main food: Includes animal matter consisting of foraminiferans, copepods, nematods, 
+amphipods, gastropods and lamellibranchs, and vegetable matter consisting of algae (Cladophora) and diatoms (Fragilaria, Coscinodiscus, Pleurosigma, Novicula, Cyclotella)
+         Feeding type: Omnivorous
+
+
+Size and age:
+   Maximum length(cm)(male/female/unsexed): Male 11.8, Female 13.0		   Ref. No:70,221
+
+   Average length(cm)(male/female/unsexed): Dominant sizes(cm) in marine landings: 
+      Male 6.6 to 9.5, Female 8.1 to 11.5       Ref. No:27,28,29,30
+
+   Maximum weight (g)(male/female/unsexed):					   Ref. No:
+
+   Average weight (g)(male/female/unsexed):						   Ref. No:
+
+   Longevity (y) (wild):  2			(captivity):				   Ref. No:221
+
+   Length/weight relationships:  At Cochin: Males: Log W=-5.08518 + 2.91356 log L  Ref. No:183
+								(r=0.97)
+         Females: Log W=-5.7007+3.25937 log L
+(r=0.99)
+
+
+
+
+Eggs and larvae:								Ref. No:116,121,159
+
+  Characteristics: Eggs are opaque with a very wide perivitelline space and measuring 0.35 to 0.41 
+mm in diameter. The embryo hatches out  in 16 to 17 hours and passes through 6 nauplius , 3 
+protozoea and 5 mysis substages, followed by 1 or 2 intermediate substages, before transforming into postlarva. The last mysis stage has a short rostrum reaching middle of eye, 2 dorsal spines,  long 2 –segmented pleopods and truncate telson bearing 7+7 setae on distal portion. First postlarval stage measures 2.6 to 2.7 mm total length, and is characterised by a blunt and short rostrum with 2-3 dorsal spines, telson with convex posterior end and 7+7 setae on distal portion, and a prominent chromatophore in the middle of each uropod ramus and two on telson.
+
+  Abundance: Eggs, larvae and postlarvae have been reported from the inshore waters of central and 
+s.w.coast and southeast coasts of India in varying densities. At Cochin, this species forms more than 80% in the total population of penaeid larvae and postlarvae occurring in the surface plankton. Larvae of this species are also found to be common in the coastal waters(10m.line) up to Sriwardhan in Maharashtra , with peak abundance off Ratnagiri coast (Goswami et al.,1977
+
+
+SPAWNING INFORMATION:						Main Ref:117,221,222
+   Locality: Inshore waters within 25m depth throughout its distributional range
+   Season:   Breeds throughout the year. Peaks Apr-Jun & Oct-Dec on S.W coast, and July-Aug, May 
+      & Oct on S.E coast.
+   Fecundity: 34,500 to 160,000 eggs (7 to 12 cm size)
+   Comment: Intensive spawning activity is generally related to rise in water temperature in the 
+        inshore waters off Cochin

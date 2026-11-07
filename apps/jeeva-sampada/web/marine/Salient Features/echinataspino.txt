@@ -1,0 +1,8 @@
+SALIENT FEATURES:
+Morphological:                                 
+Diagnostic characteristics:   This species is close to S. spinosa.  The following differences  were noted: the lateral spines on the head and the dorsal denticles on the pereon  and pleon somites are longer than in S. spinosa.  One spine occurs on each side of the distal surface of pereon somites III-VI and pleon somites I-III.  The outer lobe of maxillae I is armed on the distal margin with only a single spine while the distal end of the inner lobe is almost straightly truncated.  The outer lobes of the maxillipeds are amygdaloid and in the distal part of the inner margin bear only two short setae; the unarmed inner lobes f all far short of ½ the length of the outer lobes, and their distal margin is rounded.      The claws of pereopods I and II are longer and broader than in S. spinosa;  the lobe on the 5th segment of pereopods I is strongly developed and, moreover, the 6th segment also has a weakly developed lobe.  In pereopods III-V the 6th segment is longer than the 5th, which in turn is shorter than the 4th segment.  The basipodites of the uropods bear curved spines only on the anterior margin; on the posterior margin there is a solitary spine opposite the place of attachment of the exopodite.
+
+Sex attributes:
+DimorphicMale: 1st antenna well developed, female: 1st antenna reduced.
+
+Maximum length (cm) (male/ female/ unsexed)                                              Length of sexually mature specimens 5-6 mm.

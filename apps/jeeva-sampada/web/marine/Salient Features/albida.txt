@@ -1,0 +1,58 @@
+IMPORTANCE	    						         Ref.No.1,4,9
+Landing Statistics (t/y)	 Separate statistics are not  recorded for this species.
+Main Source of landing	:  	Coast :  
+Importance of fisheries	: This species  constitutes an important  fishery in the  Hooghly  estuary (West Bengal ) and along the south – west coast o f India. 
+
+Main catching method	: This species caught with bottom trawls, gillnets and hand lines. 
+
+Used for aquaculture	: No 
+Used as bait:			: No
+Aquarium fish		: No
+Game fish			: No
+Dangerous fish		: Harmless
+Bioactivity : Locally  known / reported/ not known :              Details 
+Biodeterioration   : Boarder / Fouler : 	
+Others:			
+
+Period of availability: Throughout the year – yes/no 		
+Patent information:
+
+SALIENT FEATURES:						Ref.No. 1,9
+Morphological:    A fairly large species, with an oblong  body. 
+Diagnostic characteristics :snout rounded and projecting  slightly beyond  tip of upper jaw; mouth terminal or slightly inferior, a pair of very small, tapering barbels  on chin.   Teeth differentiated  into large and small, especially in upper jaw, the large ones forming  the outer  series; no canine teeth;  Gillrakers  on  lower limb  of first arch 7 to 9., with several toothed  plates  below. Dorsal fin with 9 to 10 spines, followed by deep notch, second part of the fin with one spine and 23 to 26 soft rays. Anal fin with 2 spines and 7  soft rays, the second spine  long and strong, up to half of head  length . Pectoral fins long, about  ¾ of head length;  Caudal fin bluntly  rhomboid in adults.  Scales cycloid onfront part of  head, elsewhere   ctenoid  swim bladder carrot – shaped , with about  17  to 19  pairs of   appendages, one posterior  simple,  the rest  arborescent the anterior most sending  some of its  twig lets  into head.
+Colour :Back  grey, belly silvery ;faint oblique  lines along scale rows; spinous  part of dorsal  black, upper margin of second  part of dorsal fin dusky.
+
+Sex attributes:	  		No information.
+Descriptive characters:					
+Meristic characters : 
+Feeding habit:						
+Main food:  feeds  on prawns, small fishes and other benthic  organisms  Ref. No.	9		 
+Feeding type: Carnivorous
+ 
+Additional remarks: 
+Size and age:
+Maximum length ( unsexed )	: 90 cm.	Ref. No.1
+Average length ( unsexed )		: 25 cm.	Ref. No.9
+Maximum weight (unsexed )		:  		
+Average weight (Male/Female)	: 
+Longevity (y) (wild)			: 
+Length/Weight relationships	: Study area. Cochin Estuary.   Ref. No. 5
+ 
+ Log F  = - 0.2979 + 2. 3751  log L,
+ Log F  = 3.3419 + 0.8220  Log W  For  length and weight  respectively.
+The ‘r’ values  were 0.9419 for SL  and  0.9602 for body weight.								
+Eggs and larvae: 			  
+Characteristics: 
+Abundance: 
+Biochemical aspects:	
+Proximate analysis 
+
+Electrophoresis:	No information
+
+Spawning/Breeding Information:   			          Ref No. 5                                                             Locality : Cochin estuary .
+Season :  July  to November.
+Fecundity : varied from  1,08,864 to 13,87,440 eggs in fishes  ranging  in  size from 198.0 to 520 mm SL 	
+Comment :	At cochin,  length at first  maturity  for males  -195mm SL  and for female is  around  215mm SL.
+Sex ratio: M : F – 1 : 1
+Additional Information:
+ 
