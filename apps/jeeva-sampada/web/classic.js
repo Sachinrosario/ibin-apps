@@ -45,7 +45,7 @@ const CL = (() => {
   // a text box: white with text, or grey (as the originals show an empty, disabled box)
   function text(parent, x, y, w, h, value, font, color, opts = {}) {
     const has = value != null && String(value).trim() !== '';
-    const t = el('div', `position:absolute;${box(x, y, w, h)}background:${has || opts.white ? '#fff' : '#d4d0c8'};font:${font};color:${color};padding:1px 2px;overflow:hidden;white-space:${opts.wrap ? 'pre-wrap' : 'nowrap'};line-height:1.15;box-sizing:border-box;`, parent);
+    const t = el('div', `position:absolute;${box(x, y, w, h)}background:${has || opts.white ? '#fff' : '#d4d0c8'};font:${font};color:${color};padding:1px 2px;overflow:hidden;${opts.wrap ? 'overflow-y:auto;' : ''}white-space:${opts.wrap ? 'pre-wrap' : 'nowrap'};line-height:1.15;box-sizing:border-box;`, parent, opts.wrap ? 'lst' : '');
     t.textContent = has ? value : '';
     return t;
   }

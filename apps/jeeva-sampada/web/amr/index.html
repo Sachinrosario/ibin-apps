@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitized Inventory of Amphibia, Reptilia And Mammals of India</title>
+<link rel="icon" href="../ui/icon.png">
+<style>
+html,body{margin:0;height:100%;background:#000;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1024px;height:768px;transform-origin:0 0;background:#d0c8ac;overflow:hidden;user-select:none;-webkit-user-select:none;font-family:Tahoma,Verdana,Arial,sans-serif}
+.lst::-webkit-scrollbar{width:16px;background:#e8e6e0}
+.lst::-webkit-scrollbar-thumb{background:#d4d0c8;border:2px outset #fff}
+</style></head>
+<body>
+<script src="../classic.js"></script>
+<script src="data.js"></script>
+<script src="files.js"></script>
+<script src="map.js"></script>
+<script>
+"use strict";
+const {stage, el, img, hot, win, text, list, combo, label} = CL;
+const U = 'ui/';
+const A12 = '12px Arial,Helvetica,sans-serif', B15 = 'bold 15px Arial,Helvetica,sans-serif', GR = '#008000', BL = '#0000ff', BK = '#000';
+let LAY = null;
+fetch(U + 'layout.json').then(r => r.json()).then(j => { LAY = j; start(); });
+const W = n => LAY.windows[n];
+const F = (n, i) => W(n).fields[i];
+const has = v => v != null && String(v).trim() !== '';
+// rows of a table for one species id (first column is the id)
+const T = (t, id) => (AD[t] ? AD[t].r.filter(r => r[0] === id) : []);
+const T1 = (t, id) => T(t, id)[0];
+const col = (t, name) => AD[t].c.indexOf(name);
+// ---- the five databases of the program ----
+const G = {
+  amp: {master: 'amp_species_master', g: 1, s: 2, tax: [5, 4, 1, 2, 3], taxFont: [B15, GR], html: 'amp',
+    btns: ['tax', 'cm', 'dist', 'syn', 'diag', 'col', 'img', 'html'], cm: ['amp_common_name', 1, 2], dist: ['amp_distribution', 2], syn: ['amp_synonyms', 1], img: ['amp_images', 1]},
+  mam: {master: 'mam_species_master', g: 1, s: 2, tax: [5, 6, 7, 8, 1, 2, 4], taxFont: [A12, BL], html: 'mam',
+    btns: ['tax', 'cm', 'dist', 'syn', 'diag', 'rr', 'img', 'html'], cm: ['mam_common_name', 1, 2], dist: ['mam_distribution', 1], syn: ['mam_synonyms', 1], img: ['mam_images', 2]},
+  liz: {master: 'liz_species_master', g: 4, s: 5, tax: [1, 2, 3, 4, 5, 6], taxFont: [B15, GR], html: 'liz',
+    btns: ['tax', 'cs', 'dist', 'syn', 'hab', 'morph', 'img', 'html'], dist: ['liz_distribution', 2], syn: ['rep_synonyms', 1], img: ['lizard_image', 1]},
+  snake: {master: 'Snake_species_master', g: 4, s: 5, tax: [1, 2, 3, 4, 5, 6], taxFont: [B15, GR], html: 'snake',
+    btns: ['tax', 'cm', 'dist', 'hab', 'st', 'br', 'img', 'html'], cm: ['Snake_cmname', 1, 2], dist: ['snake_distribution', 2], img: ['snake_image', 3]},
+  turtle: {master: 'turtle_species_master', g: 5, s: 6, tax: [1, 2, 3, 4, 5, 6, 7], taxFont: [A12, BL], html: 'turtle',
+    btns: ['tax', 'cm', 'dist', 'cs', 'hab', 'morph', 'img', 'html'], cm: ['Turtle_cmname', 1, 2], dist: ['turtle_distribution', 2], img: ['turtle_image', 3]}
+};
+let banner, status, grp = null, cur = null, child = null, pressed = null, tbImgs = [], tbOff = null, btnHots = [];
+const C = () => G[grp];
+const spRow = id => AD[C().master].r.find(r => r[0] === id);
+const spName = id => { const r = spRow(id); return r ? (r[C().g] + ' ' + r[C().s]).replace(/\s+/g, ' ').trim() : ''; };
+function start() {
+  img(U + 'top.png', 0, 0); img(U + 'status.png', 0, 743);
+  banner = img(U + 'banner.png', 0, 38);
+  status = label(stage, 348, 744, 670, 22, '', 'bold 15px Arial,Helvetica,sans-serif', '#000', 'left');
+  addEventListener('click', closeMenu);
+  hot(16, 19, 54, 18, stage, () => dropdown('amp'));
+  hot(72, 19, 55, 18, stage, () => dropdown('mam'));
+  hot(130, 19, 46, 18, stage, () => dropdown('rep'));
+  hot(179, 19, 95, 18, stage, () => { closeMenu(); movie(); });
+  hot(278, 19, 44, 18, stage, () => { closeMenu(); openWin('credits'); });
+  hot(1006, 4, 16, 14, stage, () => { location.href = '../index.html'; }, 'Close');
+  const q = new URLSearchParams(location.search), qg = (q.get('g') || '').trim().toLowerCase(), qs = (q.get('s') || '').trim().toLowerCase();
+  if (qg) for (const g of Object.keys(G)) {
+    const r = AD[G[g].master].r.find(r => r[G[g].g].trim().toLowerCase() === qg && r[G[g].s].trim().toLowerCase() === qs);
+    if (r) { showToolbar(g); setSpecies(r[0]); break; }
+  }
+}
+function openWin(n, opts = {}) {
+  const [x, y, w, h] = W(n).rect; if (child) child.close();
+  const d = win(U + n + '.png', x, y, w, h, Object.assign({onclose: () => { if (child === d) child = null; }}, opts));
+  child = d; banner.style.display = 'none'; return d;
+}
+function showToolbar(g) {
+  if (grp === g && tbOff) return;
+  grp = g; cur = null; status.textContent = '';
+  if (tbOff) tbOff.remove(); tbImgs.forEach(x => x.remove()); tbImgs = []; btnHots.forEach(x => x.remove()); btnHots = [];
+  if (pressed) { pressed.remove(); pressed = null; }
+  tbOff = img(U + g + '_off.png', 0, 38, stage, 'pointer-events:none;');
+  LAY.toolbars[g].btns.forEach(([y0, y1], i) => btnHots.push(hot(1, y0, 74, y1 - y0 + 1, stage, () => { if (!cur || !enabled(i)) return; press(i); ACT[C().btns[i]](); })));
+  banner.style.display = 'none';
+}
+function enabled(i) {
+  const c = C(), id = cur, r = spRow(id), k = c.btns[i];
+  switch (k) {
+    case 'tax': return true;
+    case 'cm': case 'dist': case 'syn': case 'img': return T(c[k][0], id).length > 0;
+    case 'diag': return grp === 'amp' ? !!T1('amp_General_Details', id) : !!T1('mam_gen', id);
+    case 'col': return !!T1('amp_color', id);
+    case 'rr': return !!T1('mam_gen', id) || T('mam_reference', id).length > 0;
+    case 'cs': case 'hab': case 'morph': case 'st': case 'br': return true;
+    case 'html': return !!AF.html[c.html][spName(id).toLowerCase()];
+  }
+}
+function setSpecies(id) {
+  cur = id; status.textContent = spName(id);
+  tbImgs.forEach(x => x.remove()); tbImgs = [];
+  LAY.toolbars[grp].btns.forEach(([y0], i) => tbImgs.push(img(U + `${grp}_b${i}_${enabled(i) ? 'on' : 'off'}.png`, 0, y0, stage, 'pointer-events:none;')));
+  press(0); ACT.tax();
+}
+function press(i) { if (pressed) pressed.remove(); pressed = img(U + `${grp}_b${i}_down.png`, 0, LAY.toolbars[grp].btns[i][0], stage, 'pointer-events:none;'); }
+const box = (d, n, i, v, font, color, wrap) => { const [x, y, w, h] = F(n, i); return text(d, x, y, w, h, v, font || A12, color || GR, {white: true, wrap: wrap !== false}); };
+function lines(d, n, i, arr) {
+  const [x, y, w, h] = F(n, i);
+  return list(d, x, y, w, h, arr, '13px Arial,Helvetica,sans-serif', GR, null, {select: arr.length ? 0 : -1, dotOnly: true, lh: '15px'});
+}
+const ACT = {
+  tax() {
+    const n = grp + '_tax', d = openWin(n, {title: 'Classification of ' + spName(cur)}), r = spRow(cur), [fo, co] = C().taxFont;
+    C().tax.forEach((c, i) => { const t = box(d, n, i, r[c], fo, co, false); t.style.padding = fo === B15 ? '1px 2px' : '3px 2px'; });
+  },
+  cm() {
+    const [t, li, ni] = C().cm, d = openWin(grp + '_cm');
+    const rows = T(t, cur).map(r => [r[li], r[ni]]).sort((a, b) => a[0].localeCompare(b[0]) || a[1].localeCompare(b[1]));
+    lines(d, grp + '_cm', 0, rows.map(([l, nm]) => `${l}  ---  ${nm}`));
+  },
+  syn() { const [t, i] = C().syn, d = openWin(grp + '_syn'); lines(d, grp + '_syn', 0, T(t, cur).map(r => r[i])); },
+  diag() {
+    const n = grp + '_diag', d = openWin(n);
+    if (grp === 'amp') box(d, n, 0, (T1('amp_General_Details', cur) || [])[1]);
+    else { const g = T1('mam_gen', cur) || []; box(d, n, 0, g[1], A12, BK); box(d, n, 1, g[2], A12, BK); }
+  },
+  col() { const n = 'amp_col', d = openWin(n); box(d, n, 0, (T1('amp_color', cur) || [])[1]); },
+  rr() {
+    const n = 'mam_rr', d = openWin(n), g = T1('mam_gen', cur) || [];
+    box(d, n, 0, g[3], A12, BK);
+    box(d, n, 1, T('mam_reference', cur).map((r, i) => `${i + 1} . ${r[1]}`).join('\n\n'), A12, BK);
+  },
+  cs() {
+    const n = grp + '_cs', d = openWin(n), r = spRow(cur);
+    const [a, b] = grp === 'liz' ? [9, 10] : [9, 14];
+    box(d, n, 0, r[a], A12, BK); box(d, n, 1, r[b], A12, BK);
+  },
+  hab() {
+    const n = grp + '_hab', d = openWin(n), r = spRow(cur);
+    if (grp === 'liz') box(d, n, 0, (T1('liz_habit', cur) || [])[1] || r[7]);
+    else if (grp === 'snake') { box(d, n, 0, r[9], A12, BK); box(d, n, 1, r[10], A12, BK); }
+    else box(d, n, 0, r[15]);
+  },
+  morph() {
+    const n = grp + '_morph', d = openWin(n), r = spRow(cur);
+    (grp === 'liz' ? [11, 12, 13, 14] : [10, 11, 12, 13]).forEach((c, i) => box(d, n, i, r[c]));
+  },
+  st() { const n = 'snake_st', d = openWin(n), r = spRow(cur); box(d, n, 0, r[16], A12, BK); box(d, n, 1, r[15], A12, BK); },
+  br() { const n = 'snake_br', d = openWin(n), r = spRow(cur); box(d, n, 0, r[14]); box(d, n, 1, r[12]); },
+  img() {
+    const [t, i0] = C().img, pics = T(t, cur).map(r => r[i0]), d = openWin((LAY.windows[grp + '_img'] ? grp : 'amp') + '_img');
+    let i = 0;
+    const p = img('', 6, 26, d);
+    const cnt = label(d, 400, 668, 149, 24, '', A12, '#808080', 'center');
+    const file = f => (AF.img[f.toLowerCase()] || f).split('/').map(encodeURIComponent).join('/');
+    function show() { p.src = file(pics[i]); cnt.textContent = `[${i + 1}/${pics.length} ]`; }
+    hot(335, 666, 27, 28, d, () => { i = 0; show(); });
+    hot(365, 666, 30, 28, d, () => { if (i > 0) { i--; show(); } });
+    hot(551, 666, 27, 28, d, () => { if (i < pics.length - 1) { i++; show(); } });
+    hot(581, 666, 30, 28, d, () => { i = pics.length - 1; show(); });
+    show();
+  },
+  html() { const p = AF.html[C().html][spName(cur).toLowerCase()]; if (p) window.open(p.split('/').map(encodeURIComponent).join('/'), '_blank'); },
+  dist() {
+    const [t, ci] = C().dist, d = openWin('amp_dist');
+    const cv = el('canvas', 'position:absolute;left:3px;top:104px;', d); cv.width = 936; cv.height = 596;
+    const x = cv.getContext('2d');
+    const on = new Set(T(t, cur).map(r => LAB.indexOf(r[ci].trim().toUpperCase())).filter(i => i >= 0));
+    const P = (lon, lat) => [35 + (lon - 68.0801) * 19.47, 27 + (37.0922 - lat) * 19.45];
+    BMAP.f.forEach((polys, i) => {
+      x.beginPath();
+      polys.forEach(rings => rings.forEach(r => r.forEach(([lo, la], k) => { const [px, py] = P(lo, la); k ? x.lineTo(px, py) : x.moveTo(px, py); })));
+      x.fillStyle = on.has(i) ? 'rgb(255,255,192)' : 'rgb(227,253,230)'; x.fill('evenodd'); x.strokeStyle = '#000'; x.lineWidth = 1; x.stroke();
+    });
+    x.font = '10px Arial'; x.fillStyle = '#000'; x.textAlign = 'center'; x.textBaseline = 'middle';
+    BMAP.l.forEach(([lo, la], i) => { const [px, py] = P(lo, la); x.fillText(String(i + 1), px, py); });
+    x.textAlign = 'left'; x.textBaseline = 'top';
+    LAB.forEach((n, i) => { const c = i < 23 ? 652 : 788, row = i < 23 ? i : i - 23; x.fillStyle = on.has(i) ? '#ff0000' : '#000'; x.fillText(`${i + 1}. ${n}`, c - 3, 290 + row * 13.1); });
+  }
+};
+const LAB = ["ANDHRA PRADESH", "ARUNACHAL PRADESH", "ASSAM", "GOA", "KARNATAKA", "KERALA", "TAMILNADU", "GUJARAT", "MAHARASTRA", "ORISSA", "WEST BENGAL", "RAJASTHAN", "PUNJAB", "HARYANA", "JAMMU KASHMIR", "HIMACHAL PRADESH", "MANIPUR", "MIZORAM", "NAGALAND", "MEGHALAYA", "TRIPURA", "SIKKIM", "DELHI", "MADHYA PRADESH", "JHARKHAND", "BIHAR", "UTTAR PRADESH", "UTTARANCHAL", "CHHATISGARH", "ANDAMAN NICOBAR", "LAKSHWADEWEEP"];
+// ---- the Snake Park Movie (the original played the video CD file; here the same film, converted) ----
+function movie() {
+  const v = el('div', 'position:absolute;left:0;top:0;width:1024px;height:768px;background:#000;z-index:200000;');
+  const vid = el('video', 'position:absolute;left:112px;top:54px;width:800px;height:655px;background:#000;', v);
+  vid.src = 'movie/snakepark.mp4'; vid.controls = true; vid.autoplay = true;
+  const x = el('div', 'position:absolute;right:8px;top:6px;width:70px;height:22px;background:#d4d0c8;border:2px outset #fff;font:11px Tahoma,Verdana,Arial,sans-serif;text-align:center;line-height:20px;box-sizing:border-box;cursor:default;', v);
+  x.textContent = 'Close'; x.onclick = () => { vid.pause(); v.remove(); };
+}
+// ---- the documents the menus open ----
+const doc = f => () => window.open('Documents/' + encodeURIComponent(f), '_blank');
+// ---- menus: a tree; each open branch shows the picture of the original's menu in that state ----
+const SCI = g => () => dlgSci(g), CMN = g => () => dlgCommon(g), S = (g, k, t) => () => search(g, k, t);
+const MENU = {
+  amp: {pic: 'amp', x: 18, w: 104, items: [['Scientific Name', SCI('amp')], ['Common Name', CMN('amp')],
+    ['Search', {pic: 'amp_s', x: 125, w: 152, items: [['Search by BioticZone', S('amp', 'bgz')], ['Search by Common name', S('amp', 'cm')], ['Search by Habit', S('amp', 'habit')]]}]]},
+  mam: {pic: 'mam', x: 74, w: 104, items: [['Scientific Name', SCI('mam')], ['Common Name', CMN('mam')],
+    ['Search', {pic: 'mam_s', x: 181, w: 184, items: [['Search by Status', S('mam', 'status')], ['Search by Threats', S('mam', 'threat')], ['Search by Area of Occupancy', S('mam', 'area')], ['Search by Extent of Occurence', S('mam', 'extent')]]}],
+    ['Documents', {pic: 'mam_d', x: 181, w: 184, items: [['Checklist of Mammals of India', doc('checklist.htm')], ['List of Endemic Mammals', doc('list.htm')], ['IUCN Red List Categories', doc('redlist.htm')], ['Document on Endemic Mammals', doc('endemic desc.htm')]]}]]},
+  rep: {pic: 'rep', x: 133, w: 155, items: [
+    ['Lizards', {pic: 'rep_l', x: 291, w: 103, items: [['Scientific Name', SCI('liz')],
+      ['Search', {pic: 'rep_ls', x: 398, w: 181, items: [['Search by BioGeographic Zone', S('liz', 'bgz')], ['Search by Habit', S('liz', 'habit')], ['Search by Status', S('liz', 'status')]]}],
+      ['Documents', {pic: 'rep_ld', x: 398, w: 130, items: [['Document on Lizards', doc('distribution.htm')]]}]]}],
+    ['Snakes', {pic: 'rep_s', x: 291, w: 103, items: [['Scientific Name', SCI('snake')], ['Common Name', CMN('snake')],
+      ['Search', {pic: 'rep_ss', x: 398, w: 181, items: [['Search by BioGeographic Zone', S('snake', 'bgz')], ['Search by Common Name', S('snake', 'cm')], ['Search by Habit', S('snake', 'habit')], ['Search by Threat', S('snake', 'threat')], ['Search by Status', S('snake', 'status')]]}],
+      ['Documents', {pic: 'rep_sd', x: 398, w: 311, items: [['Bibliography', doc('bibliography.htm')], ['Identification of Snakes', doc('ident.htm')], ['Snake Venom', doc('venom.htm')], ['Value of Snake', doc('value.htm')], ['Snake bite : Symptoms, First aid, Treatment and Prevention', doc('snakebite.htm')]]}]]}],
+    ['Turtles & Tortoises', {pic: 'rep_t', x: 291, w: 103, items: [['Scientific Name', SCI('turtle')], ['Common Name', CMN('turtle')],
+      ['Search', {pic: 'rep_ts', x: 398, w: 181, items: [['Search by BioGeographic Zone', S('turtle', 'bgz')], ['Search by Common Name', S('turtle', 'cm')], ['Search by Habit', S('turtle', 'habit')], ['Search by Threat', S('turtle', 'threat')], ['Search by Status', S('turtle', 'status')]]}]]}],
+    ['Present Status of Reptiles', doc('status.htm')]]}
+};
+let menu = null, menuKey = '';
+function closeMenu() { if (menu) { menu.remove(); menu = null; menuKey = ''; } }
+function dropdown(k) {
+  const was = menuKey; closeMenu(); if (was === k) return; menuKey = k;
+  menu = el('div', 'position:absolute;left:0;top:0;width:1024px;height:0;z-index:99999;');
+  const pic = img(U + `menu_${MENU[k].pic}.png`, LAY.menus[MENU[k].pic][0], LAY.menus[MENU[k].pic][1], menu, 'pointer-events:none;');
+  const levels = [];   // the item rows of each open level
+  function setPic(p) { pic.src = U + `menu_${p}.png`; pic.style.left = LAY.menus[p][0] + 'px'; pic.style.top = LAY.menus[p][1] + 'px'; }
+  function level(node, depth, y0, parentPic) {
+    levels.slice(depth).forEach(l => l.remove()); levels.length = depth;
+    const box = el('div', 'position:absolute;left:0;top:0;', menu); levels[depth] = box;
+    let hl = null;
+    node.items.forEach(([t, v], i) => {
+      const y = y0 + 16 * i, r = el('div', `position:absolute;left:${node.x}px;top:${y}px;width:${node.w}px;height:16px;`, box);
+      r.addEventListener('mouseenter', () => {
+        if (typeof v === 'object') { setPic(v.pic); if (hl) { hl.remove(); hl = null; } level(v, depth + 1, y, v.pic); return; }
+        setPic(node.pic); levels.slice(depth + 1).forEach(l => l.remove()); levels.length = depth + 1;
+        if (hl) hl.remove();
+        hl = el('div', `position:absolute;left:${node.x}px;top:${y}px;width:${node.w}px;height:16px;background:#0a246a;color:#fff;font:11px Tahoma,Verdana,Arial,sans-serif;line-height:16px;padding-left:${depth ? 15 : 17}px;box-sizing:border-box;white-space:nowrap;pointer-events:none;`, box);
+        hl.textContent = t;
+      });
+      r.addEventListener('click', e => { e.stopPropagation(); if (typeof v === 'function') { closeMenu(); v(); } });
+    });
+  }
+  level(MENU[k], 0, 41);
+}
+// ---- Scientific Name: genus, then species ----
+function dlgSci(g) {
+  showToolbar(g);
+  const d = openWin('dlg_sci'), c = G[g], sp = AD[c.master].r;
+  const genera = [...new Set(sp.map(r => r[c.g].trim()))].filter(Boolean).sort();
+  let ge = '', s = '';
+  const f15 = '15px Arial,Helvetica,sans-serif';
+  const cs = combo(d, 155, 94, 169, 25, [], f15, '#0000c0', v => { s = v; }, {rows: 8, selHi: true});
+  combo(d, 155, 46, 169, 25, genera, f15, '#0000c0', v => { ge = v; s = ''; cs.set([...new Set(sp.filter(r => r[c.g].trim() === ge).map(r => r[c.s].trim()))].sort()); }, {rows: 8, selHi: true});
+  hot(131, 142, 66, 34, d, () => { const r = sp.find(r => r[c.g].trim() === ge && r[c.s].trim() === s); if (!r) return; d.close(); setSpecies(r[0]); });
+  hot(211, 142, 66, 34, d, () => d.close());
+}
+// ---- Common Name: language / region, then name ----
+function dlgCommon(g) {
+  showToolbar(g);
+  const [t, li, ni] = G[g].cm, d = openWin(`dlg_${g}_cm`);
+  const all = AD[t].r.map(r => [r[li].trim(), r[ni].trim(), r[0]]).filter(r => r[0] && r[1]);
+  let la = '', nm = '';
+  const f15 = '15px Arial,Helvetica,sans-serif';
+  const cn = combo(d, 107, 118, 363, 25, [], f15, BL, v => { nm = v; }, {rows: 8, lh: 17, selHi: true});
+  combo(d, 107, 62, 363, 25, [...new Set(all.map(r => r[0]))].sort(), f15, BL, v => { la = v; nm = ''; cn.set([...new Set(all.filter(r => r[0] === la).map(r => r[1]))].sort()); }, {rows: 8, lh: 17, selHi: true});
+  hot(188, 166, 64, 32, d, () => { const r = all.find(r => r[0] === la && r[1] === nm); if (!r) return; d.close(); setSpecies(r[2]); });
+  hot(275, 166, 64, 32, d, () => d.close());
+}
+// ---- the searches: a value, then the species that have it ----
+function searchData(g, k) {
+  const m = new Map(), add = (v, id) => { v = String(v || '').trim(); if (!v || v === '-') return; (m.get(v) || m.set(v, new Set()).get(v)).add(id); };
+  const each = (t, i) => AD[t].r.forEach(r => add(r[i], r[0]));
+  const master = AD[G[g].master].r;
+  if (g === 'amp') {
+    const bz = Object.fromEntries(AD.amp_BGzone_master.r.map(r => [r[0], r[1]])), hb = Object.fromEntries(AD.amp_habit_master.r.map(r => [r[0], r[1]]));
+    if (k === 'bgz') AD.amp_species_data.r.forEach(r => add(bz[r[2]], r[0]));
+    if (k === 'habit') AD.amp_species_data.r.forEach(r => add(hb[r[1]], r[0]));
+    if (k === 'cm') each('amp_common_name', 2);
+  }
+  if (g === 'mam') { if (k === 'status') master.forEach(r => add(r[9], r[0])); if (k === 'threat') each('mam_threats', 1); if (k === 'area') each('mam_area', 1); if (k === 'extent') each('mam_area', 2); }
+  if (g === 'liz') { if (k === 'bgz') each('liz_distribution', 1); if (k === 'habit') each('liz_habit', 1); if (k === 'status') each('liz_status', 1); }
+  if (g === 'snake') { if (k === 'bgz') each('snake_distribution', 1); if (k === 'cm') each('Snake_cmname', 2); if (k === 'habit') each('snake_habit', 1); if (k === 'threat') each('snake_threat', 1); if (k === 'status') each('snake_status', 1); }
+  if (g === 'turtle') { if (k === 'bgz') each('turtle_distribution', 1); if (k === 'cm') each('Turtle_cmname', 2); if (k === 'habit') each('turtle_habit', 1); if (k === 'threat') each('turtle_threat', 1); if (k === 'status') each('turtle_status', 1); }
+  return m;
+}
+function search(g, k) {
+  showToolbar(g);
+  const n = LAY.windows[`s_${g}_${k}`] ? `s_${g}_${k}` : `s_${g}_any`, d = openWin(n), m = searchData(g, k);
+  const vals = [...m.keys()].sort((a, b) => a.localeCompare(b));
+  let ids = [], pick = -1;
+  const [cx, cy, cw, ch] = F(n, 0), [lx, ly, lw, lh] = F(n, 1);
+  const lst = list(d, lx, ly, lw, lh, [], B15, GR, i => { pick = i; }, {lh: '17px', ondbl: () => ok()});
+  combo(d, cx - 2, cy - 2, cw + 22, ch + 4, vals, B15, GR, v => {
+    ids = [...m.get(v)].sort((a, b) => spName(a).localeCompare(spName(b)));
+    pick = -1; lst.set(ids.map(spName));
+  }, {rows: 8, lh: 17, selHi: true});
+  function ok() { if (pick < 0) return; d.close(); setSpecies(ids[pick]); }
+  hot(126, 229, 66, 34, d, ok); hot(212, 229, 66, 34, d, () => d.close());
+}
+</script>
+</body></html>

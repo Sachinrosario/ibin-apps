@@ -105,7 +105,7 @@ function lines(d, n, i, arr, font, lh) {
 const ACT = {
   tax() {
     const n = grp + '_tax', d = openWin(n, {title: 'Classification of ' + spName(cur)}), r = spRow(cur), [fo, co] = G[grp].taxFont;
-    G[grp].tax.forEach((c, i) => { const t = box(d, n, i, r[c], fo, co, false); t.style.padding = fo === B15 ? '2px 2px' : '3px 2px'; });
+    G[grp].tax.forEach((c, i) => { const t = box(d, n, i, r[c], fo, co, false); t.style.padding = fo === B15 ? '1px 2px' : '3px 2px'; });
   },
   cm() {
     const n = grp + '_cm', d = openWin(n);
