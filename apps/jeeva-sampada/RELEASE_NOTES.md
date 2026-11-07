@@ -1,4 +1,4 @@
-## Jeeva Sampada – 1.6.0
+## Jeeva Sampada – 1.7.0
 
 The original Jeeva Sampada program (Digital Inventory of Biological Resources of India, NBDB, Department of Biotechnology) rebuilt **screen for screen**: every window was captured from the original programs running on Windows and redrawn from those pictures, with the original data live behind them.
 
@@ -9,7 +9,8 @@ The original Jeeva Sampada program (Digital Inventory of Biological Resources of
 - **Freshwater Fin fishes & Shell fishes** (Inventorization of Prioritized Freshwater Finfishes & Shell Fishes of India), complete – all four databases with their own menus and buttons: **Finfishes** (672 species: Scientific Name, Common Name, five searches – Habitat, Status, Synonym, Characteristics, River; Taxonomic Hierarchy, Common Names, Distribution map, Synonym data, Morphology, Reference, Images, HTML), **Crabs** (30: Taxonomic, Colouration, Distribution, Synonym, Morphology, Remarks-Reference, Images, HTML; searches by Habitat, Author, Synonym), **Mollusc** (1,075: Taxonomic, Distribution, Synonym, Morphology, Remarks-Reference, Images, HTML; searches by Author, Synonym), **Prawns** (72: Taxonomic, Common Names, Distribution, Synonym, Colour-Size, Reference, Images, HTML; Common Name; searches by Habitat, Author, Synonym). All 691 original pictures and all original species pages.
 - **Amphibia, Reptilia & Mammals** (Digitized Inventory of Amphibia, Reptilia and Mammals of India), complete – its menus Amphibia · Mammals · Reptilia (Lizards, Snakes, Turtles & Tortoises, Present Status of Reptiles) · Snake Park Movie · Credits, with five databases: **Amphibia** (222 species), **Mammals** (144), **Lizards** (175), **Snakes** (203) and **Turtles & Tortoises** (39) – Scientific Name, Common Name, every search (biotic zone, common name, habit, status, threats, area of occupancy, extent of occurrence), the documents (checklist and endemic mammals, IUCN categories, lizards, snake bibliography, identification, venom, value and snake-bite first aid), and each species' windows (classification, common names, distribution map, synonyms, diagnostic characters, colour and size, habit and habitat, morphology, status and threats, breeding season, remarks and references, pictures, species pages). The Snake Park Movie (27 minutes) plays inside the app.
 - **Insects** (Digitized Inventory of Predators and Parasitoids of India), complete: Predators (295 – Scientific Name, Common Name; Taxonomic Hierarchy, Common Name, Identification of larva and adult, Prey, Images, HTML, References, Remarks) and Parasitoids (231 – Scientific Name and the original species pages), with all the original pictures and pages.
-- **Crop Pests, Natural Enemies & Pollinators** (Digitized Inventory of Crop Pests, Natural Enemies & Pollinators), new in 1.6.0, complete, with the two copies of the original merged (all pollinator records, pictures and pages): **Pests** (4,634: taxonomy, common names, distribution map, diagnostic features, host details with level of infestation, stages attacked and natural enemies, remarks and references, pictures, information documents), **Vectors**, **Natural Enemies** (distribution and insect/pest, host plant details) and **Pollinators** (associated crops), every search, and the **Links** window (pests, vectors, natural enemies, pollinators and host crops linked to each other).
+- **Crop Pests, Natural Enemies & Pollinators** (Digitized Inventory of Crop Pests, Natural Enemies & Pollinators), complete, with the two copies of the original merged (all pollinator records, pictures and pages): **Pests** (4,634: taxonomy, common names, distribution map, diagnostic features, host details with level of infestation, stages attacked and natural enemies, remarks and references, pictures, information documents), **Vectors**, **Natural Enemies** (distribution and insect/pest, host plant details) and **Pollinators** (associated crops), every search, and the **Links** window (pests, vectors, natural enemies, pollinators and host crops linked to each other).
+- **Laboratory Animals** (Digitized Inventory of Laboratory Animal Resources), new in 1.7.0, complete: Common Names and Scientific Names (23 animals, 173 strains), the List of Strains, Uses (criteria search), Lab Source; the strain buttons Nomenclature, Origin, Genetic Profiles (with their original italics and superscripts), Colour, Uses, Laboratory (map), Images and HTML; Literature (132 books with covers, search by category), the Video Clips film (67 minutes), Nomenclature Rules, Guide Lines, Suppliers, Lab Equipments and Buyer's Guide.
 - The other databases open in later updates (a message says so for now).
 
 Proprietary right holder - Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario
@@ -17,8 +18,8 @@ Proprietary right holder - Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin 
 ### Downloads
 | File | For |
 |---|---|
-| `JeevaSampada_1.6.0_Setup.exe` | Windows 10/11: installs, no administrator password |
+| `JeevaSampada_1.7.0_Setup.exe` | Windows 10/11: installs, no administrator password |
 | `JeevaSampada.exe` | Windows: runs without installing |
-| `JeevaSampada_1.6.0_universal.dmg` | macOS (Intel and Apple silicon) |
-| `JeevaSampada_1.6.0_amd64.deb` | Ubuntu 22.04 or newer |
-| `JeevaSampada_1.6.0_offline.zip` | Any computer: extract, then open `Open Kit.html` |
+| `JeevaSampada_1.7.0_universal.dmg` | macOS (Intel and Apple silicon) |
+| `JeevaSampada_1.7.0_amd64.deb` | Ubuntu 22.04 or newer |
+| `JeevaSampada_1.7.0_offline.zip` | Any computer: extract, then open `Open Kit.html` |

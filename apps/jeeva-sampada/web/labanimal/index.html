@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitized Inventory Of Laboratory Animal Resources</title>
+<link rel="icon" href="../ui/icon.png">
+<style>
+html,body{margin:0;height:100%;background:#000;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1024px;height:768px;transform-origin:0 0;background:#c0c0c0;overflow:hidden;user-select:none;-webkit-user-select:none;font-family:Tahoma,Verdana,Arial,sans-serif}
+.lst::-webkit-scrollbar{width:16px;background:#e8e6e0}
+.lst::-webkit-scrollbar-thumb{background:#d4d0c8;border:2px outset #fff}
+</style></head>
+<body>
+<script src="../classic.js"></script>
+<script src="data.js"></script>
+<script>
+"use strict";
+const {stage, el, img, hot, win, text, list, combo, label} = CL;
+const U = 'ui/';
+const A12 = '12px Arial,Helvetica,sans-serif', AB12 = 'bold 12px Arial,Helvetica,sans-serif', TR = '13px "Times New Roman",Times,serif', BK = '#000';
+let LAY = null;
+fetch(U + 'layout.json').then(r => r.json()).then(j => { LAY = j; start(); });
+const W = n => LAY.windows[n];
+const F = (n, i) => W(n).fields[i];
+const T = n => LD[n], ci = (n, c) => LD[n].c.indexOf(c);
+const strip = h => { const d = document.createElement('div'); d.innerHTML = h || ''; return d.textContent.trim(); };
+const REF = LD.ref.r, RC = k => ci('ref', k);
+const IMGS = {};   // picture files, found whatever the case of their names
+["BALB.JPG", "C57BL1.JPG", "C57bl1J.JPG", "SDR.JPG", "SHR.JPG", "cotton rat.JPG", "gerbil1.JPG", "gerbil2.JPG", "golden hamster1.JPG", "golden hamster2.JPG", "gpig1.JPG", "gpig2.JPG", "gpig3.JPG", "gpig4.JPG", "hrcdri.JPG", "marmoset.JPG", "mastomys1.JPG", "mastomys2.JPG", "rhesus1.JPG", "rhesus2.JPG", "rhesus3.JPG", "rhesus4.JPG", "rhesus5.JPG", "rhesus6.JPG", "rhesus7.JPG", "rhesus8.JPG", "white hamster1.JPG", "white hamster2.JPG", "white rabbit1.JPG", "white rabbit2.JPG", "white rabbit3.JPG"].forEach(f => { IMGS[f.toLowerCase()] = f; });
+let banner, status, cur = null, child = null, pressed = null, tbImgs = [], tbOff = null;
+const BTN = ['nomen', 'origin', 'genetic', 'colour', 'uses', 'lab', 'img', 'html'];
+const row = () => REF.find(r => r[0] === cur);
+const strain = () => strip(row()[RC('gener')]);
+function start() {
+  img(U + 'top.png', 0, 0); img(U + 'status.png', 0, 743);
+  tbOff = img(U + 'tb_off.png', 0, 38, stage, 'pointer-events:none;');
+  banner = img(U + 'banner.png', 78, 38);
+  status = label(stage, 330, 744, 680, 22, '', 'bold 15px "Times New Roman",Times,serif', '#000', 'left');
+  LAY.toolbars.tb.btns.forEach(([y0, y1], i) => hot(1, y0, 74, y1 - y0 + 1, stage, () => { if (!cur || !enabled(i)) return; press(i); ACT[BTN[i]](); }));
+  addEventListener('click', closeMenu);
+  hot(16, 19, 104, 18, stage, () => dropdown('la'));
+  hot(122, 19, 54, 18, stage, () => dropdown('lit'));
+  hot(180, 19, 63, 18, stage, () => { closeMenu(); movie(); });
+  hot(246, 19, 106, 18, stage, () => dropdown('nom'));
+  hot(356, 19, 67, 18, stage, () => { closeMenu(); page('cpcsea/cpcsea.htm'); });
+  hot(426, 19, 55, 18, stage, () => { closeMenu(); page('cpcsea/suppliers.htm'); });
+  hot(484, 19, 86, 18, stage, () => { closeMenu(); page('cpcsea/supp.htm'); });
+  hot(573, 19, 79, 18, stage, () => { closeMenu(); page('cpcsea/Buyer.htm'); });
+  hot(655, 19, 44, 18, stage, () => { closeMenu(); openWin('credits'); });
+  hot(1006, 4, 16, 14, stage, () => { location.href = '../index.html'; }, 'Close');
+}
+const page = p => window.open(p.split('/').map(encodeURIComponent).join('/'), '_blank');
+function openWin(n, opts = {}) {
+  const [x, y, w, h] = W(n).rect; if (child) child.close();
+  const d = win(U + n + '.png', x, y, w, h, Object.assign({onclose: () => { if (child === d) child = null; }}, opts));
+  child = d; banner.style.display = 'none'; return d;
+}
+function enabled(i) {
+  const r = row(), k = BTN[i];
+  if (k === 'img') return LD.images.r.some(x => strip(x[0]) === strain());
+  if (k === 'html') return true;
+  if (k === 'uses') return LD.uses.r.some(x => strip(x[1]) === strain());
+  const c = {nomen: 'nomen', origin: 'origin', genetic: 'genetic', colour: 'colour', lab: 'lab'}[k];
+  return strip(r[RC(c)]) !== '';
+}
+function setStrain(id) {
+  cur = id; status.textContent = strain();
+  tbImgs.forEach(x => x.remove()); tbImgs = []; if (pressed) { pressed.remove(); pressed = null; }
+  LAY.toolbars.tb.btns.forEach(([y0], i) => tbImgs.push(img(U + `tb_b${i}_${enabled(i) ? 'on' : 'off'}.png`, 0, y0, stage, 'pointer-events:none;')));
+  banner.style.display = 'none';
+}
+function press(i) { if (pressed) pressed.remove(); pressed = img(U + `tb_b${i}_down.png`, 0, LAY.toolbars.tb.btns[i][0], stage, 'pointer-events:none;'); }
+function rich(d, n, i, h, font) { const [x, y, w, hh] = F(n, i); const t = text(d, x, y, w, hh, ' ', font || TR, BK, {white: true, wrap: true}); t.innerHTML = h || ''; return t; }
+const ACT = {
+  nomen() { const d = openWin('nomen'), r = row(); ['nam', 'scientific', 'nomen', 'common'].forEach((k, i) => rich(d, 'nomen', i, r[RC(k)])); },
+  origin() { const d = openWin('origin'); rich(d, 'origin', 0, row()[RC('origin')], AB12); },
+  genetic() { const d = openWin('genetic'); rich(d, 'genetic', 0, row()[RC('genetic')]); },
+  colour() { const d = openWin('colour'); rich(d, 'colour', 0, row()[RC('colour')], A12); },
+  uses() {
+    const d = openWin('uses'), rows = LD.uses.r.filter(x => strip(x[1]) === strain());
+    const g = el('div', 'position:absolute;left:5px;top:45px;width:512px;height:410px;overflow-y:auto;', d);
+    const by = new Map(); rows.forEach(r => { const c = strip(r[3]); if (!by.has(c)) by.set(c, []); by.get(c).push(strip(r[4])); });
+    let y = 0;
+    for (const [c, us] of by) {
+      const h = us.length * 21;
+      el('div', `position:absolute;left:0;top:${y}px;width:222px;height:${h - 1}px;background:#fff;font:${AB12};display:flex;align-items:center;padding-left:2px;box-sizing:border-box;border-bottom:1px solid #808080;border-right:1px solid #808080;`, g).textContent = c;
+      us.forEach((u, j) => el('div', `position:absolute;left:223px;top:${y + j * 21}px;width:289px;height:20px;background:#fff;font:${AB12};line-height:20px;padding-left:2px;box-sizing:border-box;border-bottom:1px solid #808080;white-space:nowrap;overflow:hidden;`, g).textContent = u);
+      y += h;
+    }
+  },
+  lab() {
+    const d = openWin('lab'), r = row(), ph = strip(r[RC('photo')]);
+    if (ph) img('maps/' + encodeURIComponent(ph), 3, 22, d);
+    img(U + 'lab_list.png', 219, 54, d);
+    rich(d, 'lab', 0, r[RC('lab')], A12);
+  },
+  img() {
+    const f = LD.images.r.filter(x => strip(x[0]) === strain()).map(x => strip(x[1]));
+    const file = IMGS[f[0].toLowerCase()] || f[0];
+    page('Images/' + file);
+  },
+  html() { page('html/' + cur + '.htm'); }
+};
+// ---- the video clips (the original played this video-CD film) ----
+function movie() {
+  const v = el('div', 'position:absolute;left:0;top:0;width:1024px;height:768px;background:#000;z-index:200000;');
+  const vid = el('video', 'position:absolute;left:112px;top:54px;width:800px;height:655px;background:#000;', v);
+  const parts = ['movie/cutpart0.mp4', 'movie/cutpart1.mp4']; let k = 0;
+  vid.src = parts[0]; vid.controls = true; vid.autoplay = true;
+  vid.addEventListener('ended', () => { if (++k < parts.length) { vid.src = parts[k]; vid.play(); } });
+  const x = el('div', 'position:absolute;right:8px;top:6px;width:70px;height:22px;background:#d4d0c8;border:2px outset #fff;font:11px Tahoma,Verdana,Arial,sans-serif;text-align:center;line-height:20px;box-sizing:border-box;cursor:default;', v);
+  x.textContent = 'Close'; x.onclick = () => { vid.pause(); v.remove(); };
+}
+// ---- List of Strains ----
+function strains(filter) {
+  const d = openWin('strains'), rows = REF.filter(filter).sort((a, b) => strip(a[RC('gener')]).localeCompare(strip(b[RC('gener')])));
+  const [lx, ly, lw, lh] = F('strains', 0), [tx, ty, tw, th] = F('strains', 1);
+  const t = text(d, tx, ty, tw, th, '', TR, BK, {white: true, wrap: true});
+  let pick = -1;
+  list(d, lx, ly, lw, lh, rows.map(r => strip(r[RC('gener')])), 'bold 12px Arial,Helvetica,sans-serif', BK, i => { pick = i; t.textContent = strip(rows[i][RC('gener')]); }, {lh: '13px', ondbl: () => ok()});
+  function ok() { if (pick < 0) return; d.close(); setStrain(rows[pick][0]); }
+  hot(312, 450, 64, 32, d, ok); hot(392, 450, 64, 32, d, () => d.close());
+}
+const commons = [...new Set(REF.map(r => strip(r[RC('common')]).toUpperCase()).filter(Boolean))].sort();
+const scis = [...new Set(REF.map(r => strip(r[RC('scientific')])).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+// ---- Uses: criteria search ----
+function criteria() {
+  const d = openWin('criteria');
+  const [c1, c2, c3] = W('criteria').fields;
+  let cat = '', use = '', crit = [];
+  const box = text(d, c3[0], c3[1], c3[2], c3[3], '', A12, BK, {white: true});
+  const cu = combo(d, c2[0] - 2, c2[1] - 2, c2[2] + 22, c2[3] + 4, [], A12, BK, v => { use = v; }, {rows: 10, lh: 15, selHi: true});
+  combo(d, c1[0] - 2, c1[1] - 2, c1[2] + 22, c1[3] + 4, [...new Set(LD.uses.r.map(r => strip(r[3])))].filter(Boolean).sort(), A12, BK, v => { cat = v; use = ''; cu.set([...new Set(LD.uses.r.filter(r => strip(r[3]) === cat).map(r => strip(r[4])))].sort()); }, {rows: 10, lh: 15, selHi: true});
+  hot(526, 62, 46, 16, d, () => { if (!cat) return; crit.push([cat, use]); box.textContent = crit.map(([c, u]) => u ? `${c} - ${u}` : c).join(' ; '); });
+  hot(359, 159, 45, 15, d, () => {
+    if (!crit.length) return;
+    const ok = new Set(LD.uses.r.filter(r => crit.some(([c, u]) => strip(r[3]) === c && (!u || strip(r[4]) === u))).map(r => strip(r[1])));
+    strains(r => ok.has(strip(r[RC('gener')])));
+  });
+  hot(409, 159, 45, 15, d, () => { crit = []; box.textContent = ''; });
+}
+// ---- Lab Source: search by laboratory ----
+function bylab() {
+  const d = openWin('bylab'), [c1, c2] = W('bylab').fields;
+  const labs = [...new Set(REF.map(r => strip(r[RC('lab')])).filter(Boolean))].sort();
+  let rows = [], pick = -1;
+  const l = list(d, c2[0], c2[1], c2[2], c2[3], [], 'bold 12px Arial,Helvetica,sans-serif', BK, i => { pick = i; }, {lh: '13px', ondbl: () => ok()});
+  combo(d, c1[0] - 2, c1[1] - 2, c1[2] + 22, c1[3] + 4, labs, A12, BK, v => { rows = REF.filter(r => strip(r[RC('lab')]) === v); pick = -1; l.set(rows.map(r => strip(r[RC('gener')]))); }, {rows: 12, lh: 15, selHi: true});
+  function ok() { if (pick < 0) return; d.close(); setStrain(rows[pick][0]); }
+  hot(312, 424, 64, 32, d, ok); hot(392, 424, 64, 32, d, () => d.close());
+}
+// ---- Literature ----
+function books() {
+  const d = openWin('books'), [c1, c2] = W('books').fields, rs = LD.reference.r;
+  const t = text(d, c2[0], c2[1], c2[2], c2[3], ' ', TR, BK, {white: true, wrap: true});
+  const cov = el('div', `position:absolute;left:13px;top:${c2[1] + c2[3] + 4}px;width:${c2[2] + 2}px;height:${W('books').rect[3] - c2[1] - c2[3] - 12}px;overflow:auto;`, d, 'lst');
+  combo(d, c1[0] - 2, c1[1] - 2, c1[2] + 22, c1[3] + 4, rs.map(r => strip(r[1])), A12, BK, (v, i) => { t.innerHTML = rs[i][2]; cov.innerHTML = ''; img('icons/' + encodeURIComponent(strip(rs[i][3])) + '.jpg', 0, 0, cov, 'position:relative;'); }, {rows: 12, lh: 15, selHi: true});
+}
+function bycat() {
+  const d = openWin('bycat'), [c1, c2, c3] = W('bycat').fields, rs = LD.category.r;
+  const t = text(d, c3[0], c3[1], c3[2], c3[3], ' ', TR, BK, {white: true, wrap: true});
+  let sel = [];
+  const cb = combo(d, c2[0] - 2, c2[1] - 2, c2[2] + 22, c2[3] + 4, [], A12, BK, (v, i) => { t.innerHTML = sel[i][2]; }, {rows: 12, lh: 15, selHi: true});
+  combo(d, c1[0] - 2, c1[1] - 2, c1[2] + 22, c1[3] + 4, [...new Set(rs.map(r => strip(r[0])))].sort(), A12, BK, v => { sel = rs.filter(r => strip(r[0]) === v); cb.set(sel.map(r => strip(r[1]))); t.innerHTML = ''; }, {rows: 12, lh: 15, selHi: true});
+}
+// ---- menus ----
+const NOM = [['Mouse Nomenclature Home Page', 'mouse.html'], ['Quick Guide to Nomenclature for Alleles and Mutations', 'all.html'], ['Quick Guide to Nomenclature for Genes', 'short.html'], ['Rules for Nomenclature of Genes, Genetic Markers', 'gene.html'], ['Rules for Nomenclature of Mouse and Rat Strains', 'strain.html']];
+const MENU = {
+  la: {pic: 'la', x: 18, w: 109, items: [
+    ['Common Names', {pic: 'la_cm', x: 130, w: 192, items: commons.map(c => [c, () => strains(r => strip(r[RC('common')]).toUpperCase() === c)])}],
+    ['Scientific Names', {pic: 'la_sci', x: 130, w: 190, items: scis.map(c => [c, () => strains(r => strip(r[RC('scientific')]) === c)])}],
+    ['Uses', criteria], ['Lab Source', bylab]]},
+  lit: {pic: 'lit', x: 124, w: 177, items: [['Books on Laboratory Animals', books], ['Search for Books by Category', bycat]]},
+  nom: {pic: 'nom', x: 248, w: 293, items: NOM.map(([t, f]) => [t, () => page('cpcsea/' + f)])}
+};
+let menu = null, menuKey = '';
+function closeMenu() { if (menu) { menu.remove(); menu = null; menuKey = ''; } }
+function dropdown(k) {
+  const was = menuKey; closeMenu(); if (was === k) return; menuKey = k;
+  menu = el('div', 'position:absolute;left:0;top:0;width:1024px;height:0;z-index:99999;');
+  const pic = img(U + `menu_${MENU[k].pic}.png`, LAY.menus[MENU[k].pic][0], LAY.menus[MENU[k].pic][1], menu, 'pointer-events:none;');
+  const levels = [];
+  function setPic(p) { pic.src = U + `menu_${p}.png`; pic.style.left = LAY.menus[p][0] + 'px'; pic.style.top = LAY.menus[p][1] + 'px'; }
+  function level(node, depth, y0) {
+    levels.slice(depth).forEach(l => l.remove()); levels.length = depth;
+    const box = el('div', 'position:absolute;left:0;top:0;', menu); levels[depth] = box;
+    let hl = null;
+    node.items.forEach(([t, v], i) => {
+      const y = y0 + 16 * i, r = el('div', `position:absolute;left:${node.x}px;top:${y}px;width:${node.w}px;height:16px;`, box);
+      r.addEventListener('mouseenter', () => {
+        if (typeof v === 'object') { setPic(v.pic); if (hl) { hl.remove(); hl = null; } level(v, depth + 1, depth ? y : 41); return; }
+        setPic(node.pic); levels.slice(depth + 1).forEach(l => l.remove()); levels.length = depth + 1;
+        if (hl) hl.remove();
+        hl = el('div', `position:absolute;left:${node.x}px;top:${y}px;width:${node.w}px;height:16px;background:#0a246a;color:#fff;font:11px Tahoma,Verdana,Arial,sans-serif;line-height:16px;padding-left:${depth ? 6 : 17}px;box-sizing:border-box;white-space:nowrap;pointer-events:none;`, box);
+        hl.textContent = t;
+      });
+      r.addEventListener('click', e => { e.stopPropagation(); if (typeof v === 'function') { closeMenu(); v(); } });
+    });
+  }
+  level(MENU[k], 0, 41);
+}
+</script>
+</body></html>
