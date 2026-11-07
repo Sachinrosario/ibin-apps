@@ -1,4 +1,4 @@
-## Jeeva Sampada – 1.10.0
+## Jeeva Sampada – 1.11.0
 
 The original Jeeva Sampada program (Digital Inventory of Biological Resources of India, NBDB, Department of Biotechnology) rebuilt **screen for screen**: every window was captured from the original programs running on Windows and redrawn from those pictures, with the original data live behind them.
 
@@ -13,16 +13,19 @@ The original Jeeva Sampada program (Digital Inventory of Biological Resources of
 - **Laboratory Animals** (Digitized Inventory of Laboratory Animal Resources), complete: Common Names and Scientific Names (23 animals, 173 strains), the List of Strains, Uses (criteria search), Lab Source; the strain buttons Nomenclature, Origin, Genetic Profiles (with their original italics and superscripts), Colour, Uses, Laboratory (map), Images and HTML; Literature (132 books with covers, search by category), the Video Clips film (67 minutes), Nomenclature Rules, Guide Lines, Suppliers, Lab Equipments and Buyer's Guide.
 - **Silk Worms** (Digitized Inventory of Silkworm Resources – Bharatiya Resham), complete: the opening picture and main screen (About us, Foreword, Prelude, Preface, Credits and the six pictures), Silkworms ▸ Mulberry (bivoltine, multivoltine), Tropical Tasar, Oak Tasar, Eri, Muga ▸ Information and Breeds / Hybrids (108 breeds, each with its Origin, Egg, Larva, Cocoon, Pupa, Moth, Reeling and Images pages), the Search Form for each silkworm, and the twelve films of the Movies menu.
 - **Marine Resources** (Digitized Inventory of Marine Bio-Resources), complete: 4,350 species – Scientific Name, Common Name, Search by Habitat and by State, and the nine buttons Taxonomic Hierarchy, Synonyms & Common Names, Distribution, Salient Features, Major Publications, Images (5,700 pictures), References, List of Indian Experts and HTML (641 species pages). The notes the original opened in Notepad/WordPad open in a new window.
-- **Plant Resources – Sasya Sampada** (Medicinal & Economically Important Plants), new in 1.10.0, complete: Species Details ▸ Vernacular Names/Common Names, Scientific Names, Species List By Major Category, Criteria Search through DataBase and through Webpages; and the ten buttons for a plant – Taxonomic Hierarchy, Common Names, Synonym Data (the floras that list it), Distribution Data (the thematic grid map), HTML Files (2,600 original plant pages), Images, Accession Details, Uses and Actions, Pest Links and Patents (26,900 patents). 1,956 plants.
-- Microbial Resources opens in the next update (a message says so for now).
+- **Plant Resources – Sasya Sampada** (Medicinal & Economically Important Plants), complete: Species Details ▸ Vernacular Names/Common Names, Scientific Names, Species List By Major Category, Criteria Search through DataBase and through Webpages; and the ten buttons for a plant – Taxonomic Hierarchy, Common Names, Synonym Data (the floras that list it), Distribution Data (the thematic grid map), HTML Files (2,600 original plant pages), Images, Accession Details, Uses and Actions, Pest Links and Patents (26,900 patents). 1,956 plants.
+- **Microbial Resources** (Inventory Of Microbial Resources Of India), new in 1.11.0: the opening map and About, the introduction page with its summary of records, the search by name with its Search Results, the nine group pages (Actinomycetes, Algae, Bacteria, Consortium, Fungi, Mycorrhiza, Plasmids, Viruses, Yeasts), the genus pages, the species lists and strains (37,700 strains), and the full Preview of each strain (general information, history of the culture, growth and maintenance, preservation, patents and other information), with Help.
+
+All eleven databases of Jeeva Sampada are now in the app.
 
 Proprietary right holder - Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario
 
 ### Downloads
 | File | For |
 |---|---|
-| `JeevaSampada_1.10.0_Setup.exe` | Windows 10/11: installs, no administrator password |
+| `JeevaSampada_1.11.0_Setup.exe` | Windows 10/11: installs, no administrator password |
 | `JeevaSampada.exe` | Windows: runs without installing |
-| `JeevaSampada_1.10.0_universal.dmg` | macOS (Intel and Apple silicon) |
-| `JeevaSampada_1.10.0_amd64.deb` | Ubuntu 22.04 or newer |
-| `JeevaSampada_1.10.0_offline.zip` | Any computer: extract, then open `Open Kit.html` |
+| `JeevaSampada_1.11.0_apple-silicon.dmg` | macOS on Apple silicon (M1 and newer) |
+| `JeevaSampada_1.11.0_intel.dmg` | macOS on Intel Macs |
+| `JeevaSampada_1.11.0_amd64.deb` | Ubuntu 22.04 or newer |
+| `JeevaSampada_1.11.0_offline.zip` | Any computer: extract, then open `Open Kit.html` |

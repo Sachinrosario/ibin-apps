@@ -247,13 +247,24 @@ jobs:
         working-directory: apps/${{ matrix.app }}
         run: |
           npm install
-          npx tauri build --target universal-apple-darwin --bundles dmg
-          cp src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg ${{ steps.info.outputs.base }}_${{ steps.info.outputs.version }}_universal.dmg
+          B=${{ steps.info.outputs.base }}_${{ steps.info.outputs.version }}
+          # a very large app is built as two .dmg files (one per kind of Mac), so each stays under GitHub's 2 GB file limit
+          if [ "$(jq -r '.macSplit // false' release.json)" = true ]; then
+            npx tauri build --target aarch64-apple-darwin --bundles dmg
+            cp src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg ${B}_apple-silicon.dmg
+            rm -rf src-tauri/target/aarch64-apple-darwin
+            npx tauri build --target x86_64-apple-darwin --bundles dmg
+            cp src-tauri/target/x86_64-apple-darwin/release/bundle/dmg/*.dmg ${B}_intel.dmg
+          else
+            npx tauri build --target universal-apple-darwin --bundles dmg
+            cp src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg ${B}_universal.dmg
+          fi
+          ls -la *.dmg
       - name: Attach to release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: apps/${{ matrix.app }}
-        run: gh release upload "${{ steps.info.outputs.tag }}" ${{ steps.info.outputs.base }}_${{ steps.info.outputs.version }}_universal.dmg --clobber
+        run: gh release upload "${{ steps.info.outputs.tag }}" ${{ steps.info.outputs.base }}_${{ steps.info.outputs.version }}_*.dmg --clobber
 
   offline-zip:
     needs: [prepare, release]

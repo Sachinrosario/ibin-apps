@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inventory Of Microbial Resources Of India</title>
+<link rel="icon" href="../ui/icon.png">
+<style>
+html,body{margin:0;height:100%;background:#000;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1024px;height:768px;transform-origin:0 0;background:#d4d0c8;overflow:hidden;user-select:none;-webkit-user-select:none;font-family:Tahoma,Verdana,Arial,sans-serif}
+.lst::-webkit-scrollbar{width:16px;height:16px;background:#e8e6e0}
+.lst::-webkit-scrollbar-thumb{background:#d4d0c8;border:2px outset #fff}
+iframe{position:absolute;border:0;background:#fff}
+.gc{position:absolute;box-sizing:border-box;border-right:1px solid #c0c0c0;border-bottom:1px solid #c0c0c0;padding:0 2px;font:11px Arial,Helvetica,sans-serif;white-space:nowrap;overflow:hidden;line-height:14px;height:15px}
+</style></head>
+<body>
+<script src="../classic.js"></script>
+<script>
+"use strict";
+const {stage, el, img, hot, list, label} = CL;
+const U = 'ui/';
+let CORE = null;
+fetch('data/core.json').then(r => r.json()).then(c => { CORE = c; splash(); });
+const recs = {};
+// strain records are kept in 64 parts by a checksum of the record number (as the data builder wrote them)
+const crc = s => { let c = ~0; for (let i = 0; i < s.length; i++) { c ^= s.charCodeAt(i); for (let k = 0; k < 8; k++) c = (c >>> 1) ^ (0xEDB88320 & -(c & 1)); } return (~c >>> 0); };
+const rec = async k => { k = k.toUpperCase(); const n = crc(k) % 64; recs[n] = recs[n] || fetch(`data/rec/${n}.json`).then(r => r.json()); return (await recs[n])[k]; };
+const GROUPS = ['Actinomycetes', 'Algae', 'Bacteria', 'Consortium', 'Fungi', 'Mycorrhiza', 'Plasmids', 'Viruses', 'Yeasts'];
+let scr = null, help = null;
+function screen(bg) { if (scr) scr.remove(); scr = el('div', 'position:absolute;left:0;top:0;width:792px;height:600px;'); img(U + bg, 0, 0, scr); hot(0, 18, 58, 20, scr, showHelp); return scr; }
+function frame(x, y, w, h, src, parent) { const f = el('iframe', `left:${x}px;top:${y}px;width:${w}px;height:${h}px;`, parent || scr); f.src = src; return f; }
+function showHelp() {
+  if (help) { help.remove(); help = null; return; }
+  help = el('div', 'position:absolute;left:400px;top:0;width:410px;height:330px;background:#d4d0c8;border:2px outset #fff;z-index:900;');
+  el('div', 'height:18px;background:linear-gradient(90deg,#0a246a,#a6caf0);color:#fff;font:bold 11px Tahoma,Verdana,Arial,sans-serif;line-height:18px;padding-left:4px;', help).textContent = 'Help';
+  hot(388, 2, 16, 14, help, () => { help.remove(); help = null; });
+  frame(2, 20, 402, 304, 'Help/Main.htm', help);
+}
+// ---- the opening map, then the introduction page ----
+function splash() {
+  const s = screen('splash.png');
+  hot(1006, 4, 16, 14, stage, () => { location.href = '../index.html'; }, 'Close');
+  hot(361, 16, 26, 20, s, intro);
+  hot(6, 12, 26, 14, s, () => window.open('Help/Main.htm', '_blank'));
+}
+function intro() {
+  const s = screen('intro.png');
+  frame(11, 90, 775, 465, 'HtmlPage/Intro/microbes_intro.htm');
+  hot(714, 58, 30, 30, s, splash); hot(746, 58, 30, 30, s, () => group('Actinomycetes'));
+  const inp = el('input', 'position:absolute;left:403px;top:561px;width:286px;height:20px;border:0;font:12px Arial,Helvetica,sans-serif;padding:0 3px;box-sizing:border-box;outline:none;', s);
+  const go = () => results(inp.value.trim());
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+  hot(713, 560, 64, 23, s, go);
+}
+// ---- search: the matching groups, genera and species ----
+function results(q) {
+  if (!q) return;
+  const ql = q.toLowerCase(), out = [];
+  Object.entries(CORE.groups).forEach(([g, gs]) => Object.entries(gs).forEach(([ge, ids]) => {
+    // as the original: the groups that have a genus of that name
+    if (ge.toLowerCase() === ql) out.push([g, ge, '', null]);
+  }));
+  const p = el('div', 'position:absolute;left:142px;top:52px;width:260px;height:236px;background:#000080;border:2px solid #000080;', scr);
+  label(p, 3, 0, 200, 12, 'Search Results', 'bold 10px Arial,Helvetica,sans-serif', '#fff');
+  const g = el('div', 'position:absolute;left:3px;top:12px;width:246px;height:196px;background:#c0ffc0;overflow:auto;', p, 'lst');
+  const hd = ['S.No.', 'Group', 'Genus', 'Species'], W = [20, 62, 75, 75];
+  let x = 0; hd.forEach((h, i) => { const c = el('div', `left:${x}px;top:0;width:${W[i]}px;background:#00ffff;`, g, 'gc'); c.textContent = h; x += W[i]; });
+  let pick = -1; const rows = [];
+  out.forEach((r, j) => {
+    let xx = 0; const cells = [];
+    [j + 1, r[0], r[1], r[2]].forEach((v, i) => { const c = el('div', `left:${xx}px;top:${15 + j * 15}px;width:${W[i]}px;background:#ffff99;`, g, 'gc'); c.textContent = v; c.onclick = () => { rows.forEach(rr => rr.forEach(cc => { cc.style.background = '#ffff99'; })); cells.forEach(cc => { cc.style.background = '#00ffff'; }); pick = j; }; cells.push(c); xx += W[i]; });
+    rows.push(cells);
+  });
+  const btn = (x2, t, f) => { const b = el('div', `position:absolute;left:${x2}px;top:213px;width:38px;height:14px;background:#00ffff;font:9px Arial,Helvetica,sans-serif;text-align:center;line-height:14px;cursor:default;`, p); b.textContent = t; b.onclick = f; };
+  btn(78, 'Go', () => { if (pick < 0) return; const r = out[pick]; p.remove(); r[3] ? species(r[0], r[1], r[3]) : genus(r[0], r[1]); });
+  btn(128, 'Close', () => p.remove());
+}
+// ---- a group's page ----
+function group(g) {
+  const s = screen('group.png');
+  frame(140, 78, 638, 512, 'HtmlPage/group/' + g + '.htm');
+  GROUPS.forEach((n, i) => { const b = hot(8, 34 + i * 62, 130, 44, s, () => group(n)); if (n === g) { const l = label(s, 8, 42 + i * 62, 130, 22, n, 'bold 15px Arial,Helvetica,sans-serif', '#ff0000', 'center'); l.style.background = '#66cc66'; l.style.pointerEvents = 'none'; } });
+  hot(710, 30, 30, 30, s, intro); hot(742, 30, 30, 30, s, () => genus(g));
+}
+// ---- a group's genera ----
+function genusPage(g, ge) {
+  const pic = CORE.pics[(g + '/' + ge).toLowerCase()];
+  const d = CORE.gdesc[g + '|' + ge];
+  const body = d ? `<FONT FACE='Verdana,Geneva,Arial,Helvetica,Sans Serif' color='#00008B'>${d}</FONT>` : `<FONT FACE='Verdana,Geneva,Arial,Helvetica,Sans Serif' color='#00008B'>Description yet to be incorporated.</FONT>`;
+  return `<HTML><BODY background='HtmlPage/Intro/Back06.jpg'><CENTER><TABLE BORDER='8' BORDERCOLOR='#A52A2A' CELLSPACING='4' CELLPADDING='5' Align='Center' WIDTH='500'><TR><TH bgcolor='#ffffcc'><font color='#A52A2A' size=5 face='Verdana'> GENUS :${ge}</font></TH></TR><TR><TD><center>${pic ? `<IMG SRC='HtmlPage/${pic}' width=450 height=200>` : `<IMG SRC='HtmlPage/Intro/micro.jpg' width=450 height=200 alt=' Picture Not Available'>`}</center></TD><TR><TD>${body}</TD></TR></table></BODY></HTML>`;
+}
+function genus(g, sel) {
+  const s = screen('genus.png'), gs = CORE.groups[g] || {}, names = Object.keys(gs);
+  label(s, 18, 42, 190, 18, 'Group: ' + g, 'bold 14px Arial,Helvetica,sans-serif', '#000080');
+  label(s, 12, 112, 190, 18, 'Total Genus  = ' + names.length, 'bold 14px Arial,Helvetica,sans-serif', '#000080');
+  const fr = frame(214, 86, 562, 504, 'HtmlPage/Intro/GenusPage9999.htm');
+  let cur = sel || '', lst = null;
+  const show = ge => { cur = ge; fr.removeAttribute('src'); fr.srcdoc = genusPage(g, ge).replace(/'HtmlPage/g, "'" + new URL('HtmlPage', location.href).href); };
+  const inp = el('input', 'position:absolute;left:10px;top:222px;width:197px;height:20px;border:0;font:12px Arial,Helvetica,sans-serif;padding:0 3px;box-sizing:border-box;outline:none;', s);
+  const fill = () => { if (lst) return; lst = list(s, 10, 246, 196, 268, names, '12px Arial,Helvetica,sans-serif', '#000', (i, n) => show(n), {lh: '15px', select: names.indexOf(cur)}); };
+  inp.addEventListener('input', () => { fill(); const i = names.findIndex(n => n.toLowerCase().startsWith(inp.value.toLowerCase())); if (i >= 0) { lst.set(names, i); lst.children[i].scrollIntoView({block: 'nearest'}); show(names[i]); } });
+  hot(24, 164, 162, 40, s, fill);
+  if (sel) { fill(); show(sel); }
+  hot(712, 32, 30, 28, s, () => group(g)); hot(744, 32, 30, 28, s, () => { if (cur) species(g, cur); });
+}
+// ---- a genus' species and their strains ----
+function species(g, ge, selId) {
+  const s = screen('species.png'), all = (CORE.groups[g] || {})[ge] || [], nameOf = i => [CORE.sp[i][2], CORE.sp[i][3]].filter(Boolean).join(' ').trim();
+  // one line per species name, as the original lists them (several records can share a name)
+  const names = [...new Set(all.map(nameOf))], byName = n => all.filter(i => nameOf(i) === n), ids = names.map(n => byName(n)[0]);
+  label(s, 10, 50, 200, 18, 'Group: ' + g, 'bold 14px Arial,Helvetica,sans-serif', '#000080');
+  label(s, 10, 70, 200, 18, 'Genus: ' + ge, 'bold 14px Arial,Helvetica,sans-serif', '#000080');
+  label(s, 12, 106, 200, 18, 'Total Species = ' + ids.length, 'bold 14px Arial,Helvetica,sans-serif', '#000080');
+  const tot = label(s, 238, 104, 300, 16, 'Total Strains', 'bold 12px Arial,Helvetica,sans-serif', '#fff');
+  const grid = el('div', 'position:absolute;left:228px;top:130px;width:534px;height:430px;overflow:auto;', s, 'lst');
+  let pick = -1, rows = [], si = selId ? names.indexOf(nameOf(selId)) : -1, lst = null;
+  const inp = el('input', 'position:absolute;left:10px;top:215px;width:197px;height:19px;border:0;font:12px Arial,Helvetica,sans-serif;padding:0 3px;box-sizing:border-box;outline:none;', s);
+  const fill = () => { if (lst) return; lst = list(s, 10, 238, 180, 208, names, '12px Arial,Helvetica,sans-serif', '#000', i => { si = i; }, {lh: '15px', select: si}); };
+  inp.addEventListener('input', () => { fill(); const i = names.findIndex(n => n.toLowerCase().startsWith(inp.value.toLowerCase())); if (i >= 0) { si = i; lst.set(names, i); lst.children[i].scrollIntoView({block: 'nearest'}); } });
+  hot(30, 160, 162, 40, s, fill);
+  const H = ['recno', 'species', 'State', 'District', 'Town', 'Village'], WD = [80, 100, 100, 100, 100, 100];
+  function search() {
+    if (si < 0) return;
+    rows = byName(names[si]).flatMap(i => (CORE.strains[i] || []).map(r => [...r, i])); pick = -1; grid.innerHTML = '';
+    tot.textContent = 'Total Strains = ' + rows.length;
+    let x = 0; H.forEach((h, i) => { const c = el('div', `left:${x}px;top:0;width:${WD[i]}px;background:#000080;color:#fff;font-weight:bold;`, grid, 'gc'); c.textContent = h; x += WD[i]; });
+    const cells = [];
+    rows.forEach((r, j) => {
+      let xx = 0; const rc = [];
+      [r[0], CORE.sp[r[6]][2], r[1], r[2], r[3], r[4]].forEach((v, i) => { const c = el('div', `left:${xx}px;top:${15 + j * 15}px;width:${WD[i]}px;background:${i === 1 ? '#ffffe0' : '#c0ffc0'};`, grid, 'gc'); c.textContent = v; c.onclick = () => { cells.forEach((cc, k) => cc.forEach((q, m) => { q.style.background = m === 1 ? '#ffffe0' : '#c0ffc0'; })); rc.forEach(q => { q.style.background = '#00ffff'; }); pick = j; }; c.ondblclick = preview; rc.push(c); xx += WD[i]; });
+      cells.push(rc);
+    });
+  }
+  async function preview() { if (pick < 0) return; const r = rows[pick], d = await rec(r[0]); showPreview(r[0], CORE.sp[r[6]], d); }
+  hot(22, 478, 162, 30, s, search); hot(22, 535, 162, 30, s, preview);
+  hot(742, 34, 30, 26, s, () => genus(g, ge));
+  if (selId) { fill(); search(); }
+}
+// ---- Preview: the strain's full record, in the original's page layout ----
+const e = v => CL.esc(v || '');
+function showPreview(no, s, d) {
+  const h = d.h || {}, g = d.g || {}, p = d.p || {}, sp8 = '&nbsp;'.repeat(14), pic = CORE.pics[(s[0] + '/' + s[1]).toLowerCase()];
+  const yn = v => e(v || 'Do not know');
+  const html = `<HTML><BODY Background='HtmlPage/Intro/Back06.jpg' style="font-family:Lato,Verdana,Arial,sans-serif;color:#808080"><CENTER>
+<TABLE BORDER='6' BORDERCOLOR='#A52A2A' CELLSPACING='4' CELLPADDING='5' Align='Center' WIDTH='700'>
+<TR><TH bgcolor='#00ffc0'><FONT color='Red'>${e(s[1])}</FONT></TH><TH bgcolor='#00ffc0'><FONT color='RED'>General Information</FONT></TH></TR>
+<TR><TD width=300><center>${pic ? `<IMG SRC='HtmlPage/${pic}' width='300' height='200'>` : 'Picture Not Available'}</center></TD><TD width=400>
+Record Number :<b style="color:#000"> ${e(no)}</b><br>Co-ordinator's Name : ${e(d.co)}<br>Group : <b style="color:#000">${e(s[0])}</b><br>Family : <b style="color:#000">${e(s[5])}</b><br>Genus : <b style="color:#000">${e(s[1])}</b><br>Species : <b style="color:#000">${e(s[2])}</b><br>Authority : <b style="color:#000">${e(s[4])}</b><br>Variety : <b style="color:#000">${e(s[3])}</b><br>Strain Designation : <b style="color:#000">${e(d.st)}</b><br>Old Name/Synonym : <b style="color:#000">${e(d.sy.join(', '))}</b><br>Culture :<br>
+${sp8}Availability : <b style="color:#000">${e(d.cu)}</b><br>${sp8}Deposited Culture Collection : <b style="color:#000">${e(d.dc.join(', '))}</b><br>${sp8}Other Location : <b style="color:#000">${e(d.el)}</b><br></TD>
+<TR><TH colspan=2 bgcolor='#00ffc0'><FONT color='RED'>History Of The Culture</FONT></TH></TR>
+<TR><TD colspan=2 style="color:#000">Person/Collection from which the culture is recieved :<br>Name: ${e(h.Name)}<br>Institution: ${e(h.Institution)}<br>City: ${e(h.City)}<br>State: ${e(h.state)}<br>
+Isolated From (Habitat) : ${e(h.Habitat)} ${e(h['Plant parts or Animal'])}<br>Isolated From (Geographical) :<br>${sp8}Village : ${e(h['Isolated from Village'])}${sp8}Town/City : ${e(h['Isolated from Town or City'])}<br>${sp8}District : ${e(h['Isolated from District'])}${sp8}State : ${e(h['Isolated from State'])}<br>
+Isolated By : ${e(h['Isolated by'])}${sp8}Date : ${e(h['Isolated date'])}<br>Identified By : ${e(h['Identified by'])}${sp8}Date : ${e(h['Identified date'])}<br>
+<b><u>Hazardous to</u></b> :<br><b>Human</b> : ${yn(h.Human)}<br><b>Animal</b> : ${yn(h.Animal)}<br><b>Plants</b> : ${yn(h.Plants)}<br><b>Other Microbes</b> : ${yn(h['Other microbes'])}<br><b>Environment</b> : ${yn(h.Environment)}<br></TD></TR>
+<TR><TH colspan=2 bgcolor='#00ffc0'><FONT color='RED'>Growth & Maintenance</FONT></TH></TR>
+<TR><TD colspan=2 style="color:#000"><b>Medium</b> :<br>${sp8}<b>For Isolation</b> : ${e(g.Isolation)}<br>${sp8}<b>For Maintenance</b> : ${e(g.Maintenance)}<br><b>Growth Temperature</b> : ${e(g['Growth temperature'])}${sp8}<b>Incubation Time</b> : ${e(g['Incubation time'])}${sp8}<b>Subculturing Period</b> : ${e(g['Subculturing period'])}<br><b>Growth Conditions</b> : ${e(g['Growth conditions'])}<br></TD></TR>
+<TR><TH colspan=2 bgcolor='#00ffc0'><FONT color='RED'>Preservation</FONT></TH></TR>
+<TR><TD colspan=2 style="color:#000"><b>Methods Of Preservation</b> :<br><b>In liquid nitrogen -196 degree</b> : ${yn(p['in liquid nitrogen 196 degree'])}<br><b>By freeze drying</b> : ${yn(p['by freeze drying'])}<br><b>In active culture</b> : ${yn(p['in active culture'])}<br><b>storage under mineral oil</b> : ${yn(p['storage under mineral oil'])}<br><b>Storage at 4 degree</b> : ${yn(p['storage at 4 degree'])}<br><b>Any other method</b> : ${e(p['Any other method'])}</TD></TR>
+<TR><TH colspan=2 bgcolor='#00ffc0'><FONT color='RED'>Patent Information</FONT></TH></TR>
+<TR><TD colspan=2 style="color:#000"><b>Patent(Product)</b> : ${e(p['Patent Product'])}<br><b>Patent(Process)</b> : ${e(p['Patent Process'])}<br><b>Technology Transfer</b> : ${e(p['Technology transfer'])}</TD></TR>
+<TR><TH colspan=2 bgcolor='#00ffc0'><FONT color='RED'>Other Information</FONT></TH></TR>
+<TR><TD colspan=2 style="color:#000"><b>Distinctive Features</b> : ${e(d.fe.join('; '))}<br><b>Marker Type</b> : ${e(d.mk.map(m => m.filter(x => x && x !== '--').join(' - ')).filter(Boolean).join('; '))}<br><b>Organism Is Important For</b> : ${e(d.fi.map(f => f[0] + (f[1] ? ' – ' + f[1] : '')).join('; '))}<br><br>
+<b>Special Usage</b> : ${e(p['Special usage'])}<br><b>Any Other Information</b> : ${e(p['Any other information'])}<br><b>References</b> : ${e(d.rf.join('; '))}<br>
+<b>Provider Of Data</b> : ${e(p['Provider Name'])}<br><b>Address1</b> : ${e(p['Provider address1'])} ${e(p['Provider address2'])}<br><br><b>Collector Of Data</b> : ${e(p['Collector Name'])}<br><b>Address1</b> : ${e(p['Collector address1'])} ${e(p['Collector address2'])}<br><br></TD></TR>
+</table></BODY></HTML>`;
+  const w = el('div', 'position:absolute;left:0;top:0;width:792px;height:600px;z-index:800;');
+  img(U + 'preview.png', 0, 0, w);
+  const f = el('iframe', 'left:4px;top:85px;width:788px;height:505px;', w); f.srcdoc = html.replace(/'HtmlPage/g, "'" + new URL('HtmlPage', location.href).href);
+  hot(698, 62, 44, 18, w, () => f.contentWindow.print()); hot(745, 62, 44, 18, w, () => w.remove());
+}
+</script>
+</body></html>
