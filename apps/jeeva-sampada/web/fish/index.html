@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inventorization Of Prioritized Freshwater Finfishes &amp; Shell Fishes Of India</title>
+<link rel="icon" href="../ui/icon.png">
+<style>
+html,body{margin:0;height:100%;background:#000;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1024px;height:768px;transform-origin:0 0;background:#d0c8ac;overflow:hidden;user-select:none;-webkit-user-select:none;font-family:Tahoma,Verdana,Arial,sans-serif}
+.lst::-webkit-scrollbar{width:16px;background:#e8e6e0}
+.lst::-webkit-scrollbar-thumb{background:#d4d0c8;border:2px outset #fff}
+</style></head>
+<body>
+<script src="../classic.js"></script>
+<script src="data.js"></script>
+<script src="map.js"></script>
+<script>
+"use strict";
+const {stage, el, img, hot, win, text, list, combo, label} = CL;
+const U = 'ui/';
+const A12 = '12px Arial,Helvetica,sans-serif', B15 = 'bold 15px Arial,Helvetica,sans-serif', GR = '#008000';
+let LAY = null;
+fetch(U + 'layout.json').then(r => r.json()).then(j => { LAY = j; start(); });
+const W = n => LAY.windows[n];
+const F = (n, i) => W(n).fields[i];
+const has = v => v != null && String(v).trim() !== '';
+// ---- the four databases of the program ----
+const G = {
+  fin: {tb: 'fin', photo: 'Fish photo/', html: ['Fish Html', 'Fish.htm'], items: ['Scientific Name', 'Common Name', 'Search'],
+    subs: [['hab', 'Search by Habitat'], ['status', 'Search by Status'], ['syn', 'Search by Synonym'], ['char', 'Search by Characteristics'], ['river', 'Search by River']],
+    btns: ['tax', 'cm', 'dist', 'syn', 'morph', 'ref', 'img', 'html'], tax: [9, 10, 11, 7, 8, 4, 5, 6, 1, 2, 18], taxFont: [B15, GR]},
+  crab: {tb: 'crab', photo: 'Crab photo/', html: ['Crab Html', 'Crabs.htm'], items: ['Scientific Name', 'Search'],
+    subs: [['hab', 'Search by Habitat'], ['author', 'Search by Author'], ['syn', 'Search by Synonym']],
+    btns: ['tax', 'col', 'dist', 'syn', 'morph', 'rr', 'img', 'html'], tax: [4, 5, 6, 7, 8, 9, 1, 2, 10], taxFont: [A12, '#0000ff']},
+  mol: {tb: 'mol', photo: 'Mollusc photo/', html: ['Mollusc Html', 'Mollusc.htm'], items: ['Scientific Name', 'Search'],
+    subs: [['author', 'Search by Author'], ['syn', 'Search by Synonym']],
+    btns: ['tax', 'dist', 'syn', 'morph', 'rr', 'img', 'html'], tax: [5, 6, 7, 4, 1, 2, 8, 9], taxFont: [A12, '#0000ff']},
+  prawn: {tb: 'prawn', photo: 'prawn photo/', html: ['Prawn Html', 'Prawns.htm'], items: ['Scientific Name', 'Common Name', 'Search'],
+    subs: [['hab', 'Search by Habitat'], ['author', 'Search by Author'], ['syn', 'Search by Synonym']],
+    btns: ['tax', 'cm', 'dist', 'syn', 'cs', 'ref', 'img', 'html'], tax: [4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 13, 14], taxFont: [B15, GR]}
+};
+const MENUBAR = [['fin', 15, 71], ['crab', 71, 113], ['mol', 113, 162], ['prawn', 162, 211]];
+let banner, status, grp = null, cur = null, child = null, pressed = null, tbImgs = [], tbOff = null, btnHots = [];
+const D = () => FD[grp];
+const spRow = id => D().sp.find(r => r[0] === id);
+const spName = id => { const r = spRow(id); return r ? (r[3] || (r[1] + ' ' + r[2])).trim() : ''; };
+function start() {
+  img(U + 'top.png', 0, 0); img(U + 'status.png', 0, 743);
+  banner = img(U + 'banner.png', 0, 38);
+  status = label(stage, 348, 744, 670, 22, '', 'bold 15px Arial,Helvetica,sans-serif', '#000', 'left');
+  addEventListener('click', closeMenu);
+  MENUBAR.forEach(([g, x0, x1]) => hot(x0, 19, x1 - x0, 18, stage, () => dropdown(g)));
+  hot(211, 19, 47, 18, stage, () => { closeMenu(); openWin('credits'); });
+  hot(1006, 4, 16, 14, stage, () => { location.href = '../index.html'; }, 'Close');
+  const q = new URLSearchParams(location.search), qg = (q.get('g') || '').trim().toLowerCase(), qs = (q.get('s') || '').trim().toLowerCase();
+  if (qg) for (const g of ['fin', 'crab', 'mol', 'prawn']) {
+    const r = FD[g].sp.find(r => r[1].trim().toLowerCase() === qg && r[2].trim().toLowerCase() === qs);
+    if (r) { showToolbar(g); setSpecies(r[0]); break; }
+  }
+}
+// ---- windows ----
+function openWin(n, opts = {}) {
+  const [x, y, w, h] = W(n).rect; if (child) child.close();
+  const d = win(U + n + '.png', x, y, w, h, Object.assign({onclose: () => { if (child === d) child = null; }}, opts));
+  child = d; banner.style.display = 'none'; return d;
+}
+// the toolbar of a database is shown (all greyed) as soon as one of its windows opens
+function showToolbar(g) {
+  if (grp === g && tbOff) return;
+  grp = g; cur = null; status.textContent = '';
+  if (tbOff) tbOff.remove(); tbImgs.forEach(x => x.remove()); tbImgs = []; btnHots.forEach(x => x.remove()); btnHots = [];
+  if (pressed) { pressed.remove(); pressed = null; }
+  tbOff = img(U + G[g].tb + '_off.png', 0, 38, stage, 'pointer-events:none;');
+  LAY.toolbars[G[g].tb].btns.forEach(([y0, y1], i) => btnHots.push(hot(1, y0, 74, y1 - y0 + 1, stage, () => { if (!cur || !enabled(i)) return; press(i); ACT[G[grp].btns[i]](); })));
+  banner.style.display = 'none';
+}
+function enabled(i) {
+  const d = D(), id = cur, k = G[grp].btns[i];
+  switch (k) {
+    case 'tax': return true;
+    case 'cm': return !!(d.cm[id] || []).length;
+    case 'dist': return !!(d.di[id] || []).length;
+    case 'syn': return !!(d.sy[id] || []).length;
+    case 'morph': return !!d.mo[id];
+    case 'ref': return grp === 'fin' ? !!d.rf[id] : !!d.o1[id];
+    case 'rr': return grp === 'crab' ? !!d.rr[id] : !!d.mo[id];
+    case 'col': return has(d.co[id]);
+    case 'cs': return !!d.ot[id];
+    case 'img': return !!(d.im[id] || []).length;
+    case 'html': return FD.hx[grp].includes(spName(id));
+  }
+}
+function setSpecies(id) {
+  cur = id; status.textContent = spName(id);
+  tbImgs.forEach(x => x.remove()); tbImgs = [];
+  LAY.toolbars[G[grp].tb].btns.forEach(([y0], i) => tbImgs.push(img(U + `${G[grp].tb}_b${i}_${enabled(i) ? 'on' : 'off'}.png`, 0, y0, stage, 'pointer-events:none;')));
+  press(0); ACT.tax();
+}
+function press(i) { if (pressed) pressed.remove(); pressed = img(U + `${G[grp].tb}_b${i}_down.png`, 0, LAY.toolbars[G[grp].tb].btns[i][0], stage, 'pointer-events:none;'); }
+const box = (d, n, i, v, font, color, wrap) => { const [x, y, w, h] = F(n, i); return text(d, x, y, w, h, v, font || A12, color || GR, {white: true, wrap: wrap !== false}); };
+// a list box of lines; the first line carries the dotted focus rectangle, as in the original
+function lines(d, n, i, arr, font, lh) {
+  const [x, y, w, h] = F(n, i);
+  return list(d, x, y, w, h, arr, font || '13px Arial,Helvetica,sans-serif', GR, null, {select: arr.length ? 0 : -1, dotOnly: true, lh: (lh || 15) + 'px'});
+}
+const ACT = {
+  tax() {
+    const n = grp + '_tax', d = openWin(n, {title: 'Classification of ' + spName(cur)}), r = spRow(cur), [fo, co] = G[grp].taxFont;
+    G[grp].tax.forEach((c, i) => { const t = box(d, n, i, r[c], fo, co, false); t.style.padding = fo === B15 ? '2px 2px' : '3px 2px'; });
+  },
+  cm() {
+    const n = grp + '_cm', d = openWin(n);
+    const rows = (D().cm[cur] || []).map(([nm, lang]) => [lang, nm]).sort((a, b) => a[0].localeCompare(b[0]) || a[1].localeCompare(b[1]));
+    lines(d, n, 0, rows.map(([l, nm]) => `${l}  ---  ${nm}`));
+  },
+  syn() {
+    const n = grp + '_syn', d = openWin(n), rows = D().sy[cur] || [];
+    lines(d, n, 0, rows.map(r => grp === 'crab' ? `${r[2]}  ---  ${r[6]}` : `${r[2]} -- ${r[3]} -- ${r[4]}`));
+  },
+  morph() {
+    const n = grp + '_morph', d = openWin(n), m = D().mo[cur];
+    if (grp === 'fin') m.forEach((v, i) => box(d, n, i, v));
+    else box(d, n, 0, grp === 'mol' ? m[0] : m);
+  },
+  ref() {
+    const n = grp + '_ref', d = openWin(n);
+    if (grp === 'fin') { const r = D().rf[cur]; box(d, n, 0, r[0]); box(d, n, 1, `${r[1]}\n${r[2]} -- ${r[3]}`); }
+    else D().o1[cur].forEach((v, i) => box(d, n, i, v));
+  },
+  rr() {
+    const n = grp + '_rr', d = openWin(n);
+    if (grp === 'crab') { const r = D().rr[cur]; box(d, n, 0, r[0], '11px Arial,Helvetica,sans-serif', '#000'); box(d, n, 1, r[1], '11px Arial,Helvetica,sans-serif', '#000'); }
+    else box(d, n, 0, D().mo[cur][1], A12, '#000');
+  },
+  col() { const n = 'crab_col', d = openWin(n); box(d, n, 0, D().co[cur]); },
+  cs() { const n = 'prawn_cs', d = openWin(n), r = D().ot[cur]; box(d, n, 0, r[0]); box(d, n, 1, r[1]); },
+  img() {
+    const pics = D().im[cur] || [], d = openWin(grp + '_img');
+    let i = 0;
+    const p = img('', 6, 26, d);
+    const cnt = label(d, 400, 668, 149, 24, '', A12, '#808080', 'center');
+    const file = f => G[grp].photo + encodeURIComponent(/\.\w+$/.test(f) ? f : f + '.jpg');
+    function show() { p.src = file(pics[i]); cnt.textContent = `[${i + 1}/${pics.length} ]`; }
+    hot(335, 666, 27, 28, d, () => { i = 0; show(); });
+    hot(365, 666, 30, 28, d, () => { if (i > 0) { i--; show(); } });
+    hot(551, 666, 27, 28, d, () => { if (i < pics.length - 1) { i++; show(); } });
+    hot(581, 666, 30, 28, d, () => { i = pics.length - 1; show(); });
+    show();
+  },
+  html() { const [dir, page] = G[grp].html; window.open(encodeURIComponent(dir) + '/' + encodeURIComponent(spName(cur)) + '/' + page, '_blank'); },
+  dist() {
+    const d = openWin(grp + '_dist');
+    const cv = el('canvas', 'position:absolute;left:3px;top:104px;', d); cv.width = 936; cv.height = 596;
+    const x = cv.getContext('2d');
+    const col = grp === 'prawn' ? 2 : grp === 'fin' ? 0 : 1;
+    const on = new Set((D().di[cur] || []).map(r => FD.lab.indexOf(r[col].trim().toUpperCase())).filter(i => i >= 0));
+    const P = (lon, lat) => [35 + (lon - 68.0801) * 19.47, 27 + (37.0922 - lat) * 19.45];
+    BMAP.f.forEach((polys, i) => {
+      x.beginPath();
+      polys.forEach(rings => rings.forEach(r => r.forEach(([lo, la], k) => { const [px, py] = P(lo, la); k ? x.lineTo(px, py) : x.moveTo(px, py); })));
+      x.fillStyle = on.has(i) ? 'rgb(255,255,192)' : 'rgb(227,253,230)'; x.fill('evenodd'); x.strokeStyle = '#000'; x.lineWidth = 1; x.stroke();
+    });
+    x.font = '10px Arial'; x.fillStyle = '#000'; x.textAlign = 'center'; x.textBaseline = 'middle';
+    BMAP.l.forEach(([lo, la], i) => { const [px, py] = P(lo, la); x.fillText(String(i + 1), px, py); });
+    x.textAlign = 'left'; x.textBaseline = 'top';
+    FD.lab.forEach((n, i) => { const c = i < 23 ? 652 : 788, row = i < 23 ? i : i - 23; x.fillStyle = on.has(i) ? '#ff0000' : '#000'; x.fillText(`${i + 1}. ${n}`, c - 3, 290 + row * 13.1); });
+  }
+};
+// ---- menus ----
+let menu = null, menuKey = '';
+function closeMenu() { if (menu) { menu.remove(); menu = null; menuKey = ''; } }
+function item(parent, x, y, w, t, fn, opts = {}) {
+  const r = el('div', `position:absolute;left:${x}px;top:${y}px;width:${w}px;height:16px;font:11px Tahoma,Verdana,Arial,sans-serif;line-height:16px;padding-left:${opts.pad || 20}px;box-sizing:border-box;color:transparent;white-space:nowrap;`, parent);
+  r.textContent = t;
+  r.addEventListener('mouseenter', () => { if (opts.enter) return opts.enter(); r.style.background = '#0a246a'; r.style.color = '#fff'; });
+  r.addEventListener('mouseleave', () => { if (opts.enter) return; r.style.background = ''; r.style.color = 'transparent'; });
+  r.addEventListener('click', e => { e.stopPropagation(); if (fn) { closeMenu(); fn(); } });
+  return r;
+}
+function dropdown(g) {
+  const was = menuKey; closeMenu(); if (was === g) return; menuKey = g;
+  const [x0, y0, x1, y1] = LAY.menus[g], [sx0, sy0, sx1, sy1] = LAY.menus[g + '_s'];
+  menu = el('div', `position:absolute;left:0;top:0;width:1024px;height:0;z-index:99999;`);
+  const pic = img(U + `menu_${g}.png`, x0, y0, menu);
+  const si = G[g].items.indexOf('Search');
+  let sub = null;
+  const plain = () => { pic.src = U + `menu_${g}.png`; pic.style.left = x0 + 'px'; if (sub) { sub.remove(); sub = null; } };
+  G[g].items.forEach((t, i) => {
+    if (i === si) {
+      item(menu, x0 + 3, 41 + 16 * i, 106, t, null, {enter: () => {
+        if (sub) return;
+        pic.src = U + `menu_${g}_s.png`; pic.style.left = sx0 + 'px';
+        sub = el('div', 'position:absolute;left:0;top:0;', menu);
+        G[g].subs.forEach(([k, label2], j) => item(sub, x0 + 112, 41 + 16 * (si + j), sx1 - x0 - 115, label2, () => search(g, k, label2), {pad: 18}));
+      }});
+    } else item(menu, x0 + 3, 41 + 16 * i, 106, t, () => (t === 'Common Name' ? dlgCommon(g) : dlgSci(g)), {enter: () => { plain(); hl(i); }});
+  });
+  // highlight drawn over the plain menu for the two plain items
+  let hlEl = null;
+  function hl(i) { if (hlEl) hlEl.remove(); hlEl = el('div', `position:absolute;left:${x0 + 3}px;top:${41 + 16 * i}px;width:106px;height:16px;background:#0a246a;color:#fff;font:11px Tahoma,Verdana,Arial,sans-serif;line-height:16px;padding-left:20px;box-sizing:border-box;pointer-events:none;white-space:nowrap;`, menu); hlEl.textContent = G[g].items[i]; }
+}
+// ---- Scientific Name: genus, then species ----
+function dlgSci(g) {
+  showToolbar(g);
+  const d = openWin('dlg_sci'), sp = FD[g].sp;
+  const genera = [...new Set(sp.map(r => r[1].trim()))].sort();
+  let ge = '', s = '';
+  const f15 = '15px Arial,Helvetica,sans-serif';
+  const cs = combo(d, 155, 94, 169, 25, [], f15, '#0000c0', v => { s = v; }, {rows: 8, selHi: true});
+  combo(d, 155, 46, 169, 25, genera, f15, '#0000c0', v => { ge = v; s = ''; cs.set([...new Set(sp.filter(r => r[1].trim() === ge).map(r => r[2].trim()))].sort()); }, {rows: 8, selHi: true});
+  hot(131, 142, 66, 34, d, () => { const r = sp.find(r => r[1].trim() === ge && r[2].trim() === s); if (!r) return; d.close(); setSpecies(r[0]); });
+  hot(211, 142, 66, 34, d, () => d.close());
+}
+// ---- Common Name: language / region, then name ----
+function dlgCommon(g) {
+  showToolbar(g);
+  const d = openWin(g === 'fin' ? 'dlg_cm' : 'dlg_pcm'), cm = FD[g].cm;
+  const all = Object.entries(cm).flatMap(([id, rows]) => rows.map(([nm, lang]) => [lang.trim(), nm.trim(), id]));
+  let la = '', nm = '';
+  const f15 = '15px Arial,Helvetica,sans-serif';
+  const cn = combo(d, 107, 118, 363, 25, [], f15, '#0000ff', v => { nm = v; }, {rows: 8, lh: 17, selHi: true});
+  combo(d, 107, 62, 363, 25, [...new Set(all.map(r => r[0]))].sort(), f15, '#0000ff', v => { la = v; nm = ''; cn.set([...new Set(all.filter(r => r[0] === la).map(r => r[1]))].sort()); }, {rows: 8, lh: 17, selHi: true});
+  hot(188, 166, 64, 32, d, () => { const r = all.find(r => r[0] === la && r[1] === nm); if (!r) return; d.close(); setSpecies(r[2]); });
+  hot(275, 166, 64, 32, d, () => d.close());
+}
+// ---- the searches: a value, then the species that have it ----
+const CHAR = [['Cultivable', 17, '1'], ['Non Cultivable', 17, '0'], ['Non Ornamental', 15, '0'], ['Non Peninsular', 14, '0'], ['Non SportFish', 16, '0'], ['Ornamental', 15, '1'], ['Peninsular', 14, '1'], ['SportFish', 16, '1']];
+function searchData(g, k) {
+  const f = FD[g], m = new Map(), add = (v, id) => { v = String(v || '').trim(); if (!v) return; (m.get(v) || m.set(v, new Set()).get(v)).add(id); };
+  if (k === 'hab') { if (g === 'prawn') Object.entries(f.di).forEach(([id, rs]) => rs.forEach(r => add(r[0], id))); else f.sp.forEach(r => add(r[g === 'fin' ? 13 : 11], r[0])); }
+  if (k === 'status') f.sp.forEach(r => add(r[12], r[0]));
+  if (k === 'author') f.sp.forEach(r => add(r[{crab: 10, mol: 8, prawn: 13}[g]], r[0]));
+  if (k === 'syn') Object.entries(f.sy).forEach(([id, rs]) => rs.forEach(r => add(r[2], id)));
+  if (k === 'river') Object.entries(f.di).forEach(([id, rs]) => rs.forEach(r => add(r[2], id)));
+  if (k === 'char') f.sp.forEach(r => CHAR.forEach(([t, c, v]) => { if (r[c] === v) add(t, r[0]); }));
+  return m;
+}
+function search(g, k) {
+  showToolbar(g);
+  const d = openWin(`s_${g}_${k}`), m = searchData(g, k);
+  const vals = k === 'char' ? CHAR.map(c => c[0]).filter(c => m.has(c)) : [...m.keys()].sort();
+  let ids = [], pick = -1;
+  const [lx, ly, lw, lh] = F(`s_${g}_${k}`, 1);
+  const lst = list(d, lx, ly, lw, lh, [], B15, GR, i => { pick = i; }, {lh: '17px', ondbl: () => ok()});
+  combo(d, 115, 30, 315, 25, vals, B15, GR, v => {
+    ids = [...m.get(v)].sort((a, b) => spName(a).localeCompare(spName(b)));
+    pick = -1; lst.set(ids.map(spName));
+  }, {rows: 8, lh: 17, selHi: true});
+  function ok() { if (pick < 0) return; d.close(); setSpecies(ids[pick]); }
+  hot(124, 231, 64, 32, d, ok); hot(211, 231, 64, 32, d, () => d.close());
+}
+</script>
+</body></html>

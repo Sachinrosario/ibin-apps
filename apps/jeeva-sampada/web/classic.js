@@ -56,7 +56,7 @@ const CL = (() => {
     function paint() {
       l.innerHTML = '';
       items.forEach((it, i) => {
-        const r = el('div', `padding:0 2px;white-space:nowrap;line-height:${opts.lh || 1.2};${i === sel && !opts.dotOnly ? 'background:#0a246a;color:#fff;' : ''}${i === sel && (opts.focus || opts.dotOnly) ? 'outline:1px dotted #000;outline-offset:-1px;' : ''}`, l);
+        const r = el('div', `padding:0 2px;white-space:pre;line-height:${opts.lh || 1.2};${i === sel && !opts.dotOnly ? 'background:#0a246a;color:#fff;' : ''}${i === sel && (opts.focus || opts.dotOnly) ? 'outline:1px dotted #000;outline-offset:-1px;' : ''}`, l);
         r.textContent = it;
         r.addEventListener('click', () => { sel = i; opts.dotOnly = false; paint(); onpick && onpick(i, it); });
         r.addEventListener('dblclick', () => { opts.ondbl && opts.ondbl(i, it); });
@@ -73,6 +73,8 @@ const CL = (() => {
     const t = el('div', `position:absolute;${box(2, 2, w - 4 - 17, h - 4)}background:#fff;font:${font};color:${color};padding:0 2px;white-space:nowrap;overflow:hidden;line-height:${h - 4}px;box-sizing:border-box;`, c);
     t.textContent = opts.value || '';
     let open = null, value = opts.value || '';
+    // opts.selHi: the chosen value stays highlighted (the box keeps the focus in the original)
+    const show1 = v => { if (opts.selHi && v) { t.textContent = ''; const sp = el('span', 'background:#0a246a;color:#fff;', t); sp.textContent = v; } else t.textContent = v; };
     function close() { if (open) { open.remove(); open = null; } }
     function show() {
       if (open) return close();
@@ -85,7 +87,7 @@ const CL = (() => {
         r2.textContent = it;
         r2.addEventListener('mouseenter', () => { r2.style.background = '#0a246a'; r2.style.color = '#fff'; });
         r2.addEventListener('mouseleave', () => { r2.style.background = ''; r2.style.color = ''; });
-        r2.addEventListener('click', e => { e.stopPropagation(); value = it; t.textContent = it; close(); onpick && onpick(it, i); });
+        r2.addEventListener('click', e => { e.stopPropagation(); value = it; show1(it); close(); onpick && onpick(it, i); });
       });
       setTimeout(() => addEventListener('click', close, {once: true}), 0);
     }
