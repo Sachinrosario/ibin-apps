@@ -1265,13 +1265,14 @@
           "key": "v1",
           "label": "Version 1 – Original (2026 rebuild)",
           "versionName": "Version 1",
-          "version": "1.9.0",
+          "version": "1.10.0",
           "released": "2026-11-07",
           "published": true,
-          "summary": "The original Jeeva Sampada program rebuilt screen for screen from the originals: the main screen with its menus and scrolling line, Links, and nine complete databases in their original format – Birds (Pakshi Sampada), Domestic Animals, Freshwater Fin fishes & Shell fishes, Amphibia, Reptilia & Mammals, Insects (predators and parasitoids), Crop Pests, Natural Enemies & Pollinators, Laboratory Animals, Silk Worms and Marine Bio-Resources – with all their windows, searches, documents, pictures, species pages and films. Plants (Sasya Sampada) and Microbial Resources follow in updates.",
+          "summary": "The original Jeeva Sampada program rebuilt screen for screen from the originals: the main screen with its menus and scrolling line, Links, and ten complete databases in their original format – Birds (Pakshi Sampada), Domestic Animals, Freshwater Fin fishes & Shell fishes, Amphibia, Reptilia & Mammals, Insects (predators and parasitoids), Crop Pests, Natural Enemies & Pollinators, Laboratory Animals, Silk Worms, Marine Bio-Resources and Plant Resources – Sasya Sampada – with all their windows, searches, documents, pictures, species pages and films. Microbial Resources follows in an update.",
           "facts": [
             "Original screens",
-            "9 databases",
+            "10 databases",
+            "1,956 plants (Sasya Sampada)",
             "1,303 birds",
             "131 domestic breeds",
             "1,849 fishes, crabs, molluscs and prawns",
@@ -1288,40 +1289,45 @@
             {
               "os": "windows",
               "kind": "Installer",
-              "file": "JeevaSampada_1.9.0_Setup.exe",
-              "size": "666 MB",
+              "file": "JeevaSampada_1.10.0_Setup.exe",
+              "size": "856 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password."
             },
             {
               "os": "windows",
               "kind": "No-install",
               "file": "JeevaSampada.exe",
-              "size": "892 MB",
+              "size": "1.2 GB",
               "note": "Runs straight from a folder or pen drive."
             },
             {
               "os": "mac",
               "kind": "App",
-              "file": "JeevaSampada_1.9.0_universal.dmg",
-              "size": "1.4 GB",
+              "file": "JeevaSampada_1.10.0_universal.dmg",
+              "size": "1.8 GB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
-              "file": "JeevaSampada_1.9.0_amd64.deb",
-              "size": "692 MB",
+              "file": "JeevaSampada_1.10.0_amd64.deb",
+              "size": "895 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
-              "file": "JeevaSampada_1.9.0_offline.zip",
-              "size": "768 MB",
+              "file": "JeevaSampada_1.10.0_offline.zip",
+              "size": "1.0 GB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
           "changes": [
+            {
+              "version": "1.10.0",
+              "date": "2026-11-08",
+              "text": "Added the complete Plant Resources database (Sasya Sampada) in the original format."
+            },
             {
               "version": "1.9.0",
               "date": "2026-11-07",
