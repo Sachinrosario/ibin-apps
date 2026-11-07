@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitized Inventory of Insect Resources of India</title>
+<link rel="icon" href="../ui/icon.png">
+<style>
+html,body{margin:0;height:100%;background:#000;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1024px;height:768px;transform-origin:0 0;background:#d0c8ac;overflow:hidden;user-select:none;-webkit-user-select:none;font-family:Tahoma,Verdana,Arial,sans-serif}
+.lst::-webkit-scrollbar{width:16px;background:#e8e6e0}
+.lst::-webkit-scrollbar-thumb{background:#d4d0c8;border:2px outset #fff}
+</style></head>
+<body>
+<script src="../classic.js"></script>
+<script src="data.js"></script>
+<script src="files.js"></script>
+<script>
+"use strict";
+const {stage, el, img, hot, win, text, list, combo, label} = CL;
+const U = 'ui/';
+const A12 = '12px Arial,Helvetica,sans-serif', GR = '#008000', BL = '#0000ff', BK = '#000';
+let LAY = null;
+fetch(U + 'layout.json').then(r => r.json()).then(j => { LAY = j; start(); });
+const W = n => LAY.windows[n];
+const F = (n, i) => W(n).fields[i];
+const has = v => v != null && String(v).trim() !== '';
+// the two databases: Predators (full records) and Parasitoids (names, and the original species pages)
+const G = {pred: {t: 'predator', dir: 'Predators'}, para: {t: 'parasit', dir: 'Parasitoids'}};
+const BTN = ['tax', 'cm', 'ident', 'prey', 'img', 'html', 'refs', 'rem'];
+let banner, status, grp = null, cur = null, child = null, pressed = null, tbImgs = [], tbOff = null, btnHots = [];
+const tab = () => ID[G[grp].t];
+const c = n => tab().c.indexOf(n);
+const row = id => tab().r.find(r => r[0] === id);
+const name = id => { const r = row(id); return r ? r[c('complete')].replace(/\s+/g, ' ').trim() : ''; };
+const files = id => IF[G[grp].dir][name(id).toLowerCase()] || {htm: [], img: []};
+const path = (f) => [G[grp].dir, folder(cur), f].map(encodeURIComponent).join('/');
+const folder = id => { const n = name(id).toLowerCase(); return (Object.keys(IF[G[grp].dir]).includes(n) ? n : n); };
+function realFolder() { return Object.keys(IF[G[grp].dir]).find(k => k === name(cur).toLowerCase()); }
+function start() {
+  img(U + 'top.png', 0, 0); img(U + 'status.png', 0, 743);
+  banner = img(U + 'banner.png', 0, 38);
+  status = label(stage, 348, 744, 670, 22, '', 'bold 15px Arial,Helvetica,sans-serif', '#000', 'left');
+  addEventListener('click', closeMenu);
+  hot(15, 19, 58, 18, stage, () => dropdown('pred'));
+  hot(75, 19, 62, 18, stage, () => dropdown('para'));
+  hot(140, 19, 44, 18, stage, () => { closeMenu(); openWin('credits'); });
+  hot(1006, 4, 16, 14, stage, () => { location.href = '../index.html'; }, 'Close');
+  const q = new URLSearchParams(location.search), qg = (q.get('g') || '').trim().toLowerCase(), qs = (q.get('s') || '').trim().toLowerCase();
+  if (qg) for (const g of ['pred', 'para']) {
+    const t = ID[G[g].t], r = t.r.find(r => r[1].trim().toLowerCase() === qg && r[2].trim().toLowerCase() === qs);
+    if (r) { showToolbar(g); setSpecies(r[0]); break; }
+  }
+}
+function openWin(n, opts = {}) {
+  const [x, y, w, h] = W(n).rect; if (child) child.close();
+  const d = win(U + n + '.png', x, y, w, h, Object.assign({onclose: () => { if (child === d) child = null; }}, opts));
+  child = d; banner.style.display = 'none'; return d;
+}
+function showToolbar(g) {
+  if (grp === g && tbOff) return;
+  grp = g; cur = null; status.textContent = '';
+  if (!tbOff) {
+    tbOff = img(U + 'tb_off.png', 0, 38, stage, 'pointer-events:none;');
+    LAY.toolbars.tb.btns.forEach(([y0, y1], i) => btnHots.push(hot(1, y0, 72, y1 - y0 + 1, stage, () => { if (!cur || !enabled(i)) return; press(i); ACT[BTN[i]](); })));
+  }
+  tbImgs.forEach(x => x.remove()); tbImgs = []; if (pressed) { pressed.remove(); pressed = null; }
+  banner.style.display = 'none';
+}
+function enabled(i) {
+  const r = row(cur), k = BTN[i];
+  if (k === 'html') return files(cur).htm.length > 0;
+  if (grp === 'para') return false;
+  if (k === 'img') return files(cur).img.length > 0;
+  if (k === 'tax') return true;
+  const col = {cm: 'CommonName', ident: 'larva', prey: 'prey', refs: 'References', rem: 'Remarks'}[k];
+  return has(r[c(col)]) || (k === 'ident' && has(r[c('adult')]));
+}
+function setSpecies(id) {
+  cur = id; status.textContent = grp === 'pred' ? name(id) : '';
+  tbImgs.forEach(x => x.remove()); tbImgs = [];
+  LAY.toolbars.tb.btns.forEach(([y0], i) => tbImgs.push(img(U + `tb_b${i}_${enabled(i) ? 'on' : 'off'}.png`, 0, y0, stage, 'pointer-events:none;')));
+  // the original opens the classification of a predator, and the page of a parasitoid, as soon as it is chosen
+  if (grp === 'pred') { press(0); ACT.tax(); } else if (enabled(5)) { press(5); ACT.html(); }
+}
+function press(i) { if (pressed) pressed.remove(); pressed = img(U + `tb_b${i}_down.png`, 0, LAY.toolbars.tb.btns[i][0], stage, 'pointer-events:none;'); }
+const box = (d, n, i, v, color) => { const [x, y, w, h] = F(n, i); return text(d, x, y, w, h, v, A12, color || BK, {white: true, wrap: true}); };
+const open = f => window.open([G[grp].dir, realFolder(), f].map(encodeURIComponent).join('/'), '_blank');
+const ACT = {
+  tax() {
+    const d = openWin('tax', {title: 'Classification of ' + name(cur)}), r = row(cur);
+    ['order', 'Family', 'genus', 'species', 'authority'].forEach((k, i) => { const t = box(d, 'tax', i, r[c(k)], BL); t.style.whiteSpace = 'nowrap'; t.style.padding = '3px 2px'; });
+  },
+  cm() { const d = openWin('cm'); box(d, 'cm', 0, row(cur)[c('CommonName')]); },
+  ident() { const d = openWin('ident'), r = row(cur); box(d, 'ident', 0, r[c('larva')]); box(d, 'ident', 1, r[c('adult')]); },
+  prey() { const d = openWin('prey'); box(d, 'prey', 0, row(cur)[c('prey')]); },
+  refs() { const d = openWin('refs'); box(d, 'refs', 0, row(cur)[c('References')]); },
+  rem() { const d = openWin('rem'); box(d, 'rem', 0, row(cur)[c('Remarks')]); },
+  // the original showed the picture and the page in a browser window
+  img() { open(files(cur).img[0]); },
+  html() { open(files(cur).htm[0]); }
+};
+// ---- menus ----
+const MENU = {pred: {x: 18, w: 104, items: [['Scientific Name', () => dlgSci('pred')], ['Common Name', () => dlgCommon()]]}, para: {x: 78, w: 104, items: [['Scientific Name', () => dlgSci('para')]]}};
+let menu = null, menuKey = '';
+function closeMenu() { if (menu) { menu.remove(); menu = null; menuKey = ''; } }
+function dropdown(k) {
+  const was = menuKey; closeMenu(); if (was === k) return; menuKey = k;
+  menu = el('div', 'position:absolute;left:0;top:0;width:1024px;height:0;z-index:99999;');
+  img(U + `menu_${k}.png`, LAY.menus[k][0], LAY.menus[k][1], menu, 'pointer-events:none;');
+  let hl = null;
+  MENU[k].items.forEach(([t, fn], i) => {
+    const y = 41 + 16 * i, r = el('div', `position:absolute;left:${MENU[k].x}px;top:${y}px;width:${MENU[k].w}px;height:16px;`, menu);
+    r.addEventListener('mouseenter', () => { if (hl) hl.remove(); hl = el('div', `position:absolute;left:${MENU[k].x}px;top:${y}px;width:${MENU[k].w}px;height:16px;background:#0a246a;color:#fff;font:11px Tahoma,Verdana,Arial,sans-serif;line-height:16px;padding-left:17px;box-sizing:border-box;white-space:nowrap;pointer-events:none;`, menu); hl.textContent = t; });
+    r.addEventListener('click', e => { e.stopPropagation(); closeMenu(); fn(); });
+  });
+}
+function dlgSci(g) {
+  showToolbar(g);
+  const d = openWin('dlg_sci'), sp = tab().r;
+  const genera = [...new Set(sp.map(r => r[1].trim()))].filter(Boolean).sort();
+  let ge = '', s = '';
+  const f15 = '15px Arial,Helvetica,sans-serif';
+  const cs = combo(d, 155, 94, 169, 25, [], f15, '#0000c0', v => { s = v; }, {rows: 8, selHi: true});
+  combo(d, 155, 46, 169, 25, genera, f15, '#0000c0', v => { ge = v; s = ''; cs.set([...new Set(sp.filter(r => r[1].trim() === ge).map(r => r[2].trim()))].sort()); }, {rows: 8, selHi: true});
+  hot(131, 142, 66, 34, d, () => { const r = sp.find(r => r[1].trim() === ge && r[2].trim() === s); if (!r) return; d.close(); setSpecies(r[0]); });
+  hot(211, 142, 66, 34, d, () => d.close());
+}
+// the predators' common names are all English names
+function dlgCommon() {
+  showToolbar('pred');
+  const d = openWin('dlg_cm'), all = tab().r.filter(r => has(r[c('CommonName')])).map(r => [r[c('CommonName')].trim(), r[0]]);
+  let nm = '';
+  const f15 = '15px Arial,Helvetica,sans-serif';
+  const cn = combo(d, 107, 118, 363, 25, [], f15, BL, v => { nm = v; }, {rows: 8, lh: 17, selHi: true});
+  const lang = combo(d, 107, 62, 363, 25, ['English'], f15, BL, () => { nm = ''; cn.set([...new Set(all.map(r => r[0]))].sort()); }, {rows: 8, lh: 17, selHi: true});
+  // the original opens with English already chosen
+  cn.set([...new Set(all.map(r => r[0]))].sort());
+  const t0 = lang.firstChild; t0.textContent = ''; el('span', 'background:#0a246a;color:#fff;', t0).textContent = 'English';
+  hot(188, 166, 64, 32, d, () => { const r = all.find(r => r[0] === nm); if (!r) return; d.close(); setSpecies(r[1]); });
+  hot(275, 166, 64, 32, d, () => d.close());
+}
+</script>
+</body></html>
