@@ -1265,16 +1265,17 @@
           "key": "v1",
           "label": "Version 1 – Original (2026 rebuild)",
           "versionName": "Version 1",
-          "version": "1.4.0",
+          "version": "1.5.0",
           "released": "2026-11-07",
           "published": true,
-          "summary": "The original Jeeva Sampada program rebuilt screen for screen from the originals: the main screen with its menus and scrolling line, Links (state, district, groups, species, and Application), the complete Birds database – Pakshi Sampada (search by scientific or common name, five search windows, classification, common name, distribution map, breeding, conservation, habit and biotic zone, pictures and the original species pages) the complete Domestic Animals database (species and breed, morphology, distribution map, synonyms, livestock farms, performance, remarks, photographs, searches, the eleven reports and the documents), the complete Freshwater Fin fishes & Shell fishes database (finfishes, crabs, molluscs and prawns: classification, common names, distribution map, synonyms, morphology, references, pictures, species pages and all the searches), and the complete Amphibia, Reptilia & Mammals database (amphibians, mammals, lizards, snakes, turtles and tortoises with all their windows, searches and documents, and the Snake Park Movie). The other databases follow in updates.",
+          "summary": "The original Jeeva Sampada program rebuilt screen for screen from the originals: the main screen with its menus and scrolling line, Links (state, district, groups, species, and Application), the complete Birds database – Pakshi Sampada (search by scientific or common name, five search windows, classification, common name, distribution map, breeding, conservation, habit and biotic zone, pictures and the original species pages) the complete Domestic Animals database (species and breed, morphology, distribution map, synonyms, livestock farms, performance, remarks, photographs, searches, the eleven reports and the documents), the complete Freshwater Fin fishes & Shell fishes database (finfishes, crabs, molluscs and prawns: classification, common names, distribution map, synonyms, morphology, references, pictures, species pages and all the searches) the complete Amphibia, Reptilia & Mammals database (amphibians, mammals, lizards, snakes, turtles and tortoises with all their windows, searches and documents, and the Snake Park Movie), and the complete Insects database (predators and parasitoids). The other databases follow in updates.",
           "facts": [
             "Original screens",
             "1,303 birds",
             "131 domestic breeds",
             "1,849 fishes, crabs, molluscs and prawns",
             "783 amphibians, reptiles and mammals",
+            "526 predators and parasitoids",
             "Snake Park Movie (27 min)",
             "616 places in Links"
           ],
@@ -1284,40 +1285,45 @@
             {
               "os": "windows",
               "kind": "Installer",
-              "file": "JeevaSampada_1.4.0_Setup.exe",
-              "size": "205 MB",
+              "file": "JeevaSampada_1.5.0_Setup.exe",
+              "size": "277 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password."
             },
             {
               "os": "windows",
               "kind": "No-install",
               "file": "JeevaSampada.exe",
-              "size": "284 MB",
+              "size": "382 MB",
               "note": "Runs straight from a folder or pen drive."
             },
             {
               "os": "mac",
               "kind": "App",
-              "file": "JeevaSampada_1.4.0_universal.dmg",
-              "size": "443 MB",
+              "file": "JeevaSampada_1.5.0_universal.dmg",
+              "size": "592 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
-              "file": "JeevaSampada_1.4.0_amd64.deb",
-              "size": "220 MB",
+              "file": "JeevaSampada_1.5.0_amd64.deb",
+              "size": "295 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
-              "file": "JeevaSampada_1.4.0_offline.zip",
-              "size": "250 MB",
+              "file": "JeevaSampada_1.5.0_offline.zip",
+              "size": "335 MB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
           "changes": [
+            {
+              "version": "1.5.0",
+              "date": "2026-11-07",
+              "text": "Added the complete Insects database (predators and parasitoids) in the original format."
+            },
             {
               "version": "1.4.0",
               "date": "2026-11-07",
