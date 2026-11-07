@@ -1265,22 +1265,23 @@
           "key": "v1",
           "label": "Version 1 – Original (2026 rebuild)",
           "versionName": "Version 1",
-          "version": "1.10.0",
+          "version": "1.11.0",
           "released": "2026-11-07",
           "published": true,
-          "summary": "The original Jeeva Sampada program rebuilt screen for screen from the originals: the main screen with its menus and scrolling line, Links, and ten complete databases in their original format – Birds (Pakshi Sampada), Domestic Animals, Freshwater Fin fishes & Shell fishes, Amphibia, Reptilia & Mammals, Insects (predators and parasitoids), Crop Pests, Natural Enemies & Pollinators, Laboratory Animals, Silk Worms, Marine Bio-Resources and Plant Resources – Sasya Sampada – with all their windows, searches, documents, pictures, species pages and films. Microbial Resources follows in an update.",
+          "summary": "The original Jeeva Sampada program rebuilt screen for screen from the originals: the main screen with its menus and scrolling line, Links, and all eleven databases in their original format – Birds (Pakshi Sampada), Domestic Animals, Freshwater Fin fishes & Shell fishes, Amphibia, Reptilia & Mammals, Insects, Crop Pests, Natural Enemies & Pollinators, Laboratory Animals, Silk Worms, Plant Resources (Sasya Sampada), Marine Bio-Resources and Microbial Resources – with their windows, searches, documents, pictures, species pages and films.",
           "facts": [
             "Original screens",
-            "10 databases",
-            "1,956 plants (Sasya Sampada)",
+            "All 11 databases",
+            "1,956 plants",
+            "37,700 microbial strains",
+            "4,350 marine species",
             "1,303 birds",
-            "131 domestic breeds",
             "1,849 fishes, crabs, molluscs and prawns",
             "783 amphibians, reptiles and mammals",
+            "131 domestic breeds",
             "526 predators and parasitoids",
             "173 laboratory animal strains",
             "108 silkworm breeds",
-            "4,350 marine species",
             "15 films"
           ],
           "web": "https://sachinrosario.github.io/ibin-apps/jeeva-sampada/",
@@ -1289,40 +1290,52 @@
             {
               "os": "windows",
               "kind": "Installer",
-              "file": "JeevaSampada_1.10.0_Setup.exe",
-              "size": "856 MB",
+              "file": "JeevaSampada_1.11.0_Setup.exe",
+              "size": "903 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password."
             },
             {
               "os": "windows",
               "kind": "No-install",
               "file": "JeevaSampada.exe",
-              "size": "1.2 GB",
+              "size": "1.3 GB",
               "note": "Runs straight from a folder or pen drive."
             },
             {
               "os": "mac",
-              "kind": "App",
-              "file": "JeevaSampada_1.10.0_universal.dmg",
-              "size": "1.8 GB",
-              "note": "Intel and Apple-silicon Macs."
+              "kind": "App (Apple silicon)",
+              "file": "JeevaSampada_1.11.0_apple-silicon.dmg",
+              "size": "952 MB",
+              "note": "Macs with M1 or newer chips."
+            },
+            {
+              "os": "mac",
+              "kind": "App (Intel)",
+              "file": "JeevaSampada_1.11.0_intel.dmg",
+              "size": "944 MB",
+              "note": "Macs with Intel processors."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
-              "file": "JeevaSampada_1.10.0_amd64.deb",
-              "size": "895 MB",
+              "file": "JeevaSampada_1.11.0_amd64.deb",
+              "size": "944 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
-              "file": "JeevaSampada_1.10.0_offline.zip",
+              "file": "JeevaSampada_1.11.0_offline.zip",
               "size": "1.0 GB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
           "changes": [
+            {
+              "version": "1.11.0",
+              "date": "2026-11-08",
+              "text": "Added Microbial Resources: all eleven databases of Jeeva Sampada are now in the app. The Mac download is now two files, one for Apple-silicon Macs and one for Intel Macs."
+            },
             {
               "version": "1.10.0",
               "date": "2026-11-08",
