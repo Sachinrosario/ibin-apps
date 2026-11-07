@@ -1265,14 +1265,15 @@
           "key": "v1",
           "label": "Version 1 – Original (2026 rebuild)",
           "versionName": "Version 1",
-          "version": "1.1.0",
+          "version": "1.2.0",
           "released": "2026-11-07",
           "published": true,
-          "summary": "The original Jeeva Sampada program rebuilt screen for screen from the originals: the main screen with its menus and scrolling line, Links (state, district, groups, species, and Application), and the complete Birds database – Pakshi Sampada (search by scientific or common name, five search windows, classification, common name, distribution map, breeding, conservation, habit and biotic zone, pictures and the original species pages). The other databases follow in updates.",
+          "summary": "The original Jeeva Sampada program rebuilt screen for screen from the originals: the main screen with its menus and scrolling line, Links (state, district, groups, species, and Application), the complete Birds database – Pakshi Sampada (search by scientific or common name, five search windows, classification, common name, distribution map, breeding, conservation, habit and biotic zone, pictures and the original species pages), and the complete Domestic Animals database (species and breed, morphology, distribution map, synonyms, livestock farms, performance, remarks, photographs, searches, the eleven reports and the documents). The other databases follow in updates.",
           "facts": [
             "Original screens",
             "1,303 birds",
-            "937 bird pictures",
+            "131 domestic breeds",
+            "1,222 pictures",
             "1,301 species pages",
             "616 places in Links"
           ],
@@ -1282,40 +1283,45 @@
             {
               "os": "windows",
               "kind": "Installer",
-              "file": "JeevaSampada_1.1.0_Setup.exe",
-              "size": "35 MB",
+              "file": "JeevaSampada_1.2.0_Setup.exe",
+              "size": "43 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password."
             },
             {
               "os": "windows",
               "kind": "No-install",
               "file": "JeevaSampada.exe",
-              "size": "56 MB",
+              "size": "65 MB",
               "note": "Runs straight from a folder or pen drive."
             },
             {
               "os": "mac",
               "kind": "App",
-              "file": "JeevaSampada_1.1.0_universal.dmg",
-              "size": "77 MB",
+              "file": "JeevaSampada_1.2.0_universal.dmg",
+              "size": "95 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
-              "file": "JeevaSampada_1.1.0_amd64.deb",
-              "size": "38 MB",
+              "file": "JeevaSampada_1.2.0_amd64.deb",
+              "size": "47 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
-              "file": "JeevaSampada_1.1.0_offline.zip",
-              "size": "43 MB",
+              "file": "JeevaSampada_1.2.0_offline.zip",
+              "size": "51 MB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
           "changes": [
+            {
+              "version": "1.2.0",
+              "date": "2026-11-07",
+              "text": "Added the complete Domestic Animals database in the original format: breeds, morphology, distribution, synonyms, livestock farms, performance forms, remarks, photographs, searches, reports and documents."
+            },
             {
               "version": "1.1.0",
               "date": "2026-11-07",
