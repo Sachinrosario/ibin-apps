@@ -1,6 +1,6 @@
 // Offline support: keeps the app, data and every picture that has been viewed.
-const CACHE = 'jam-v1';
-const CORE = ['./', 'index.html', 'data/core.js', 'data/med.js', 'manifest.webmanifest', 'img/ui/icon.png'];
+const CACHE = 'jam-v2';
+const CORE = ['./', 'index.html', 'classic.js', 'links.js', 'ui/main.png', 'ui/links.png', 'ui/menu_animal.png', 'manifest.webmanifest', 'ui/icon.png'];
 self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting())));
 // All IBIN apps share one website, so only this app's own older copies are removed (never another app's offline copy).
 const PREFIX = CACHE.replace(/-v\d+$/, '-v');

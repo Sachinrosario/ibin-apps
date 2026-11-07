@@ -221,5 +221,13 @@ function showDist() {
   const tick = el('div', 'position:absolute;left:429px;top:42px;width:8px;height:8px;background:#fff;display:none;', d);
   hot(344, 30, 62, 32, d, () => window.print());
 }
+
+// started from the main program (Links ▸ Application) with a species, as the original passed it through table1
+(() => {
+  const q = new URLSearchParams(location.search), g = q.get('g'), s = q.get('s');
+  if (g) { const id = Object.keys(BD.sp).find(k => BD.sp[k][0].toLowerCase() === g.trim().toLowerCase() && BD.sp[k][1].toLowerCase() === (s || '').trim().toLowerCase()); if (id) setSpecies(id); }
+})();
+// the caption Close button ends this program and shows Jeeva Sampada again
+hot(1006, 4, 16, 14, stage, () => { location.href = '../index.html'; }, 'Close');
 </script>
 </body></html>
