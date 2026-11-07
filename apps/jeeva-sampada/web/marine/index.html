@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitized Inventory of Marine Bio-Resources</title>
+<link rel="icon" href="../ui/icon.png">
+<style>
+html,body{margin:0;height:100%;background:#000;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1024px;height:768px;transform-origin:0 0;background:#d0c8ac;overflow:hidden;user-select:none;-webkit-user-select:none;font-family:Tahoma,Verdana,Arial,sans-serif}
+.lst::-webkit-scrollbar{width:16px;background:#e8e6e0}
+.lst::-webkit-scrollbar-thumb{background:#d4d0c8;border:2px outset #fff}
+</style></head>
+<body>
+<script src="../classic.js"></script>
+<script src="data.js"></script>
+<script src="files.js"></script>
+<script>
+"use strict";
+const {stage, el, img, hot, win, text, list, combo, label} = CL;
+const U = 'ui/';
+const A12 = '12px Arial,Helvetica,sans-serif', B15 = 'bold 15px Arial,Helvetica,sans-serif', GR = '#008000', BL = '#0000ff', BK = '#000';
+let LAY = null;
+fetch(U + 'layout.json').then(r => r.json()).then(j => { LAY = j; start(); });
+const W = n => LAY.windows[n];
+const F = (n, i) => W(n).fields[i];
+const has = v => v != null && String(v).trim() !== '' && String(v).trim() !== '-';
+const by = (t, k) => { const m = new Map(); MD[t].r.forEach(r => { (m.get(r[k]) || m.set(r[k], []).get(r[k])).push(r); }); return m; };
+const SP = new Map(MD.species_master.r.map(r => [r[0], r])), CLS = new Map(MD.Classification_master.r.map(r => [r[0], r]));
+const SPD = by('species_data', 1), SYN = by('species_synonym', 0), VER = by('vernacular_names', 0), DIS = by('distribution_data', 0), INFO = by('info', 0), HAB = by('Habitat_data', 0);
+const HTML = new Map(MD.html.r.map(r => [r[0], r]));
+const name = id => { const r = SP.get(id); return r ? (r[5] || `${r[1]} ${r[2]}`).replace(/\s+/g, ' ').trim() : ''; };
+// a file named in the database, found whatever the case (and the documents converted to web pages)
+function file(p) { p = (p || '').replace(/\\/g, '/'); const k = p.toLowerCase(); const f = MF[k] || MF[k.replace(/\s+(\.\w+)$/, '$1')]; return f ? f.split('/').map(encodeURIComponent).join('/') : null; }
+const files = (id, par) => (INFO.get(id) || []).filter(r => r[1] === par).map(r => file(r[4])).filter(Boolean);
+let banner, status, cur = null, child = null, pressed = null, tbImgs = [];
+const BTN = ['tax', 'syn', 'dist', 'Salient Features', 'Major Publications', 'img', 'References', 'List of Indian Experts', 'html'];
+function start() {
+  img(U + 'top.png', 0, 0); img(U + 'status.png', 0, 743);
+  img(U + 'tb_off.png', 0, 38, stage, 'pointer-events:none;');
+  banner = img(U + 'banner.png', 78, 38);
+  status = label(stage, 348, 744, 670, 22, '', 'bold 15px Arial,Helvetica,sans-serif', '#000', 'left');
+  LAY.toolbars.tb.btns.forEach(([y0, y1], i) => hot(1, y0, 74, y1 - y0 + 1, stage, () => { if (!cur || !enabled(i)) return; press(i); act(i); }));
+  addEventListener('click', closeMenu);
+  hot(14, 19, 87, 18, stage, () => { closeMenu(); dlgSci(); });
+  hot(102, 19, 85, 18, stage, () => { closeMenu(); dlgCommon(); });
+  hot(188, 19, 49, 18, stage, () => dropdown());
+  hot(238, 19, 43, 18, stage, () => { closeMenu(); openWin('credits'); });
+  hot(1006, 4, 16, 14, stage, () => { location.href = '../index.html'; }, 'Close');
+  const q = new URLSearchParams(location.search), qg = (q.get('g') || '').trim().toLowerCase(), qs = (q.get('s') || '').trim().toLowerCase();
+  if (qg) { const r = MD.species_master.r.find(r => r[1].trim().toLowerCase() === qg && r[2].trim().toLowerCase() === qs); if (r) setSpecies(r[0]); }
+}
+function openWin(n, opts = {}) {
+  const [x, y, w, h] = W(n).rect; if (child) child.close();
+  const d = win(U + n + '.png', x, y, w, h, Object.assign({onclose: () => { if (child === d) child = null; }}, opts));
+  child = d; banner.style.display = 'none'; return d;
+}
+function enabled(i) {
+  const k = BTN[i];
+  if (k === 'tax') return true;
+  if (k === 'syn') return (SYN.get(cur) || []).length + (VER.get(cur) || []).length > 0;
+  if (k === 'dist') return (DIS.get(cur) || []).length > 0;
+  if (k === 'img') return files(cur, 'Image').length > 0;
+  if (k === 'html') return HTML.has(cur) && !!file('icons/' + HTML.get(cur)[2] + '/' + HTML.get(cur)[1]);
+  return files(cur, k).length > 0;
+}
+function setSpecies(id) {
+  cur = id; status.textContent = name(id);
+  tbImgs.forEach(x => x.remove()); tbImgs = [];
+  LAY.toolbars.tb.btns.forEach(([y0], i) => tbImgs.push(img(U + `tb_b${i}_${enabled(i) ? 'on' : 'off'}.png`, 0, y0, stage, 'pointer-events:none;')));
+  press(0); act(0);
+}
+function press(i) { if (pressed) pressed.remove(); pressed = img(U + `tb_b${i}_down.png`, 0, LAY.toolbars.tb.btns[i][0], stage, 'pointer-events:none;'); }
+const box = (d, n, i, v, font, color) => { const [x, y, w, h] = F(n, i); const t = text(d, x, y, w, h, v, font || '15px Arial,Helvetica,sans-serif', color || BL, {white: true}); t.style.padding = '1px 2px'; return t; };
+function lines(d, n, i, arr) { const [x, y, w, h] = F(n, i); return list(d, x, y, w, h, arr, A12, GR, null, {select: arr.length ? 0 : -1, dotOnly: true, lh: '14px'}); }
+function act(i) {
+  const k = BTN[i];
+  if (k === 'tax') {
+    const d = openWin('tax', {title: 'Classification of ' + name(cur)}), s = SP.get(cur), c = CLS.get(s[6]) || [], sd = (SPD.get(cur) || [])[0] || [];
+    [c[12], c[11], c[10], c[9], c[8], c[7], c[6], c[5], c[4], c[3], c[1], sd[3], sd[4], sd[5]].forEach((v, j) => box(d, 'tax', j, v));
+  } else if (k === 'syn') {
+    const d = openWin('syncm');
+    lines(d, 'syncm', 0, (SYN.get(cur) || []).map(r => [r[2], r[3], r[4]].filter(has).join(', ')));
+    lines(d, 'syncm', 1, (VER.get(cur) || []).map(r => `${r[2]}  ---  ${r[1]}`));
+  } else if (k === 'dist') {
+    const d = openWin('dist'), rows = DIS.get(cur) || [];
+    const g = el('div', 'position:absolute;left:4px;top:24px;width:534px;height:640px;overflow-y:auto;', d, 'lst');
+    const cell = (x, y, w, t, hd) => { const c = el('div', `position:absolute;left:${x}px;top:${y}px;width:${w}px;height:33px;box-sizing:border-box;border-right:1px solid #808080;border-bottom:1px solid #808080;background:${hd ? '#804040' : x ? '#dfd0cc' : '#d4d0c8'};color:${hd ? '#fff' : '#804040'};font:bold 11px Arial,Helvetica,sans-serif;padding:${hd ? 9 : 4}px 3px 0;overflow:hidden;`, g); c.textContent = t; };
+    ['Country', 'State', 'District', 'Place'].forEach((t, j) => cell(j * 133, 0, 133, t, true));
+    rows.forEach((r, i) => [r[1], r[2], r[3], r[4]].forEach((v, j) => cell(j * 133, 33 * (i + 1), 133, has(v) && v !== 'None' ? v : '', false)));
+  } else if (k === 'img') {
+    const pics = files(cur, 'Image'), d = openWin('img');
+    let n = 0;
+    const p = img('', 6, 26, d);
+    const cnt = label(d, 400, 668, 149, 24, '', A12, '#808080', 'center');
+    const show = () => { p.src = pics[n]; cnt.textContent = `[${n + 1}/${pics.length} ]`; };
+    hot(335, 666, 27, 28, d, () => { n = 0; show(); }); hot(365, 666, 30, 28, d, () => { if (n > 0) { n--; show(); } });
+    hot(551, 666, 27, 28, d, () => { if (n < pics.length - 1) { n++; show(); } }); hot(581, 666, 30, 28, d, () => { n = pics.length - 1; show(); });
+    show();
+  } else if (k === 'html') {
+    const h = HTML.get(cur); window.open(file('icons/' + h[2] + '/' + h[1]), '_blank');
+  } else {
+    // the original opened these notes in Notepad / WordPad, one window per file
+    files(cur, k).forEach(f => window.open(f, '_blank'));
+  }
+}
+// ---- menus and dialogs ----
+let menu = null, menuOpen = false;
+function closeMenu() { if (menu) { menu.remove(); menu = null; menuOpen = false; } }
+function dropdown() {
+  const was = menuOpen; closeMenu(); if (was) return; menuOpen = true;
+  menu = el('div', 'position:absolute;left:0;top:0;width:1024px;height:0;z-index:99999;');
+  const [x0, y0] = LAY.menus.search; img(U + 'menu_search.png', x0, y0, menu, 'pointer-events:none;');
+  let hl = null;
+  [['Search by Habitat', 'hab'], ['Search by State', 'state']].forEach(([t, k], i) => {
+    const y = 41 + 16 * i, r = el('div', `position:absolute;left:${x0 + 3}px;top:${y}px;width:117px;height:16px;`, menu);
+    r.addEventListener('mouseenter', () => { if (hl) hl.remove(); hl = el('div', `position:absolute;left:${x0 + 3}px;top:${y}px;width:117px;height:16px;background:#0a246a;color:#fff;font:11px Tahoma,Verdana,Arial,sans-serif;line-height:16px;padding-left:8px;box-sizing:border-box;pointer-events:none;`, menu); hl.textContent = t; });
+    r.addEventListener('click', e => { e.stopPropagation(); closeMenu(); search(k); });
+  });
+}
+function dlgSci() {
+  const d = openWin('dlg_sci'), sp = MD.species_master.r;
+  const genera = [...new Set(sp.map(r => r[1].trim()))].filter(Boolean).sort((a, b) => a.localeCompare(b));
+  let ge = '', s = '';
+  const f15 = '15px Arial,Helvetica,sans-serif';
+  const cs = combo(d, 155, 94, 169, 25, [], f15, '#0000c0', v => { s = v; }, {rows: 8, selHi: true});
+  combo(d, 155, 46, 169, 25, genera, f15, '#0000c0', v => { ge = v; s = ''; cs.set([...new Set(sp.filter(r => r[1].trim() === ge).map(r => r[2].trim()))].sort()); }, {rows: 8, selHi: true});
+  hot(131, 142, 66, 34, d, () => { const r = sp.find(r => r[1].trim() === ge && r[2].trim() === s); if (!r) return alert('Please select the Species'); d.close(); setSpecies(r[0]); });
+  hot(211, 142, 66, 34, d, () => d.close());
+}
+function dlgCommon() {
+  const d = openWin('dlg_cm'), all = MD.vernacular_names.r.map(r => [r[2].trim(), r[1].trim(), r[0]]).filter(r => r[0] && r[1] && SP.has(r[2]));
+  let la = '', nm = '';
+  const f15 = '15px Arial,Helvetica,sans-serif';
+  const cn = combo(d, 107, 118, 363, 25, [], f15, BL, v => { nm = v; }, {rows: 8, lh: 17, selHi: true});
+  combo(d, 107, 62, 363, 25, [...new Set(all.map(r => r[0]))].sort(), f15, BL, v => { la = v; nm = ''; cn.set([...new Set(all.filter(r => r[0] === la).map(r => r[1]))].sort()); }, {rows: 8, lh: 17, selHi: true});
+  hot(188, 166, 64, 32, d, () => { const r = all.find(r => r[0] === la && r[1] === nm); if (!r) return; d.close(); setSpecies(r[2]); });
+  hot(275, 166, 64, 32, d, () => d.close());
+}
+function search(k) {
+  const n = 's_' + k, d = openWin(n), m = new Map();
+  const add = (v, id) => { v = (v || '').trim(); if (!has(v) || v === 'None' || !SP.has(id)) return; (m.get(v) || m.set(v, new Set()).get(v)).add(id); };
+  if (k === 'hab') MD.Habitat_data.r.forEach(r => add(r[1], r[0])); else MD.distribution_data.r.forEach(r => add(r[2], r[0]));
+  let ids = [], pick = -1;
+  const [cx, cy, cw, ch] = F(n, 0), [lx, ly, lw, lh] = F(n, 1);
+  const lst = list(d, lx, ly, lw, lh, [], B15, GR, i => { pick = i; }, {lh: '17px', ondbl: () => ok()});
+  combo(d, cx - 2, cy - 2, cw + 22, ch + 4, [...m.keys()].sort((a, b) => a.localeCompare(b)), B15, BK, v => { ids = [...m.get(v)].sort((a, b) => name(a).localeCompare(name(b))); pick = -1; lst.set(ids.map(name)); }, {rows: 8, lh: 17, selHi: true});
+  function ok() { if (pick < 0) return alert('Please select the Species'); d.close(); setSpecies(ids[pick]); }
+  hot(118, 229, 66, 34, d, ok); hot(204, 229, 66, 34, d, () => d.close());
+}
+</script>
+</body></html>

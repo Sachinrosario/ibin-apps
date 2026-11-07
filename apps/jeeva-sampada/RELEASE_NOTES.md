@@ -1,4 +1,4 @@
-## Jeeva Sampada – 1.8.0
+## Jeeva Sampada – 1.9.0
 
 The original Jeeva Sampada program (Digital Inventory of Biological Resources of India, NBDB, Department of Biotechnology) rebuilt **screen for screen**: every window was captured from the original programs running on Windows and redrawn from those pictures, with the original data live behind them.
 
@@ -11,7 +11,8 @@ The original Jeeva Sampada program (Digital Inventory of Biological Resources of
 - **Insects** (Digitized Inventory of Predators and Parasitoids of India), complete: Predators (295 – Scientific Name, Common Name; Taxonomic Hierarchy, Common Name, Identification of larva and adult, Prey, Images, HTML, References, Remarks) and Parasitoids (231 – Scientific Name and the original species pages), with all the original pictures and pages.
 - **Crop Pests, Natural Enemies & Pollinators** (Digitized Inventory of Crop Pests, Natural Enemies & Pollinators), complete, with the two copies of the original merged (all pollinator records, pictures and pages): **Pests** (4,634: taxonomy, common names, distribution map, diagnostic features, host details with level of infestation, stages attacked and natural enemies, remarks and references, pictures, information documents), **Vectors**, **Natural Enemies** (distribution and insect/pest, host plant details) and **Pollinators** (associated crops), every search, and the **Links** window (pests, vectors, natural enemies, pollinators and host crops linked to each other).
 - **Laboratory Animals** (Digitized Inventory of Laboratory Animal Resources), complete: Common Names and Scientific Names (23 animals, 173 strains), the List of Strains, Uses (criteria search), Lab Source; the strain buttons Nomenclature, Origin, Genetic Profiles (with their original italics and superscripts), Colour, Uses, Laboratory (map), Images and HTML; Literature (132 books with covers, search by category), the Video Clips film (67 minutes), Nomenclature Rules, Guide Lines, Suppliers, Lab Equipments and Buyer's Guide.
-- **Silk Worms** (Digitized Inventory of Silkworm Resources – Bharatiya Resham), new in 1.8.0, complete: the opening picture and main screen (About us, Foreword, Prelude, Preface, Credits and the six pictures), Silkworms ▸ Mulberry (bivoltine, multivoltine), Tropical Tasar, Oak Tasar, Eri, Muga ▸ Information and Breeds / Hybrids (108 breeds, each with its Origin, Egg, Larva, Cocoon, Pupa, Moth, Reeling and Images pages), the Search Form for each silkworm, and the twelve films of the Movies menu.
+- **Silk Worms** (Digitized Inventory of Silkworm Resources – Bharatiya Resham), complete: the opening picture and main screen (About us, Foreword, Prelude, Preface, Credits and the six pictures), Silkworms ▸ Mulberry (bivoltine, multivoltine), Tropical Tasar, Oak Tasar, Eri, Muga ▸ Information and Breeds / Hybrids (108 breeds, each with its Origin, Egg, Larva, Cocoon, Pupa, Moth, Reeling and Images pages), the Search Form for each silkworm, and the twelve films of the Movies menu.
+- **Marine Resources** (Digitized Inventory of Marine Bio-Resources), new in 1.9.0, complete: 4,350 species – Scientific Name, Common Name, Search by Habitat and by State, and the nine buttons Taxonomic Hierarchy, Synonyms & Common Names, Distribution, Salient Features, Major Publications, Images (5,700 pictures), References, List of Indian Experts and HTML (641 species pages). The notes the original opened in Notepad/WordPad open in a new window.
 - The other databases open in later updates (a message says so for now).
 
 Proprietary right holder - Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario
@@ -19,8 +20,8 @@ Proprietary right holder - Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin 
 ### Downloads
 | File | For |
 |---|---|
-| `JeevaSampada_1.8.0_Setup.exe` | Windows 10/11: installs, no administrator password |
+| `JeevaSampada_1.9.0_Setup.exe` | Windows 10/11: installs, no administrator password |
 | `JeevaSampada.exe` | Windows: runs without installing |
-| `JeevaSampada_1.8.0_universal.dmg` | macOS (Intel and Apple silicon) |
-| `JeevaSampada_1.8.0_amd64.deb` | Ubuntu 22.04 or newer |
-| `JeevaSampada_1.8.0_offline.zip` | Any computer: extract, then open `Open Kit.html` |
+| `JeevaSampada_1.9.0_universal.dmg` | macOS (Intel and Apple silicon) |
+| `JeevaSampada_1.9.0_amd64.deb` | Ubuntu 22.04 or newer |
+| `JeevaSampada_1.9.0_offline.zip` | Any computer: extract, then open `Open Kit.html` |
