@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitized Inventory of Birds Resources of India</title>
+<link rel="icon" href="../img/ui/icon.png">
+<style>
+html,body{margin:0;height:100%;background:#000;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1024px;height:768px;transform-origin:0 0;background:#d0c8ac;overflow:hidden;user-select:none;-webkit-user-select:none;font-family:Tahoma,Verdana,Arial,sans-serif}
+.lst::-webkit-scrollbar{width:16px;background:#e8e6e0}
+.lst::-webkit-scrollbar-thumb{background:#d4d0c8;border:2px outset #fff}
+</style></head>
+<body>
+<script src="../classic.js"></script>
+<script src="data.js"></script>
+<script src="map.js"></script>
+<script>
+"use strict";
+const {stage, el, img, hot, win, text, list, combo, label} = CL;
+const U = 'ui/';
+const F15 = '15px Arial,Helvetica,sans-serif', F12 = '12px Arial,Helvetica,sans-serif', FB15 = 'bold 15px Arial,Helvetica,sans-serif';
+const name = id => BD.sp[id] ? BD.sp[id][0] + ' ' + BD.sp[id][1] : '';
+// ---- the main window (frame, menu, toolbar, banner, status bar) ----
+img(U + 'top.png', 0, 0);
+img(U + 'status.png', 0, 743);
+const banner = img(U + 'banner.png', 78, 38);
+const tb = img(U + 'toolbar_off.png', 0, 38);
+const status = label(stage, 0, 744, 1024, 22, '', 'bold 15px Arial,Helvetica,sans-serif', '#000', 'center');
+const BTN = [[39, 103], [104, 167], [168, 223], [224, 287], [288, 351], [352, 423], [424, 479], [480, 535]];
+let cur = null, child = null, pressed = null;
+const btnImg = BTN.map(([y0], i) => { const b = img(U + `btn${i}_off.png`, 0, y0); b.style.display = 'none'; return b; });
+function setSpecies(id) {
+  cur = id; banner.style.display = 'none';
+  tb.src = U + 'toolbar_on.png';
+  status.textContent = name(id);
+  // the Images button stays greyed out when the bird has no picture, as in the original
+  btnImg[6].src = U + 'btn6_off.png'; btnImg[6].style.display = BD.im[id] ? 'none' : '';
+  if (child) child.close();
+}
+function openChild(w) { if (child) child.close(); child = w; banner.style.display = 'none'; }
+function press(i) {
+  if (pressed) pressed.remove();
+  pressed = img(U + `btn${i}_down.png`, 0, BTN[i][0]);
+  pressed.style.pointerEvents = 'none';
+}
+const ACTIONS = [showClass, showCommon, showDist, showBreed, showCons, showHabit, showImages, showHtml];
+BTN.forEach(([y0, y1], i) => hot(1, y0, 74, y1 - y0 + 1, stage, () => {
+  if (!cur || (i === 6 && !BD.im[cur])) return;
+  press(i); ACTIONS[i]();
+}));
+// ---- menu bar: Scientific Name, Common name, Search, Credits ----
+let menu = null;
+function closeMenu() { if (menu) { menu.remove(); menu = null; } }
+addEventListener('click', closeMenu);
+hot(13, 19, 88, 18, stage, () => { closeMenu(); dlgScientific(); });
+hot(102, 19, 84, 18, stage, () => { closeMenu(); dlgCommonNames(); });
+hot(186, 19, 49, 18, stage, () => {
+  if (menu) return closeMenu();
+  menu = el('div', 'position:absolute;left:183px;top:18px;width:233px;height:107px;z-index:99999;');
+  img(U + 'menu_search_down.png', 0, 0, menu);
+  img(U + 'menu_search.png', 0, 20, menu);
+  const items = ['Search by Breeding Status', 'Search by Common Name', 'Search by Conservation Status - IW(P)A', 'Search by Endemic Staus', 'Search by Migratory Status'];
+  items.forEach((t, i) => {
+    const r = el('div', `position:absolute;left:3px;top:${24 + i * 16}px;width:226px;height:16px;font:11px Tahoma,Verdana,Arial,sans-serif;line-height:16px;padding-left:14px;box-sizing:border-box;color:transparent;`, menu);
+    r.textContent = t;
+    r.addEventListener('mouseenter', () => { r.style.background = '#0a246a'; r.style.color = '#fff'; });
+    r.addEventListener('mouseleave', () => { r.style.background = ''; r.style.color = 'transparent'; });
+    r.addEventListener('click', e => { e.stopPropagation(); closeMenu(); dlgSearch(i); });
+  });
+});
+hot(236, 19, 44, 18, stage, () => { closeMenu(); openChild(win(U + 'b_credits.png', 78, 40, 722, 338, {onclose: () => { child = null; }})); });
+// ---- Scientific Names ----
+function dlgScientific() {
+  if (child) child.close();
+  banner.style.display = 'none';
+  const d = win(U + 'b_sci.png', 326, 249, 403, 224, {onclose: () => { child = null; }}); child = d;
+  const genera = [...new Set(Object.values(BD.sp).map(s => s[0]))].sort();
+  let g = '', s = '';
+  const cs = combo(d, 155, 94, 169, 25, [], F15, '#0000c0', v => { s = v; }, {rows: 8});
+  combo(d, 155, 46, 169, 25, genera, F15, '#0000c0', v => {
+    g = v; s = '';
+    cs.set(Object.values(BD.sp).filter(x => x[0] === g).map(x => x[1]).sort());
+  }, {rows: 8});
+  hot(131, 142, 66, 34, d, () => {
+    if (!g || !s) return alert('Please select the Species');
+    const id = Object.keys(BD.sp).find(k => BD.sp[k][0] === g && BD.sp[k][1] === s);
+    d.close(); setSpecies(id);
+  });
+  hot(211, 142, 66, 34, d, () => d.close());
+}
+// ---- Common Names (Language / Name) ----
+function dlgCommonNames() {
+  if (child) child.close();
+  banner.style.display = 'none';
+  const d = win(U + 'b_cmnames.png', 277, 235, 501, 252, {onclose: () => { child = null; }}); child = d;
+  const all = Object.entries(BD.cm).flatMap(([id, a]) => a.map(c => [c[0], c[1], id]));
+  const langs = [...new Set(all.map(c => c[1]).filter(Boolean))].sort();
+  let nm = '';
+  const names = lang => [...new Set(all.filter(c => lang === 'English' || c[1] === lang).map(c => c[0]))].sort();
+  const cn = combo(d, 107, 118, 361, 25, names('English'), F15, '#0000c0', v => { nm = v; }, {rows: 10});
+  combo(d, 107, 62, 361, 25, langs, F15, '#0000c0', v => { nm = ''; cn.set(names(v)); }, {value: 'English', rows: 10});
+  hot(195, 166, 66, 34, d, () => {
+    const hit = all.find(c => c[0] === nm);
+    if (!hit) return alert('Please select the Name');
+    d.close(); setSpecies(hit[2]);
+  });
+  hot(275, 166, 66, 34, d, () => d.close());
+}
+// ---- Search by … (5 windows) ----
+function dlgSearch(k) {
+  if (child) child.close();
+  banner.style.display = 'none';
+  const T = ['b_search2', 'b_search3', 'b_search4', 'b_search5', 'b_search6'][k];
+  const G = {b_search2: [326, 222, 402, 279, [147, 30, 201, 25], [27, 70, 353, 140], 211, 230], b_search3: [329, 219, 397, 285, [147, 38, 201, 25], [27, 78, 353, 140], 211, 238], b_search4: [324, 214, 407, 294, [139, 38, 233, 25], [27, 78, 353, 140], 211, 238], b_search5: [323, 216, 409, 290, [131, 38, 257, 25], [27, 78, 361, 140], 219, 238], b_search6: [326, 221, 403, 280, [147, 30, 201, 25], [27, 70, 353, 140], 211, 230]}[T];
+  const d = win(U + T + '.png', G[0], G[1], G[2], G[3], {onclose: () => { child = null; }}); child = d;
+  let index;
+  if (k === 1) { index = {}; Object.entries(BD.cm).forEach(([id, a]) => a.forEach(c => (index[c[0]] = index[c[0]] || []).push(id))); }
+  else index = BD.srch[['breeding', null, 'iwpa', 'endemic', 'migratory'][k]];
+  let ids = [], pick = -1;
+  const [lx, ly, lw, lh] = G[5];
+  const lst = list(d, lx + 2, ly + 2, lw - 4, lh - 4, [], F12, '#000', i => { pick = i; }, {ondbl: () => ok()});
+  const [cx, cy, cw, ch] = G[4];
+  combo(d, cx, cy, cw, ch, Object.keys(index).sort(), F12, '#000', v => {
+    ids = [...new Set(index[v])].sort((a, b) => name(a).localeCompare(name(b))); pick = -1;
+    lst.set(ids.map(name));
+  }, {rows: 10});
+  function ok() { if (pick < 0) return alert('Please select the Species'); const id = ids[pick]; d.close(); setSpecies(id); }
+  hot(G[6] - 80, G[7], 66, 34, d, ok);
+  hot(G[6], G[7], 66, 34, d, () => d.close());
+}
+// ---- the eight buttons ----
+function showClass() {
+  const s = BD.sp[cur], a = BD.au[cur] || [];
+  const d = win(U + 'b_class.png', 78, 40, 672, 391, {title: 'Classification of ' + name(cur), onclose: () => { child = null; }}); openChild(d);
+  [[56, 26, s[2]], [91, 22, s[3]], [120, 26, s[0]], [155, 22, s[1]], [184, 26, s[4]]].forEach(([y, h, v]) => text(d, 77, y, 255, h, v, F15, '#0000ff', {white: true}));
+  text(d, 77, 224, 253, 34, [a[0], a[1]].filter(Boolean).join(' ; '), F15, '#0000ff', {white: true, wrap: true});
+  text(d, 77, 272, 573, 45, [a[2], a[3], a[5], a[6]].filter(x => x && x !== '-').join(' ; '), F12, '#0000ff', {white: true, wrap: true});
+  hot(259, 334, 89, 32, d, () => d.close());
+}
+function showCommon() {
+  const c = (BD.cm[cur] || [])[0] || [];
+  const d = win(U + 'b_cm.png', 78, 40, 537, 207, {onclose: () => { child = null; }}); openChild(d);
+  text(d, 149, 48, 373, 29, c[0], FB15, '#000080', {white: true});
+  text(d, 173, 96, 157, 29, c[2], FB15, '#000080', {white: true});
+}
+function showBreed() {
+  const d = win(U + 'b_breed.png', 78, 40, 524, 416, {onclose: () => { child = null; }}); openChild(d);
+  const layer = el('div', 'position:absolute;left:0;top:0;', d);
+  const dots = [el('div', 'position:absolute;left:16px;top:32px;width:4px;height:4px;background:#000;border-radius:1px;', d), el('div', 'position:absolute;left:238px;top:32px;width:4px;height:4px;background:#000;border-radius:1px;', d)];
+  function fill(src) {
+    dots[0].style.display = src === '1' ? '' : 'none'; dots[1].style.display = src === '2' ? '' : 'none';
+    layer.innerHTML = '';
+    const b = ((BD.br[cur] || {})[src]) || [[], [], [], []];
+    text(layer, 157, 72, 165, 32, b[0].join(', '), F12, '#008000');
+    text(layer, 21, 160, 469, 48, b[1].join('\n'), F12, '#008000', {wrap: true, white: true});
+    text(layer, 148, 247, 165, 32, b[2].join(', '), F12, '#008000');
+    text(layer, 21, 336, 469, 48, b[3].join('\n'), F12, '#008000', {wrap: true, white: true});
+  }
+  hot(8, 26, 200, 14, d, () => fill('1'));
+  hot(228, 26, 200, 14, d, () => fill('2'));
+  fill('1');
+}
+function showCons() {
+  const d = win(U + 'b_cons.png', 78, 40, 712, 512, {onclose: () => { child = null; }}); openChild(d);
+  text(d, 116, 31, 517, 24, BD.iu[cur], F12, '#008000');
+  list(d, 13, 112, 213, 48, BD.iw[cur] || [], '11px Arial,Helvetica,sans-serif', '#008000', null, {select: (BD.iw[cur] || []).length ? 0 : -1, dotOnly: true});
+  text(d, 12, 215, 213, 21, BD.en[cur], F12, '#008000');
+}
+function showHabit() {
+  const d = win(U + 'b_habit.png', 78, 40, 577, 381, {onclose: () => { child = null; }}); openChild(d);
+  list(d, 69, 48, 157, 136, BD.hb[cur] || [], FB15, '#008000', null, {select: (BD.hb[cur] || []).length ? 0 : -1, dotOnly: true});
+  list(d, 341, 48, 221, 136, BD.bz[cur] || [], FB15, '#008000', null, {select: -1});
+  text(d, 108, 247, 421, 93, (BD.rm[cur] || []).join('\n'), F12, '#008000', {wrap: true});
+}
+function showImages() {
+  const pics = BD.im[cur] || [];
+  const d = win(U + 'b_img.png', 78, 40, 942, 703, {onclose: () => { child = null; }}); openChild(d);
+  let i = 0;
+  const p = img('', 6, 26, d);
+  const cnt = label(d, 400, 668, 149, 24, '', '12px Arial,Helvetica,sans-serif', '#808080', 'center');
+  function show() { p.src = 'Images/' + encodeURIComponent(pics[i]); cnt.textContent = `[${i + 1}/${pics.length} ]`; }
+  hot(335, 666, 27, 28, d, () => { i = 0; show(); });
+  hot(365, 666, 30, 28, d, () => { if (i > 0) { i--; show(); } });
+  hot(551, 666, 27, 28, d, () => { if (i < pics.length - 1) { i++; show(); } });
+  hot(581, 666, 30, 28, d, () => { i = pics.length - 1; show(); });
+  show();
+}
+function showHtml() {
+  const h = BD.hp[cur];
+  if (h) window.open('Html/' + encodeURIComponent(h) + '/' + encodeURIComponent(h) + '.htm', '_blank');
+}
+function showDist() {
+  const d = win(U + 'b_dist.png', 78, 40, 942, 703, {onclose: () => { child = null; }}); openChild(d);
+  const cv = el('canvas', 'position:absolute;left:3px;top:84px;', d);
+  cv.width = 936; cv.height = 614;
+  const x = cv.getContext('2d');
+  const on = new Set(BD.di[cur] || []);
+  let labels = true;
+  const P = (lon, lat) => [38 - 3 + (lon - 68.0801) * 19.47, 99 - 84 + (37.0922 - lat) * 19.45];
+  function draw() {
+    x.clearRect(0, 0, 936, 614);
+    BMAP.f.forEach((polys, i) => {
+      x.beginPath();
+      polys.forEach(rings => rings.forEach(r => r.forEach(([lo, la], k) => { const [px, py] = P(lo, la); k ? x.lineTo(px, py) : x.moveTo(px, py); })));
+      x.fillStyle = on.has(i) ? 'rgb(255,255,192)' : 'rgb(227,253,230)';
+      x.fill('evenodd'); x.strokeStyle = '#000'; x.lineWidth = 1; x.stroke();
+    });
+    if (labels) {
+      x.font = '10px Arial'; x.fillStyle = '#000'; x.textAlign = 'center'; x.textBaseline = 'middle';
+      BMAP.l.forEach(([lo, la], i) => { const [px, py] = P(lo, la); x.fillText(String(i + 1), px, py); });
+    }
+    x.textAlign = 'left'; x.textBaseline = 'top'; x.font = '10px Arial';
+    BD.lab.forEach((n, i) => {
+      const col = i < 23 ? 652 : 788, row = i < 23 ? i : i - 23;
+      x.fillStyle = on.has(i) ? '#ff0000' : '#000';
+      x.fillText(`${i + 1}. ${n}`, col - 3, 394 - 84 + row * 13.1);
+    });
+  }
+  draw();
+  const chk = el('div', 'position:absolute;left:422px;top:37px;width:8px;height:8px;', d);
+  hot(424, 38, 100, 16, d, () => { labels = !labels; draw(); tick.style.display = labels ? 'none' : ''; });
+  const tick = el('div', 'position:absolute;left:429px;top:42px;width:8px;height:8px;background:#fff;display:none;', d);
+  hot(344, 30, 62, 32, d, () => window.print());
+}
+</script>
+</body></html>
