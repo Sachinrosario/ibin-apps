@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitized Inventory of Crop Pests, Natural Enemies &amp; Pollinators</title>
+<link rel="icon" href="../ui/icon.png">
+<style>
+html,body{margin:0;height:100%;background:#000;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1024px;height:768px;transform-origin:0 0;background:#d0c8ac;overflow:hidden;user-select:none;-webkit-user-select:none;font-family:Tahoma,Verdana,Arial,sans-serif}
+.lst::-webkit-scrollbar{width:16px;background:#e8e6e0}
+.lst::-webkit-scrollbar-thumb{background:#d4d0c8;border:2px outset #fff}
+</style></head>
+<body>
+<script src="../classic.js"></script>
+<script src="data.js"></script>
+<script src="map.js"></script>
+<script src="pages.js"></script>
+<script>
+"use strict";
+const {stage, el, img, hot, win, text, list, combo, label} = CL;
+const U = 'ui/';
+const A12 = '12px Arial,Helvetica,sans-serif', B15 = 'bold 15px Arial,Helvetica,sans-serif', GR = '#008000', BL = '#0000ff', BK = '#000', BR = '#804000';
+let LAY = null;
+fetch(U + 'layout.json').then(r => r.json()).then(j => { LAY = j; start(); });
+const W = n => LAY.windows[n];
+const F = (n, i) => W(n).fields[i];
+const has = v => v != null && String(v).trim() !== '' && String(v).trim() !== '-';
+const uniq = a => [...new Set(a.map(v => String(v || '').trim()).filter(has))];
+const byId = (t, idc) => { const m = new Map(); PD[t].r.forEach(r => { const k = r[idc]; (m.get(k) || m.set(k, []).get(k)).push(r); }); return m; };
+const ORD = Object.fromEntries(PD.ORDER.r.map(r => [r[0], r[1]])), FAM = Object.fromEntries(PD.FAMILY.r.map(r => [r[0], r[1]])), LEV = Object.fromEntries(PD.LEVEL_OF_INFESTATION.r.map(r => [r[0], r[1]]));
+// ---- the four databases ----
+const PEST = byId('PESTS', 0), VEC = byId('VECTORS', 0), NE = byId('NATURAL_ENEMIES', 1), POLL = byId('POLLINATORS', 2);
+const G = {
+  pest: {tb: 'pest', master: PD.pest_master.r.map(r => ({id: r[0], g: r[1], s: r[2], n: r[3], tax: [r[5], r[4], r[1], r[2], r[6]]})), rows: id => PEST.get(id) || [],
+    btns: ['tax', 'cm', 'dist', 'diag', 'host', 'rr', 'img', 'html']},
+  vec: {tb: 'vec', master: [...VEC.values()].map(rs => rs[0]).map(r => ({id: r[0], g: r[1], s: r[2], n: r[3], tax: [ORD[r[8]] || r[8], FAM[r[7]] || r[7], r[1], r[2], r[5]]})), rows: id => VEC.get(id) || [],
+    btns: ['tax', 'cm', 'dist', 'diag', 'dis', 'rr', 'img', 'html']},
+  ne: {tb: 'ne', master: [...NE.values()].map(rs => rs[0]).map(r => ({id: r[1], g: r[2], s: r[3], n: r[4], tax: [r[6], r[8], r[2], r[3], r[5]]})), rows: id => NE.get(id) || [],
+    btns: ['tax', 'cm', 'dist', 'diag', 'host', 'rr', 'img', 'html']},
+  poll: {tb: 'poll', master: [...POLL.values()].map(rs => rs[0]).map(r => ({id: r[2], g: r[3], s: r[4], n: r[6], tax: [r[0], r[1], r[3], r[4], r[8]]})), rows: id => POLL.get(id) || [],
+    btns: ['tax', 'crop', 'rem', 'ref', 'img', 'html']}
+};
+Object.values(G).forEach(g => { g.by = new Map(g.master.map(m => [m.id, m])); });
+const IMG = {pest: ['pest_images', 'pest images/'], vec: ['vector_images', 'vector images/'], ne: ['natural_images', 'natural enemies images/'], poll: ['poll_images', '']};
+const DIST = {pest: 'pest_distribution', vec: 'vector_distribution'};
+let banner, status, grp = null, cur = null, child = null, pressed = null, tbImgs = [], tbOff = null, btnHots = [];
+const C = () => G[grp];
+const M = id => C().by.get(id);
+const name = id => (M(id) ? M(id).n : '').replace(/\s+/g, ' ').trim();
+const R = () => C().rows(cur);
+const col = i => uniq(R().map(r => r[i]));
+const imgs = id => PD[IMG[grp][0]].r.filter(r => r[0] === id).map(r => IMG[grp][1] + r[1].replace(/\\/g, '/'));
+function htmlOf(id) {
+  if (grp === 'pest') { const d = PD.pest_doc.r.find(r => r[0] === id); return d ? 'Documents/' + d[1].replace(/\.doc$/i, '.html') : null; }
+  if (grp === 'poll') { const n = name(id).toLowerCase(); return PAGES[n] || null; }
+  return null;
+}
+function start() {
+  img(U + 'top.png', 0, 0); img(U + 'status.png', 0, 743);
+  banner = img(U + 'banner.png', 0, 38);
+  status = label(stage, 348, 744, 670, 22, '', 'bold 15px Arial,Helvetica,sans-serif', '#000', 'left');
+  addEventListener('click', closeMenu);
+  [['pest', 16, 36], ['vec', 56, 46], ['ne', 106, 85], ['poll', 198, 60]].forEach(([k, x, w]) => hot(x, 19, w, 18, stage, () => dropdown(k)));
+  hot(260, 19, 34, 18, stage, () => { closeMenu(); links(); });
+  hot(296, 19, 44, 18, stage, () => { closeMenu(); openWin('credits'); });
+  hot(1006, 4, 16, 14, stage, () => { location.href = '../index.html'; }, 'Close');
+  const q = new URLSearchParams(location.search), qg = (q.get('g') || '').trim().toLowerCase(), qs = (q.get('s') || '').trim().toLowerCase();
+  if (qg) for (const g of ['pest', 'vec', 'ne', 'poll']) {
+    const m = G[g].master.find(m => m.g.trim().toLowerCase() === qg && m.s.trim().toLowerCase() === qs);
+    if (m) { showToolbar(g); setSpecies(m.id); break; }
+  }
+}
+function openWin(n, opts = {}) {
+  const [x, y, w, h] = W(n).rect; if (child) child.close();
+  const d = win(U + n + '.png', x, y, w, h, Object.assign({onclose: () => { if (child === d) child = null; }}, opts));
+  child = d; banner.style.display = 'none'; return d;
+}
+function showToolbar(g) {
+  if (grp === g && tbOff) return;
+  grp = g; cur = null; status.textContent = '';
+  if (tbOff) tbOff.remove(); tbImgs.forEach(x => x.remove()); tbImgs = []; btnHots.forEach(x => x.remove()); btnHots = [];
+  if (pressed) { pressed.remove(); pressed = null; }
+  tbOff = img(U + g + '_off.png', 0, 38, stage, 'pointer-events:none;');
+  LAY.toolbars[g].btns.forEach(([y0, y1], i) => btnHots.push(hot(1, y0, 74, y1 - y0 + 1, stage, () => { if (!cur || !enabled(i)) return; press(i); ACT[C().btns[i]](); })));
+  banner.style.display = 'none';
+}
+function enabled(i) {
+  const k = C().btns[i];
+  switch (k) {
+    case 'tax': return true;
+    case 'cm': return col(grp === 'pest' ? 2 : grp === 'vec' ? 4 : 19).length > 0;
+    case 'dist': return grp === 'ne' ? col(7).length > 0 || col(13).length > 0 : PD[DIST[grp]].r.some(r => r[0] === cur);
+    case 'diag': return col(grp === 'pest' ? 1 : grp === 'vec' ? 11 : 0).length > 0;
+    case 'host': return true;
+    case 'dis': return true;
+    case 'rr': return true;
+    case 'crop': return col(7).length > 0 || col(11).length > 0;
+    case 'rem': return col(14).length > 0;
+    case 'ref': return col(13).length > 0;
+    case 'img': return imgs(cur).length > 0;
+    case 'html': return !!htmlOf(cur);
+  }
+}
+function setSpecies(id) {
+  cur = id; status.textContent = name(id);
+  tbImgs.forEach(x => x.remove()); tbImgs = [];
+  LAY.toolbars[grp].btns.forEach(([y0], i) => tbImgs.push(img(U + `${grp}_b${i}_${enabled(i) ? 'on' : 'off'}.png`, 0, y0, stage, 'pointer-events:none;')));
+  press(0); ACT.tax();
+}
+function press(i) { if (pressed) pressed.remove(); pressed = img(U + `${grp}_b${i}_down.png`, 0, LAY.toolbars[grp].btns[i][0], stage, 'pointer-events:none;'); }
+const box = (d, n, i, v, color, font) => { const [x, y, w, h] = F(n, i); return text(d, x, y, w, h, v, font || A12, color || BK, {white: true, wrap: true}); };
+const numbered = a => a.length > 1 ? a.map((v, i) => `${i + 1} . ${v}`).join('\n\n') : (a[0] ? `1 . ${a[0]}` : '');
+function lines(d, n, i, arr, font, color) {
+  const [x, y, w, h] = F(n, i);
+  return list(d, x, y, w, h, arr, font || '13px Arial,Helvetica,sans-serif', color || GR, null, {select: arr.length ? 0 : -1, dotOnly: true, lh: '15px'});
+}
+const ACT = {
+  tax() {
+    const n = grp + '_tax', d = openWin(n, {title: 'Classification of ' + name(cur)});
+    M(cur).tax.forEach((v, i) => { const t = box(d, n, i, v, BL, '15px Arial,Helvetica,sans-serif'); t.style.whiteSpace = 'nowrap'; t.style.padding = '1px 2px'; });
+  },
+  cm() { const d = openWin('cm'); lines(d, 'cm', 0, col(grp === 'pest' ? 2 : grp === 'vec' ? 4 : 19).map(v => `English  ---  ${v}`)); },
+  dist() {
+    if (grp === 'ne') { const d = openWin('ne_dist'), r = R()[0]; box(d, 'ne_dist', 0, col(7).join(', ')); box(d, 'ne_dist', 1, R().filter(r => has(r[13])).map(r => `Species -- ${r[13]}` + (has(r[15]) ? `\nAuthor -- ${r[15]}` : '')).filter((v, i, a) => a.indexOf(v) === i).join('\n\n')); return; }
+    map(PD[DIST[grp]].r.filter(r => r[0] === cur).map(r => r[1]));
+  },
+  diag() { const n = grp + '_diag', d = openWin(n); box(d, n, 0, col(grp === 'pest' ? 1 : grp === 'vec' ? 11 : 0).join('\n\n')); },
+  host() {
+    if (grp === 'ne') { const d = openWin('ne_host'); box(d, 'ne_host', 0, col(9).join(', ')); box(d, 'ne_host', 1, col(10).join(', ')); box(d, 'ne_host', 2, col(16).join(', ')); return; }
+    const d = openWin('pest_host'), [x, y, w, h] = F('pest_host', 0);
+    // the list view: Host/Hosts, Level of infestation, Stages Attacked (column headers are part of the picture)
+    const rows = R().map(r => [r[7], LEV[r[8]] || '', r[9]]).filter(r => has(r[0]));
+    const lv = el('div', `position:absolute;left:${x + 2}px;top:${y + 19}px;width:${w - 4}px;height:${h - 40}px;overflow:hidden;font:${A12};color:#000;`, d);
+    rows.forEach((r, i) => {
+      const ro = el('div', 'position:relative;height:17px;white-space:nowrap;', lv);
+      [[0, 170], [172, 155], [330, 200]].forEach(([cx, cw], j) => { const c = el('div', `position:absolute;left:${cx + 2}px;top:1px;width:${cw}px;overflow:hidden;`, ro); const sp = el('span', i === 0 && j === 0 ? 'background:#0a246a;color:#fff;outline:1px dotted #000;' : '', c); sp.textContent = r[j]; });
+    });
+    const ne = uniq(PD.NATURAL_ENEMIES.r.filter(r => r[13].trim() === name(cur)).map(r => r[4]));
+    const [nx, ny, nw, nh] = F('pest_host', 1);
+    list(d, nx, ny, nw, nh, ne, A12, GR, null, {lh: '15px'});
+  },
+  dis() { const d = openWin('vec_dis'); box(d, 'vec_dis', 0, col(9).join(', ')); box(d, 'vec_dis', 1, col(13).join(', ')); },
+  rr() { const n = grp + '_rr', d = openWin(n); const [ri, fi] = {pest: [11, 10], vec: [15, 6], ne: [18, 17]}[grp]; box(d, n, 0, numbered(col(ri))); box(d, n, 1, numbered(col(fi))); },
+  crop() { const d = openWin('poll_crop'); lines(d, 'poll_crop', 0, col(7).map(v => `Common Name - ${v}`)); },
+  rem() { const d = openWin('poll_ref'); box(d, 'poll_ref', 0, col(14).join('\n\n')); },
+  ref() { const d = openWin('poll_ref'); box(d, 'poll_ref', 0, col(13).join('\n\n')); },
+  img() {
+    const pics = imgs(cur), d = openWin(grp + '_img');
+    let i = 0;
+    const p = img('', 6, 26, d);
+    const cnt = label(d, 400, 668, 149, 24, '', A12, '#808080', 'center');
+    function show() { p.src = pics[i].split('/').map(encodeURIComponent).join('/'); cnt.textContent = `[${i + 1}/${pics.length} ]`; }
+    hot(335, 666, 27, 28, d, () => { i = 0; show(); });
+    hot(365, 666, 30, 28, d, () => { if (i > 0) { i--; show(); } });
+    hot(551, 666, 27, 28, d, () => { if (i < pics.length - 1) { i++; show(); } });
+    hot(581, 666, 30, 28, d, () => { i = pics.length - 1; show(); });
+    show();
+  },
+  html() { const p = htmlOf(cur); if (p) window.open(p.split('/').map(encodeURIComponent).join('/'), '_blank'); }
+};
+const LAB = ["ANDHRA PRADESH", "ARUNACHAL PRADESH", "ASSAM", "GOA", "KARNATAKA", "KERALA", "TAMILNADU", "GUJARAT", "MAHARASTRA", "ORISSA", "WEST BENGAL", "RAJASTHAN", "PUNJAB", "HARYANA", "JAMMU KASHMIR", "HIMACHAL PRADESH", "MANIPUR", "MIZORAM", "NAGALAND", "MEGHALAYA", "TRIPURA", "SIKKIM", "DELHI", "MADHYA PRADESH", "JHARKHAND", "BIHAR", "UTTAR PRADESH", "UTTARANCHAL", "CHHATISGARH", "ANDAMAN NICOBAR", "LAKSHWADEWEEP"];
+function map(states) {
+  const d = openWin('dist');
+  const cv = el('canvas', 'position:absolute;left:3px;top:104px;', d); cv.width = 936; cv.height = 596;
+  const x = cv.getContext('2d');
+  const on = new Set(states.map(s => LAB.indexOf(s.trim().toUpperCase())).filter(i => i >= 0));
+  const P = (lon, lat) => [35 + (lon - 68.0801) * 19.47, 27 + (37.0922 - lat) * 19.45];
+  BMAP.f.forEach((polys, i) => {
+    x.beginPath();
+    polys.forEach(rings => rings.forEach(r => r.forEach(([lo, la], k) => { const [px, py] = P(lo, la); k ? x.lineTo(px, py) : x.moveTo(px, py); })));
+    x.fillStyle = on.has(i) ? 'rgb(255,255,192)' : 'rgb(227,253,230)'; x.fill('evenodd'); x.strokeStyle = '#000'; x.lineWidth = 1; x.stroke();
+  });
+  x.font = '10px Arial'; x.fillStyle = '#000'; x.textAlign = 'center'; x.textBaseline = 'middle';
+  BMAP.l.forEach(([lo, la], i) => { const [px, py] = P(lo, la); x.fillText(String(i + 1), px, py); });
+  x.textAlign = 'left'; x.textBaseline = 'top';
+  LAB.forEach((n, i) => { const c = i < 23 ? 652 : 788, row = i < 23 ? i : i - 23; x.fillStyle = on.has(i) ? '#ff0000' : '#000'; x.fillText(`${i + 1}. ${n}`, c - 3, 290 + row * 13.1); });
+}
+// ---- Links: one window, five ways in ----
+function links() {
+  let mode = 'pest', d = null;
+  const RAD = [[38, 36, 60, 16, 'pest'], [98, 36, 72, 16, 'vec'], [175, 36, 112, 16, 'ne'], [292, 36, 80, 16, 'poll'], [375, 36, 90, 16, 'host']];
+  function build() {
+    d = openWin('l_' + mode);
+    RAD.forEach(([x, y, w, h, m]) => hot(x, y, w, h, d, () => { mode = m; build(); }));
+    const n = 'l_' + mode, f = W(n).fields, [cx, cy, cw, ch] = f[0], [bx, by, bw, bh] = f[f.length - 1];
+    const bottom = label(d, bx, by, bw, bh, '', 'bold 15px Arial,Helvetica,sans-serif', BL, 'center');
+    const items = mode === 'pest' ? G.pest.master.map(m => m.n) : mode === 'vec' ? G.vec.master.map(m => m.n) : mode === 'ne' ? G.ne.master.map(m => m.n) : mode === 'poll' ? G.poll.master.map(m => m.n) : PD.crop.r.map(r => r[0]);
+    const vals = uniq(items).sort((a, b) => a.localeCompare(b));
+    const L1 = f[1] && mode !== 'vec' && mode !== 'ne' ? list(d, f[1][0], f[1][1], f[1][2], f[1][3] - 17, [], A12, GR, null, {lh: '15px'}) : null;
+    const L2 = (mode === 'pest' || mode === 'host') ? list(d, f[2][0], f[2][1], f[2][2], f[2][3] - 17, [], A12, GR, null, {lh: '15px'}) : null;
+    const grid = (mode === 'vec' || mode === 'ne') ? el('div', 'position:absolute;left:13px;top:149px;width:565px;height:140px;overflow:hidden;', d) : null;
+    combo(d, cx - 2, cy - 2, cw + 22, ch + 4, vals, A12, BK, v => {
+      bottom.textContent = v;
+      if (mode === 'pest') { const ids = G.pest.master.filter(m => m.n === v).map(m => m.id); L1.set(uniq(ids.flatMap(id => (PEST.get(id) || []).map(r => r[7])))); L2.set(uniq(PD.NATURAL_ENEMIES.r.filter(r => r[13].trim() === v).map(r => r[4]))); }
+      if (mode === 'poll') { L1.set(uniq(PD.POLLINATORS.r.filter(r => r[6].trim() === v).map(r => r[7]))); }
+      if (mode === 'host') { L1.set(uniq(PD.PESTS.r.filter(r => r[7].trim() === v).map(r => r[6]))); L2.set(uniq(PD.POLLINATORS.r.filter(r => r[7].trim() === v || r[11].trim() === v).map(r => r[6]))); }
+      if (grid) {
+        grid.innerHTML = '';
+        const rows = mode === 'vec' ? PD.VECTORS.r.filter(r => r[3].trim() === v).map(r => [r[9], r[13]]) : PD.NATURAL_ENEMIES.r.filter(r => r[4].trim() === v).map(r => [r[13], r[9]]);
+        // one block per first-column value, its second-column values one per line (the original merges the cells)
+        const groups = new Map(); rows.forEach(([a, b]) => { a = (a || '').trim(); if (!groups.has(a)) groups.set(a, []); b.split(/\s*,\s*/).filter(has).forEach(x => { if (!groups.get(a).includes(x)) groups.get(a).push(x); }); });
+        let y = 0;
+        for (const [a, bs] of groups) {
+          const hh = Math.max(1, bs.length) * 18;
+          el('div', `position:absolute;left:0;top:${y}px;width:243px;height:${hh - 1}px;background:#fff;border-right:1px solid #808080;border-bottom:1px solid #808080;font:${B15};color:${BR};display:flex;align-items:center;padding-left:2px;box-sizing:border-box;white-space:nowrap;overflow:hidden;`, grid).textContent = a || '-';
+          (bs.length ? bs : ['-']).forEach((b, j) => el('div', `position:absolute;left:244px;top:${y + j * 18}px;width:321px;height:17px;background:#fff;border-bottom:1px solid #808080;font:${B15};color:${BR};padding-left:2px;box-sizing:border-box;white-space:nowrap;overflow:hidden;line-height:17px;`, grid).textContent = b);
+          y += hh;
+        }
+      }
+    }, {rows: 8, lh: 14, selHi: true});
+  }
+  build();
+}
+// ---- menus ----
+const SCI = g => () => dlgSci(g), CMN = g => () => dlgCommon(g), S = (g, k) => () => search(g, k);
+const MENU = {
+  pest: {pic: 'pest', x: 18, w: 103, items: [['Scientific Name', SCI('pest')], ['Common Name', CMN('pest')], ['Search', {pic: 'pest_s', x: 124, w: 175, items: [['Search by Host Plant', S('pest', 'host')], ['Search by Level of Infestation', S('pest', 'level')], ['Search by Stages Attacked', S('pest', 'stage')]]}]]},
+  vec: {pic: 'vec', x: 58, w: 103, items: [['Scientific Name', SCI('vec')], ['Common Name', CMN('vec')], ['Search', {pic: 'vec_s', x: 164, w: 152, items: [['Search by Disease Name', S('vec', 'dis')], ['Search by Crop', S('vec', 'crop')]]}]]},
+  ne: {pic: 'ne', x: 108, w: 103, items: [['Scientific Name', SCI('ne')], ['Common Name', CMN('ne')], ['Search', {pic: 'ne_s', x: 214, w: 187, items: [['Search by Host Plant', S('ne', 'host')], ['Search by Host Stages Attacked', S('ne', 'stage')], ['Search by Insect/Pest', S('ne', 'pest')]]}]]},
+  poll: {pic: 'poll', x: 200, w: 103, items: [['Scientific Name', SCI('poll')], ['Search', {pic: 'poll_s', x: 306, w: 247, items: [['Search by Crop Associated (Common Name)', S('poll', 'cm')], ['Search by Crop Associated (Scientific Name)', S('poll', 'sci')]]}]]}
+};
+let menu = null, menuKey = '';
+function closeMenu() { if (menu) { menu.remove(); menu = null; menuKey = ''; } }
+function dropdown(k) {
+  const was = menuKey; closeMenu(); if (was === k) return; menuKey = k;
+  menu = el('div', 'position:absolute;left:0;top:0;width:1024px;height:0;z-index:99999;');
+  const pic = img(U + `menu_${MENU[k].pic}.png`, LAY.menus[MENU[k].pic][0], LAY.menus[MENU[k].pic][1], menu, 'pointer-events:none;');
+  const levels = [];
+  function setPic(p) { pic.src = U + `menu_${p}.png`; pic.style.left = LAY.menus[p][0] + 'px'; pic.style.top = LAY.menus[p][1] + 'px'; }
+  function level(node, depth, y0) {
+    levels.slice(depth).forEach(l => l.remove()); levels.length = depth;
+    const box = el('div', 'position:absolute;left:0;top:0;', menu); levels[depth] = box;
+    let hl = null;
+    node.items.forEach(([t, v], i) => {
+      const y = y0 + 16 * i, r = el('div', `position:absolute;left:${node.x}px;top:${y}px;width:${node.w}px;height:16px;`, box);
+      r.addEventListener('mouseenter', () => {
+        if (typeof v === 'object') { setPic(v.pic); if (hl) { hl.remove(); hl = null; } level(v, depth + 1, y); return; }
+        setPic(node.pic); levels.slice(depth + 1).forEach(l => l.remove()); levels.length = depth + 1;
+        if (hl) hl.remove();
+        hl = el('div', `position:absolute;left:${node.x}px;top:${y}px;width:${node.w}px;height:16px;background:#0a246a;color:#fff;font:11px Tahoma,Verdana,Arial,sans-serif;line-height:16px;padding-left:${depth ? 15 : 17}px;box-sizing:border-box;white-space:nowrap;pointer-events:none;`, box);
+        hl.textContent = t;
+      });
+      r.addEventListener('click', e => { e.stopPropagation(); if (typeof v === 'function') { closeMenu(); v(); } });
+    });
+  }
+  level(MENU[k], 0, 41);
+}
+function dlgSci(g) {
+  showToolbar(g);
+  const d = openWin('dlg_sci'), sp = G[g].master;
+  const genera = uniq(sp.map(m => m.g)).sort();
+  let ge = '', s = '';
+  const f15 = '15px Arial,Helvetica,sans-serif';
+  const cs = combo(d, 155, 94, 169, 25, [], f15, '#0000c0', v => { s = v; }, {rows: 8, selHi: true});
+  combo(d, 155, 46, 169, 25, genera, f15, '#0000c0', v => { ge = v; s = ''; cs.set(uniq(sp.filter(m => m.g.trim() === ge).map(m => m.s)).sort()); }, {rows: 8, selHi: true});
+  hot(131, 142, 66, 34, d, () => { const m = sp.find(m => m.g.trim() === ge && m.s.trim() === s); if (!m) return; d.close(); setSpecies(m.id); });
+  hot(211, 142, 66, 34, d, () => d.close());
+}
+function dlgCommon(g) {
+  showToolbar(g);
+  const ci = {pest: 2, vec: 4, ne: 19}[g], d = openWin('dlg_cm');
+  const all = []; G[g].master.forEach(m => uniq(G[g].rows(m.id).map(r => r[ci])).forEach(n => all.push([n, m.id])));
+  let nm = '';
+  const f15 = '15px Arial,Helvetica,sans-serif';
+  const cn = combo(d, 107, 118, 363, 25, [], f15, BL, v => { nm = v; }, {rows: 8, lh: 17, selHi: true});
+  const lang = combo(d, 107, 62, 363, 25, ['English'], f15, BL, () => { nm = ''; cn.set(uniq(all.map(r => r[0])).sort()); }, {rows: 8, lh: 17, selHi: true});
+  cn.set(uniq(all.map(r => r[0])).sort());
+  const t0 = lang.firstChild; t0.textContent = ''; el('span', 'background:#0a246a;color:#fff;', t0).textContent = 'English';
+  hot(188, 166, 64, 32, d, () => { const r = all.find(r => r[0] === nm); if (!r) return; d.close(); setSpecies(r[1]); });
+  hot(275, 166, 64, 32, d, () => d.close());
+}
+function searchData(g, k) {
+  const m = new Map(), add = (v, id) => { v = String(v || '').trim(); if (!has(v)) return; (m.get(v) || m.set(v, new Set()).get(v)).add(id); };
+  if (g === 'pest') PD.PESTS.r.forEach(r => add(k === 'host' ? r[7] : k === 'level' ? LEV[r[8]] : r[9], r[0]));
+  if (g === 'vec') PD.VECTORS.r.forEach(r => add(k === 'dis' ? r[9] : r[13], r[0]));
+  if (g === 'ne') PD.NATURAL_ENEMIES.r.forEach(r => add(k === 'host' ? r[9] : k === 'stage' ? r[16] : r[13], r[1]));
+  if (g === 'poll') PD.POLLINATORS.r.forEach(r => add(k === 'cm' ? r[7] : r[11], r[2]));
+  return m;
+}
+function search(g, k) {
+  showToolbar(g);
+  const n = `s_${g}_${k}`, d = openWin(n), m = searchData(g, k);
+  const vals = [...m.keys()].sort((a, b) => a.localeCompare(b));
+  let ids = [], pick = -1;
+  const [cx, cy, cw, ch] = F(n, 0), [lx, ly, lw, lh] = F(n, 1);
+  const lst = list(d, lx, ly, lw, lh, [], B15, GR, i => { pick = i; }, {lh: '17px', ondbl: () => ok()});
+  combo(d, cx - 2, cy - 2, cw + 22, ch + 4, vals, B15, GR, v => {
+    ids = [...m.get(v)].filter(id => G[g].by.has(id)).sort((a, b) => G[g].by.get(a).n.localeCompare(G[g].by.get(b).n));
+    pick = -1; lst.set(ids.map(id => G[g].by.get(id).n));
+  }, {rows: 8, lh: 17, selHi: true});
+  function ok() { if (pick < 0) return; d.close(); setSpecies(ids[pick]); }
+  hot(126, 229, 66, 34, d, ok); hot(212, 229, 66, 34, d, () => d.close());
+}
+</script>
+</body></html>
