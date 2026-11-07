@@ -1265,16 +1265,16 @@
           "key": "v1",
           "label": "Version 1 – Original (2026 rebuild)",
           "versionName": "Version 1",
-          "version": "1.0.0",
-          "released": "2026-11-06",
+          "version": "1.1.0",
+          "released": "2026-11-07",
           "published": true,
-          "summary": "The pooled database of the original program: species of plants, microbes, crop pests, vectors, silkworms, amphibians, reptiles, birds, mammals, domestic animals, fishes, crabs, prawns and molluscs by state and district; a name search across all groups; medicinal plant names with 11,306 patents. The 12 separate databases are added in updates.",
+          "summary": "The original Jeeva Sampada program rebuilt screen for screen from the originals: the main screen with its menus and scrolling line, Links (state, district, groups, species, and Application), and the complete Birds database – Pakshi Sampada (search by scientific or common name, five search windows, classification, common name, distribution map, breeding, conservation, habit and biotic zone, pictures and the original species pages). The other databases follow in updates.",
           "facts": [
-            "21,814 species names",
-            "225,326 place records",
-            "1,997 medicinal plants",
-            "11,306 patents",
-            "16 groups"
+            "Original screens",
+            "1,303 birds",
+            "937 bird pictures",
+            "1,301 species pages",
+            "616 places in Links"
           ],
           "web": "https://sachinrosario.github.io/ibin-apps/jeeva-sampada/",
           "preview": "",
@@ -1282,40 +1282,45 @@
             {
               "os": "windows",
               "kind": "Installer",
-              "file": "JeevaSampada_1.0.0_Setup.exe",
-              "size": "4 MB",
+              "file": "JeevaSampada_1.1.0_Setup.exe",
+              "size": "35 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password."
             },
             {
               "os": "windows",
               "kind": "No-install",
               "file": "JeevaSampada.exe",
-              "size": "16 MB",
+              "size": "56 MB",
               "note": "Runs straight from a folder or pen drive."
             },
             {
               "os": "mac",
               "kind": "App",
-              "file": "JeevaSampada_1.0.0_universal.dmg",
-              "size": "8 MB",
+              "file": "JeevaSampada_1.1.0_universal.dmg",
+              "size": "77 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
-              "file": "JeevaSampada_1.0.0_amd64.deb",
-              "size": "4 MB",
+              "file": "JeevaSampada_1.1.0_amd64.deb",
+              "size": "38 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
-              "file": "JeevaSampada_1.0.0_offline.zip",
-              "size": "3 MB",
+              "file": "JeevaSampada_1.1.0_offline.zip",
+              "size": "43 MB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
           "changes": [
+            {
+              "version": "1.1.0",
+              "date": "2026-11-07",
+              "text": "Rebuilt in the original format, screen for screen from the original programs: main screen, Links, and the complete Birds database (Pakshi Sampada)."
+            },
             {
               "version": "1.0.0",
               "date": "2026-11-06",
