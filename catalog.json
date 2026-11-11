@@ -1448,35 +1448,35 @@
               "os": "windows",
               "kind": "Installer",
               "file": "SasyaBharathi2_2.0.0_Setup.exe",
-              "size": "",
+              "size": "6 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password. Plant records and pictures are fetched online."
             },
             {
               "os": "windows",
               "kind": "No-install",
               "file": "SasyaBharathi2.exe",
-              "size": "",
+              "size": "23 MB",
               "note": "Runs straight from a folder or pen drive. Plant records and pictures are fetched online."
             },
             {
               "os": "mac",
               "kind": "App",
               "file": "SasyaBharathi2_2.0.0_universal.dmg",
-              "size": "",
+              "size": "12 MB",
               "note": "Intel and Apple-silicon Macs. Plant records and pictures are fetched online."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
               "file": "SasyaBharathi2_2.0.0_amd64.deb",
-              "size": "",
+              "size": "6 MB",
               "note": "Ubuntu 22.04 or newer. Plant records and pictures are fetched online."
             },
             {
               "os": "any",
               "kind": "Offline folder",
               "file": "SasyaBharathi2_2.0.0_offline.zip",
-              "size": "",
+              "size": "182 MB",
               "note": "Any computer, everything inside, no internet needed. Extract, then double-click Open Kit.html."
             }
           ],
@@ -1511,35 +1511,35 @@
               "os": "windows",
               "kind": "Installer",
               "file": "SasyaBharathi_1.0.1_Setup.exe",
-              "size": "",
+              "size": "5 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password. Plant records and pictures are fetched online."
             },
             {
               "os": "windows",
               "kind": "No-install",
               "file": "SasyaBharathi.exe",
-              "size": "",
+              "size": "19 MB",
               "note": "Runs straight from a folder or pen drive. Plant records and pictures are fetched online."
             },
             {
               "os": "mac",
               "kind": "App",
               "file": "SasyaBharathi_1.0.1_universal.dmg",
-              "size": "",
+              "size": "11 MB",
               "note": "Intel and Apple-silicon Macs. Plant records and pictures are fetched online."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
               "file": "SasyaBharathi_1.0.1_amd64.deb",
-              "size": "",
+              "size": "5 MB",
               "note": "Ubuntu 22.04 or newer. Plant records and pictures are fetched online."
             },
             {
               "os": "any",
               "kind": "Offline folder",
               "file": "SasyaBharathi_1.0.1_offline.zip",
-              "size": "",
+              "size": "182 MB",
               "note": "Any computer, everything inside, no internet needed. Extract, then double-click Open Kit.html."
             }
           ],
