@@ -1,4 +1,6 @@
-## Andaman Mapping – Version 1 – Original (1.0.4)
+## Andaman Mapping – Version 1 – Original (1.0.5)
+
+1.0.5: all original images and fliers now come by themselves. The Images and Fliers tabs fetch each picture from the public Pictures and Fliers pack on the IBIN Apps releases page the first time it is shown (internet needed once; the computer keeps a copy for offline use). Installing the pack is no longer needed; an installed pack folder is still used when present. Everything else is as before.
 
 1.0.4: closer to the 2015 program. Thematic and grid maps use the original's six shades (cyan to dark green) with natural-break ranges and an "Andaman_Grid by …" legend ("0 to 3", "3 to 18" …). New Point Select Info tool (the "i" button) shows a grid's sheet, area and species counts. A readout under the map shows zoom, scale and cursor position. Everything else is as 1.0.3 (below).
 

@@ -14,8 +14,8 @@
           "key": "v2",
           "label": "Version 2 – Updated (2026)",
           "versionName": "Version 2 – Updated",
-          "version": "2.0.1",
-          "released": "2026-11-06",
+          "version": "2.0.2",
+          "released": "2026-11-11",
           "published": true,
           "summary": "Search first, on phones too: find plants by scientific name, family, local name in any language, synonym or habit. Current names (GBIF / Catalogue of Life, 2015 names kept in brackets), one page per plant, a draggable map with species-count maps, and GIS export of grids as GeoJSON, KML or CSV.",
           "facts": [
@@ -31,7 +31,7 @@
             {
               "os": "windows",
               "kind": "Installer",
-              "file": "AndamanMapping2_2.0.1_Setup.exe",
+              "file": "AndamanMapping2_2.0.2_Setup.exe",
               "size": "30 MB",
               "note": "Installs beside Version 1. No administrator password."
             },
@@ -45,26 +45,31 @@
             {
               "os": "mac",
               "kind": "App",
-              "file": "AndamanMapping2_2.0.1_universal.dmg",
+              "file": "AndamanMapping2_2.0.2_universal.dmg",
               "size": "64 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
-              "file": "AndamanMapping2_2.0.1_amd64.deb",
+              "file": "AndamanMapping2_2.0.2_amd64.deb",
               "size": "30 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
-              "file": "AndamanMapping2_2.0.1_offline.zip",
+              "file": "AndamanMapping2_2.0.2_offline.zip",
               "size": "29 MB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
           "changes": [
+            {
+              "version": "2.0.2",
+              "date": "2026-11-11",
+              "text": "All original images and fliers are fetched automatically from the public Pictures and Fliers pack (no separate pack Setup needed)."
+            },
             {
               "version": "2.0.1",
               "date": "2026-11-06",
@@ -82,8 +87,8 @@
           "key": "v1",
           "label": "Version 1 – Original (2015 screens)",
           "versionName": "Version 1 – Original",
-          "version": "1.0.4",
-          "released": "2026-11-06",
+          "version": "1.0.5",
+          "released": "2026-11-11",
           "published": true,
           "summary": "The 2015 program rebuilt screen for screen, without MapInfo: search the plants of the Andaman Islands by genus, species, habit or common name, or select map grids to list the species recorded there; see each species' taxonomy, distribution map, picture, distribution data, synonyms and common names.",
           "facts": [
@@ -99,7 +104,7 @@
             {
               "os": "windows",
               "kind": "Installer",
-              "file": "AndamanMapping_1.0.4_Setup.exe",
+              "file": "AndamanMapping_1.0.5_Setup.exe",
               "size": "34 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password."
             },
@@ -113,26 +118,31 @@
             {
               "os": "mac",
               "kind": "App",
-              "file": "AndamanMapping_1.0.4_universal.dmg",
+              "file": "AndamanMapping_1.0.5_universal.dmg",
               "size": "68 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
-              "file": "AndamanMapping_1.0.4_amd64.deb",
+              "file": "AndamanMapping_1.0.5_amd64.deb",
               "size": "32 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
-              "file": "AndamanMapping_1.0.4_offline.zip",
+              "file": "AndamanMapping_1.0.5_offline.zip",
               "size": "33 MB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
           "changes": [
+            {
+              "version": "1.0.5",
+              "date": "2026-11-11",
+              "text": "All original images and fliers are fetched automatically from the public Pictures and Fliers pack (no separate pack Setup needed)."
+            },
             {
               "version": "1.0.4",
               "date": "2026-11-06",
@@ -174,8 +184,8 @@
           "key": "v2",
           "label": "Version 2 – Updated (2026)",
           "versionName": "Version 2 – Updated",
-          "version": "2.0.0",
-          "released": "2026-11-06",
+          "version": "2.0.1",
+          "released": "2026-11-11",
           "published": true,
           "summary": "Search first, on phones too: find plants by scientific name, family, local name in any language, synonym or habit. Current names (GBIF / Catalogue of Life, 2015 names kept in brackets), one page per plant, a draggable map with states, districts and taluks, species-count maps, and GIS export of grids as GeoJSON, KML or CSV.",
           "facts": [
@@ -191,7 +201,7 @@
             {
               "os": "windows",
               "kind": "Installer",
-              "file": "WesternGhatsMapping2_2.0.0_Setup.exe",
+              "file": "WesternGhatsMapping2_2.0.1_Setup.exe",
               "size": "62 MB",
               "note": "Installs beside Version 1. No administrator password."
             },
@@ -205,26 +215,31 @@
             {
               "os": "mac",
               "kind": "App",
-              "file": "WesternGhatsMapping2_2.0.0_universal.dmg",
+              "file": "WesternGhatsMapping2_2.0.1_universal.dmg",
               "size": "127 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
-              "file": "WesternGhatsMapping2_2.0.0_amd64.deb",
+              "file": "WesternGhatsMapping2_2.0.1_amd64.deb",
               "size": "61 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
-              "file": "WesternGhatsMapping2_2.0.0_offline.zip",
+              "file": "WesternGhatsMapping2_2.0.1_offline.zip",
               "size": "62 MB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
           "changes": [
+            {
+              "version": "2.0.1",
+              "date": "2026-11-11",
+              "text": "All original images and fliers are fetched automatically from the public Pictures and Fliers pack (no separate pack Setup needed)."
+            },
             {
               "version": "2.0.0",
               "date": "2026-11-06",
@@ -237,8 +252,8 @@
           "key": "v1",
           "label": "Version 1 – Original (2015 screens)",
           "versionName": "Version 1 – Original",
-          "version": "1.0.0",
-          "released": "2026-11-06",
+          "version": "1.0.1",
+          "released": "2026-11-11",
           "published": true,
           "summary": "The 2015 program rebuilt screen for screen, without MapInfo: search the plants of the Western Ghats by genus, species, habit, common name or taluk, or select map grids to list the species recorded there; ten thematic maps including disturbance and threat indices; see each species' taxonomy, distribution map, picture, flier, distribution data, synonyms and common names.",
           "facts": [
@@ -254,7 +269,7 @@
             {
               "os": "windows",
               "kind": "Installer",
-              "file": "WesternGhatsMapping_1.0.0_Setup.exe",
+              "file": "WesternGhatsMapping_1.0.1_Setup.exe",
               "size": "67 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password."
             },
@@ -268,26 +283,31 @@
             {
               "os": "mac",
               "kind": "App",
-              "file": "WesternGhatsMapping_1.0.0_universal.dmg",
+              "file": "WesternGhatsMapping_1.0.1_universal.dmg",
               "size": "132 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
-              "file": "WesternGhatsMapping_1.0.0_amd64.deb",
+              "file": "WesternGhatsMapping_1.0.1_amd64.deb",
               "size": "64 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
-              "file": "WesternGhatsMapping_1.0.0_offline.zip",
+              "file": "WesternGhatsMapping_1.0.1_offline.zip",
               "size": "65 MB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
           "changes": [
+            {
+              "version": "1.0.1",
+              "date": "2026-11-11",
+              "text": "All original images and fliers are fetched automatically from the public Pictures and Fliers pack (no separate pack Setup needed)."
+            },
             {
               "version": "1.0.0",
               "date": "2026-11-06",

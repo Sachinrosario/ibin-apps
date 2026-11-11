@@ -113,6 +113,26 @@ const HAB = {tree:'Tree', herb:'Herb', shrub:'Shrub', epiphyte:'Epiphyte', regen
 const HAB_KEYS = ['tree','herb','shrub','epiphyte','regeneration'];
 
 /* ---------- species ---------- */
+// All original images and fliers: the installed programs fetch each picture by themselves from the public Pictures and Fliers
+// pack on the IBIN Apps releases page the first time it is shown, and keep it on the computer
+// (Windows: served at pack/; Mac and Ubuntu: ibinpack://). The web page has no access to the pack.
+const PKBASE = location.protocol === 'tauri:' ? 'ibinpack://localhost/' : location.hostname === 'tauri.localhost' ? 'http://ibinpack.localhost/' : 'pack/';
+const pkUrl = rel => PKBASE + rel.split('/').map(encodeURIComponent).join('/');
+const pkDesktop = PKBASE !== 'pack/' || /^127\.0\.0\.1$/.test(location.hostname);
+function pkLight(src) { let b = document.getElementById('pklb'); if (!b) { b = document.createElement('div'); b.id = 'pklb'; b.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:9999;cursor:zoom-out'; b.innerHTML = '<img alt="" style="max-width:96vw;max-height:94vh">'; b.onclick = () => b.style.display = 'none'; document.body.appendChild(b); } b.firstChild.src = src; b.style.display = 'flex'; }
+function pkGallery(box, rows, flierName) {
+  if (!pkDesktop) { box.innerHTML = '<div class="note">All the original images and the complete flier show in the installed program (Windows, Mac or Ubuntu, from the IBIN Apps page), which fetches them by itself. They can also be downloaded as the Pictures and Fliers pack from the IBIN Apps releases page.</div>'; return; }
+  const names = { F: 'Field photographs', H: 'Herbarium images', L: 'Line diagrams', P: 'Paintings' };
+  const fig = rel => `<figure style="display:inline-block;margin:4px;width:170px;vertical-align:top"><img loading="lazy" src="${esc(pkUrl(rel))}" alt="" onerror="this.closest('figure').style.display='none'" onclick="pkLight(this.src)" style="width:170px;height:130px;object-fit:cover;border-radius:6px;background:#eee;cursor:zoom-in"><figcaption class="lead" style="font-size:12px;word-break:break-word">${esc(rel.split('/').pop().replace(/\.[^.]+$/, ''))}</figcaption></figure>`;
+  let h = '';
+  for (const k of Object.keys(names)) { const rs = rows.filter(r => r[0] === k); if (rs.length) h += `<h3>${names[k]} (${rs.length})</h3><div>` + rs.map(r => fig('Images/' + r[2])).join('') + '</div>'; }
+  if (flierName) h += `<h3>Flier</h3><div id="pkFl"></div>`;
+  box.innerHTML = h || '<div class="card">No pictures.</div>';
+  if (flierName) { const add = k => { if (k > 60) return; const i = new Image();
+    i.onload = () => { const f = document.createElement('figure'); f.style.cssText = 'margin:6px 0;max-width:520px'; i.style.cssText = 'width:100%;border-radius:8px;cursor:zoom-in'; i.onclick = () => pkLight(i.src); f.appendChild(i); const c = document.createElement('figcaption'); c.className = 'lead'; c.textContent = 'Slide ' + k; f.appendChild(c); const g = document.getElementById('pkFl'); if (g) { g.appendChild(f); add(k + 1); } };
+    i.onerror = () => {}; i.src = pkUrl('Fliers/' + flierName + '/Slide' + k + '.JPG'); }; add(1); }
+}
+
 const SP = C.sp.map(r => {
   const id = r[0], n = NM.n[id] || null, name15 = r[2];
   const s = {id, genus: r[1], name15, fam: C.fams[r[3]], hab: r[4].map(i => C.habits[i]), mask: r[5], fl: r[6], rep: r[7], code: n ? n[0] : 0};
@@ -306,10 +326,11 @@ function viewSpecies(app, id) {
   <h2>Images and flier</h2>
   <div class="card">${rows.length ? `The original program holds <b>${rows.length}</b> images of this species (${Object.keys(cn).filter(k => cc[k]).map(k => cc[k] + ' ' + cn[k]).join(', ')}).` : 'No images of this species were recorded in the original program.'}
   This page shows one picture${s.fl ? ' and the first slide of the flier' : ''}.
-  <div class="note ok" style="margin-bottom:0">This app shows one picture per plant so that it stays small and works offline.</div></div>
+  ${rows.length || s.fl ? `<div style="margin-top:10px"><button class="btn" id="pkAll">Show all ${rows.length ? rows.length + ' original images' : ''}${rows.length && s.fl ? ' and ' : ''}${s.fl ? 'the complete flier' : ''}</button> <span class="lead">the installed program fetches them from the IBIN Apps pictures pack the first time (internet needed once)</span></div><div id="pkBox"></div>` : ''}</div>
   ${s.fl ? `<figure style="margin:8px 0;max-width:520px"><img src="${MB}img/f/${s.id}.webp" alt="Flier, first slide" style="width:100%;border-radius:10px;border:1px solid var(--line)"><figcaption class="lead">First slide of the original flier</figcaption></figure>` : ''}
   <h2>Classification</h2><div class="card">${['Kingdom','Phylum','Class','Subclass','Order','Family'].map((n, i) => t[i] ? `<b>${n}</b> ${esc(t[i])}` : '').filter(Boolean).join(' &rsaquo; ')}</div>
   ${mates.length ? `<h2>Other species of <i>${esc(s.genus)}</i></h2><div class="sim">${mates.slice(0, 30).map(x => `<a href="#/s/${x.id}">${nameHtml(x)}</a>`).join('')}${mates.length > 30 ? '<span class="lead">…and ' + (mates.length - 30) + ' more</span>' : ''}</div>` : ''}`;
+  { const b = $('#pkAll'); if (b) b.onclick = () => { b.disabled = true; pkGallery($('#pkBox'), rows, s.fl ? s.name15 : null); }; }
   const mv = new MapView($('#sm'), {dots: true, legendTitle: 'Records per grid'}); mapsToClean.push(mv);
   const v = new Array(C.grids.length).fill(0); sg.forEach((n, i) => { v[i] = n; }); mv.setVal(sg.size ? v : null); mv.fitSet([...sg.keys()]);
   app.querySelectorAll('[data-ex]').forEach(b => b.onclick = () => exportGrids(b.dataset.ex, [...sg.entries()], 'westernghats_' + s.cur.replace(/\W+/g, '_') + '_grids', 'records'));
@@ -385,7 +406,7 @@ function viewAbout(app) {
   app.innerHTML = `<h1>About Western Ghats Mapping</h1>
   <div class="card"><p><b>Western Ghats Mapping</b> (“Distribution, Taxonomy &amp; Diversity of Plants of Western Ghats”, Western Ghat Resource Assessment and Mapping) is a 2015 program of the School of Ecology and Conservation, University of Agricultural Sciences, Bangalore, with partner institutions across the Western Ghats. It recorded the plants of the Western Ghats in map grids of 3.75 minutes (about 7 km).</p>
   <p>This is Version 2 of its 2026 rebuild by IBIN Apps: the original data with current plant names, a search-first design that works on phones, and GIS export. Version 1 (the original screens) is still available on the <a href="../">IBIN Apps page</a>.</p></div>
-  <div class="note ok">This app shows one picture per plant so that it stays small and works offline.</div>
+  <div class="note ok">This app keeps one picture per plant inside, so that it stays small and works offline. The installed program (Windows, Mac or Ubuntu) also shows all the original images and fliers, which it fetches from the IBIN Apps pictures pack when you ask for them on a plant page.</div>
   <h2>Team</h2><div class="card"><b>Project Co-ordinator</b><br>Dr. K. N. Ganeshaiah, School of Ecology and Conservation, University of Agricultural Sciences, GKVK Campus, Bangalore-560065<br><br><div style="display:flex;gap:12px;flex-wrap:wrap"><img src="img/ui/team1.jpg" alt="The Western Ghat team" style="max-width:100%;width:380px"><img src="img/ui/team2.jpg" alt="The Western Ghat team" style="max-width:100%;width:380px"></div></div>
   <h2>Credits</h2><div class="card">Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario.<br>Plant names checked against the ${esc(NM.source)}, ${esc(NM.date)}. Map layers and species records are from the original program.</div>
   <h2>How to use</h2><div class="card"><ul><li><b>Search</b>: type any part of a name. Local names are searched in every language.</li><li><b>Map</b>: tap grids to list the plants recorded there; use <i>Species count per grid</i> for a thematic map.</li><li><b>GIS</b>: on a plant page or the map page, download grids as GeoJSON, KML or CSV and open them in QGIS, ArcGIS or Google Earth.</li></ul></div>`;

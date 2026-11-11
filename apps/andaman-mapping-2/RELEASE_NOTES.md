@@ -1,4 +1,6 @@
-## Andaman Mapping – Version 2 – Updated (2.0.1)
+## Andaman Mapping – Version 2 – Updated (2.0.2)
+
+2.0.2: a plant page has a new button, "Show all … original images and the complete flier", which fetches them from the public Pictures and Fliers pack on the IBIN Apps releases page (internet needed once; the computer keeps a copy for offline use). Everything else is as before.
 
 2.0.1: the link to the Google Drive image folder is removed. Everything else is as 2.0.0.
 

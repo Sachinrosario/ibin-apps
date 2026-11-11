@@ -1,4 +1,6 @@
-## Western Ghats Mapping – Version 1 – Original (1.0.0)
+## Western Ghats Mapping – Version 1 – Original (1.0.1)
+
+1.0.1: all original images and fliers now come by themselves. The Images and Fliers tabs fetch each picture from the public Pictures and Fliers pack on the IBIN Apps releases page the first time it is shown (internet needed once; the computer keeps a copy for offline use). Installing the pack is no longer needed; an installed pack folder is still used when present. Everything else is as before.
 
 The 2015 program "Western Ghat Resource Assessment and Mapping" (Distribution, Taxonomy & Diversity of Plants of Western Ghats) rebuilt so that it looks and works as the original did, without MapInfo.
 

@@ -57,6 +57,9 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
+	// Pictures and Fliers pack: an installed pack folder if there is one, otherwise fetched picture by picture (see pack.go)
+	mux.HandleFunc("/pack/", packHandler([]string{filepath.Join(exeDir(), "pack"), filepath.Join(os.Getenv("LOCALAPPDATA"), "AndamanMapping", "pack"), filepath.Join(os.Getenv("LOCALAPPDATA"), "WesternGhatMapping", "pack")},
+		filepath.Join(os.Getenv("LOCALAPPDATA"), "IBINApps", "packs", "andaman-mapping"), "https://github.com/Sachinrosario/ibin-apps/releases/download/andaman-mapping-pictures-1.0.0/"))
 	mux.HandleFunc("/__alive", func(w http.ResponseWriter, r *http.Request) {
 		q := r.URL.Query()
 		if id := q.Get("id"); id != "" {

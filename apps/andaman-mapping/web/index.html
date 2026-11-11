@@ -434,7 +434,9 @@ function pic(s) {
 
 // Pictures pack (optional, installed separately): all original images and fliers in a folder called  pack/  beside the page.
 // Without it the program shows the one built-in picture per species, as before.
-const PACK = 'pack/', pkUrl = rel => PACK + rel.split('/').map(encodeURIComponent).join('/');
+// The installed programs fetch each picture by themselves from the public Pictures and Fliers pack on the IBIN Apps
+// releases page the first time it is shown, and keep it on the computer (Windows: served at pack/; Mac and Ubuntu: ibinpack://).
+const PACK = location.protocol === 'tauri:' ? 'ibinpack://localhost/' : location.hostname === 'tauri.localhost' ? 'http://ibinpack.localhost/' : 'pack/', pkUrl = rel => PACK + rel.split('/').map(encodeURIComponent).join('/');
 function pkProbe(rel, ok, bad) { const i = new Image(); i.onload = ok; i.onerror = bad; i.src = pkUrl(rel); }
 function lightbox(src) { let b = $('lb'); if (!b) { b = document.createElement('div'); b.id = 'lb'; b.innerHTML = '<img alt="">'; b.onclick = () => b.style.display = 'none'; document.body.appendChild(b); } b.firstChild.src = src; b.style.display = 'flex'; }
 const NOPIC = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="140" viewBox="0 0 200 140"><rect width="200" height="140" fill="#e9e4c4"/><path d="M100 118V62M100 92c-26-4-38-22-38-40 22 2 38 16 38 40zm0-8c22-2 36-16 38-34-20 2-36 14-38 34z" fill="#7a9a4a" stroke="#4a6a2a" stroke-width="2"/></svg>');
@@ -458,20 +460,20 @@ const BUILD = {
     const counts = rows.length ? Object.keys(names).filter(k => n[k]).map(k => `${names[k]}: <b>${n[k]}</b>`).join(' &nbsp;·&nbsp; ') : 'No images of this species were recorded in the original program.';
     const basic = () => { if (SPCUR !== cur) return; $('p_img').innerHTML = `<h3>Images of ${esc(cur.name)}</h3><div class="note">${counts}</div>` +
       `<div class="gal">${p ? `<figure><img src="${p.src}" alt="${esc(cur.name)}"><figcaption>${esc(p.cap)}</figcaption></figure>` : ''}</div>` +
-      `<div class="note">This copy shows one picture per species.${rows.length ? ` All ${rows.length} original images of this species (herbarium sheets, line diagrams, paintings and field photographs) show here once the <b>Pictures and Fliers pack</b> is installed.` : ''}</div>`; };
+      `<div class="note">This copy shows one picture per species.${rows.length ? ` All ${rows.length} original images of this species (herbarium sheets, line diagrams, paintings and field photographs) show here in the installed program (Windows, Mac or Ubuntu): it fetches them by itself from the IBIN Apps <b>Pictures and Fliers pack</b> the first time (internet needed once).` : ''}</div>`; };
     basic();
     if (!rows.length) return;
     pkProbe('Images/' + rows[0][2], () => { if (SPCUR !== cur) return;
-      let h = `<h3>Images of ${esc(cur.name)}</h3><div class="note">${counts} &nbsp;·&nbsp; from the installed Pictures and Fliers pack (click a picture to enlarge)</div>`;
+      let h = `<h3>Images of ${esc(cur.name)}</h3><div class="note">${counts} &nbsp;·&nbsp; from the Pictures and Fliers pack (click a picture to enlarge)</div>`;
       Object.keys(names).filter(k => n[k]).forEach(k => { h += `<div class="pkh">${names[k]} (${n[k]})</div><div class="gal">` + rows.filter(r => r[0] === k).map(r => { const cap = (r[1] && r[1] !== '0' ? r[1] + ' · ' : '') + r[2].split('/').pop().replace(/\.[^.]+$/, ''); return `<figure class="pk" onclick="lightbox(pkUrl(${esc(JSON.stringify('Images/' + r[2]))}))"><img loading="lazy" src="${pkUrl('Images/' + r[2])}" alt="" onerror="this.parentNode.style.display='none'"><figcaption>${esc(cap)}${r[3] ? ' · ' + esc(r[3]) : ''}</figcaption></figure>`; }).join('') + '</div>'; });
       $('p_img').innerHTML = h; }, () => {});
   },
   fl() {
     const gi = gridInfo(), cm = det()[0];
-    const link = `<div class="note">${SPCUR.fl ? 'The complete flier (all slides) shows here once the <b>Pictures and Fliers pack</b> is installed.' : ''}</div>`;
+    const link = `<div class="note">${SPCUR.fl ? 'The complete flier (all slides) shows here in the installed program, which fetches it from the IBIN Apps <b>Pictures and Fliers pack</b> the first time (internet needed once).' : ''}</div>`;
     if (SPCUR.fl) { const cur = SPCUR; $('p_fl').innerHTML = `<h3>Flier of ${esc(SPCUR.name)}</h3><div class="gal"><figure style="width:520px"><img src="img/f/${SPCUR.id}.webp" alt="Flier" style="width:520px"><figcaption>First slide of the original flier</figcaption></figure></div>` + link;
       pkProbe('Fliers/' + cur.name + '/Slide1.JPG', () => { if (SPCUR !== cur) return;
-        $('p_fl').innerHTML = `<h3>Flier of ${esc(cur.name)}</h3><div class="note">Complete original flier, from the installed Pictures and Fliers pack (click a slide to enlarge)</div><div class="gal" id="pkfl"></div>`;
+        $('p_fl').innerHTML = `<h3>Flier of ${esc(cur.name)}</h3><div class="note">Complete original flier, from the Pictures and Fliers pack (click a slide to enlarge)</div><div class="gal" id="pkfl"></div>`;
         const add = k => { if (k > 40 || SPCUR !== cur) return; const rel = 'Fliers/' + cur.name + '/Slide' + k + '.JPG', i = new Image();
           i.onload = () => { const f = document.createElement('figure'); f.className = 'pk'; f.style.width = '520px'; f.onclick = () => lightbox(i.src); i.style.cssText = 'width:520px;height:auto'; f.appendChild(i); const c = document.createElement('figcaption'); c.textContent = 'Slide ' + k; f.appendChild(c); const g = $('pkfl'); if (g) g.appendChild(f); add(k + 1); };
           i.onerror = () => {}; i.src = pkUrl(rel); }; add(1); }, () => {}); }

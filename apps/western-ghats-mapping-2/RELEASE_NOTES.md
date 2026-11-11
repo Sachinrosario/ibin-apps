@@ -1,4 +1,6 @@
-## Western Ghats Mapping – Version 2 – Updated (2.0.0)
+## Western Ghats Mapping – Version 2 – Updated (2.0.1)
+
+2.0.1: a plant page has a new button, "Show all … original images and the complete flier", which fetches them from the public Pictures and Fliers pack on the IBIN Apps releases page (internet needed once; the computer keeps a copy for offline use). Everything else is as before.
 
 The 2015 Western Ghats Mapping program (Western Ghats Resource Assessment and Mapping, School of Ecology and Conservation, UAS Bangalore) with current plant names, a search-first design that works on phones, and GIS export. Runs on Windows, Mac and Ubuntu, in a browser, and offline.
 
