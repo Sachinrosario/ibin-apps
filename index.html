@@ -85,6 +85,7 @@ summary{cursor:pointer;font-weight:600;color:var(--leaf)}
 footer{color:var(--muted);font-size:13px;padding-block:36px 48px}
 @media (max-width:860px){.dl{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:600px){.guide,.dl{grid-template-columns:minmax(0,1fr)}.app{grid-template-columns:minmax(0,1fr)}.app>img{width:72px;height:72px}}
+.cat{font-size:1.05rem;letter-spacing:.04em;text-transform:uppercase;margin:28px 0 10px;padding-bottom:6px;border-bottom:1px solid currentColor;opacity:.85}
 </style>
 
 <header class="wrap">
@@ -138,7 +139,9 @@ let CAT=null; const pick={};
 function render(){
   const cat=CAT, base=`https://github.com/${cat.owner}/${cat.releasesRepo}/releases`;
   document.getElementById('countline').textContent=`Available software · ${cat.apps.length}`;
+  let lastCat=null;
   document.getElementById('apps').innerHTML=cat.apps.map((a,ai)=>{
+    const catHead=(a.category&&a.category!==lastCat)?`<h3 class="cat" id="cat-${esc(a.category).replace(/\W+/g,'-').toLowerCase()}">${esc(a.category)}</h3>`:''; lastCat=a.category||lastCat;
     const eds=a.editions||[a]; const e=eds.find(x=>x.key===pick[ai])||eds[0];
     const tag=`${e.id}-v${e.version}`;
     const groups=['windows','mac','ubuntu','any'].map(os=>{
@@ -153,7 +156,7 @@ function render(){
         }).join('')+`</div>`;
     }).join('');
     const sw=eds.length>1?`<div class="vswitch" role="tablist" aria-label="Choose a version">${eds.map(x=>`<button type="button" role="tab" aria-selected="${x===e}" class="${x===e?'on':''}" data-app="${ai}" data-ed="${esc(x.key)}"><b>${esc(x.label)}</b><small>${esc(x.version)}</small></button>`).join('')}</div>`:'';
-    return `<article class="app">
+    return catHead+`<article class="app">
       <img src="${esc(a.icon)}" alt="">
       <div>
         <div class="head"><h2>${esc(a.name)}</h2></div>

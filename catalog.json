@@ -4,428 +4,299 @@
   "releasesRepo": "ibin-apps",
   "apps": [
     {
-      "name": "Phyllanthus & Rattans Identification Kit",
-      "icon": "apps/phyllanthus-rattans-kit.png",
-      "origin": "Indian Barcode of Life kit (DBT, Government of India), 2010. Built by ATREE Bangalore, UAS Bangalore and BSI Kolkata.",
+      "name": "Andaman Mapping",
+      "icon": "apps/andaman-mapping.png",
+      "origin": "Andaman Mapping: Distribution, Taxonomy & Diversity of Plants of Andaman (2015). Andaman Resource Assessment and Mapping, School of Ecology and Conservation, UAS Bangalore, with the Botanical Survey of India and partners.",
       "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
       "editions": [
         {
-          "id": "phyllanthus-rattans-kit-2",
+          "id": "andaman-mapping-2",
           "key": "v2",
           "label": "Version 2 – Updated (2026)",
           "versionName": "Version 2 – Updated",
-          "version": "2.0.0",
-          "released": "2026-10-22",
+          "version": "2.0.1",
+          "released": "2026-11-06",
           "published": true,
-          "summary": "Names updated to the Catalogue of Life (2010 names kept), GenBank DNA barcode records, guided key, India distribution map with GIS export, comparison and glossary.",
+          "summary": "Search first, on phones too: find plants by scientific name, family, local name in any language, synonym or habit. Current names (GBIF / Catalogue of Life, 2015 names kept in brackets), one page per plant, a draggable map with species-count maps, and GIS export of grids as GeoJSON, KML or CSV.",
           "facts": [
-            "59 species",
-            "Catalogue of Life names",
-            "GenBank records",
-            "India map",
+            "2,213 plants",
+            "309 names updated",
+            "35,000 local names",
+            "Works on phones",
             "GIS export"
           ],
-          "gis": "Exports localities as GeoJSON, KML and CSV for QGIS or ArcGIS (desktop and published web version).",
-          "web": "https://sachinrosario.github.io/ibin-apps/phyllanthus-rattans-kit-2/",
-          "preview": "https://claude.ai/artifact/WEmJbGHc8LigJW9fY9LmrQ",
+          "web": "https://sachinrosario.github.io/ibin-apps/andaman-mapping-2/",
+          "preview": "",
           "downloads": [
             {
               "os": "windows",
               "kind": "Installer",
-              "file": "PhyllanthusRattansKit2_2.0.0_Setup.exe",
-              "size": "19 MB",
+              "file": "AndamanMapping2_2.0.1_Setup.exe",
+              "size": "30 MB",
               "note": "Installs beside Version 1. No administrator password."
             },
             {
               "os": "windows",
               "kind": "No-install",
-              "file": "PhyllanthusRattansKit2.exe",
-              "size": "24 MB",
+              "file": "AndamanMapping2.exe",
+              "size": "40 MB",
               "note": "Runs straight from a folder or pen drive."
             },
             {
               "os": "mac",
               "kind": "App",
-              "file": "PhyllanthusRattansKit2_2.0.0_universal.dmg",
-              "size": "",
+              "file": "AndamanMapping2_2.0.1_universal.dmg",
+              "size": "64 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
-              "file": "PhyllanthusRattansKit2_2.0.0_amd64.deb",
-              "size": "",
+              "file": "AndamanMapping2_2.0.1_amd64.deb",
+              "size": "30 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
-              "file": "PhyllanthusRattansKit2_2.0.0_offline.zip",
-              "size": "",
+              "file": "AndamanMapping2_2.0.1_offline.zip",
+              "size": "29 MB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
           "changes": [
+            {
+              "version": "2.0.1",
+              "date": "2026-11-06",
+              "text": "The link to the Google Drive folder is removed. This app shows one picture per plant so that it stays small and works offline."
+            },
             {
               "version": "2.0.0",
-              "date": "2026-10-22",
-              "text": "Catalogue of Life names with 2010 names kept; GenBank barcode records; guided key; India map with GIS export; comparison; glossary."
+              "date": "2026-11-04",
+              "text": "Plant names checked against the GBIF Backbone (309 updated, 2015 names kept; 340 left for a taxonomist to check); search first; works on phones; one page per plant; draggable and pinchable map; GIS export (GeoJSON, KML, CSV)."
             }
           ]
         },
         {
-          "version": "1.0.1",
-          "versionName": "Version 1 – Original",
-          "released": "2026-10-22",
-          "published": true,
-          "web": "https://sachinrosario.github.io/ibin-apps/phyllanthus-rattans-kit/",
-          "preview": "https://claude.ai/artifact/56VWoteCcb6azsGiqrxxsQ",
-          "downloads": [
-            {
-              "os": "windows",
-              "kind": "Installer",
-              "file": "PhyllanthusRattansKit_1.0.1_Setup.exe",
-              "size": "19 MB",
-              "note": "Adds Start-menu and desktop shortcuts. No administrator password."
-            },
-            {
-              "os": "windows",
-              "kind": "No-install",
-              "file": "PhyllanthusRattansKit.exe",
-              "size": "23.5 MB",
-              "note": "Runs straight from a folder or pen drive."
-            },
-            {
-              "os": "mac",
-              "kind": "App",
-              "file": "PhyllanthusRattansKit_1.0.1_universal.dmg",
-              "size": "38 MB",
-              "note": "Built by the GitHub build robot. Intel and Apple-silicon Macs."
-            },
-            {
-              "os": "ubuntu",
-              "kind": "Package",
-              "file": "PhyllanthusRattansKit_1.0.1_amd64.deb",
-              "size": "18 MB",
-              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
-            },
-            {
-              "os": "any",
-              "kind": "Offline folder",
-              "file": "PhyllanthusRattansKit_1.0.1_offline.zip",
-              "size": "17 MB",
-              "note": "Any computer. Extract, then double-click Open Kit.html."
-            }
-          ],
-          "changes": [
-            {
-              "version": "1.0.1",
-              "date": "2026-10-22",
-              "text": "Opening screen now credits the proprietary right holder, Dr. K.N. Ganeshaiah, and the 2026 update by Dr. Sachin A. Rosario. No other changes."
-            },
-            {
-              "version": "1.0.0",
-              "date": "2026-10-22",
-              "text": "Faithful rebuild of the 2010 program. Same species, data and identification keys; results checked against the original database on 1,290 combinations."
-            }
-          ],
-          "facts": [
-            "59 species",
-            "4 identification keys",
-            "264 images",
-            "1,117 localities",
-            "DNA barcodes"
-          ],
-          "gis": "Not needed. Locality coordinates can be exported to GIS from Version 2.",
-          "id": "phyllanthus-rattans-kit",
-          "key": "v1",
-          "label": "Version 1 – Original (2010)",
-          "summary": "The 2010 program as it was: original names and data, with the 2026 credits."
-        }
-      ]
-    },
-    {
-      "name": "Pathanga Suchya",
-      "icon": "apps/pathanga-suchya.png",
-      "origin": "Butterfly identification program for the butterflies of Bangalore, K.N. Ganeshaiah, GKVK (2006–2007; Version 3.0 of 2018).",
-      "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
-      "editions": [
-        {
-          "id": "pathanga-suchya-4",
-          "key": "v4",
-          "label": "Version 4 – Updated (2026)",
-          "versionName": "Version 4 – Updated",
-          "version": "4.0.0",
-          "released": "2026-10-23",
-          "published": true,
-          "summary": "New design that also works on phones: a guided key that suggests the best next question and shows how many butterflies each answer leaves, Catalogue of Life names (2007 names kept in brackets), month-by-month 'what flies when', similar butterflies on every page.",
-          "facts": [
-            "120 butterflies",
-            "Catalogue of Life names",
-            "8,582 photos",
-            "What flies when",
-            "Works on phones"
-          ],
-          "web": "https://sachinrosario.github.io/ibin-apps/pathanga-suchya-4/",
-          "preview": "",
-          "downloads": [
-            {
-              "os": "windows",
-              "kind": "Installer",
-              "file": "PathangaSuchya4_4.0.0_Setup.exe",
-              "size": "181 MB",
-              "note": "Installs beside Version 3. No administrator password."
-            },
-            {
-              "os": "windows",
-              "kind": "No-install",
-              "file": "PathangaSuchya4.exe",
-              "size": "187 MB",
-              "note": "Runs straight from a folder or pen drive."
-            },
-            {
-              "os": "mac",
-              "kind": "App",
-              "file": "PathangaSuchya4_4.0.0_universal.dmg",
-              "size": "365 MB",
-              "note": "Intel and Apple-silicon Macs."
-            },
-            {
-              "os": "ubuntu",
-              "kind": "Package",
-              "file": "PathangaSuchya4_4.0.0_amd64.deb",
-              "size": "181 MB",
-              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
-            },
-            {
-              "os": "any",
-              "kind": "Offline folder",
-              "file": "PathangaSuchya4_4.0.0_offline.zip",
-              "size": "183 MB",
-              "note": "Any computer. Extract, then double-click Open Kit.html."
-            }
-          ],
-          "changes": [
-            {
-              "version": "4.0.0",
-              "date": "2026-10-23",
-              "text": "New design and palette; guided key with best next question and counts; Catalogue of Life names with 2007 names in brackets; month-by-month seasonality and 'what flies when'; similar butterflies; search."
-            }
-          ]
-        },
-        {
-          "id": "pathanga-suchya",
-          "key": "v3",
-          "label": "Version 3 – Original (2018 screens)",
-          "versionName": "Version 3 – Original",
-          "version": "3.0.2",
-          "released": "2026-10-24",
-          "published": true,
-          "summary": "The 2018 program rebuilt screen for screen: identification keys, quick finding by patch, spot and eye-spot colours, butterfly photos, host plants, life cycles and seasonality wheels.",
-          "facts": [
-            "120 butterflies",
-            "8,582 photos",
-            "Host plants",
-            "Life cycles",
-            "Seasonality"
-          ],
-          "web": "https://sachinrosario.github.io/ibin-apps/pathanga-suchya/",
-          "preview": "",
-          "downloads": [
-            {
-              "os": "windows",
-              "kind": "Installer",
-              "file": "PathangaSuchya_3.0.2_Setup.exe",
-              "size": "181 MB",
-              "note": "Adds Start-menu and desktop shortcuts. No administrator password."
-            },
-            {
-              "os": "windows",
-              "kind": "No-install",
-              "file": "PathangaSuchya.exe",
-              "size": "188 MB",
-              "note": "Runs straight from a folder or pen drive."
-            },
-            {
-              "os": "mac",
-              "kind": "App",
-              "file": "PathangaSuchya_3.0.2_universal.dmg",
-              "size": "365 MB",
-              "note": "Intel and Apple-silicon Macs."
-            },
-            {
-              "os": "ubuntu",
-              "kind": "Package",
-              "file": "PathangaSuchya_3.0.2_amd64.deb",
-              "size": "181 MB",
-              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
-            },
-            {
-              "os": "any",
-              "kind": "Offline folder",
-              "file": "PathangaSuchya_3.0.2_offline.zip",
-              "size": "183 MB",
-              "note": "Any computer. Extract, then double-click Open Kit.html."
-            }
-          ],
-          "changes": [
-            {
-              "version": "3.0.2",
-              "date": "2026-10-24",
-              "text": "Exit on the opening screen now closes the program, and the minimise button of the windows works."
-            },
-            {
-              "version": "3.0.1",
-              "date": "2026-10-23",
-              "text": "The program's screen is now centred in wide browser windows and desktop windows. No other changes."
-            },
-            {
-              "version": "3.0.0",
-              "date": "2026-10-23",
-              "text": "Faithful rebuild of Pathanga Suchya 3.0 (2018) with the same screens and behaviour. Butterfly View shows the photos in each species folder (the original looked for file names that are not in the package)."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Threatened Plants of Western Ghats",
-      "icon": "apps/threatened-plants.png",
-      "origin": "RET Kit: A Field Guide to Threatened Plants of Western Ghats, Prof. K.N. Ganeshaiah, School of Ecology and Conservation, UAS Bangalore (2015–2016).",
-      "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
-      "editions": [
-        {
-          "id": "threatened-plants-2",
-          "key": "v2",
-          "label": "Version 2 – Updated (2026)",
-          "versionName": "Version 2 – Updated",
-          "version": "2.0.0",
-          "released": "2026-10-27",
-          "published": true,
-          "summary": "New design that also works on phones: 178 threatened plants (77 added in 2026), Catalogue of Life names (2015 names kept in brackets), current IUCN status with year, FRLHT/TDU status by state, close matches and best next question, credited field photos and a 'What's changed' page.",
-          "facts": [
-            "178 threatened plants",
-            "77 added in 2026",
-            "Catalogue of Life names",
-            "IUCN status updated",
-            "Works on phones"
-          ],
-          "web": "https://sachinrosario.github.io/ibin-apps/threatened-plants-2/",
-          "preview": "",
-          "downloads": [
-            {
-              "os": "windows",
-              "kind": "Installer",
-              "file": "ThreatenedPlants2_2.0.0_Setup.exe",
-              "size": "56 MB",
-              "note": "Installs beside Version 1. No administrator password."
-            },
-            {
-              "os": "windows",
-              "kind": "No-install",
-              "file": "ThreatenedPlants2.exe",
-              "size": "59 MB",
-              "note": "Runs straight from a folder or pen drive."
-            },
-            {
-              "os": "mac",
-              "kind": "App",
-              "file": "ThreatenedPlants2_2.0.0_universal.dmg",
-              "size": "116 MB",
-              "note": "Intel and Apple-silicon Macs."
-            },
-            {
-              "os": "ubuntu",
-              "kind": "Package",
-              "file": "ThreatenedPlants2_2.0.0_amd64.deb",
-              "size": "55 MB",
-              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
-            },
-            {
-              "os": "any",
-              "kind": "Offline folder",
-              "file": "ThreatenedPlants2_2.0.0_offline.zip",
-              "size": "54 MB",
-              "note": "Any computer. Extract, then double-click Open Kit.html."
-            }
-          ],
-          "changes": [
-            {
-              "version": "2.0.0",
-              "date": "2026-10-27",
-              "text": "New design; names checked in Catalogue of Life (12 renamed, old names in brackets); IUCN status updated with year (60 changes); FRLHT/TDU status by state; 77 threatened species added with characters from published descriptions; 11 species marked no longer threatened; credited photos; What's changed page."
-            }
-          ]
-        },
-        {
-          "id": "threatened-plants",
+          "id": "andaman-mapping",
           "key": "v1",
           "label": "Version 1 – Original (2015 screens)",
           "versionName": "Version 1 – Original",
-          "version": "1.0.1",
-          "released": "2026-10-24",
+          "version": "1.0.4",
+          "released": "2026-11-06",
           "published": true,
-          "summary": "The 2015 field guide rebuilt screen for screen: choose characters on the tree, pick thumbnails, see the matching species, open their detail sheets, or look them up by family and genus.",
+          "summary": "The 2015 program rebuilt screen for screen, without MapInfo: search the plants of the Andaman Islands by genus, species, habit or common name, or select map grids to list the species recorded there; see each species' taxonomy, distribution map, picture, distribution data, synonyms and common names.",
           "facts": [
-            "101 threatened plants",
-            "26 characters",
-            "Species sheets",
-            "Character photos",
-            "Species search"
+            "2,213 species",
+            "1,038 map grids",
+            "35,000 common names",
+            "20,000 synonyms",
+            "Thematic maps"
           ],
-          "web": "https://sachinrosario.github.io/ibin-apps/threatened-plants/",
+          "web": "https://sachinrosario.github.io/ibin-apps/andaman-mapping/",
           "preview": "",
           "downloads": [
             {
               "os": "windows",
               "kind": "Installer",
-              "file": "ThreatenedPlants_1.0.1_Setup.exe",
-              "size": "33 MB",
+              "file": "AndamanMapping_1.0.4_Setup.exe",
+              "size": "34 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password."
             },
             {
               "os": "windows",
               "kind": "No-install",
-              "file": "ThreatenedPlants.exe",
-              "size": "36 MB",
+              "file": "AndamanMapping.exe",
+              "size": "42 MB",
               "note": "Runs straight from a folder or pen drive."
             },
             {
               "os": "mac",
               "kind": "App",
-              "file": "ThreatenedPlants_1.0.1_universal.dmg",
-              "size": "70 MB",
+              "file": "AndamanMapping_1.0.4_universal.dmg",
+              "size": "68 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
-              "file": "ThreatenedPlants_1.0.1_amd64.deb",
+              "file": "AndamanMapping_1.0.4_amd64.deb",
               "size": "32 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
-              "file": "ThreatenedPlants_1.0.1_offline.zip",
-              "size": "31 MB",
+              "file": "AndamanMapping_1.0.4_offline.zip",
+              "size": "33 MB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
           "changes": [
             {
+              "version": "1.0.4",
+              "date": "2026-11-06",
+              "text": "Closer to the 2015 program: the original six map shades (cyan to dark green) with natural-break ranges and its legend wording; new Point Select Info tool; zoom, scale and cursor readout under the map."
+            },
+            {
+              "version": "1.0.3",
+              "date": "2026-11-06",
+              "text": "The link to the Google Drive folder is removed. The original images and fliers now come only from the separate Pictures and Fliers pack."
+            },
+            {
+              "version": "1.0.2",
+              "date": "2026-11-06",
+              "text": "Shows all original images (19,502) and fliers (2,218 slides) of each species when the separate Pictures and Fliers pack is installed; without the pack nothing changes."
+            },
+            {
               "version": "1.0.1",
-              "date": "2026-10-24",
-              "text": "The title-bar buttons now work: minimise hides the window behind a button at the bottom, the square button switches full screen on and off, and the close button on the opening screen closes the program."
+              "date": "2026-11-05",
+              "text": "The Windows Setup now uses the same kind of installer wizard as the 2015 program. No administrator password needed; the program itself is unchanged."
             },
             {
               "version": "1.0.0",
-              "date": "2026-10-23",
-              "text": "Faithful rebuild of the 2015 RET Kit with the same screens and behaviour, checked against the original on Windows. Clear works on every screen, the first thumbnail combines like the others, and all 101 species sheets open (the original crashed, dropped the first thumbnail, and missed eight sheets)."
+              "date": "2026-11-04",
+              "text": "Faithful rebuild of Andaman Mapping (2015) with the same screens and data; no MapInfo needed. One representative picture per species;."
             }
           ]
         }
-      ]
+      ],
+      "category": "Mapping and GIS"
+    },
+    {
+      "name": "Western Ghats Mapping",
+      "icon": "apps/western-ghats-mapping.png",
+      "origin": "Western Ghats Mapping: Distribution, Taxonomy & Diversity of Plants of Western Ghats (2015). Western Ghat Resource Assessment and Mapping, School of Ecology and Conservation, UAS Bangalore, with partner institutions.",
+      "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
+      "editions": [
+        {
+          "id": "western-ghats-mapping-2",
+          "key": "v2",
+          "label": "Version 2 – Updated (2026)",
+          "versionName": "Version 2 – Updated",
+          "version": "2.0.0",
+          "released": "2026-11-06",
+          "published": true,
+          "summary": "Search first, on phones too: find plants by scientific name, family, local name in any language, synonym or habit. Current names (GBIF / Catalogue of Life, 2015 names kept in brackets), one page per plant, a draggable map with states, districts and taluks, species-count maps, and GIS export of grids as GeoJSON, KML or CSV.",
+          "facts": [
+            "5,103 plants",
+            "1,667 names updated",
+            "68,895 local names",
+            "Works on phones",
+            "GIS export"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/western-ghats-mapping-2/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "WesternGhatsMapping2_2.0.0_Setup.exe",
+              "size": "62 MB",
+              "note": "Installs beside Version 1. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "WesternGhatsMapping2.exe",
+              "size": "86 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "WesternGhatsMapping2_2.0.0_universal.dmg",
+              "size": "127 MB",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "WesternGhatsMapping2_2.0.0_amd64.deb",
+              "size": "61 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "WesternGhatsMapping2_2.0.0_offline.zip",
+              "size": "62 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "2.0.0",
+              "date": "2026-11-06",
+              "text": "Plant names checked against the GBIF Backbone (1,667 updated, 2015 names kept; 381 left for a taxonomist to check); search first; works on phones; one page per plant; draggable and pinchable map with state, district and taluk layers; GIS export (GeoJSON, KML, CSV)."
+            }
+          ]
+        },
+        {
+          "id": "western-ghats-mapping",
+          "key": "v1",
+          "label": "Version 1 – Original (2015 screens)",
+          "versionName": "Version 1 – Original",
+          "version": "1.0.0",
+          "released": "2026-11-06",
+          "published": true,
+          "summary": "The 2015 program rebuilt screen for screen, without MapInfo: search the plants of the Western Ghats by genus, species, habit, common name or taluk, or select map grids to list the species recorded there; ten thematic maps including disturbance and threat indices; see each species' taxonomy, distribution map, picture, flier, distribution data, synonyms and common names.",
+          "facts": [
+            "5,103 species",
+            "3,231 map grids",
+            "68,895 common names",
+            "49,758 synonyms",
+            "Thematic maps"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/western-ghats-mapping/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "WesternGhatsMapping_1.0.0_Setup.exe",
+              "size": "67 MB",
+              "note": "Adds Start-menu and desktop shortcuts. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "WesternGhatsMapping.exe",
+              "size": "88 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "WesternGhatsMapping_1.0.0_universal.dmg",
+              "size": "132 MB",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "WesternGhatsMapping_1.0.0_amd64.deb",
+              "size": "64 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "WesternGhatsMapping_1.0.0_offline.zip",
+              "size": "65 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "1.0.0",
+              "date": "2026-11-06",
+              "text": "Faithful rebuild of Western Ghats Mapping (2015) with the same screens and data; no MapInfo needed. One representative picture per species; all original images and fliers come from the separate Pictures and Fliers pack."
+            }
+          ]
+        }
+      ],
+      "category": "Mapping and GIS"
     },
     {
       "name": "Birds Group Identification (with Prob)",
@@ -622,7 +493,435 @@
             }
           ]
         }
-      ]
+      ],
+      "category": "Birds"
+    },
+    {
+      "name": "Pathanga Suchya",
+      "icon": "apps/pathanga-suchya.png",
+      "origin": "Butterfly identification program for the butterflies of Bangalore, K.N. Ganeshaiah, GKVK (2006–2007; Version 3.0 of 2018).",
+      "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
+      "editions": [
+        {
+          "id": "pathanga-suchya-4",
+          "key": "v4",
+          "label": "Version 4 – Updated (2026)",
+          "versionName": "Version 4 – Updated",
+          "version": "4.0.0",
+          "released": "2026-10-23",
+          "published": true,
+          "summary": "New design that also works on phones: a guided key that suggests the best next question and shows how many butterflies each answer leaves, Catalogue of Life names (2007 names kept in brackets), month-by-month 'what flies when', similar butterflies on every page.",
+          "facts": [
+            "120 butterflies",
+            "Catalogue of Life names",
+            "8,582 photos",
+            "What flies when",
+            "Works on phones"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/pathanga-suchya-4/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "PathangaSuchya4_4.0.0_Setup.exe",
+              "size": "181 MB",
+              "note": "Installs beside Version 3. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "PathangaSuchya4.exe",
+              "size": "187 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "PathangaSuchya4_4.0.0_universal.dmg",
+              "size": "365 MB",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "PathangaSuchya4_4.0.0_amd64.deb",
+              "size": "181 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "PathangaSuchya4_4.0.0_offline.zip",
+              "size": "183 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "4.0.0",
+              "date": "2026-10-23",
+              "text": "New design and palette; guided key with best next question and counts; Catalogue of Life names with 2007 names in brackets; month-by-month seasonality and 'what flies when'; similar butterflies; search."
+            }
+          ]
+        },
+        {
+          "id": "pathanga-suchya",
+          "key": "v3",
+          "label": "Version 3 – Original (2018 screens)",
+          "versionName": "Version 3 – Original",
+          "version": "3.0.2",
+          "released": "2026-10-24",
+          "published": true,
+          "summary": "The 2018 program rebuilt screen for screen: identification keys, quick finding by patch, spot and eye-spot colours, butterfly photos, host plants, life cycles and seasonality wheels.",
+          "facts": [
+            "120 butterflies",
+            "8,582 photos",
+            "Host plants",
+            "Life cycles",
+            "Seasonality"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/pathanga-suchya/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "PathangaSuchya_3.0.2_Setup.exe",
+              "size": "181 MB",
+              "note": "Adds Start-menu and desktop shortcuts. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "PathangaSuchya.exe",
+              "size": "188 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "PathangaSuchya_3.0.2_universal.dmg",
+              "size": "365 MB",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "PathangaSuchya_3.0.2_amd64.deb",
+              "size": "181 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "PathangaSuchya_3.0.2_offline.zip",
+              "size": "183 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "3.0.2",
+              "date": "2026-10-24",
+              "text": "Exit on the opening screen now closes the program, and the minimise button of the windows works."
+            },
+            {
+              "version": "3.0.1",
+              "date": "2026-10-23",
+              "text": "The program's screen is now centred in wide browser windows and desktop windows. No other changes."
+            },
+            {
+              "version": "3.0.0",
+              "date": "2026-10-23",
+              "text": "Faithful rebuild of Pathanga Suchya 3.0 (2018) with the same screens and behaviour. Butterfly View shows the photos in each species folder (the original looked for file names that are not in the package)."
+            }
+          ]
+        }
+      ],
+      "category": "Butterflies"
+    },
+    {
+      "name": "Phyllanthus & Rattans Identification Kit",
+      "icon": "apps/phyllanthus-rattans-kit.png",
+      "origin": "Indian Barcode of Life kit (DBT, Government of India), 2010. Built by ATREE Bangalore, UAS Bangalore and BSI Kolkata.",
+      "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
+      "editions": [
+        {
+          "id": "phyllanthus-rattans-kit-2",
+          "key": "v2",
+          "label": "Version 2 – Updated (2026)",
+          "versionName": "Version 2 – Updated",
+          "version": "2.0.0",
+          "released": "2026-10-22",
+          "published": true,
+          "summary": "Names updated to the Catalogue of Life (2010 names kept), GenBank DNA barcode records, guided key, India distribution map with GIS export, comparison and glossary.",
+          "facts": [
+            "59 species",
+            "Catalogue of Life names",
+            "GenBank records",
+            "India map",
+            "GIS export"
+          ],
+          "gis": "Exports localities as GeoJSON, KML and CSV for QGIS or ArcGIS (desktop and published web version).",
+          "web": "https://sachinrosario.github.io/ibin-apps/phyllanthus-rattans-kit-2/",
+          "preview": "https://claude.ai/artifact/WEmJbGHc8LigJW9fY9LmrQ",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "PhyllanthusRattansKit2_2.0.0_Setup.exe",
+              "size": "19 MB",
+              "note": "Installs beside Version 1. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "PhyllanthusRattansKit2.exe",
+              "size": "24 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "PhyllanthusRattansKit2_2.0.0_universal.dmg",
+              "size": "",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "PhyllanthusRattansKit2_2.0.0_amd64.deb",
+              "size": "",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "PhyllanthusRattansKit2_2.0.0_offline.zip",
+              "size": "",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "2.0.0",
+              "date": "2026-10-22",
+              "text": "Catalogue of Life names with 2010 names kept; GenBank barcode records; guided key; India map with GIS export; comparison; glossary."
+            }
+          ]
+        },
+        {
+          "version": "1.0.1",
+          "versionName": "Version 1 – Original",
+          "released": "2026-10-22",
+          "published": true,
+          "web": "https://sachinrosario.github.io/ibin-apps/phyllanthus-rattans-kit/",
+          "preview": "https://claude.ai/artifact/56VWoteCcb6azsGiqrxxsQ",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "PhyllanthusRattansKit_1.0.1_Setup.exe",
+              "size": "19 MB",
+              "note": "Adds Start-menu and desktop shortcuts. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "PhyllanthusRattansKit.exe",
+              "size": "23.5 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "PhyllanthusRattansKit_1.0.1_universal.dmg",
+              "size": "38 MB",
+              "note": "Built by the GitHub build robot. Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "PhyllanthusRattansKit_1.0.1_amd64.deb",
+              "size": "18 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "PhyllanthusRattansKit_1.0.1_offline.zip",
+              "size": "17 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "1.0.1",
+              "date": "2026-10-22",
+              "text": "Opening screen now credits the proprietary right holder, Dr. K.N. Ganeshaiah, and the 2026 update by Dr. Sachin A. Rosario. No other changes."
+            },
+            {
+              "version": "1.0.0",
+              "date": "2026-10-22",
+              "text": "Faithful rebuild of the 2010 program. Same species, data and identification keys; results checked against the original database on 1,290 combinations."
+            }
+          ],
+          "facts": [
+            "59 species",
+            "4 identification keys",
+            "264 images",
+            "1,117 localities",
+            "DNA barcodes"
+          ],
+          "gis": "Not needed. Locality coordinates can be exported to GIS from Version 2.",
+          "id": "phyllanthus-rattans-kit",
+          "key": "v1",
+          "label": "Version 1 – Original (2010)",
+          "summary": "The 2010 program as it was: original names and data, with the 2026 credits."
+        }
+      ],
+      "category": "Plants"
+    },
+    {
+      "name": "Threatened Plants of Western Ghats",
+      "icon": "apps/threatened-plants.png",
+      "origin": "RET Kit: A Field Guide to Threatened Plants of Western Ghats, Prof. K.N. Ganeshaiah, School of Ecology and Conservation, UAS Bangalore (2015–2016).",
+      "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
+      "editions": [
+        {
+          "id": "threatened-plants-2",
+          "key": "v2",
+          "label": "Version 2 – Updated (2026)",
+          "versionName": "Version 2 – Updated",
+          "version": "2.0.0",
+          "released": "2026-10-27",
+          "published": true,
+          "summary": "New design that also works on phones: 178 threatened plants (77 added in 2026), Catalogue of Life names (2015 names kept in brackets), current IUCN status with year, FRLHT/TDU status by state, close matches and best next question, credited field photos and a 'What's changed' page.",
+          "facts": [
+            "178 threatened plants",
+            "77 added in 2026",
+            "Catalogue of Life names",
+            "IUCN status updated",
+            "Works on phones"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/threatened-plants-2/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "ThreatenedPlants2_2.0.0_Setup.exe",
+              "size": "56 MB",
+              "note": "Installs beside Version 1. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "ThreatenedPlants2.exe",
+              "size": "59 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "ThreatenedPlants2_2.0.0_universal.dmg",
+              "size": "116 MB",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "ThreatenedPlants2_2.0.0_amd64.deb",
+              "size": "55 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "ThreatenedPlants2_2.0.0_offline.zip",
+              "size": "54 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "2.0.0",
+              "date": "2026-10-27",
+              "text": "New design; names checked in Catalogue of Life (12 renamed, old names in brackets); IUCN status updated with year (60 changes); FRLHT/TDU status by state; 77 threatened species added with characters from published descriptions; 11 species marked no longer threatened; credited photos; What's changed page."
+            }
+          ]
+        },
+        {
+          "id": "threatened-plants",
+          "key": "v1",
+          "label": "Version 1 – Original (2015 screens)",
+          "versionName": "Version 1 – Original",
+          "version": "1.0.1",
+          "released": "2026-10-24",
+          "published": true,
+          "summary": "The 2015 field guide rebuilt screen for screen: choose characters on the tree, pick thumbnails, see the matching species, open their detail sheets, or look them up by family and genus.",
+          "facts": [
+            "101 threatened plants",
+            "26 characters",
+            "Species sheets",
+            "Character photos",
+            "Species search"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/threatened-plants/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "ThreatenedPlants_1.0.1_Setup.exe",
+              "size": "33 MB",
+              "note": "Adds Start-menu and desktop shortcuts. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "ThreatenedPlants.exe",
+              "size": "36 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "ThreatenedPlants_1.0.1_universal.dmg",
+              "size": "70 MB",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "ThreatenedPlants_1.0.1_amd64.deb",
+              "size": "32 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "ThreatenedPlants_1.0.1_offline.zip",
+              "size": "31 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "1.0.1",
+              "date": "2026-10-24",
+              "text": "The title-bar buttons now work: minimise hides the window behind a button at the bottom, the square button switches full screen on and off, and the close button on the opening screen closes the program."
+            },
+            {
+              "version": "1.0.0",
+              "date": "2026-10-23",
+              "text": "Faithful rebuild of the 2015 RET Kit with the same screens and behaviour, checked against the original on Windows. Clear works on every screen, the first thumbnail combines like the others, and all 101 species sheets open (the original crashed, dropped the first thumbnail, and missed eight sheets)."
+            }
+          ]
+        }
+      ],
+      "category": "Plants"
     },
     {
       "name": "Vrikshayurveda",
@@ -820,7 +1119,8 @@
             }
           ]
         }
-      ]
+      ],
+      "category": "Plants"
     },
     {
       "name": "Sasya Sahyadri",
@@ -959,300 +1259,8 @@
             }
           ]
         }
-      ]
-    },
-    {
-      "name": "Andaman Mapping",
-      "icon": "apps/andaman-mapping.png",
-      "origin": "Andaman Mapping: Distribution, Taxonomy & Diversity of Plants of Andaman (2015). Andaman Resource Assessment and Mapping, School of Ecology and Conservation, UAS Bangalore, with the Botanical Survey of India and partners.",
-      "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
-      "editions": [
-        {
-          "id": "andaman-mapping-2",
-          "key": "v2",
-          "label": "Version 2 – Updated (2026)",
-          "versionName": "Version 2 – Updated",
-          "version": "2.0.1",
-          "released": "2026-11-06",
-          "published": true,
-          "summary": "Search first, on phones too: find plants by scientific name, family, local name in any language, synonym or habit. Current names (GBIF / Catalogue of Life, 2015 names kept in brackets), one page per plant, a draggable map with species-count maps, and GIS export of grids as GeoJSON, KML or CSV.",
-          "facts": [
-            "2,213 plants",
-            "309 names updated",
-            "35,000 local names",
-            "Works on phones",
-            "GIS export"
-          ],
-          "web": "https://sachinrosario.github.io/ibin-apps/andaman-mapping-2/",
-          "preview": "",
-          "downloads": [
-            {
-              "os": "windows",
-              "kind": "Installer",
-              "file": "AndamanMapping2_2.0.1_Setup.exe",
-              "size": "30 MB",
-              "note": "Installs beside Version 1. No administrator password."
-            },
-            {
-              "os": "windows",
-              "kind": "No-install",
-              "file": "AndamanMapping2.exe",
-              "size": "40 MB",
-              "note": "Runs straight from a folder or pen drive."
-            },
-            {
-              "os": "mac",
-              "kind": "App",
-              "file": "AndamanMapping2_2.0.1_universal.dmg",
-              "size": "64 MB",
-              "note": "Intel and Apple-silicon Macs."
-            },
-            {
-              "os": "ubuntu",
-              "kind": "Package",
-              "file": "AndamanMapping2_2.0.1_amd64.deb",
-              "size": "30 MB",
-              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
-            },
-            {
-              "os": "any",
-              "kind": "Offline folder",
-              "file": "AndamanMapping2_2.0.1_offline.zip",
-              "size": "29 MB",
-              "note": "Any computer. Extract, then double-click Open Kit.html."
-            }
-          ],
-          "changes": [
-            {
-              "version": "2.0.1",
-              "date": "2026-11-06",
-              "text": "The link to the Google Drive folder is removed. This app shows one picture per plant so that it stays small and works offline."
-            },
-            {
-              "version": "2.0.0",
-              "date": "2026-11-04",
-              "text": "Plant names checked against the GBIF Backbone (309 updated, 2015 names kept; 340 left for a taxonomist to check); search first; works on phones; one page per plant; draggable and pinchable map; GIS export (GeoJSON, KML, CSV)."
-            }
-          ]
-        },
-        {
-          "id": "andaman-mapping",
-          "key": "v1",
-          "label": "Version 1 – Original (2015 screens)",
-          "versionName": "Version 1 – Original",
-          "version": "1.0.4",
-          "released": "2026-11-06",
-          "published": true,
-          "summary": "The 2015 program rebuilt screen for screen, without MapInfo: search the plants of the Andaman Islands by genus, species, habit or common name, or select map grids to list the species recorded there; see each species' taxonomy, distribution map, picture, distribution data, synonyms and common names.",
-          "facts": [
-            "2,213 species",
-            "1,038 map grids",
-            "35,000 common names",
-            "20,000 synonyms",
-            "Thematic maps"
-          ],
-          "web": "https://sachinrosario.github.io/ibin-apps/andaman-mapping/",
-          "preview": "",
-          "downloads": [
-            {
-              "os": "windows",
-              "kind": "Installer",
-              "file": "AndamanMapping_1.0.4_Setup.exe",
-              "size": "34 MB",
-              "note": "Adds Start-menu and desktop shortcuts. No administrator password."
-            },
-            {
-              "os": "windows",
-              "kind": "No-install",
-              "file": "AndamanMapping.exe",
-              "size": "42 MB",
-              "note": "Runs straight from a folder or pen drive."
-            },
-            {
-              "os": "mac",
-              "kind": "App",
-              "file": "AndamanMapping_1.0.4_universal.dmg",
-              "size": "68 MB",
-              "note": "Intel and Apple-silicon Macs."
-            },
-            {
-              "os": "ubuntu",
-              "kind": "Package",
-              "file": "AndamanMapping_1.0.4_amd64.deb",
-              "size": "32 MB",
-              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
-            },
-            {
-              "os": "any",
-              "kind": "Offline folder",
-              "file": "AndamanMapping_1.0.4_offline.zip",
-              "size": "33 MB",
-              "note": "Any computer. Extract, then double-click Open Kit.html."
-            }
-          ],
-          "changes": [
-            {
-              "version": "1.0.4",
-              "date": "2026-11-06",
-              "text": "Closer to the 2015 program: the original six map shades (cyan to dark green) with natural-break ranges and its legend wording; new Point Select Info tool; zoom, scale and cursor readout under the map."
-            },
-            {
-              "version": "1.0.3",
-              "date": "2026-11-06",
-              "text": "The link to the Google Drive folder is removed. The original images and fliers now come only from the separate Pictures and Fliers pack."
-            },
-            {
-              "version": "1.0.2",
-              "date": "2026-11-06",
-              "text": "Shows all original images (19,502) and fliers (2,218 slides) of each species when the separate Pictures and Fliers pack is installed; without the pack nothing changes."
-            },
-            {
-              "version": "1.0.1",
-              "date": "2026-11-05",
-              "text": "The Windows Setup now uses the same kind of installer wizard as the 2015 program. No administrator password needed; the program itself is unchanged."
-            },
-            {
-              "version": "1.0.0",
-              "date": "2026-11-04",
-              "text": "Faithful rebuild of Andaman Mapping (2015) with the same screens and data; no MapInfo needed. One representative picture per species;."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Western Ghats Mapping",
-      "icon": "apps/western-ghats-mapping.png",
-      "origin": "Western Ghats Mapping: Distribution, Taxonomy & Diversity of Plants of Western Ghats (2015). Western Ghat Resource Assessment and Mapping, School of Ecology and Conservation, UAS Bangalore, with partner institutions.",
-      "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
-      "editions": [
-        {
-          "id": "western-ghats-mapping-2",
-          "key": "v2",
-          "label": "Version 2 – Updated (2026)",
-          "versionName": "Version 2 – Updated",
-          "version": "2.0.0",
-          "released": "2026-11-06",
-          "published": true,
-          "summary": "Search first, on phones too: find plants by scientific name, family, local name in any language, synonym or habit. Current names (GBIF / Catalogue of Life, 2015 names kept in brackets), one page per plant, a draggable map with states, districts and taluks, species-count maps, and GIS export of grids as GeoJSON, KML or CSV.",
-          "facts": [
-            "5,103 plants",
-            "1,667 names updated",
-            "68,895 local names",
-            "Works on phones",
-            "GIS export"
-          ],
-          "web": "https://sachinrosario.github.io/ibin-apps/western-ghats-mapping-2/",
-          "preview": "",
-          "downloads": [
-            {
-              "os": "windows",
-              "kind": "Installer",
-              "file": "WesternGhatsMapping2_2.0.0_Setup.exe",
-              "size": "62 MB",
-              "note": "Installs beside Version 1. No administrator password."
-            },
-            {
-              "os": "windows",
-              "kind": "No-install",
-              "file": "WesternGhatsMapping2.exe",
-              "size": "86 MB",
-              "note": "Runs straight from a folder or pen drive."
-            },
-            {
-              "os": "mac",
-              "kind": "App",
-              "file": "WesternGhatsMapping2_2.0.0_universal.dmg",
-              "size": "127 MB",
-              "note": "Intel and Apple-silicon Macs."
-            },
-            {
-              "os": "ubuntu",
-              "kind": "Package",
-              "file": "WesternGhatsMapping2_2.0.0_amd64.deb",
-              "size": "61 MB",
-              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
-            },
-            {
-              "os": "any",
-              "kind": "Offline folder",
-              "file": "WesternGhatsMapping2_2.0.0_offline.zip",
-              "size": "62 MB",
-              "note": "Any computer. Extract, then double-click Open Kit.html."
-            }
-          ],
-          "changes": [
-            {
-              "version": "2.0.0",
-              "date": "2026-11-06",
-              "text": "Plant names checked against the GBIF Backbone (1,667 updated, 2015 names kept; 381 left for a taxonomist to check); search first; works on phones; one page per plant; draggable and pinchable map with state, district and taluk layers; GIS export (GeoJSON, KML, CSV)."
-            }
-          ]
-        },
-        {
-          "id": "western-ghats-mapping",
-          "key": "v1",
-          "label": "Version 1 – Original (2015 screens)",
-          "versionName": "Version 1 – Original",
-          "version": "1.0.0",
-          "released": "2026-11-06",
-          "published": true,
-          "summary": "The 2015 program rebuilt screen for screen, without MapInfo: search the plants of the Western Ghats by genus, species, habit, common name or taluk, or select map grids to list the species recorded there; ten thematic maps including disturbance and threat indices; see each species' taxonomy, distribution map, picture, flier, distribution data, synonyms and common names.",
-          "facts": [
-            "5,103 species",
-            "3,231 map grids",
-            "68,895 common names",
-            "49,758 synonyms",
-            "Thematic maps"
-          ],
-          "web": "https://sachinrosario.github.io/ibin-apps/western-ghats-mapping/",
-          "preview": "",
-          "downloads": [
-            {
-              "os": "windows",
-              "kind": "Installer",
-              "file": "WesternGhatsMapping_1.0.0_Setup.exe",
-              "size": "67 MB",
-              "note": "Adds Start-menu and desktop shortcuts. No administrator password."
-            },
-            {
-              "os": "windows",
-              "kind": "No-install",
-              "file": "WesternGhatsMapping.exe",
-              "size": "88 MB",
-              "note": "Runs straight from a folder or pen drive."
-            },
-            {
-              "os": "mac",
-              "kind": "App",
-              "file": "WesternGhatsMapping_1.0.0_universal.dmg",
-              "size": "132 MB",
-              "note": "Intel and Apple-silicon Macs."
-            },
-            {
-              "os": "ubuntu",
-              "kind": "Package",
-              "file": "WesternGhatsMapping_1.0.0_amd64.deb",
-              "size": "64 MB",
-              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
-            },
-            {
-              "os": "any",
-              "kind": "Offline folder",
-              "file": "WesternGhatsMapping_1.0.0_offline.zip",
-              "size": "65 MB",
-              "note": "Any computer. Extract, then double-click Open Kit.html."
-            }
-          ],
-          "changes": [
-            {
-              "version": "1.0.0",
-              "date": "2026-11-06",
-              "text": "Faithful rebuild of Western Ghats Mapping (2015) with the same screens and data; no MapInfo needed. One representative picture per species; all original images and fliers come from the separate Pictures and Fliers pack."
-            }
-          ]
-        }
-      ]
+      ],
+      "category": "Plants"
     },
     {
       "name": "Jeeva Sampada",
@@ -1388,7 +1396,8 @@
             }
           ]
         }
-      ]
+      ],
+      "category": "Bioresource databases"
     }
   ],
   "upcoming": [
@@ -1397,5 +1406,12 @@
       "summary": "Butterfly species database",
       "stage": "Waiting for intake"
     }
+  ],
+  "categories": [
+    "Mapping and GIS",
+    "Birds",
+    "Butterflies",
+    "Plants",
+    "Bioresource databases"
   ]
 }
