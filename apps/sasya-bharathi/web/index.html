@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sasya Bharathi</title>
+<link rel="icon" href="img/ui/icon.png">
+<style>
+/* Sasya Bharathi (India) 2004-05 - Version 1, faithful web rebuild.
+   The screens are the original program's own screens (captured from the 2005 program running under Windows),
+   with its lists, counts, maps and tables filled from the original Access database (med1.mdb, image.mdb). */
+@font-face{font-family:"PS Arial";src:local("Arial"),local("ArialMT"),url(fonts/arimo-latin-400-normal.woff2) format("woff2");font-weight:400}
+@font-face{font-family:"PS Arial";src:local("Arial Bold"),local("Arial-BoldMT"),url(fonts/arimo-latin-700-normal.woff2) format("woff2");font-weight:700}
+:root{--arial:"PS Arial",Arial,sans-serif;--sans:"Microsoft Sans Serif","MS Sans Serif","PS Arial",sans-serif}
+html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:var(--sans)}
+#stage{position:absolute;width:1366px;height:768px;transform-origin:0 0;overflow:hidden;user-select:none;-webkit-user-select:none;background:#dccca9}
+#stage img{-webkit-user-drag:none}
+.scr{position:absolute;inset:0;display:none;background-repeat:no-repeat}
+.scr.on{display:block}
+.abs{position:absolute}
+.hot{position:absolute;cursor:pointer}
+.hot:active{background:rgba(0,0,0,.08);border-radius:14px}
+select.lb{position:absolute;border:1px solid #808080;border-right-color:#fff;border-bottom-color:#fff;box-shadow:inset 1px 1px 0 #404040;background:#fff;
+  font:13px/15px var(--arial);color:#000;padding:0;margin:0;outline:none;box-sizing:border-box}
+select.lb option{padding:0 2px;min-height:15px}
+select.lb option:checked{background:#000080 linear-gradient(#000080,#000080);color:#fff}
+.cnt{position:absolute;background:#ddcca9;font:11px var(--arial);text-align:center;color:#000}
+.cnt u{display:block;margin-top:4px}
+.ttl{position:absolute;font:12px var(--arial);text-align:center;color:#000}
+.cb{position:absolute;font:12px var(--sans);text-align:left}
+#busy{position:absolute;inset:0;display:none;z-index:900;cursor:wait}
+#busy div{position:absolute;left:583px;top:360px;width:200px;padding:10px;background:#ffffe1;border:1px solid #000;font:12px var(--arial);text-align:center}
+/* detail window */
+#det .body{position:absolute;left:0;top:96px;width:1366px;height:672px;overflow:hidden}
+.tab{position:absolute;top:40px;height:50px;cursor:pointer;background-size:100% 100%}
+.dtitle{position:absolute;left:300px;top:8px;width:660px;text-align:center;font:bold 14px var(--arial);color:#8b0000}
+.hval{position:absolute;width:354px;height:34px;background:url(img/ui/hbox.png);font:20px var(--arial);color:#7d0000;text-align:center;line-height:22px}
+table.fg{border-collapse:collapse;font:11px var(--arial);color:#804040;table-layout:fixed}
+table.fg th{background:#804040;color:#fff;font:bold 11px var(--arial);text-align:left;height:32px;padding:0 3px;border:1px solid #808080}
+table.fg td{border:1px solid #808080;padding:0 3px;height:32px;vertical-align:middle;overflow:hidden;cursor:pointer}
+table.fg td.a{background:#cdb7b1}table.fg td.b{background:#dfd0cc}
+table.fg td.sel{outline:2px solid #000080;outline-offset:-2px}
+.tree{position:absolute;background:#fff;overflow:auto;font:12px var(--arial)}
+.tree .n{white-space:nowrap;display:flex;align-items:center;gap:4px;height:24px}
+.tree .hl{background:#0a246a;color:#fff;padding:2px 3px}
+.pm{width:9px;height:9px;border:1px solid #808080;font:9px/9px var(--arial);text-align:center;cursor:pointer;background:#fff;color:#000;flex:none}
+#cmt{border-collapse:collapse;font:bold 14px var(--arial)}
+#cmt th{background:#008080;color:#fff;text-align:left;padding:1px 4px;border:1px solid #808080;font:bold 14px var(--arial)}
+#cmt td{border:1px solid #808080;padding:1px 4px;background:#fff;height:18px}
+#cmt td.nm{color:#804040;cursor:pointer}
+#cmt td.nm.sel{background:#0a246a;color:#fff}
+.dlg{position:absolute;inset:0;background:rgba(0,0,0,.25);z-index:500;display:none}
+.dlg .w{position:absolute;left:133px;top:84px;width:1100px;height:600px;background:#dccca9;border:2px outset #fff;box-shadow:2px 2px 6px #000}
+.dlg .tb{height:20px;background:linear-gradient(90deg,#0a246a,#a6caf0);color:#fff;font:bold 12px var(--arial);line-height:20px;padding-left:6px}
+.btn{position:absolute;background:#d4d0c8;border:2px outset #fff;font:12px var(--arial);text-align:center;line-height:20px;cursor:pointer}
+#quit{position:fixed;inset:0;z-index:100000;background:#000;color:#fff;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;font:20px var(--arial)}
+</style>
+</head>
+<body>
+<div id="stage">
+  <!-- opening screen (Form3) -->
+  <div class="scr on" id="open" style="background-image:url(img/ui/open.jpg)">
+    <div class="abs" style="left:300px;top:575px;width:766px;text-align:center;font:bold 13px/19px var(--arial);color:#1f4a00">
+      <div>Proprietary right holder - Dr. K.N. Ganeshaiah</div><div>Updated in 2026 by Dr. Sachin A. Rosario &middot; <span id="ver"></span></div></div>
+    <div class="hot" style="left:1157px;top:727px;width:72px;height:34px" onclick="go('team')" title="Credits"></div>
+    <div class="hot" style="left:1231px;top:727px;width:66px;height:34px" onclick="go('mods')" title="Next"></div>
+    <div class="hot" style="left:1297px;top:724px;width:66px;height:34px" onclick="quitApp()" title="Exit"></div>
+  </div>
+  <div class="scr" id="team" style="background-image:url(img/ui/team.jpg)">
+    <a class="abs" style="left:48px;top:503px;width:180px;height:16px" href="http://www.atree.org/kng.htm" target="_blank" rel="noopener"></a>
+    <div class="hot" style="left:684px;top:725px;width:62px;height:30px" onclick="go('open')" title="Back"></div>
+  </div>
+  <!-- Data Recovery Modules -->
+  <div class="scr" id="mods" style="background-image:url(img/ui/modules.jpg)">
+    <div class="hot" style="left:22px;top:94px;width:240px;height:64px" onclick="openPolitical()"></div>
+    <div class="hot" style="left:1124px;top:90px;width:236px;height:64px" onclick="openBiotic()"></div>
+    <div class="hot" style="left:18px;top:376px;width:248px;height:64px" onclick="openGrid()"></div>
+    <div class="hot" style="left:1114px;top:380px;width:242px;height:64px" onclick="openThematic()"></div>
+    <div class="hot" style="left:16px;top:658px;width:242px;height:64px" onclick="openImages()"></div>
+    <div class="hot" style="left:1114px;top:659px;width:242px;height:64px" onclick="openText()"></div>
+    <div class="hot" style="left:1292px;top:34px;width:64px;height:30px" onclick="go('open')" title="Back"></div>
+  </div>
+  <!-- Political Boundary -->
+  <div class="scr" id="pol" style="background-image:url(img/ui/political.png)">
+    <div class="hot" style="left:4px;top:4px;width:648px;height:760px;cursor:crosshair;border-radius:0" id="polMap" title="Click on a state to view its plants"></div>
+  </div>
+  <!-- Biotic zone search -->
+  <div class="scr" id="bio" style="background-image:url(img/ui/biotic.png)">
+    <div class="hot" style="left:4px;top:4px;width:648px;height:760px;cursor:crosshair;border-radius:0" id="bioMap"></div>
+    <div id="bioLegend"></div>
+  </div>
+  <!-- Gridwise search -->
+  <div class="scr" id="grd" style="background-image:url(img/ui/gridbg.png)">
+    <div class="abs" id="grdBox" style="left:6px;top:6px;width:646px;height:758px;overflow:scroll;background:#ddcca9">
+      <div class="abs" style="left:0;top:0;width:914px;height:1032px;background:url(img/ui/map_grid.png);cursor:crosshair" id="grdMap">
+        <div class="abs" id="grdSel" style="display:none;background:#f00"></div></div></div>
+  </div>
+  <!-- Thematic maps -->
+  <div class="scr" id="thm" style="background-image:url(img/ui/thematic.png)">
+    <div class="abs" style="left:4px;top:4px;width:814px;height:760px;overflow:hidden;background:#ddcca9">
+      <img id="thmImg" class="abs" style="left:0.5px;top:-45px;width:814px;height:876px" alt=""></div>
+    <img class="abs" id="thr0" style="left:830px;top:68px" alt=""><img class="abs" id="thr1" style="left:830px;top:103px" alt=""><img class="abs" id="thr2" style="left:830px;top:135px" alt="">
+    <div class="hot" style="left:828px;top:62px;width:180px;height:24px" onclick="thematic(0)"></div>
+    <div class="hot" style="left:828px;top:97px;width:180px;height:24px" onclick="thematic(1)"></div>
+    <div class="hot" style="left:828px;top:129px;width:180px;height:24px" onclick="thematic(2)"></div>
+    <div class="hot" style="left:1008px;top:8px;width:66px;height:34px" onclick="go('mods')" title="Home"></div>
+    <div class="hot" style="left:1078px;top:8px;width:66px;height:34px" onclick="quitApp()" title="Exit"></div>
+  </div>
+  <!-- Images -->
+  <div class="scr" id="img" style="background-image:url(img/ui/images.jpg)">
+    <div class="hot" style="left:1220px;top:9px;width:68px;height:34px" onclick="go('mods')" title="Home"></div>
+    <div class="hot" style="left:1292px;top:9px;width:68px;height:34px" onclick="quitApp()" title="Exit"></div>
+  </div>
+  <!-- Textform search -->
+  <div class="scr" id="txt" style="background-image:url(img/ui/textform.png)"></div>
+  <!-- the 'Digitized Inventory' window -->
+  <div class="scr" id="det" style="background:#c0c0c0 url(img/ui/dhdr.png) no-repeat">
+    <div class="dtitle" id="dTitle"></div>
+    <div class="hot" style="left:1264px;top:4px;width:48px;height:32px" onclick="detBack()" title="Back"></div>
+    <div class="hot" style="left:1313px;top:4px;width:50px;height:32px" onclick="quitApp()" title="Exit"></div>
+    <div id="dTabs"></div>
+    <div class="body" id="dBody"></div>
+  </div>
+  <div class="dlg" id="stl"><div class="w"><div class="tb">List of Correct &amp; Synonym Names</div><div id="stlIn"></div></div></div>
+  <div id="busy"><div>Please wait&hellip;</div></div>
+</div>
+<div id="quit"><div>Sasya Bharathi is closed. You can close this window.</div><div class="btn" style="position:static;padding:4px 16px" onclick="location.reload()">Open it again</div></div>
+<script>
+'use strict';
+const VERSION = '1.0.0';
+const REMOTE = 'https://sachinrosario.github.io/ibin-apps/sasya-bharathi/';
+const SW = 1366, SH = 768, stage = document.getElementById('stage');
+const $ = id => document.getElementById(id);
+function fit() {
+  const s = Math.min(innerWidth / SW, innerHeight / SH);
+  stage.style.transform = `scale(${s})`;
+  stage.style.left = Math.max(0, (innerWidth - SW * s) / 2) + 'px';
+  stage.style.top = Math.max(0, (innerHeight - SH * s) / 2) + 'px';
+}
+addEventListener('resize', fit); fit();
+$('ver').textContent = 'Version ' + VERSION;
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[c]);
+const el = (tag, attrs, html) => { const e = document.createElement(tag); if (attrs) for (const k in attrs) { if (k === 'style') Object.assign(e.style, attrs.style); else if (k.startsWith('on')) e[k] = attrs[k]; else e.setAttribute(k, attrs[k]); } if (html != null) e.innerHTML = html; return e; };
+const pos = (e, l, t, w, h) => { e.style.left = l + 'px'; e.style.top = t + 'px'; if (w != null) e.style.width = w + 'px'; if (h != null) e.style.height = h + 'px'; return e; };
+const none = v => (v == null || v === '' || v === '0' || /^none$/i.test(v)) ? '' : v;
+function busy(on) { $('busy').style.display = on ? 'block' : 'none'; }
+let CUR = 'open';
+function go(id) { document.querySelectorAll('.scr').forEach(s => s.classList.toggle('on', s.id === id)); CUR = id; }
+function quitApp() { try { window.close(); } catch (e) {} setTimeout(() => { $('quit').style.display = 'flex'; }, 250); }
+
+// ---------- data loading: a file in this folder first, the IBIN Apps web copy when it is not there (small installers) ----------
+const loaded = {};
+function loadJs(rel) {
+  if (loaded[rel]) return loaded[rel];
+  return loaded[rel] = new Promise((ok, bad) => {
+    const s = document.createElement('script'); s.src = rel;
+    s.onload = () => ok();
+    s.onerror = () => { s.remove(); const r = document.createElement('script'); r.src = REMOTE + rel; r.onload = () => ok(); r.onerror = () => { delete loaded[rel]; bad(new Error(rel)); }; document.head.appendChild(r); };
+    document.head.appendChild(s);
+  });
+}
+window.SB = window.SB || {};
+const SHARD = {};
+SB.got = (k, i, o) => { SHARD[k + i] = o; };
+async function shard(k, i) { if (!SHARD[k + i]) await loadJs(`data/${k}/${i}.js`); return SHARD[k + i]; }
+const crc32 = (() => { const T = []; for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; T[n] = c >>> 0; } return s => { let c = 0xFFFFFFFF; for (const b of new TextEncoder().encode(s)) c = T[(c ^ b) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }; })();
+function photo(img, file) { img.onerror = () => { img.onerror = null; img.src = REMOTE + 'img/photos/' + encodeURIComponent(file); }; img.src = 'img/photos/' + encodeURIComponent(file); }
+
+// ---------- indexes ----------
+let BYID, BYCOMB, INDIA, STATUS = ['valid', 'probably valid', 'synonym', 'probably synonym', 'undecided'];
+function unpack(s) { const o = []; let p = 0; if (s) for (const d of s.split('.')) { p += parseInt(d, 16); o.push(p); } return o; }
+function initData() {
+  BYID = new Map(); BYCOMB = new Map();
+  for (const r of SB.sp) { BYID.set(r[0], r); const k = r[7].toLowerCase(); if (!BYCOMB.has(k)) BYCOMB.set(k, []); BYCOMB.get(k).push(r); }
+  const st = [0, 0, 0, 0, 0]; for (const r of SB.sp) st[r[6]]++;
+  INDIA = makeSet(SB.sp.map(r => [r[1].toUpperCase(), r[2], r[7]]), st);
+}
+// a set of plants shown in the four lists: [family, genus, species] rows
+function makeSet(rows, bracket) {
+  const fam = new Map(), gen = new Map(), sp = new Map();
+  for (const [f, g, c] of rows) { const fk = f.toLowerCase(), gk = g.toLowerCase(), ck = c.toLowerCase();
+    if (!fam.has(fk)) fam.set(fk, f); if (!gen.has(gk)) gen.set(gk, [g, fk]); if (!sp.has(ck)) sp.set(ck, [c, fk, gk]); }
+  const srt = a => a.sort((x, y) => x.toLowerCase() < y.toLowerCase() ? -1 : x.toLowerCase() > y.toLowerCase() ? 1 : 0);
+  return { fams: srt([...fam.values()]), gens: [...gen.values()].sort((a, b) => a[0].toLowerCase() < b[0].toLowerCase() ? -1 : 1), sps: [...sp.values()].sort((a, b) => a[0].toLowerCase() < b[0].toLowerCase() ? -1 : 1), bracket };
+}
+function stateSet(states) {
+  const ids = new Set(); for (const s of states) for (const i of unpack(SB.states[s.toLowerCase()])) ids.add(i);
+  return makeSet([...ids].map(i => [SB.cfg[i][0], SB.cfg[i][1], SB.combs[i]]));
+}
+function speciesRow(comb) { const rs = BYCOMB.get(comb.toLowerCase()) || []; return rs.find(r => !r[4] && !r[5]) || rs[0]; }
+function sspRows(comb) { return (BYCOMB.get(comb.toLowerCase()) || []).filter(r => r[4] || r[5]); }
+
+// ---------- the four-list panel (Plant Richness ...) ----------
+function opts(sel, items) { sel.innerHTML = items.map(t => `<option>${esc(t)}</option>`).join(''); sel.scrollTop = 0; }
+function panel(host, x, y, withImage) {
+  const P = { host, set: null };
+  if (withImage) { P.img = pos(el('img', { class: 'abs', src: 'img/ui/panel.png', alt: '' }), x, y); host.append(P.img); }
+  const L = (l, t, w, h) => { const s = pos(el('select', { class: 'lb', size: 2 }), x + l, y + t, w, h); host.append(s); return s; };
+  P.title = pos(el('div', { class: 'ttl' }), x + 20, y + 13, 500); host.append(P.title);
+  const C = (l, w) => { const d = pos(el('div', { class: 'cnt' }), x + l, y + 62, w, 26); host.append(d); return d; };
+  P.cf = C(24, 132); P.cg = C(184, 132); P.cs = pos(C(351, 150), x + 351, y + 58, 150, 34); P.cv = C(535, 150);
+  P.lf = L(9, 101, 154, 213); P.lg = L(168, 101, 158, 213); P.ls = L(331, 101, 183, 213); P.lv = L(518, 101, 184, 213);
+  P.btns = [];
+  const B = (l, t, w, f) => { const b = pos(el('div', { class: 'hot', onclick: () => P.set && f() }), x + l, y + t, w, 28); host.append(b); P.btns.push(b); };
+  B(14, 332, 142, () => { const f = P.lf.value; if (!f) return alert('Select the Family'); detail('F', f); });
+  B(175, 332, 140, () => { const g = P.lg.value; if (!g) return alert('Select the Genus'); detail('G', g); });
+  B(340, 332, 154, () => { const c = P.ls.value; if (!c) return alert('Select the Species'); const r = speciesRow(c); if (r) detail('S', r[0]); });
+  B(510, 332, 196, () => { const v = P.lv.value; if (!v) return alert('Select the Sub species or variety'); const r = SB.sp.find(r => r[8].toLowerCase() === v.toLowerCase()); if (r) detail('S', r[0]); });
+  B(46, 368, 74, () => P.show(P.set, P.title.textContent));
+  B(142, 368, 340, () => statusLists(SB.st));
+  P.lf.onchange = () => { const fk = P.lf.value.toLowerCase(); opts(P.lg, P.set.gens.filter(g => g[1] === fk).map(g => g[0])); opts(P.ls, P.set.sps.filter(s => s[1] === fk).map(s => s[0])); opts(P.lv, []); P.cv.innerHTML = ''; };
+  P.lg.onchange = () => { const gk = P.lg.value.toLowerCase(); opts(P.ls, P.set.sps.filter(s => s[2] === gk).map(s => s[0])); opts(P.lv, []); P.cv.innerHTML = ''; };
+  P.ls.onchange = () => { const v = sspRows(P.ls.value).map(r => r[8]); opts(P.lv, v); P.cv.innerHTML = v.length ? `<u>${v.length}</u>` : ''; };
+  P.lf.ondblclick = () => P.lf.value && detail('F', P.lf.value);
+  P.lg.ondblclick = () => P.lg.value && detail('G', P.lg.value);
+  P.ls.ondblclick = () => { const r = P.ls.value && speciesRow(P.ls.value); if (r) detail('S', r[0]); };
+  P.show = (set, title) => {
+    P.set = set; P.title.textContent = title || '';
+    P.cf.innerHTML = `<u>${set.fams.length}</u>`; P.cg.innerHTML = `<u>${set.gens.length}</u>`;
+    P.cs.innerHTML = `<u style="margin-top:0">${set.sps.length}</u>` + (set.bracket ? `<div style="margin-top:5px;font-size:10px">**(${set.bracket.join(',')})</div>` : '');
+    P.cv.innerHTML = ''; opts(P.lf, set.fams); opts(P.lg, set.gens.map(g => g[0])); opts(P.ls, set.sps.map(s => s[0])); opts(P.lv, []);
+    P.els().forEach(e => e.style.display = '');
+  };
+  P.els = () => [P.img, P.title, P.cf, P.cg, P.cs, P.cv, P.lf, P.lg, P.ls, P.lv, ...P.btns].filter(Boolean);
+  P.hide = () => { P.set = null; P.els().forEach(e => e.style.display = 'none'); };
+  return P;
+}
+function homeExit(host, x) {
+  host.append(pos(el('div', { class: 'hot', onclick: () => go('mods'), title: 'Home' }), x, 8, 66, 34));
+  host.append(pos(el('div', { class: 'hot', onclick: quitApp, title: 'Exit' }), x + 70, 8, 66, 34));
+}
+
+// ---------- Political boundary ----------
+const polXY = (x, y) => [67.9 + (x - 8) / 21.25, 37.25 - (y - 34) / 23.79]; // fitted to the program's own map picture
+function inRing(px, py, ring) { let c = false; for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) { const [xi, yi] = ring[i], [xj, yj] = ring[j]; if ((yi > py) !== (yj > py) && px < (xj - xi) * (py - yi) / (yj - yi) + xi) c = !c; } return c; }
+function stateAt(lon, lat) {
+  for (const [st, ds] of Object.entries(SB.poly)) { if (st === 'SouthindiaStates') continue; for (const [, rings] of ds) for (const r of rings) if (inRing(lon, lat, r)) return st; }
+  return null;
+}
+let POL;
+function openPolitical() {
+  go('pol');
+  if (!POL) { const h = $('pol'); POL = panel(h, 656, 40, true); homeExit(h, 846);
+    $('polMap').onclick = e => { const r = $('polMap').getBoundingClientRect(), s = r.width / 648; const [lon, lat] = polXY((e.clientX - r.left) / s + 4, (e.clientY - r.top) / s + 4); const st = stateAt(lon, lat); if (!st) return;
+      busy(true); setTimeout(() => { POL.show(stateSet([st]), 'Plant Richness of ' + st); busy(false); }, 10); };
+  }
+  POL.show(INDIA, 'Plant Richness of Entire India');
+}
+
+// ---------- Biotic zones ----------
+const ZONES = [null, ['Tibetan', ['Jammu & Kashmir']], ['North West Himalaya', ['Himachal Pradesh']], ['West Himalaya', ['Uttaranchal']], ['Punjab', ['Punjab', 'Haryana']], ['Sikkim', ['sikkim']],
+  ['Upper Gangetic Plain', ['Uttar Pradesh']], ['Thar', ['Rajasthan']], ['Kutch', ['Gujarat']], ['Gujarat-Rajwara', ['Rajasthan', 'Gujarat']], ['Central Highlands', ['Madhya Pradesh']],
+  ['Eastern Plateau', ['Orissa', 'Chhatisgarh']], ['Chota-Nagpur', ['Jharkhand']], ['Central Plateau', ['Maharastra', 'Andhra Pradesh']], ['Lower Gangetic Plain', ['West Bengal']], ['Brahmaputra', ['Assam']],
+  ['Eastern Himalaya', ['Arunachal Pradesh']], ['Assam Hills', ['nagaland', 'meghalaya', 'tripura', 'manipur', 'mizoram']], ['Deccan Plateau', ['karnataka', 'tamilnadu', 'andhra pradesh']],
+  ['western ghats', ['karnataka', 'maharastra', 'kerala', 'tamilnadu']], ['West Coast', ['karnataka', 'maharastra', 'kerala', 'tamilnadu']]];
+// which zone each point of the coloured map belongs to (run-length rows, every 2nd pixel), traced from the program's own map
+const BIOZ = [[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,82,1,5,0,241],[0,75,1,13,0,240],[0,69,1,20,0,239],[0,69,1,20,0,239],[0,69,1,22,0,237],[0,64,1,28,0,236],[0,62,1,32,0,234],[0,62,1,34,0,232],[0,60,1,37,0,231],[0,60,1,39,0,229],[0,59,1,41,0,228],[0,57,1,44,0,227],[0,56,1,46,0,26,1,4,0,196],[0,56,1,46,0,25,1,6,0,195],[0,57,1,47,0,15,1,17,0,192],[0,57,1,49,0,12,1,19,0,191],[0,63,1,46,0,8,1,21,0,190],[0,64,1,45,0,7,1,23,0,189],[0,64,1,75,0,189],[0,66,1,73,0,189],[0,69,1,69,0,190],[0,69,1,69,0,190],[0,71,1,67,0,190],[0,71,1,67,0,190],[0,74,2,4,1,60,0,190],[0,74,2,5,1,59,0,190],[0,73,2,10,1,55,0,190],[0,72,2,12,1,53,0,191],[0,70,2,17,1,48,0,193],[0,70,2,19,1,46,0,193],[0,69,2,23,1,40,0,196],[0,69,2,25,1,38,0,196],[0,67,2,29,1,36,0,196],[0,67,2,30,1,35,0,196],[0,68,2,31,1,33,0,196],[0,68,2,31,1,33,0,196],[0,68,2,33,1,25,0,202],[0,69,2,33,1,24,0,202],[0,69,2,35,1,22,0,202],[0,69,2,35,1,23,0,201],[0,69,4,2,2,35,1,20,0,202],[0,69,4,3,2,36,1,18,0,202],[0,69,4,3,2,37,1,17,0,202],[0,69,4,3,2,39,1,16,0,201],[0,69,4,5,2,37,1,17,0,200],[0,69,4,8,2,35,1,18,0,198],[0,69,4,10,2,33,1,18,0,198],[0,69,4,14,2,31,1,17,0,197],[0,69,4,15,2,30,1,17,0,197],[0,70,4,16,2,29,1,17,0,196],[0,73,4,14,2,28,1,18,0,195],[0,76,4,3,0,2,4,7,2,27,1,18,0,195],[0,81,4,13,2,21,1,18,0,195],[0,81,4,15,2,20,1,6,0,2,1,8,0,196],[0,81,4,15,2,20,1,6,0,2,1,5,0,199],[0,84,4,13,2,21,1,4,0,3,1,2,0,201],[0,86,4,11,2,22,1,3,0,4,1,1,0,201],[0,87,4,12,2,23,0,206],[0,87,4,13,2,22,0,206],[0,85,4,15,2,24,0,204],[0,84,4,21,2,19,0,204],[0,81,4,20,3,8,2,15,0,204],[0,81,4,20,3,8,2,15,0,204],[0,79,4,23,3,10,2,13,0,203],[0,79,4,23,3,11,2,13,0,202],[0,79,4,25,3,12,2,9,0,203],[0,80,4,24,3,13,2,10,0,201],[0,80,4,25,3,24,0,199],[0,80,4,25,3,24,0,199],[0,79,4,28,3,24,0,197],[0,79,4,28,3,24,0,197],[0,80,4,29,3,26,0,193],[0,80,4,29,3,28,0,191],[0,80,4,29,3,29,0,190],[0,78,4,33,3,28,0,189],[0,77,4,34,3,28,0,189],[0,76,4,35,3,30,0,187],[0,75,4,37,3,29,0,187],[0,74,4,39,3,31,0,184],[0,74,4,40,3,30,0,184],[0,74,4,37,6,5,3,30,0,182],[0,74,4,37,6,6,3,30,0,181],[0,73,4,37,6,9,3,28,0,181],[0,73,4,36,6,10,3,28,0,181],[0,70,7,3,4,36,6,13,3,23,0,183],[0,69,7,4,4,36,6,13,3,21,0,185],[0,67,7,12,4,28,6,16,3,19,0,186],[0,67,7,12,4,28,6,17,3,17,0,187],[0,67,7,13,4,27,6,19,3,15,0,187],[0,66,7,13,4,28,6,20,3,14,0,187],[0,66,7,13,4,28,6,22,3,11,0,188],[0,65,7,14,4,28,6,23,3,9,0,189],[0,65,7,15,4,27,6,24,3,8,0,161,16,3,0,25],[0,65,7,15,4,27,6,25,3,7,0,148,16,3,0,10,16,3,0,25],[0,64,7,21,4,22,6,26,3,6,0,146,16,9,0,4,16,7,0,23],[0,64,7,25,4,18,6,26,3,6,0,144,16,12,0,3,16,7,0,23],[0,62,7,27,4,18,6,27,3,5,0,144,16,22,0,23],[0,62,7,27,4,18,6,29,3,3,0,143,16,23,0,23],[0,58,7,31,4,18,6,31,0,144,16,26,0,20],[0,58,7,31,4,18,6,32,0,143,16,26,0,20],[0,57,7,32,4,18,6,35,0,138,16,28,0,20],[0,56,7,33,4,19,6,36,0,130,16,34,0,20],[0,56,7,33,4,20,6,37,0,127,16,33,0,22],[0,55,7,36,4,18,6,38,0,126,16,33,0,22],[0,54,7,37,9,3,4,17,6,38,0,123,16,41,0,15],[0,54,7,36,9,4,4,17,6,39,0,120,16,44,0,14],[0,54,7,35,9,5,4,17,6,40,0,118,16,46,0,13],[0,52,7,37,9,5,4,17,6,42,0,71,5,3,0,40,16,50,0,11],[0,37,7,3,0,12,7,36,9,6,4,17,6,42,0,70,5,5,0,39,16,50,0,11],[0,35,7,5,0,10,7,37,9,8,4,2,9,6,4,6,6,34,0,1,6,11,0,1,6,3,0,62,5,8,0,37,16,21,0,1,16,29,0,11],[0,35,7,5,0,8,7,38,9,9,4,2,9,6,4,6,6,34,0,1,6,16,0,60,5,9,0,31,16,3,0,2,16,22,0,1,16,29,0,11],[0,34,7,52,9,18,4,5,6,34,0,1,6,18,0,58,5,8,0,27,16,60,0,13],[0,34,7,52,9,20,4,2,0,1,6,57,0,54,5,8,0,27,16,60,0,13],[0,33,7,53,9,20,4,2,0,3,6,57,0,52,5,8,0,28,16,36,15,8,16,12,0,16],[0,32,7,53,9,21,4,3,0,2,6,59,0,49,5,9,0,28,16,34,15,10,16,12,0,16],[0,32,7,52,9,21,4,4,0,2,6,65,14,6,0,36,5,10,0,29,16,31,15,10,16,14,0,16],[0,30,7,54,9,21,4,5,0,2,6,64,14,8,0,34,5,10,0,32,16,25,15,12,16,15,0,16],[0,29,7,53,9,23,4,7,6,65,14,7,0,34,5,10,0,32,16,22,15,14,16,12,0,2,16,4,0,14],[0,28,7,54,9,23,4,7,9,2,6,63,14,7,0,34,5,10,0,31,16,23,15,14,16,10,0,4,16,4,0,14],[0,27,7,54,9,25,4,6,9,4,6,61,14,7,0,36,5,8,0,31,16,22,15,15,16,6,0,10,16,2,0,14],[0,27,7,53,9,26,4,6,9,5,6,60,14,7,0,36,14,8,0,31,16,21,15,15,16,7,0,26],[0,27,7,52,9,29,4,4,9,7,6,59,14,10,0,3,14,3,0,26,14,10,0,13,15,3,0,14,16,18,15,16,16,6,0,28],[0,27,7,51,9,31,4,3,9,10,6,56,14,11,0,1,14,4,0,26,14,14,0,8,15,4,0,7,15,3,0,2,15,35,16,6,0,29],[0,28,7,49,9,47,6,55,14,15,0,26,14,21,15,51,16,5,0,31],[0,28,7,49,9,48,6,55,14,15,0,2,14,6,0,17,14,19,15,51,17,3,16,4,0,31],[0,34,7,42,9,50,6,53,14,26,0,3,14,2,0,9,14,19,15,50,17,7,0,33],[0,34,7,41,9,51,6,53,14,26,0,2,14,3,0,8,14,20,15,49,17,6,0,35],[0,34,7,40,9,52,6,52,14,45,0,3,14,13,15,46,17,8,0,35],[0,34,7,38,9,54,6,52,14,45,0,3,14,2,0,1,14,10,15,45,17,9,0,35],[0,33,7,38,9,55,6,52,14,45,0,4,14,1,0,2,14,8,15,45,17,10,0,35],[0,33,7,38,9,55,6,52,14,44,0,8,14,8,15,44,17,11,0,35],[0,34,7,35,9,56,6,53,14,42,0,11,14,4,0,2,15,45,17,10,0,36],[0,34,7,34,9,57,6,54,14,41,0,11,14,4,0,3,15,43,17,11,0,36],[0,34,7,33,9,58,6,56,14,39,0,18,15,20,17,7,15,15,17,12,0,36],[0,34,7,32,9,59,6,56,14,39,0,18,15,18,17,10,15,14,17,12,0,36],[0,39,7,26,9,59,6,56,14,42,0,16,17,36,15,4,17,14,0,36],[0,40,7,24,9,60,6,56,14,43,0,15,17,53,0,37],[0,40,7,23,9,57,10,3,6,15,10,6,6,33,14,49,0,11,17,53,0,38],[0,40,7,22,9,57,10,5,6,13,10,13,6,26,14,50,0,11,17,53,0,38],[0,40,7,22,9,57,10,32,6,24,14,53,0,9,17,52,0,39],[0,40,7,22,9,56,10,35,6,20,14,55,0,9,17,51,0,40],[0,41,7,19,9,58,10,53,6,2,14,55,0,10,17,49,0,41],[0,41,7,19,9,58,10,56,14,29,12,3,14,18,0,16,17,47,0,41],[0,41,7,19,9,58,10,57,14,27,12,4,14,17,0,18,17,5,0,6,17,36,0,40],[0,41,7,18,9,59,10,58,14,25,12,6,14,16,0,40,17,25,0,40],[0,42,7,17,9,59,10,59,14,24,12,6,14,14,0,42,17,25,0,40],[0,44,7,15,9,58,10,61,14,22,12,9,14,11,0,42,17,26,0,40],[0,44,8,1,7,14,9,58,10,62,14,19,12,12,14,10,0,41,17,27,0,40],[0,43,8,12,7,4,9,58,10,51,12,9,10,2,12,32,14,8,0,42,17,27,0,40],[0,43,8,13,7,2,9,14,0,2,9,43,10,51,12,43,14,9,0,41,17,26,0,41],[0,28,8,1,0,6,8,4,0,4,8,14,9,15,0,2,9,43,10,50,12,46,14,8,0,40,17,24,0,43],[0,27,8,2,0,3,8,10,0,1,8,14,9,15,0,2,9,43,10,50,12,47,14,7,0,40,17,24,0,43],[0,16,8,41,9,60,10,49,12,49,14,10,0,32,17,28,0,43],[0,15,8,42,9,60,10,48,12,50,14,10,0,31,17,28,0,44],[0,14,8,42,9,61,10,47,12,50,14,12,0,29,17,28,0,45],[0,14,8,42,9,60,10,48,12,50,14,12,0,28,17,29,0,45],[0,14,8,20,0,2,8,19,9,61,10,48,12,49,14,12,0,27,17,31,0,45],[0,13,8,21,0,2,8,19,9,61,10,48,12,48,14,13,0,27,17,31,0,45],[0,12,8,1,0,3,8,39,9,60,10,49,12,46,14,14,0,27,17,24,0,4,17,3,0,46],[0,17,8,17,0,2,8,19,9,59,10,50,12,45,14,15,0,27,17,24,0,6,17,1,0,46],[0,17,8,17,0,2,8,18,9,59,10,51,12,44,14,17,0,26,17,24,0,53],[0,17,8,37,9,58,10,51,12,45,14,9,0,1,14,7,0,26,17,24,0,53],[0,17,8,35,9,60,10,51,12,44,14,19,0,25,17,8,0,3,17,13,0,53],[0,18,8,34,9,59,10,52,12,44,14,19,0,25,17,8,0,3,17,13,0,53],[0,19,8,31,9,59,10,17,0,1,10,35,12,44,14,20,0,26,17,6,0,4,17,12,0,54],[0,20,8,29,9,58,10,19,0,1,10,34,12,45,14,20,0,26,17,6,0,4,17,11,0,55],[0,21,8,25,9,60,10,20,0,1,10,34,12,45,14,22,0,25,17,5,0,4,17,11,0,55],[0,22,8,12,0,1,8,11,9,58,10,22,0,1,10,34,12,45,14,22,0,25,17,5,0,4,17,11,0,55],[0,27,8,2,0,5,8,10,9,58,10,24,0,1,10,34,12,46,14,21,0,27,17,3,0,5,17,9,0,56],[0,34,8,10,9,57,10,60,12,47,14,20,0,28,17,2,0,5,17,9,0,56],[0,34,8,6,9,49,10,72,12,47,14,19,0,36,17,9,0,56],[0,32,9,57,10,72,12,47,14,19,0,36,17,9,0,56],[0,28,9,1,0,1,9,50,10,78,11,3,12,47,14,19,0,37,17,7,0,57],[0,27,9,52,10,77,11,5,12,46,14,20,0,38,17,6,0,57],[0,22,9,57,10,76,11,6,12,46,14,21,0,37,17,6,0,57],[0,21,9,57,10,73,11,10,12,45,14,22,0,37,17,7,0,56],[0,21,9,34,20,2,9,21,10,72,11,12,12,44,14,22,0,37,17,7,0,56],[0,22,9,33,20,3,9,20,10,71,11,14,12,43,14,22,0,37,17,7,0,56],[0,22,9,33,20,2,9,20,10,72,11,14,12,42,14,23,0,37,17,7,0,56],[0,24,9,31,20,2,9,20,10,71,11,15,12,42,14,23,0,37,17,7,0,56],[0,25,9,30,20,2,9,19,10,72,11,15,12,41,14,24,0,37,17,7,0,56],[0,26,9,29,20,3,9,14,10,74,11,17,12,41,14,25,0,37,17,1,0,61],[0,26,9,29,20,4,9,12,10,75,11,18,12,40,14,25,0,99],[0,27,9,28,20,5,9,10,10,75,11,21,12,38,14,25,0,99],[0,28,9,27,20,4,9,12,10,73,11,34,12,26,14,24,0,100],[0,29,9,25,0,1,20,3,9,13,10,73,11,34,12,25,14,25,0,100],[0,30,9,24,0,1,20,3,9,13,10,56,13,11,10,5,11,35,12,25,14,11,0,6,14,5,0,103],[0,32,9,21,0,2,20,4,9,12,10,53,13,15,10,2,11,37,12,24,14,8,0,118],[0,32,9,20,0,3,20,4,9,11,10,52,13,19,11,36,12,25,14,8,0,118],[0,34,9,16,0,6,20,3,9,10,19,3,10,47,13,20,11,37,12,25,14,9,0,118],[0,34,9,16,0,6,20,3,9,10,19,4,10,45,13,21,11,35,12,26,14,10,0,118],[0,36,9,10,0,10,20,4,9,8,19,6,10,41,13,24,11,37,12,23,14,11,0,118],[0,56,20,4,9,8,19,6,10,39,13,26,11,37,12,22,14,12,0,118],[0,57,20,4,9,6,19,9,10,18,13,5,10,12,13,28,11,38,12,21,14,12,0,118],[0,57,20,4,9,6,19,7,13,2,10,16,13,48,11,40,12,18,14,12,0,118],[0,57,20,4,9,6,19,7,13,3,10,14,13,50,11,42,12,14,14,13,0,118],[0,57,20,4,9,5,19,8,13,7,10,8,13,52,11,43,12,12,14,12,0,120],[0,57,20,4,9,4,19,9,13,67,11,46,12,8,14,13,0,120],[0,56,20,4,19,1,9,3,19,9,13,68,11,48,12,6,14,12,0,121],[0,55,20,4,19,13,13,67,11,51,12,5,14,11,0,122],[0,55,20,4,19,13,13,67,11,52,12,3,14,11,0,123],[0,55,20,4,19,11,13,69,11,53,12,2,14,11,0,123],[0,55,20,4,19,11,13,69,11,55,14,10,0,124],[0,55,20,4,19,10,13,70,11,55,14,9,0,125],[0,55,20,4,19,11,13,69,11,21,0,1,11,3,0,1,11,29,14,9,0,125],[0,55,20,4,19,12,13,68,11,21,0,1,11,3,0,1,11,29,14,7,0,127],[0,55,20,4,19,12,13,67,11,22,0,1,11,3,0,1,11,29,14,6,0,128],[0,55,20,4,19,13,13,64,11,24,0,1,11,3,0,1,11,31,0,132],[0,55,20,4,19,13,13,64,11,24,0,1,11,3,0,1,11,29,0,134],[0,56,20,3,19,13,13,64,11,24,0,1,11,3,0,1,11,28,0,135],[0,56,20,3,19,13,13,62,11,57,0,137],[0,56,20,3,19,13,13,62,11,56,0,138],[0,56,20,4,19,12,13,61,11,56,0,139],[0,56,20,5,19,10,13,62,11,55,0,140],[0,56,20,5,19,9,13,63,11,53,0,142],[0,56,20,5,19,9,13,63,11,53,0,142],[0,56,20,4,19,9,13,64,11,51,0,144],[0,56,20,4,19,9,13,64,11,51,0,144],[0,56,20,4,19,9,13,65,11,49,0,145],[0,56,20,4,19,9,13,68,11,46,0,145],[0,57,20,3,19,9,13,70,11,42,0,147],[0,57,20,3,19,9,13,71,11,41,0,147],[0,57,20,3,19,10,13,71,11,40,0,147],[0,57,20,3,19,10,13,71,11,39,0,148],[0,57,20,3,19,10,13,71,11,38,0,149],[0,57,20,4,19,9,13,72,11,36,0,150],[0,57,20,4,19,10,13,73,11,32,0,152],[0,57,20,4,19,10,13,73,11,31,0,153],[0,57,20,5,19,9,13,73,11,29,0,155],[0,58,20,4,19,9,13,73,11,28,0,156],[0,59,20,3,19,9,13,75,11,25,0,157],[0,59,20,3,19,9,13,76,11,23,0,158],[0,59,20,3,19,9,13,77,11,20,0,160],[0,59,20,3,19,10,13,76,11,20,0,160],[0,59,20,4,19,9,13,77,11,17,0,162],[0,59,20,4,19,9,13,77,11,17,0,162],[0,60,20,3,19,9,13,77,11,15,0,164],[0,60,20,3,19,9,13,77,11,14,0,165],[0,60,20,3,19,9,13,78,11,12,0,166],[0,60,20,3,19,11,13,77,11,10,0,167],[0,60,20,3,19,11,13,78,11,9,0,167],[0,60,20,3,19,13,13,77,11,8,0,167],[0,60,20,4,19,10,18,4,13,77,11,4,0,169],[0,60,20,4,19,10,18,5,13,79,11,1,0,169],[0,60,20,4,19,10,18,6,13,52,18,3,13,24,0,169],[0,60,20,4,19,10,18,12,13,42,18,9,13,21,0,170],[0,60,20,4,19,10,18,12,13,41,18,11,13,20,0,170],[0,60,20,5,19,9,18,15,13,10,18,9,13,17,18,14,13,17,0,172],[0,60,20,5,19,9,18,16,13,8,18,11,13,15,18,17,13,13,0,174],[0,61,20,4,19,9,18,38,13,10,18,20,13,4,0,182],[0,61,20,5,19,8,18,39,13,9,18,21,13,1,18,2,0,182],[0,62,20,4,19,8,18,71,0,183],[0,62,20,5,19,7,18,71,0,183],[0,63,20,4,19,8,18,69,0,184],[0,63,20,4,19,8,18,69,0,184],[0,64,20,5,19,7,18,63,0,1,18,4,0,184],[0,64,20,5,19,7,18,62,0,5,18,1,0,184],[0,65,20,4,19,7,18,60,0,192],[0,65,20,4,19,7,18,60,0,192],[0,65,20,5,19,7,18,59,0,192],[0,65,20,5,19,7,18,59,0,192],[0,66,20,5,19,6,18,59,0,192],[0,66,20,5,19,6,0,2,18,57,0,192],[0,67,20,5,19,5,0,2,18,57,0,192],[0,67,20,5,19,5,0,2,18,57,0,192],[0,67,20,7,19,4,0,1,18,56,0,193],[0,68,20,6,19,4,0,1,18,56,0,193],[0,69,20,5,19,4,18,57,0,193],[0,69,20,5,19,5,18,57,0,192],[0,69,20,5,19,5,18,57,0,192],[0,70,20,4,19,5,18,57,0,192],[0,70,20,4,19,6,18,56,0,192],[0,70,20,4,19,7,18,55,0,192],[0,71,20,3,19,7,18,56,0,191],[0,71,20,3,19,7,18,56,0,191],[0,71,20,4,19,7,18,55,0,191],[0,71,20,4,19,7,18,56,0,190],[0,71,20,4,19,8,18,55,0,190],[0,71,20,5,19,9,18,53,0,190],[0,71,20,5,19,10,18,52,0,190],[0,72,20,4,19,11,18,51,0,190],[0,72,20,4,19,11,18,51,0,190],[0,72,20,4,19,13,18,49,0,190],[0,72,20,4,19,13,18,49,0,190],[0,72,20,4,19,13,18,49,0,190],[0,72,20,4,19,13,18,49,0,190],[0,72,20,5,19,12,18,49,0,190],[0,73,20,4,19,12,18,49,0,190],[0,73,20,5,19,11,18,48,0,191],[0,73,20,5,19,11,18,48,0,191],[0,74,20,4,19,11,18,20,0,2,18,25,0,192],[0,74,20,5,19,9,18,21,0,2,18,25,0,192],[0,74,20,5,19,9,18,48,0,192],[0,75,20,4,19,9,18,21,0,2,18,25,0,192],[0,75,20,5,19,9,18,20,0,2,18,24,0,193],[0,76,20,4,19,10,18,44,0,194],[0,76,20,5,19,10,18,43,0,194],[0,77,20,5,19,9,18,42,0,195],[0,78,20,4,19,10,18,41,0,195],[0,78,20,5,19,10,18,39,0,196],[0,79,20,5,19,11,18,36,0,197],[0,79,20,5,19,12,18,35,0,197],[0,80,20,4,19,13,18,34,0,197],[0,80,20,5,19,12,18,34,0,197],[0,81,20,5,19,12,18,32,0,198],[0,81,20,5,19,12,18,32,0,198],[0,82,20,4,19,12,18,32,0,198],[0,82,20,4,19,13,18,31,0,198],[0,82,20,4,19,13,18,31,0,198],[0,83,20,4,19,13,18,31,0,197],[0,83,20,4,19,13,18,31,0,197],[0,83,20,4,19,13,18,31,0,197],[0,83,20,4,19,12,18,32,0,197],[0,83,20,4,19,12,18,32,0,197],[0,84,20,3,19,12,18,32,0,197],[0,84,20,4,19,18,18,25,0,197],[0,84,20,4,19,18,18,25,0,197],[0,85,20,4,19,17,18,25,0,197],[0,86,20,3,19,17,18,25,0,197],[0,86,20,3,19,17,18,24,0,198],[0,86,20,3,19,17,18,24,0,198],[0,86,20,3,19,17,18,24,0,198],[0,87,20,2,19,17,18,23,0,199],[0,87,20,3,19,15,18,18,0,2,18,4,0,199],[0,87,20,3,19,15,18,17,0,4,18,2,0,200],[0,87,20,4,19,13,18,18,0,206],[0,87,20,4,19,13,18,18,0,206],[0,87,20,4,19,12,18,19,0,206],[0,87,20,4,19,12,18,20,0,205],[0,87,20,4,19,12,18,21,0,204],[0,87,20,4,19,11,18,22,0,204],[0,87,20,5,19,10,18,23,0,203],[0,87,20,5,19,10,18,23,0,203],[0,87,20,5,19,9,18,25,0,202],[0,88,20,4,19,9,18,26,0,201],[0,88,20,6,19,7,18,13,0,9,18,3,0,202],[0,88,20,6,19,7,18,11,0,13,18,1,0,202],[0,89,20,7,19,4,18,11,0,217],[0,89,20,7,19,4,18,11,0,217],[0,89,20,8,19,2,18,12,0,217],[0,90,20,7,19,2,18,11,0,218],[0,91,20,8,18,10,0,219],[0,92,20,8,18,9,0,219],[0,93,20,8,18,8,0,219],[0,94,20,7,18,7,0,220],[0,96,20,6,18,5,0,221],[0,97,20,5,18,4,0,222],[0,97,20,7,0,224],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328],[0,328]];
+function zoneAt(x, y) { const row = BIOZ[Math.round(y / 2)]; if (!row) return 0; let cx = Math.round(x / 2); for (let i = 0; i < row.length; i += 2) { if (cx < row[i + 1]) return row[i]; cx -= row[i + 1]; } return 0; }
+let BIO;
+function bioZone(z) { busy(true); setTimeout(() => { const [n, st] = ZONES[z]; BIO.show(stateSet(st), 'Plant Richness of the biotic zone ' + (z === 20 ? 'western ghats' : n)); busy(false); }, 10); }
+function openBiotic() {
+  go('bio');
+  if (!BIO) { const h = $('bio'); BIO = panel(h, 656, 40, true); homeExit(h, 846);
+    const lg = el('div', { class: 'abs', style: { left: '662px', top: '503px', width: '494px', height: '93px', border: '1px solid #c0c0c0', font: '11px var(--arial)', background: '#ddcca9' } });
+    lg.innerHTML = '<div style="position:absolute;left:7px;top:-1px;color:#00f;font-size:12px">Click on the label to view the list of species of that biotic zone in Entire India.</div>';
+    const col = [8, 104, 243, 368], wd = [92, 135, 120, 120];
+    for (let z = 1; z <= 20; z++) { const c = Math.floor((z - 1) / 5), r = (z - 1) % 5; const d = pos(el('div', { class: 'hot', style: { font: '11px var(--arial)', whiteSpace: 'nowrap', borderRadius: 0 } }, z + '. ' + ZONES[z][0].replace('western ghats', 'Western Ghats')), col[c], 14 + r * 16, wd[c], 15); d.onclick = () => bioZone(z); lg.append(d); }
+    h.append(lg);
+    $('bioMap').onclick = e => { const r = $('bioMap').getBoundingClientRect(), s = r.width / 648; const z = zoneAt((e.clientX - r.left) / s + 4, (e.clientY - r.top) / s + 4); if (z) bioZone(z); };
+  }
+  BIO.hide();
+}
+
+// ---------- Grid (625 sq km cells) ----------
+let GRD;
+function openGrid() {
+  go('grd');
+  if (!GRD) { const h = $('grd'); GRD = panel(h, 656, 40, true); homeExit(h, 846);
+    $('grdMap').onclick = e => { const r = $('grdMap').getBoundingClientRect(), s = r.width / 914;
+      const px = (e.clientX - r.left) / s, py = (e.clientY - r.top) / s, u = 1740 + (px - 26) / 0.074419, v = 165 + (py - 20) / 0.0660;
+      const g = SB.grid.find(g => u >= g[1] && u < g[3] && v >= g[2] && v < g[4]); if (!g || !g[5]) return;
+      const q = $('grdSel'); q.style.display = 'block'; pos(q, 26 + (g[1] - 1740) * 0.074419 + 1, 20 + (g[2] - 165) * 0.0660 + 1, (g[3] - g[1]) * 0.074419 - 1, (g[4] - g[2]) * 0.0660 - 1);
+      busy(true); setTimeout(() => { GRD.show(stateSet([g[5]]), 'GRIDWISE(625 Sq.kms) SEARCH'); busy(false); }, 10); };
+  }
+  GRD.hide(); $('grdSel').style.display = 'none';
+}
+
+// ---------- Thematic maps ----------
+function openThematic() { go('thm'); thematic(0); }
+function thematic(i) { $('thmImg').src = 'img/ui/map_' + ['family', 'genus', 'species'][i] + '.png'; [0, 1, 2].forEach(k => $('thr' + k).src = 'img/ui/radio_' + (k === i ? 'on' : 'off') + '.png'); }
+
+// ---------- Images module ----------
+let IMG;
+function openImages() {
+  go('img');
+  if (!IMG) { const h = $('img'); IMG = {};
+    const L = (l, w) => { const s = pos(el('select', { class: 'lb', size: 2 }), l, 171, w, 213); h.append(s); return s; };
+    const C = (l, w, t, hh) => { const d = pos(el('div', { class: 'cnt' }), l, t, w, hh); h.append(d); return d; };
+    IMG.cf = C(846, 132, 119, 26); IMG.cg = C(1006, 132, 121, 26); IMG.cs = C(1172, 148, 113, 44);
+    IMG.lf = L(831, 154); IMG.lg = L(991, 158); IMG.ls = L(1154, 183);
+    const rows = []; for (const [k, v] of Object.entries(SB.im)) for (const x of v.slice(0, 1)) { const r = speciesRow(k); rows.push([(x[2] || (r && r[1]) || '').toUpperCase(), x[3] || (r && r[2]) || '', r ? r[7] : k]); }
+    IMG.set = makeSet(rows, SB.imst.map(a => a.length));
+    const P = IMG; P.show = () => { const s = P.set; P.cf.innerHTML = `<u>${s.fams.length}</u>`; P.cg.innerHTML = `<u>${s.gens.length}</u>`; P.cs.innerHTML = `<u>${s.sps.length}</u><div style="margin-top:8px;font-size:10px">**(${s.bracket.join(',')})</div>`; opts(P.lf, s.fams); opts(P.lg, s.gens.map(g => g[0])); opts(P.ls, s.sps.map(x => x[0])); };
+    P.lf.onchange = () => { const fk = P.lf.value.toLowerCase(); opts(P.lg, P.set.gens.filter(g => g[1] === fk).map(g => g[0])); opts(P.ls, P.set.sps.filter(s => s[1] === fk).map(s => s[0])); };
+    P.lg.onchange = () => { const gk = P.lg.value.toLowerCase(); opts(P.ls, P.set.sps.filter(s => s[2] === gk).map(s => s[0])); };
+    const B = (l, t, w, f) => h.append(pos(el('div', { class: 'hot', onclick: f }), l, t, w, 32));
+    B(835, 404, 147, () => P.lf.value ? detail('F', P.lf.value) : alert('Select the Family'));
+    B(997, 404, 147, () => P.lg.value ? detail('G', P.lg.value) : alert('Select the Genus'));
+    B(1161, 403, 158, () => { const r = P.ls.value && speciesRow(P.ls.value); r ? detail('S', r[0], 'img') : alert('Select the Species'); });
+    P.ls.ondblclick = () => { const r = P.ls.value && speciesRow(P.ls.value); if (r) detail('S', r[0], 'img'); };
+    B(867, 443, 77, () => P.show()); B(955, 445, 342, () => statusLists(SB.imst));
+  }
+  IMG.show();
+}
+
+// ---------- Textform search ----------
+let TXT;
+async function openText() {
+  go('txt');
+  if (TXT) return;
+  const h = $('txt'); TXT = panel(h, 656, 40, true); TXT.hide(); homeExit(h, 846);
+  const S = (l, t, w) => { const s = pos(el('select', { class: 'cb' }), l, t, w, 22); h.append(s); return s; };
+  const lang = S(92, 61, 191), cname = S(92, 93, 191), st = S(84, 173, 199), dist = S(84, 205, 199), fam = S(92, 341, 191), gen = S(92, 373, 191), spp = S(92, 405, 191), ssp = S(92, 437, 191);
+  const fill = (s, a) => { s.innerHTML = '<option></option>' + a.map(x => `<option>${esc(x)}</option>`).join(''); };
+  const B = (l, t, w, f) => h.append(pos(el('div', { class: 'hot', onclick: f }), l, t, w, 32));
+  fill(st, Object.keys(SB.dat).sort());
+  st.onchange = () => fill(dist, (SB.dat[st.value] || []).slice().sort());
+  fill(fam, INDIA.fams);
+  fam.onchange = () => { const fk = fam.value.toLowerCase(); fill(gen, INDIA.gens.filter(g => g[1] === fk).map(g => g[0])); fill(spp, []); fill(ssp, []); };
+  gen.onchange = () => { const gk = gen.value.toLowerCase(); fill(spp, INDIA.sps.filter(s => s[2] === gk).map(s => s[0])); fill(ssp, []); };
+  spp.onchange = () => fill(ssp, sspRows(spp.value).map(r => r[8]));
+  B(293, 68, 80, () => { if (!SB.cm) return; const hit = (SB.cm[lang.value] || []).find(x => x[0] === cname.value); if (!hit) return alert('Select the Common Name');
+    TXT.show(makeSet(hit[1].map(i => [SB.cfg[i][0], SB.cfg[i][1], SB.combs[i]])), `Plants with the common name '${cname.value}' (${lang.value})`); });
+  B(293, 196, 80, async () => { if (!st.value) return alert('Select the State'); busy(true);
+    try { if (!dist.value) TXT.show(stateSet([st.value]), 'Plant Richness of ' + st.value);
+      else { await loadJs('data/sd.js'); const m = SB.sd[st.value.toLowerCase()] || {}; const k = Object.keys(m).find(d => d.toLowerCase() === dist.value.toLowerCase());
+        TXT.show(makeSet(unpack(m[k]).map(i => [SB.cfg[i][0], SB.cfg[i][1], SB.combs[i]])), `Plant Richness of ${dist.value} (${st.value})`); } } finally { busy(false); } });
+  B(150, 245, 77, () => { st.value = ''; fill(dist, []); TXT.hide(); });
+  B(293, 380, 80, () => { if (ssp.value) { const r = SB.sp.find(r => r[8].toLowerCase() === ssp.value.toLowerCase()); if (r) return detail('S', r[0]); }
+    if (spp.value) { const r = speciesRow(spp.value); if (r) return detail('S', r[0]); } if (gen.value) return detail('G', gen.value); if (fam.value) return detail('F', fam.value); alert('Select the Family'); });
+  B(150, 469, 77, () => { fam.value = ''; fill(gen, []); fill(spp, []); fill(ssp, []); });
+  busy(true);
+  try { await loadJs('data/cm.js'); fill(lang, Object.keys(SB.cm).sort((a, b) => a.toLowerCase() < b.toLowerCase() ? -1 : 1)); lang.onchange = () => fill(cname, (SB.cm[lang.value] || []).map(x => x[0])); } finally { busy(false); }
+}
+
+// ---------- To List Correct & Synonym Names ----------
+function statusLists(lists) {
+  const d = $('stl'), w = $('stlIn'); w.innerHTML = ''; d.style.display = 'block';
+  const H = ['Valid', 'Probably Valid', 'Synonym', 'Probably Synonym', 'Undecided'];
+  H.forEach((t, i) => { w.append(pos(el('div', { class: 'abs', style: { font: 'bold 12px var(--arial)' } }, `${t} (${lists[i].length})`), 14 + i * 216, 34));
+    const s = pos(el('select', { class: 'lb', size: 2 }), 12 + i * 216, 52, 208, 490); opts(s, lists[i]); w.append(s);
+    s.ondblclick = () => { const v = s.value.trim().replace(/\s+/g, ' ').toLowerCase(); const r = SB.sp.find(r => r[8].toLowerCase() === v) || speciesRow(v); if (r) { d.style.display = 'none'; detail('S', r[0]); } }; });
+  w.append(pos(el('div', { class: 'abs', style: { font: '11px var(--arial)' } }, 'Double-click a name to open its inventory.'), 14, 552));
+  w.append(pos(el('div', { class: 'btn', onclick: () => d.style.display = 'none' }, 'Close'), 990, 548, 90, 24));
+}
+
+// ---------- the Digitized Inventory window ----------
+let DET = null, BACKTO = 'mods';
+const TABS_S = [['tax', 4, 118], ['map', 198, 108], ['img', 392, 118], ['dist', 588, 116], ['syn', 783, 117], ['cm', 978, 120], ['fl', 1172, 118]];
+const TABS_F = [['tax', 12, 122], ['map', 354, 110], ['dist', 694, 118], ['fl', 1036, 118]];
+async function detail(kind, key, tab) {
+  if (CUR !== 'det') BACKTO = CUR;
+  busy(true);
+  try {
+    const D = { kind, key };
+    if (kind === 'S') { const r = BYID.get(key); D.row = r; D.name = r[8] || r[7]; D.fam = r[1]; D.data = ((await shard('d', key % SB.ns)) || {})[String(key)] || {}; D.T = SHARD['d' + key % SB.ns].t; D.imgs = SB.im[r[7].toLowerCase()] || []; }
+    else { const k = (kind === 'F' ? 'F' : 'G') + key.toLowerCase(); const sh = await shard('g', crc32(k.toLowerCase()) % SB.ng); D.data = (sh || {})[k] || { d: [], f: [], m: [{}, {}] }; D.T = sh ? sh.t : [];
+      D.name = kind === 'F' ? key.toUpperCase() : key; D.fam = kind === 'F' ? key : ((INDIA.gens.find(g => g[0].toLowerCase() === key.toLowerCase()) || [, ''])[1]); }
+    DET = D;
+    $('dTitle').textContent = `Digitized Inventory of ${D.name} in entire India`;
+    go('det'); showTab(tab && (kind === 'S' || tab !== 'img') ? (tab === 'img' && !D.imgs.length ? 'tax' : tab) : 'tax');
+  } catch (e) { alert('The data of this plant could not be loaded. Please check the internet connection and try again.'); }
+  finally { busy(false); }
+}
+function detBack() { go(BACKTO); }
+function showTab(t) {
+  const D = DET, host = $('dTabs'); host.innerHTML = '';
+  for (const [k, x, w] of D.kind === 'S' ? TABS_S : TABS_F) {
+    const na = k === 'img' && !D.imgs.length;
+    const src = D.kind === 'S' ? `img/ui/tab_${k}${na ? '_na' : k === t ? '_on' : ''}.png` : (k === 't' ? '' : k === t ? `img/ui/${k === 'tax' ? 'ftab_tax_on' : 'tab_' + k + '_on'}.png` : `img/ui/${k === 'tax' ? 'tab_tax' : 'ftab_' + k}.png`);
+    const b = pos(el('div', { class: 'tab', style: { backgroundImage: `url(${src})`, cursor: na ? 'default' : 'pointer' } }), x, 40, w, 50);
+    if (!na) b.onclick = () => showTab(k); host.append(b);
+  }
+  const B = $('dBody'); B.innerHTML = ''; B.style.background = '';
+  ({ tax: tabTax, map: tabMap, img: tabImg, dist: tabDist, syn: tabSyn, cm: tabCm, fl: tabFl })[t](B, D);
+}
+const T = (D, i) => D.T[i];
+function tabTax(B, D) {
+  B.style.background = 'url(img/ui/hbody.jpg)';
+  const c = SB.cls[(D.fam || '').toUpperCase()] || ['Plants', '', '', '', ''];
+  const fam = D.kind === 'F' ? D.key : (D.fam || '');
+  const v = [...c, fam.charAt(0).toUpperCase() + fam.slice(1).toLowerCase()];
+  v.forEach((t, i) => B.append(pos(el('div', { class: 'hval' }, esc(t)), 556, 199 + 48 * i)));
+}
+// state polygons drawn the way the program's MapX map showed them
+const LEG = ['ANDHRA PRADESH', 'ARUNACHAL PRADESH', 'ASSAM', 'GOA', 'KARNATAKA', 'KERALA', 'TAMILNADU', 'GUJARAT', 'MAHARASTRA', 'ORISSA', 'WEST BENGAL', 'RAJASTHAN', 'PUNJAB', 'HARYANA', 'JAMMU_KASHMIR', 'HIMACHAL PRADESH', 'MANIPUR', 'MIZORAM', 'NAGALAND', 'MEGHALAYA', 'TRIPURA', 'SIKKIM', 'DELHI', 'MADHYA PRADESH', 'JHARKHAND', 'BIHAR', 'UTTAR PRADESH', 'UTTARANCHAL', 'CHHATISGARH'];
+const nk = s => s.toLowerCase().replace(/[^a-z]/g, '');
+const mx = lon => 35 + (lon - 67.9) * 18.96, my = lat => 24 + (37.25 - lat) * 18.93;
+function tabMap(B, D) {
+  B.style.background = '#e3fde6';
+  B.append(pos(el('img', { class: 'abs', src: 'img/ui/maptools.png', alt: '' }), 12, 7));
+  const area = pos(el('div', { class: 'abs', style: { background: '#e3fde6', border: '1px solid #808080', overflow: 'hidden' } }), 14, 76, 1344, 586); B.append(area);
+  const cnt = {}; for (const [s, n] of Object.entries((D.data.m || [{}])[0])) cnt[nk(s)] = (cnt[nk(s)] || 0) + n;
+  const dcnt = (D.data.m || [{}, {}])[1] || {};
+  const st = { thm: false, lab: true, places: true, bg: '#e3fde6' };
+  const lab = pos(el('input', { type: 'checkbox' }), 668, 31); lab.checked = true; const pl = pos(el('input', { type: 'checkbox' }), 668, 52); pl.checked = true;
+  [lab, pl].forEach(c => { c.className = 'abs'; c.style.margin = 0; c.style.width = c.style.height = '13px'; B.append(c); });
+  const draw = () => {
+    const vals = Object.values(cnt).filter(v => v > 0), lo = Math.min(...vals), hi = Math.max(...vals), br = vals.length ? (hi - lo) / 3 : 0;
+    const col = v => !st.thm ? '#ffffc0' : !v ? '#ffffc0' : br === 0 ? '#ffc0c0' : v < lo + br ? '#ffffc0' : v < lo + 2 * br ? '#ffc0c0' : '#ffc080';
+    let svg = `<svg width="1344" height="586" style="position:absolute;left:0;top:0;background:${st.bg}">`;
+    const labels = [];
+    for (const [s, rings] of Object.entries(SB.so)) { if (s === 'SouthindiaStates') continue;
+      const v = cnt[nk(s)] || 0; let d = '', sx = 0, sy = 0, n = 0;
+      for (const r of rings) { d += 'M' + r.map(([x, y]) => mx(x).toFixed(1) + ',' + my(y).toFixed(1)).join('L') + 'Z'; }
+      for (const [, rr] of SB.poly[s]) for (const r of rr) for (const [x, y] of r) { sx += x; sy += y; n++; }
+      svg += `<path d="${d}" fill="${col(v)}" stroke="#000" stroke-width=".8"><title>${esc(s)}${v ? ' : ' + v + ' flora record(s)' : ''}</title></path>`;
+      const i = LEG.findIndex(L => nk(L) === nk(s)); if (i >= 0 && n) labels.push([i + 1, mx(sx / n), my(sy / n)]);
+    }
+    if (st.lab) for (const [i, x, y] of labels) svg += `<text x="${x}" y="${y}" font-family="Arial" font-size="11" text-anchor="middle">${i}</text>`;
+    if (st.places) for (const k of Object.keys(dcnt)) { const [s, dn] = k.split('#'); const ds = Object.entries(SB.poly).find(([p]) => nk(p) === nk(s)); if (!ds) continue;
+      const hit = ds[1].find(x => x[0] && x[0].toLowerCase() === dn.toLowerCase()); if (!hit || !hit[2]) continue;
+      svg += `<circle cx="${mx(hit[2][0])}" cy="${my(hit[2][1])}" r="2.5" fill="#c00000"/><text x="${mx(hit[2][0]) + 4}" y="${my(hit[2][1]) + 3}" font-family="Arial" font-size="9" fill="#600">${esc(dn)}</text>`; }
+    svg += '</svg>';
+    let leg = '<div style="position:absolute;left:1049px;top:276px;font:11px var(--arial);line-height:13.4px">' + LEG.slice(0, 23).map((s, i) => `${i + 1}. ${s}`).join('<br>') + '</div><div style="position:absolute;left:1177px;top:279px;font:11px var(--arial);line-height:13.4px">' + LEG.slice(23).map((s, i) => `${i + 24}. ${s}`).join('<br>') + '</div>';
+    leg += '<div style="position:absolute;left:1106px;top:0;width:233px;height:16px;border:1px solid #000;background:#fff;font:11px var(--arial);text-align:center">Legend</div>';
+    if (st.thm && vals.length) { const r = [[lo, lo + br, '#ffffc0'], [lo + br, lo + 2 * br, '#ffc0c0'], [lo + 2 * br, hi, '#ffc080']];
+      leg += '<div style="position:absolute;left:1106px;top:18px;width:225px;padding:4px;border:1px solid #000;background:#fff;font:11px var(--arial)">Number of flora records' + (br === 0 ? `<div><span style="display:inline-block;width:14px;height:10px;background:#ffc0c0;border:1px solid #000;margin-right:6px"></span>${lo}</div>` : r.map(([a, b, c]) => `<div><span style="display:inline-block;width:14px;height:10px;background:${c};border:1px solid #000;margin-right:6px"></span>${Math.round(a)} to ${Math.round(b)}</div>`).join('')) + '</div>'; }
+    area.innerHTML = svg + leg;
+  };
+  const H = (l, w, f) => B.append(pos(el('div', { class: 'hot', onclick: f }), l, 30, w, 38));
+  H(18, 110, () => { st.lab = lab.checked = !lab.checked; draw(); });
+  H(137, 104, () => { st.thm = false; draw(); });
+  H(247, 98, () => { st.bg = st.bg === '#e3fde6' ? '#ffffff' : '#e3fde6'; draw(); });
+  H(353, 64, () => window.print());
+  H(424, 116, () => { st.thm = true; draw(); });
+  lab.onchange = () => { st.lab = lab.checked; draw(); }; pl.onchange = () => { st.places = pl.checked; draw(); };
+  draw();
+}
+function tabImg(B, D) {
+  B.style.background = '#e3fde6';
+  let i = 0; const box = pos(el('div', { class: 'abs', style: { overflow: 'hidden' } }), 20, 15, 1330, 615); B.append(box);
+  const img = el('img', { alt: '', style: { maxWidth: '1320px', maxHeight: '610px', boxShadow: '4px 4px 4px #888' } }); box.append(img);
+  B.append(pos(el('img', { class: 'abs', src: 'img/ui/pager.png', alt: '' }), 18, 637));
+  const cap = pos(el('div', { class: 'abs', style: { font: '12px var(--arial)', color: '#555', textAlign: 'center' } }), 68, 641, 100);
+  const src = pos(el('div', { class: 'abs', style: { font: 'bold 14px var(--arial)', color: '#f00', textAlign: 'center' } }), 450, 639, 680);
+  B.append(cap, src);
+  const show = () => { const x = D.imgs[i]; if (x[0]) { img.style.display = ''; photo(img, x[0]); } else { img.style.display = 'none'; box.dataset.na = 1; } box.querySelector('.na') && box.querySelector('.na').remove(); if (!x[0]) box.append(el('div', { class: 'na', style: { font: '14px var(--arial)', color: '#800000' } }, 'This picture was not in the original installer.')); cap.textContent = `[${i + 1}/${D.imgs.length} ]`; src.textContent = x[1] ? 'Courtesy : ' + x[1] : ''; };
+  [[18, () => i = 0], [42, () => i = Math.max(0, i - 1)], [170, () => i = Math.min(D.imgs.length - 1, i + 1)], [194, () => i = D.imgs.length - 1]].forEach(([x, f]) => B.append(pos(el('div', { class: 'hot', onclick: () => { f(); show(); } }), x, 637, 24, 22)));
+  show();
+}
+function floraRow(fid) { return SB.fl[fid] || ['', '', '', '', '']; }
+function tabDist(B, D) {
+  B.style.background = 'url(img/ui/tex_dist.jpg)';
+  const rows = (D.data.d || []).map(r => [r[0], ...r.slice(1).map(i => T(D, i))]); // fid, country, zone, state, district, taluk, misc, habitat, biotic
+  let mode = 0;
+  const bar = pos(el('div', { class: 'abs', style: { background: '#bba7a1', font: 'bold 14px var(--arial)' } }), 516, 7, 336, 19); B.append(bar);
+  bar.innerHTML = '<label style="position:absolute;left:4px;top:1px;cursor:pointer"><input type="radio" name="dm" checked style="margin:0 6px 0 0;width:11px;height:11px">Political Zone</label><label style="position:absolute;left:138px;top:1px;cursor:pointer"><input type="radio" name="dm" style="margin:0 6px 0 0;width:11px;height:11px">Biotic and habitat Zone</label>';
+  B.append(pos(el('div', { class: 'abs', style: { font: 'bold 14px var(--arial)', textAlign: 'center' } }, 'Habitat'), 1028, 5, 322));
+  const ft = pos(el('div', { class: 'abs', style: { overflow: 'auto', background: '#cdb7b1', border: '1px solid #808080' } }), 14, 30, 1008, 172); B.append(ft);
+  const hb = pos(el('div', { class: 'abs', style: { overflow: 'auto', background: '#cdb7b1', border: '1px solid #808080', font: '11px var(--arial)', color: '#804040', padding: '3px', boxSizing: 'border-box' } }), 1028, 30, 322, 172); B.append(hb);
+  const ins = pos(el('div', { class: 'abs', style: { font: '13px var(--arial)' } }), 77, 207, 900); B.append(ins);
+  const gw = pos(el('div', { class: 'abs', style: { overflow: 'auto', background: '#cdb7b1', border: '1px solid #808080' } }), 14, 229, 766, 432); B.append(gw);
+  const floraTable = fids => {
+    const fl = [...new Set(fids)].map(floraRow).sort((a, b) => a[0] < b[0] ? -1 : 1);
+    ft.innerHTML = '<table class="fg" style="width:997px"><col style="width:330px"><col style="width:50px"><col style="width:330px"><col style="width:250px"><col style="width:33px"><tr><th>Flora Name</th><th>Volume</th><th>Author</th><th>Edition</th><th>YOP</th></tr>' +
+      (fl.length ? fl : [['', '', '', '', '']]).map(f => '<tr>' + f.map((v, i) => `<td class="${i % 2 ? 'b' : 'a'}" style="height:31px;cursor:default">${esc(v)}</td>`).join('') + '</tr>').join('') + '</table>';
+  };
+  const draw = () => {
+    const cols = mode ? [['Biotic Zone', 8, 300], ['Habitat', 7, 440]] : [['Country/Continent', 1, 118], ['Zone', 2, 57], ['State', 3, 113], ['District', 4, 113], ['Taluk', 5, 113], ['Place', 6, 113]];
+    ins.textContent = mode ? 'Click on the required Biotic zone,Habitat to view its corresponding Flora' : 'Click on the required Country,Zone,State,District,Taluk,place to view its corresponding flora';
+    const keyOf = r => cols.map(c => none(r[c[1]]));
+    const uniq = new Map(); for (const r of rows) { const k = keyOf(r); const s = k.join('\u0001'); if (!uniq.has(s)) uniq.set(s, k); }
+    const list = [...uniq.values()].sort((a, b) => { for (let i = 0; i < a.length; i++) { const x = a[i].toLowerCase(), y = b[i].toLowerCase(); if (x !== y) return (x === '' ? 1 : 0) - (y === '' ? 1 : 0) || (x < y ? -1 : 1); } return 0; });
+    let h = `<table class="fg" style="width:${cols.reduce((s, c) => s + c[2], 0)}px">` + cols.map(c => `<col style="width:${c[2]}px">`).join('') + '<tr>' + cols.map(c => `<th>${c[0]}</th>`).join('') + '</tr>';
+    const span = list.map(() => cols.map(() => 1));
+    for (let c = 0; c < cols.length - 1; c++) for (let i = list.length - 1; i > 0; i--) { let same = true; for (let k = 0; k <= c; k++) if (list[i][k] !== list[i - 1][k]) { same = false; break; } if (same && list[i][c] !== '') { span[i - 1][c] += span[i][c]; span[i][c] = 0; } }
+    list.forEach((k, i) => { h += '<tr>' + k.map((v, c) => span[i][c] ? `<td class="${c % 2 ? 'b' : 'a'}" rowspan="${span[i][c]}" data-r="${i}" data-c="${c}">${esc(v)}</td>` : '').join('') + '</tr>'; });
+    gw.innerHTML = h + '</table>'; gw.scrollTop = 0;
+    gw.onclick = e => { const td = e.target.closest('td[data-r]'); if (!td) return; gw.querySelectorAll('td.sel').forEach(x => x.classList.remove('sel')); td.classList.add('sel');
+      const k = list[+td.dataset.r].slice(0, +td.dataset.c + 1); const hit = rows.filter(r => k.every((v, j) => none(r[cols[j][1]]) === v));
+      floraTable(hit.map(r => r[0])); hb.innerHTML = [...new Set(hit.map(r => none(r[7])).filter(Boolean))].map(esc).join('<br>'); };
+    floraTable([]); hb.innerHTML = '';
+  };
+  bar.querySelectorAll('input').forEach((r, i) => r.onchange = () => { mode = i; draw(); });
+  draw();
+}
+const vbColor = c => { const h = String(c || '').replace(/&H|&/gi, '').padStart(6, '0'); return '#' + h.slice(4, 6) + h.slice(2, 4) + h.slice(0, 2); };
+const STLAB = ['Correct', 'Probably Correct', 'Synonym', 'Probably Synonym', 'Undecided'];
+function tabSyn(B, D) {
+  B.style.background = 'url(img/ui/tex_syn.jpg)';
+  const nm = D.row[8] || D.row[7];
+  B.append(pos(el('div', { class: 'abs', style: { font: '22px var(--arial)', color: '#804000', textAlign: 'center' } }, `${esc(nm)}&nbsp; [${STLAB[D.row[6]]}]`), 318, 10, 732));
+  const tr = pos(el('div', { class: 'tree' }), 318, 39, 732, 466); B.append(tr);
+  B.append(pos(el('img', { class: 'abs', src: 'img/ui/synlegend.png', alt: '' }), 352, 515));
+  const name = a => [a[0], a[1], a[2] ? 'ssp. ' + a[2] : '', a[3] ? 'var. ' + a[3] : ''].filter(Boolean).join(' ');
+  const fl = fids => [...new Set(fids)].map(floraRow).map(f => `${esc(f[0])} ; ${esc(f[1])} ; ${esc(f[2])}`);
+  let h = `<div class="n" style="margin:2px 0 0 2px"><img src="img/ui/ico_tree.png" alt=""><span class="hl">Valid Names,Synonym and its Corresponding Flora for ' ${esc(nm)} '</span></div>`;
+  const node = (label, color, kids, depth) => { const id = 'n' + Math.random().toString(36).slice(2);
+    return `<div class="n" style="padding-left:${10 + depth * 30}px"><span class="pm" data-t="${id}">+</span><img src="img/ui/ico_palm.png" alt="" style="width:30px;height:30px"><span style="color:${color}">${esc(label)}</span></div><div id="${id}" style="display:none">${kids}</div>`; };
+  const leaf = (t, depth) => `<div class="n" style="padding-left:${10 + depth * 30}px;height:18px;font-size:11px">&#8226; ${t}</div>`;
+  if (D.data.z && D.data.z.length) {
+    const g = new Map(); for (const [n, f] of D.data.z) { const a = n.map(i => T(D, i)); const k = a.slice(0, 5).join('|'); if (!g.has(k)) g.set(k, { a: a.slice(0, 5), kids: new Map(), f: [] }); const o = g.get(k); o.f.push(...f); const sk = a.slice(5).join('|'); if (!o.kids.has(sk)) o.kids.set(sk, { a: a.slice(5), f: [] }); o.kids.get(sk).f.push(...f); }
+    for (const o of g.values()) h += node(name(o.a), vbColor(o.a[4]), [...o.kids.values()].map(k => node(name(k.a), vbColor(k.a[4]), fl(k.f).map(t => leaf(t, 2)).join(''), 1)).join(''), 0);
+  } else if (D.data.s && D.data.s.length) {
+    const all = D.data.s.flatMap(x => x[1]);
+    for (const [n, f] of D.data.s) { const a = n.map(i => T(D, i)); h += node(name(a), vbColor(a[4]), fl(f).map(t => leaf(t, 1)).join(''), 0); }
+    if (!all.length) h += leaf('No flora recorded', 1);
+  } else h += node(nm, ['#008000', '#804000', '#ff0000', '#ff00ff', '#0000ff'][D.row[6]], fl(D.data.f || []).map(t => leaf(t, 1)).join(''), 0);
+  tr.innerHTML = h;
+  tr.onclick = e => { const p = e.target.closest('.pm'); if (!p) return; const k = $(p.dataset.t); const o = k.style.display === 'none'; k.style.display = o ? '' : 'none'; p.textContent = o ? '-' : '+'; };
+}
+function tabCm(B, D) {
+  B.style.background = 'url(img/ui/tex_cm.jpg)';
+  const wrap = pos(el('div', { class: 'abs', style: { background: '#d4d0c8', overflow: 'auto', border: '1px solid #808080' } }), 348, 9, 461, 328); B.append(wrap);
+  const by = new Map(); for (const [l, n, f] of D.data.c || []) { const L = T(D, l); if (!by.has(L)) by.set(L, []); by.get(L).push([T(D, n), f.map(x => x.map(i => T(D, i)))]); }
+  let h = '<table id="cmt"><col style="width:200px"><col style="width:239px"><tr><th>LANGUAGE / REGION</th><th>NAME</th></tr>';
+  const flat = [];
+  for (const [L, ns] of [...by.entries()].sort((a, b) => a[0].toLowerCase() < b[0].toLowerCase() ? -1 : 1)) ns.sort((a, b) => a[0].toLowerCase() < b[0].toLowerCase() ? -1 : 1).forEach((x, i) => { flat.push(x); h += '<tr>' + (i ? '' : `<td rowspan="${ns.length}">${esc(L)}</td>`) + `<td class="nm" data-i="${flat.length - 1}">${esc(x[0])}</td></tr>`; });
+  wrap.innerHTML = h + '</table>' + (flat.length ? '' : '<div style="padding:8px;font:12px var(--arial)">No common names are recorded for this plant.</div>');
+  B.append(pos(el('div', { class: 'abs', style: { font: '11px var(--arial)', color: '#800000', textAlign: 'center' } }, 'Click on the common name to view the corresponding flora from where it is extracted.<br>Flora name ; Flora volume ; Author ; Edition ; Year of Publication&nbsp; Respectively.'), 330, 547, 520));
+  const out = pos(el('div', { class: 'abs', style: { background: '#fff', border: '1px solid #808080', overflow: 'auto', font: '12px var(--arial)', padding: '3px', boxSizing: 'border-box' } }), 18, 581, 1332, 76); B.append(out);
+  wrap.onclick = e => { const td = e.target.closest('td.nm'); if (!td) return; wrap.querySelectorAll('td.sel').forEach(x => x.classList.remove('sel')); td.classList.add('sel'); out.innerHTML = flat[+td.dataset.i][1].map(f => esc(f.join(' ; '))).join('<br>'); };
+}
+function tabFl(B, D) {
+  B.style.background = '#c0c0c0';
+  const fids = (D.data.f || []).slice();
+  const fl = [...new Set(fids)].map(floraRow).sort((a, b) => a[0].toLowerCase() < b[0].toLowerCase() ? -1 : 1);
+  const what = D.kind === 'S' ? 'species' : D.kind === 'F' ? 'family' : 'genus';
+  const tr = pos(el('div', { class: 'tree', style: { font: 'bold 11px var(--arial)' } }), 12, 4, 1346, 664); B.append(tr);
+  let h = `<div class="n" style="height:32px;margin-left:3px"><img src="img/ui/ico_tree.png" alt="" style="width:30px"><span class="hl">Flora Name; Flora Volume; Author; Edition; Year Of Publication Respectively</span></div>`;
+  h += `<div class="n" style="height:32px;margin-left:2px"><img src="img/ui/ico_book.png" alt=""><span>List of Flora for the ${what}&nbsp; '${esc(D.kind === 'S' ? (D.row[8] || D.row[7]) : D.key)}'&nbsp; in entire India ( ${fl.length} )</span></div>`;
+  for (const f of fl) h += `<div class="n" style="height:32px;margin-left:20px;border-left:1px dotted #808080;padding-left:12px"><img src="img/ui/ico_folder.png" alt=""><span>${f.map(esc).join(' ; ')}</span></div>`;
+  tr.innerHTML = h;
+}
+
+// ---------- start ----------
+busy(true);
+loadJs('data/core.js').then(() => { initData(); busy(false); }).catch(() => { busy(false); alert('The plant database could not be loaded.'); });
+</script>
+</body>
+</html>
