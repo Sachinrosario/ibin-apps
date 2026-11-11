@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Sasya Bharathi 2",
+  "mainBinaryName": "sasya-bharathi-2",
+  "version": "2.0.0",
+  "identifier": "in.ibinapps.sasyabharathi2",
+  "build": {
+    "frontendDist": "../web"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Sasya Bharathi – Version 2",
+        "width": 1366,
+        "height": 800,
+        "minWidth": 960,
+        "minHeight": 560,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "publisher": "IBIN Apps",
+    "copyright": "Sasya Bharathi (c) K.N. Ganeshaiah, University of Agricultural Sciences, Bangalore. Rebuild 2026.",
+    "category": "Education",
+    "shortDescription": "Distribution, taxonomy and diversity of the plants of entire India",
+    "longDescription": "Version 1: a faithful rebuild of Sasya Bharathi (India) 2004-05: plant richness of India by state, biotic zone and 625 sq km grid, thematic maps, pictures, and for every family, genus and species its taxonomic hierarchy, state map, distribution records, synonyms, common names and floras.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    }
+  }
+}
