@@ -23,3 +23,13 @@ if [ -z "$SKIP_MEDIA_SHARE" ]; then
     echo "shared media: $src -> $dst"
   done
 fi
+# An app whose web/img/SHARED_PHOTOS_FROM names another app reuses that app's img/photos folder in its desktop and offline
+# builds; the web page reads them from the other app's folder (no second copy on the site).
+if [ -z "$SKIP_MEDIA_SHARE" ]; then
+  for f in apps/*/web/img/SHARED_PHOTOS_FROM; do
+    [ -f "$f" ] || continue
+    dst=$(dirname "$f"); src="apps/$(tr -d '[:space:]' < "$f")/web/img"
+    [ -d "$src/photos" ] && [ ! -e "$dst/photos" ] && cp -r "$src/photos" "$dst/photos"
+    echo "shared photos: $src -> $dst"
+  done
+fi
