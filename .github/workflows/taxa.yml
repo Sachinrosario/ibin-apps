@@ -1,0 +1,43 @@
+# Current names (Catalogue of Life), IUCN status (via GBIF) and DNA records (NCBI, BOLD) for a name list in .github/tools/taxa/<list>.txt.
+# Long lists are shared between several runners (parts); each part is pushed to branch taxa-<list> as <list>-<part>.json.
+name: Names, status and DNA
+on:
+  workflow_dispatch:
+    inputs:
+      list: {description: ".github/tools/taxa/<list>.txt", required: true}
+      kingdom: {description: "Animalia or Plantae", required: true, default: "Animalia"}
+      parts: {description: "number of runners sharing the list (1-20)", required: false, default: "1"}
+permissions:
+  contents: write
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      parts: ${{ steps.p.outputs.parts }}
+    steps:
+      - id: p
+        run: echo "parts=$(python3 -c 'import json;print(json.dumps(list(range(int("${{ inputs.parts }}")))))')" >> $GITHUB_OUTPUT
+  look:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        part: ${{ fromJSON(needs.plan.outputs.parts) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Look up
+        run: |
+          set -o pipefail; mkdir out
+          N=${{ inputs.parts }}; I=${{ matrix.part }}
+          if [ "$N" = 1 ]; then F=out/${{ inputs.list }}.json; else F=out/${{ inputs.list }}-$I.json; fi
+          python3 .github/tools/taxa_update.py .github/tools/taxa/${{ inputs.list }}.txt $F ${{ inputs.kingdom }} $I/$N | tail -40
+      - name: Push to branch taxa-<list>
+        run: |
+          cd out
+          for t in 1 2 3 4 5 6; do
+            rm -rf r && git clone -q --depth 1 -b taxa-${{ inputs.list }} "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" r 2>/dev/null || { mkdir -p r && (cd r && git init -q -b taxa-${{ inputs.list }} && git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}"); }
+            cp *.json r/ && cd r && git add -A && git -c user.name=ci -c user.email=ci@local commit -qm "names, status, DNA part ${{ matrix.part }}" && git push -q origin taxa-${{ inputs.list }} && exit 0
+            cd ..; sleep $((RANDOM % 20 + 5))
+          done; exit 1

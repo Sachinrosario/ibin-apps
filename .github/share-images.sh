@@ -33,3 +33,13 @@ if [ -z "$SKIP_MEDIA_SHARE" ]; then
     echo "shared photos: $src -> $dst"
   done
 fi
+# An app whose web/data/SHARED_DATA_FROM names another app reuses that app's per-plant record folders (data/d, data/g)
+# in its desktop and offline builds; the web page reads them from the other app's folder.
+if [ -z "$SKIP_MEDIA_SHARE" ]; then
+  for f in apps/*/web/data/SHARED_DATA_FROM; do
+    [ -f "$f" ] || continue
+    dst=$(dirname "$f"); src="apps/$(tr -d '[:space:]' < "$f")/web/data"
+    for d in d g; do [ -d "$src/$d" ] && [ ! -e "$dst/$d" ] && cp -r "$src/$d" "$dst/$d"; done
+    echo "shared data: $src -> $dst"
+  done
+fi
