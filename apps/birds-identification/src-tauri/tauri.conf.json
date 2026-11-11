@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Birds Identification",
+  "mainBinaryName": "birds-identification",
+  "version": "1.0.0",
+  "identifier": "in.ibinapps.birdsidentification",
+  "build": {
+    "frontendDist": "../web"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Birds Identification",
+        "width": 1366,
+        "height": 800,
+        "minWidth": 960,
+        "minHeight": 560,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "publisher": "IBIN Apps",
+    "copyright": "Birds Identification 1.0 (c) K.N. Ganeshaiah. Rebuild 2026.",
+    "category": "Education",
+    "shortDescription": "Identify a bird of India to species from what you see",
+    "longDescription": "Version 1: a faithful rebuild of Birds Identification 1.0 (2018): choose characters of a sitting or flying bird (head, crown, eye, beak, throat, neck, body, wings, tail, legs, feet) and see the matching species (male, female, young) and bird groups, with photographs.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    }
+  }
+}

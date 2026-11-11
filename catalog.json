@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-06",
+  "updated": "2026-11-11",
   "owner": "Sachinrosario",
   "releasesRepo": "ibin-apps",
   "apps": [
@@ -495,6 +495,78 @@
         }
       ],
       "category": "Birds"
+    },
+    {
+      "name": "Birds Identification",
+      "icon": "apps/birds-identification.png",
+      "origin": "Species-level identification of birds of India, IBIN project (UAS Bangalore with DBT, Government of India), 2018.",
+      "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
+      "category": "Birds",
+      "editions": [
+        {
+          "id": "birds-identification",
+          "key": "v1",
+          "label": "Version 1 – Original",
+          "versionName": "Version 1 – Original",
+          "version": "1.0.0",
+          "released": "2026-11-11",
+          "published": false,
+          "summary": "The 2018 species-level program rebuilt screen for screen: describe a sitting or flying bird by clicking its parts and picking picture thumbnails, and see the matching species (male, female, young) and bird groups, with photographs.",
+          "facts": [
+            "420 entries (152 species)",
+            "Water and sea birds, 24 groups",
+            "Sitting or flying",
+            "26 characters",
+            "1,896 photographs"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/birds-identification/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "BirdsIdentification_1.0.0_Setup.exe",
+              "size": "",
+              "note": "Adds Start-menu and desktop shortcuts. No administrator password. Photographs are fetched online."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "BirdsIdentification.exe",
+              "size": "",
+              "note": "Runs straight from a folder or pen drive. Photographs are fetched online."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "BirdsIdentification_1.0.0_universal.dmg",
+              "size": "",
+              "note": "Intel and Apple-silicon Macs. Photographs are fetched online."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "BirdsIdentification_1.0.0_amd64.deb",
+              "size": "",
+              "note": "Ubuntu 22.04 or newer. Photographs are fetched online."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "BirdsIdentification_1.0.0_offline.zip",
+              "size": "",
+              "note": "Any computer, everything inside, no internet needed. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "1.0.0",
+              "date": "2026-11-11",
+              "text": "Faithful rebuild from the original program and its source code: same screens, thumbnails, matching rules and photographs. Small installer; photographs come from the IBIN site when first viewed."
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "Pathanga Suchya",

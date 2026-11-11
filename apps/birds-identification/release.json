@@ -1,0 +1,8 @@
+{
+  "version": "1.0.0",
+  "title": "Birds Identification – Version 1 – Original (1.0.0)",
+  "fileBase": "BirdsIdentification",
+  "remote": [
+    "img/photos"
+  ]
+}

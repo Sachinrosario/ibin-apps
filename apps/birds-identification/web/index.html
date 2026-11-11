@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Birds Identification</title>
+<link rel="icon" href="img/ui/icon.png">
+<style>
+/* Birds Identification 1.0 (2018) - Version 1, faithful web rebuild.
+   The original VB6 program sizes its character windows from the screen; the layout below follows its own code
+   (frmsplash, frmselect, frmsit, frmflight) on a 1366 x 768 screen, scaled to the browser window. */
+@font-face{font-family:"PS Arial";src:local("Arial"),local("ArialMT"),url(fonts/arimo-latin-400-normal.woff2) format("woff2");font-weight:400}
+@font-face{font-family:"PS Arial";src:local("Arial Bold"),local("Arial-BoldMT"),url(fonts/arimo-latin-700-normal.woff2) format("woff2");font-weight:700}
+@font-face{font-family:"PS Times";src:local("Times New Roman"),local("TimesNewRomanPSMT"),url(fonts/tinos-latin-400-normal.woff2) format("woff2");font-weight:400}
+@font-face{font-family:"PS Times";src:local("Times New Roman Bold"),local("TimesNewRomanPS-BoldMT"),url(fonts/tinos-latin-700-normal.woff2) format("woff2");font-weight:700}
+@font-face{font-family:"PS Calibri";src:local("Calibri Bold"),local("Calibri-Bold"),url(fonts/Carlito-Bold.ttf) format("truetype");font-weight:700}
+:root{--arial:"PS Arial",Arial,sans-serif;--sans:"Microsoft Sans Serif","MS Sans Serif","PS Arial",sans-serif;--segoe:"Segoe UI",Tahoma,"PS Arial",sans-serif;
+  --verdana:Verdana,"DejaVu Sans","PS Arial",sans-serif;--calibri:"PS Calibri",Calibri,Carlito,sans-serif;--times:"PS Times","Times New Roman",serif}
+html,body{margin:0;height:100%;background:#0f3d5c;overflow:hidden;font-family:var(--sans)}
+#stage{position:absolute;width:1366px;height:768px;transform-origin:0 0;overflow:hidden;user-select:none;-webkit-user-select:none;
+  background:linear-gradient(160deg,#1f8fe0 0%,#1673c8 45%,#0b4fa0 100%);cursor:default}
+#stage img{-webkit-user-drag:none}
+.abs{position:absolute}
+.hot,.hand{cursor:url(img/ui/hand.cur),pointer}
+/* window chrome (Windows 10) */
+.win{position:absolute;background:#fff;overflow:hidden}
+.win.normal{border:1px solid #1a6fd0;box-sizing:border-box;box-shadow:0 7px 24px rgba(0,0,0,.4)}
+.tb{position:absolute;left:0;top:0;right:0;height:30px;background:#fff;display:flex;align-items:center;font:12px var(--segoe);color:#000;white-space:pre;z-index:2}
+.tb img{width:16px;height:16px;margin:0 6px 0 7px}
+.tb .ctl{position:absolute;top:0;width:46px;height:100%;display:flex;align-items:center;justify-content:center;font:13px var(--segoe)}
+.tb .ctl.x:hover{background:#e81123;color:#fff}
+.tb .ctl.dis{color:#bbb}
+.win.inactive .tb{color:#999}
+.cl{position:absolute;left:0;top:30px;right:0;bottom:0;overflow:hidden}
+/* VB controls */
+.btn{position:absolute;box-sizing:border-box;background:#e1e1e1;border:1px solid #adadad;display:flex;align-items:center;justify-content:center;text-align:center;
+  color:#000;line-height:1.15;padding:0 2px;font:16px var(--sans);white-space:normal}
+.btn:hover{background:#e5f1fb;border-color:#0078d7}
+.btn:active{background:#cce4f7;border-color:#005499}
+.btn.white{background:#fff}
+.btn.def{border:2px solid #0078d7}
+.btn.def::after{content:"";position:absolute;inset:3px;border:1px dotted #000}
+.btn.dis{color:#a0a0a0;pointer-events:none;background:#fff;border-color:#bfbfbf}
+.sunk{position:absolute;box-sizing:border-box;border:1px solid #828790;background:#fff}
+.lst{overflow-y:auto;overflow-x:hidden}
+.lst div{white-space:nowrap;padding:0 3px;cursor:default}
+.lst div.sel{background:#0078d7;color:#fff}
+.lst::-webkit-scrollbar{width:17px}
+.lst::-webkit-scrollbar-track{background:#f0f0f0}
+.lst::-webkit-scrollbar-thumb{background:#cdcdcd;border:2px solid #f0f0f0}
+.frame{position:absolute;box-sizing:border-box;border:1px solid #dcdcdc;border-top-color:#dcdcdc}
+.frame>span{position:absolute;left:6px;top:-10px;background:#fff;padding:0 1px;font:16px var(--sans);color:#000;white-space:nowrap}
+.lbl{position:absolute;white-space:nowrap}
+.part{position:absolute;font:bold 24px/30px var(--calibri);color:#000;background:#fff;white-space:nowrap;overflow:hidden;cursor:url(img/ui/hand.cur),pointer}
+/* thumbnails (Shape 200 x 200, border 3, picture fitted inside, caption below, blue button bottom right) */
+.th{position:absolute;width:200px;height:230px}
+.th .box{position:absolute;left:0;top:0;width:200px;height:200px;box-sizing:border-box;border:3px solid #c0c0c0;background:#fff;cursor:url(img/ui/hand.cur),pointer;
+  display:flex;align-items:center;justify-content:center}
+.th .box img{max-width:194px;max-height:194px;display:block}
+.th.on .box{border-color:#0000ff}
+.th .blue{position:absolute;left:183px;top:183px;width:17px;height:17px;box-sizing:border-box;border:1px solid;border-color:#fff #404040 #404040 #fff;background:#000080;cursor:url(img/ui/hand.cur),pointer}
+.th .cap{position:absolute;left:-15px;top:200px;width:230px;font:13px var(--sans);text-align:center}
+.radio{position:absolute;width:13px;height:13px;border-radius:50%;box-sizing:border-box;border:1px solid #333;background:#fff}
+.radio.on::after{content:"";position:absolute;left:3px;top:3px;width:5px;height:5px;border-radius:50%;background:#000}
+/* message box */
+.msg .body{position:absolute;left:0;right:0;top:30px;bottom:44px;display:flex;align-items:center;padding:0 14px;font:12px var(--segoe)}
+.msg .foot{position:absolute;left:0;right:0;bottom:0;height:44px;background:#f0f0f0}
+.msg .foot .btn{right:12px;top:10px;width:75px;height:23px;font:12px var(--segoe);border:1px solid #0078d7}
+/* picture viewer and document viewer (stand in for the Windows photo viewer and the PDF reader the program opens) */
+.viewer .cl{background:#202020;display:flex;align-items:center;justify-content:center}
+.viewer .cl img{max-width:100%;max-height:100%}
+.viewer .nav{position:absolute;top:50%;width:46px;height:70px;margin-top:-35px;background:rgba(0,0,0,.45);color:#fff;font:32px var(--segoe);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.viewer .cnt{position:absolute;left:0;right:0;bottom:6px;text-align:center;color:#ddd;font:12px var(--segoe)}
+.doc .cl{background:#525659;overflow-y:auto}
+.doc .cl img{display:block;width:620px;margin:12px auto;box-shadow:0 2px 8px rgba(0,0,0,.5)}
+</style>
+</head>
+<body>
+<div id="stage"><div id="wins"></div></div>
+<script src="data/birds.js"></script>
+<script>
+"use strict";
+const B = window.BIRDS, VERSION = '1.0.0';
+const SW = 1366, SH = 768;
+const REMOTE = 'https://sachinrosario.github.io/ibin-apps/birds-identification/';
+const $ = (s, r = document) => r.querySelector(s);
+const el = (tag, attrs = {}, kids = []) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'style' && typeof v === 'object') Object.assign(e.style, v);
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of [].concat(kids)) if (c != null) e.append(c.nodeType ? c : document.createTextNode(c));
+  return e;
+};
+const px = n => n + 'px';
+const pos = (e, x, y, w, h) => { e.style.left = px(x); e.style.top = px(y); if (w != null) e.style.width = px(w); if (h != null) e.style.height = px(h); return e; };
+const lc = s => String(s).trim().toLowerCase();
+const cmp = (a, b) => { a = lc(a); b = lc(b); return a < b ? -1 : a > b ? 1 : 0; };
+
+/* ---------- stage scaling ---------- */
+const stage = $('#stage');
+function fit() {
+  const s = Math.min(innerWidth / SW, innerHeight / SH);
+  stage.style.transform = `scale(${s})`;
+  stage.style.left = Math.max(0, (innerWidth - SW * s) / 2) + 'px';
+  stage.style.top = Math.max(0, (innerHeight - SH * s) / 2) + 'px';
+}
+addEventListener('resize', fit); fit();
+
+/* ---------- windows ---------- */
+const W = {}; let zTop = 10;
+function openWin(id, { title = '', icon = 'img/ui/icon.png', x = 0, y = 0, w = SW, h = SH, normal = false, min = true, max = true, maxDis = false, modal = false, onClose, cls = '' } = {}) {
+  closeWin(id, true);
+  const win = el('div', { class: `win${normal ? ' normal' : ''} ${cls}`, id }); pos(win, x, y, w, h);
+  const bar = el('div', { class: 'tb' }, [icon ? el('img', { src: icon, alt: '' }) : el('span', { style: { width: '8px' } }), title]);
+  let r = 0;
+  bar.append(el('div', { class: 'ctl x', title: 'Close', style: { right: px(r) }, onclick: () => closeWin(id) }, '✕')); r += 46;
+  if (max) { bar.append(el('div', { class: 'ctl' + (maxDis ? ' dis' : ''), title: maxDis ? '' : 'Full screen on / off', style: { right: px(r) }, onclick: () => maxDis || toggleFull() }, normal ? '☐' : '❐')); r += 46; }
+  if (min) bar.append(el('div', { class: 'ctl', title: 'Minimise', style: { right: px(r) }, onclick: () => minimiseWin(id, title) }, '—'));
+  win.append(bar);
+  const cl = el('div', { class: 'cl' }); win.append(cl);
+  win.addEventListener('mousedown', () => focusWin(id), true);
+  W[id] = { el: win, bar, cl, onClose };
+  if (modal) $('#wins').append(el('div', { class: 'abs', id: id + '_sh', style: { inset: 0, zIndex: zTop + 1 } }));
+  $('#wins').append(win); focusWin(id);
+  return cl;
+}
+function setTitle(id, t) { if (W[id]) W[id].bar.childNodes[1].textContent = t; }
+function minimiseWin(id, title) {
+  const w = W[id]; if (!w) return;
+  w.el.style.display = 'none';
+  const chip = el('div', { class: 'btn minchip', 'data-for': id, title: 'Restore', style: { left: '8px', bottom: '8px', top: 'auto', padding: '6px 12px', font: '14px var(--sans)', zIndex: 99999 }, onclick: () => { chip.remove(); w.el.style.display = ''; focusWin(id); } }, '▣ ' + String(w.bar.childNodes[1].textContent).split('   ')[0].trim());
+  $('#wins').append(chip);
+}
+function toggleFull() { try { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); } catch (e) {} }
+function focusWin(id) { if (!W[id]) return; for (const k in W) W[k].el.classList.toggle('inactive', k !== id); W[id].el.style.zIndex = ++zTop + 1; const sh = $('#' + id + '_sh'); if (sh) sh.style.zIndex = zTop; }
+function closeWin(id, silent) {
+  document.querySelectorAll(`.minchip[data-for="${id}"]`).forEach(c => c.remove());
+  const w = W[id]; if (!w) return; w.el.remove(); const sh = $('#' + id + '_sh'); if (sh) sh.remove(); delete W[id];
+  if (!silent && w.onClose) w.onClose();
+}
+function msgBox(text, title = 'Project1') {
+  const w = Math.max(200, text.length * 7 + 60), h = 140;
+  const cl = openWin('msg', { title, icon: null, x: Math.round((SW - w) / 2), y: 300, w, h, normal: true, min: false, max: false, modal: true, cls: 'msg' });
+  cl.style.top = 0;
+  cl.append(el('div', { class: 'body' }, text), el('div', { class: 'foot' }, el('div', { class: 'btn', onclick: () => closeWin('msg') }, 'OK')));
+}
+addEventListener('keydown', e => { if (W.msg && ['Enter', 'Escape', ' '].includes(e.key)) { e.preventDefault(); closeWin('msg'); } });
+// End: a web page cannot always close its own window, so after trying, show a "closed" screen with a way back in.
+function quitApp() {
+  for (const k of Object.keys(W)) closeWin(k, true);
+  try { window.close(); } catch (e) {}
+  setTimeout(() => {
+    if ($('#quit')) return;
+    const q = el('div', { id: 'quit', style: { position: 'fixed', inset: 0, zIndex: 100000, background: '#0f3d5c', color: '#fff', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px', font: '20px var(--arial)' } },
+      [el('div', {}, 'Birds Identification is closed. You can close this window.'), el('div', { class: 'btn', style: { position: 'static', padding: '8px 18px' }, onclick: () => { q.remove(); showSplash(); } }, 'Open it again')]);
+    document.body.append(q);
+  }, 300);
+}
+// pictures open in a viewer that, like the Windows photo viewer, steps through the other pictures of the same folder
+function photoSrc(f, remote) { return (remote ? REMOTE : '') + 'img/photos/' + f; }
+function openPics(files, kind) {
+  if (!files || !files.length) return;
+  let i = 0;
+  const cl = openWin('viewer', { title: '', icon: null, x: 183, y: 40, w: 1000, h: 690, normal: true, cls: 'viewer' });
+  const draw = () => {
+    const f = files[i];
+    setTitle('viewer', `${f.split('/').pop()} - Photos`);
+    const img = el('img', { src: kind === 'photo' ? photoSrc(f) : 'img/icons/' + f, alt: '' });
+    if (kind === 'photo') img.onerror = () => { if (!img.dataset.r) { img.dataset.r = 1; img.src = photoSrc(f, true); } };   // the installed program fetches photographs from the IBIN site
+    cl.replaceChildren(img);
+    if (files.length > 1) cl.append(el('div', { class: 'nav', style: { left: '8px' }, onclick: () => { i = (i + files.length - 1) % files.length; draw(); } }, '‹'),
+      el('div', { class: 'nav', style: { right: '8px' }, onclick: () => { i = (i + 1) % files.length; draw(); } }, '›'), el('div', { class: 'cnt' }, `${i + 1} / ${files.length}`));
+  };
+  draw();
+}
+const DOCS = { 'About Us': ['about-us-1.png'], Credits: ['credits-1.png', 'credits-2.png'], Introduction: ['introduction-1.png', 'introduction-2.png'], Data: ['data-1.png'] };
+function openDoc(name, file) {
+  const cl = openWin('doc', { title: `${file} - Adobe Acrobat Reader`, icon: null, x: 283, y: 20, w: 800, h: 730, normal: true, cls: 'doc' });
+  for (const p of DOCS[name]) cl.append(el('img', { src: 'img/docs/' + p, alt: name }));
+}
+
+/* ---------- the database ---------- */
+const SP = B.sp.map(r => ({ id: r[0], sci: r[1], common: r[2], sex: r[3], age: r[4], group: r[5] }));
+const TABLE = Object.fromEntries(Object.entries(B.chars).map(([k, v]) => [lc(k), Object.fromEntries(Object.entries(v).map(([id, l]) => [lc(id), l]))]));
+const ICONS = B.icons, PHOTOS = B.photos;
+// Command1 captions of the two character windows, by index (the index decides the order in which they are applied)
+const CAP = {
+  sit: ['Leg Length', 'Tail Length', 'Lowerbody Color', 'Tail Shape', 'Beak Color', 'UpperBody Color', 'Head Color', 'Neck length', 'Throat Markings', 'Crown', 'Beak Length',
+    'Throat Color', 'Feet Webbed', 'Beak Shape', 'Leg Color', 'Eye Color', 'Eye Markings', 'Is there Throat Marking', 'Is there Eye Marking', 'Any LowerBody Markings', 'Any UpperBody Markings', 'Color Type'],
+  fly: ['UpperWing Color', 'Tail Length', 'Lowerbody Color', 'Tail Shape', 'Beak Color', 'UpperBody Color', 'Any LowerBody Markings', 'Neck length', 'Throat Markings', 'Any LowerWing Markings',
+    'Beak Length', 'Any UpperWing Markings', 'LowerWing Color', 'Color Type', 'Any UpperBody Markings', 'Eye Color', 'Eye Markings', 'Is there Throat Marking', 'Is there Eye Marking'],
+};
+// the frames of buttons (frmbeak, frmeye ...) with each button's top, height and font, from the forms
+const FRAMES = {
+  sit: {
+    throat: ['THROAT', [[17, 56, 77, 1], [8, 216, 77, 0, 'hide'], [11, 368, 77]], 673],
+    tail: ['TAIL', [[1, 96, 69], [3, 224, 69]], 681], legs: ['LEG', [[0, 96, 69], [14, 224, 69]], 681],
+    eye: ['EYE', [[18, 80, 77, 1], [16, 240, 77, 0, 'hide'], [15, 392, 69]], 681],
+    beak: ['BEAK', [[10, 80, 69, 1], [13, 208, 69], [4, 336, 69]], 681],
+    body: ['BODY', [[20, 104, 77], [5, 240, 77], [19, 384, 85], [2, 528, 77]], 681],
+  },
+  fly: {
+    eye: ['EYE', [[18, 80, 77, 1], [16, 240, 77, 0, 'hide'], [15, 392, 69]], 673],
+    beak: ['BEAK', [[10, 80, 69, 1], [4, 232, 69]], 673], tail: ['TAIL', [[1, 64, 69], [3, 168, 69]], 673],
+    body: ['BODY', [[14, 104, 77], [5, 232, 77], [6, 376, 77], [2, 528, 69]], 673],
+    wing: ['WING', [[11, 64, 77], [0, 184, 77], [9, 312, 77], [12, 456, 77]], 673],
+    throat: ['THROAT', [[17, 56, 77, 1], [8, 216, 77, 0, 'hide']], 673],
+  },
+};
+// what a click on a word of the bird picture opens (manageimages): frame, then the first enabled button of the list
+const PARTS = {
+  sit: { head: [null, [6]], crown: [null, [9]], feet: [null, [12]], neck: [null, [7]], eye: ['eye', [18, 16, 15]], legs: ['legs', [0, 14]], body: ['body', [20, 5, 19, 2]],
+    tail: ['tail', [1, 3]], beak: ['beak', [10, 13, 4]], throat: ['throat', [17, 8, 11]] },
+  fly: { eye: ['eye', [18, 16, 15]], body: ['body', [14, 5, 6, 2]], wing: ['wing', [11, 0, 9, 12]], tail: ['tail', [1, 3]], beak: ['beak', [10, 4]], throat: ['throat', [17, 8]], neck: [null, [7]] },
+};
+const LABELS = {
+  sit: [['head', 419, 8, 65, 33, 'HEAD'], ['eye', 664, 72, 49, 33, 'EYE'], ['crown', 8, 80, 257, 33, 'CROWN/CREST/PLUMES'], ['throat', 184, 120, 89, 25, 'THROAT'], ['tail', 80, 352, 65, 33, 'TAIL'],
+    ['feet', 712, 480, 65, 33, 'FEET'], ['legs', 704, 400, 65, 33, 'LEGS'], ['body', 712, 304, 65, 41, 'BODY'], ['neck', 704, 160, 65, 33, 'NECK'], ['beak', 704, 108, 73, 33, 'BEAK']],
+  fly: [['tail', 0, 352, 65, 33, 'TAIL'], ['wing', 744, 256, 81, 33, 'WINGS'], ['eye', 776, 376, 49, 33, 'EYE'], ['throat', 592, 528, 89, 25, 'THROAT'], ['body', 352, 456, 65, 41, 'BODY'],
+    ['neck', 456, 528, 65, 33, 'NECK'], ['beak', 816, 408, 65, 33, 'BEAK']],
+};
+// values of a character: the list entries of its table found among the birds, as the file list shows their icons (by name), then Don't Know
+function values(cap) {
+  const t = TABLE[lc(cap)] || {}, seen = new Map();
+  for (const s of SP) for (const v of t[lc(s.id)] || []) if (!seen.has(lc(v))) seen.set(lc(v), v.trim());
+  return [...seen.values()].sort(cmp);
+}
+
+/* ---------- state: the STEPS / STEPSIT table of the window that is open ---------- */
+const S = { mode: 'sit', steps: {}, hidden: {}, sel2: null };
+function shortlist() {
+  // each character with picks keeps the birds having one of the picked values; characters applied in index order
+  let ids = SP.map(s => lc(s.id)); const lines = [];
+  CAP[S.mode].forEach((cap, pp) => {
+    const picks = S.steps[pp]; if (!picks || !picks.length) return;
+    lines.push(`${cap}: ${picks.join('/')}`);
+    const t = TABLE[lc(cap)] || {}, want = new Set(picks.map(lc));
+    ids = [...new Set(ids.filter(id => (t[id] || []).some(v => want.has(lc(v)))))];
+  });
+  if (!lines.length) return { lines, species: [], groups: [] };
+  const keep = new Set(ids), sp = new Map(), gr = new Map();
+  for (const s of SP) if (keep.has(lc(s.id))) {
+    const k = `${s.common} ; ${s.sex} ; ${s.age}`; if (!sp.has(lc(k))) sp.set(lc(k), { text: k, s });
+    if (s.group) gr.set(lc(s.group), s.group);
+  }
+  return { lines, species: [...sp.values()].sort((a, b) => cmp(a.s.common, b.s.common) || cmp(a.s.sex, b.s.sex) || cmp(a.s.age, b.s.age)), groups: [...gr.values()].sort(cmp) };
+}
+
+/* ---------- splash (frmsplash) ---------- */
+function showSplash() {
+  for (const k of Object.keys(W)) closeWin(k, true);
+  const w = 962 + 2, h = 656 + 31;
+  const cl = openWin('splash', { title: '', x: Math.round((SW - w) / 2), y: Math.round((SH - h) / 2), w, h, normal: true, min: false, max: false, onClose: quitApp });
+  cl.append(pos(el('img', { class: 'abs', src: 'img/ui/splash_top.png', alt: '' }), 0, 0, 958, 157),
+    pos(el('img', { class: 'abs', src: 'img/ui/logo_uas.jpg', alt: 'University of Agricultural Sciences, Bangalore' }), 16, 176, 102, 99),
+    pos(el('img', { class: 'abs', src: 'img/ui/logo_dbt.png', alt: 'Department of Biotechnology, Government of India' }), 384, 168, 132, 122),
+    pos(el('img', { class: 'abs', src: 'img/ui/logo_ibin.jpg', alt: 'IBIN' }), 696, 192, 199, 67),
+    pos(el('div', { class: 'lbl', style: { font: 'bold 64px/81px var(--times)', color: '#0000ff', textAlign: 'center', overflow: 'hidden' } }, 'Identification of Birds of India'), 32, 304, 849, 81),
+    pos(el('div', { class: 'lbl', style: { font: '12px/15px var(--arial)', color: '#333', textAlign: 'center' } }, [el('div', {}, 'Proprietary right holder - Dr. K.N. Ganeshaiah'), el('div', {}, `Updated in 2026 by Dr. Sachin A. Rosario  ·  Version ${VERSION}`)]), 32, 390, 849),
+    pos(el('img', { class: 'abs', src: 'img/ui/splash_bottom.png', alt: '' }), 0, 496, 962, 160));
+  const b = (cap, x, wd, font, fn) => cl.append(pos(el('div', { class: 'btn hand', style: { font }, onclick: fn }, cap), x, 432, wd, 41));
+  b('About Us', 72, 105, 'bold 16px var(--sans)', () => openDoc('About Us', 'About Us.pdf'));
+  b('Credits', 232, 81, 'bold 16px var(--sans)', () => openDoc('Credits', 'Credits.pdf'));
+  b('Introduction', 368, 113, 'bold 16px var(--sans)', () => openDoc('Introduction', 'INTRODUCTION.pdf'));
+  b('Data Profile', 536, 121, 'bold 16px var(--sans)', () => openDoc('Data', 'Data.pdf'));
+  b('Exit', 728, 73, 'bold 16px var(--sans)', quitApp);
+  b('NEXT', 856, 97, '24px var(--sans)', showSelect);
+  cl.lastChild.classList.add('def');
+}
+
+/* ---------- sitting or flying (frmselect) ---------- */
+function showSelect() {
+  closeWin('splash', true);
+  const w = 1004 + 2, h = 582 + 31;
+  const cl = openWin('select', { title: 'Bird Identification', x: Math.round((SW - w) / 2), y: Math.round((SH - h) / 2), w, h, normal: true, maxDis: true, onClose: () => { closeWin('select', true); showSplash(); } });
+  cl.append(pos(el('img', { class: 'abs', src: 'img/ui/sel_sit.png', alt: 'Sitting or standing bird' }), 48, 32, 358, 482),
+    pos(el('img', { class: 'abs', src: 'img/ui/sel_flight.png', alt: 'Flying bird' }), 488, 48, 446, 449));
+  const opt = (m, x, cap) => {
+    const r = el('div', { class: 'radio' + (S.mode === m ? ' on' : '') });
+    const o = el('div', { class: 'abs hand', style: { font: 'bold 16px/25px var(--sans)' }, onclick: () => { S.mode = m; cl.querySelectorAll('.radio').forEach(x => x.classList.toggle('on', x === r)); } }, [pos(r, 0, 6), pos(el('span', { class: 'abs', style: { whiteSpace: 'nowrap' } }, cap), 19, 0)]);
+    cl.append(pos(o, x, 528, 201, 25));
+  };
+  opt('sit', 88, 'SITTING/STANDING'); opt('fly', 592, 'IN FLIGHT/FLYING');
+  cl.append(pos(el('div', { class: 'btn hand def', style: { font: '24px var(--sans)' }, onclick: () => { closeWin('select', true); showMain(); } }, 'Next'), 920, 272, 81, 49),
+    pos(el('div', { class: 'btn hand', style: { font: '18px var(--sans)' }, onclick: () => { closeWin('select', true); showSplash(); } }, 'Back'), 840, 520, 73, 41),
+    pos(el('div', { class: 'btn hand', style: { font: '18px var(--sans)' }, onclick: quitApp }, 'Exit'), 920, 520, 73, 41));
+}
+
+/* ---------- the character window (frmsit / frmflight) ---------- */
+const MH = SH - 20;                         // Me.Height = Screen.Height - 300 twips
+const F1W = 337, F1L = SW - F1W - 7;          // Frame1 at the right
+let V;                                      // what the window shows
+function showMain() {
+  S.steps = {}; S.hidden = { 8: true, 16: true }; S.sel2 = null;
+  V = { title: 'Choose Characters', frame: null, idx: null, back: false, images: false, left: 144 };
+  for (const k of Object.keys(W)) closeWin(k, true);
+  openWin('main', { title: V.title, x: 0, y: 0, w: SW, h: MH, maxDis: true, onClose: () => { closeWin('main', true); showSelect(); } });
+  draw();
+}
+function draw() {
+  const cl = W.main.cl; cl.replaceChildren();
+  setTitle('main', V.idx == null ? V.title : `Choose ${CAP[S.mode][V.idx]}               * Click on the Thumbnail to Select / Unselect the Character.   Click on the Blue Button to view Images of the Character.`);
+  const m = S.mode, ft = m === 'sit' ? 8 : 0;
+  // the bird picture with its words (covered when a character is open)
+  if (V.idx == null) {
+    cl.append(pos(el('img', { class: 'abs', src: `img/ui/diag_${m === 'sit' ? 'sit' : 'flight'}.jpg`, alt: m === 'sit' ? 'Sitting bird' : 'Flying bird' }), 0, 0, m === 'sit' ? 881 : 882, m === 'sit' ? 534 : 566));
+    for (const [k, x, y, w, h, t] of LABELS[m]) cl.append(pos(el('div', { class: 'part', onclick: () => openPart(k) }, t), x, y, w, h));
+  } else {
+    // frame of buttons on the left
+    if (V.frame) {
+      const [cap, btns, fh] = FRAMES[m][V.frame];
+      const f = el('div', { class: 'frame' }, el('span', {}, cap)); pos(f, 0, 9, 145, fh - 9); cl.append(f);
+      for (const [bi, top, h, bold, hide] of btns) {
+        if (hide && S.hidden[bi]) continue;
+        cl.append(pos(el('div', { class: 'btn white hand' + (bi === V.idx ? ' def' : ''), style: { font: (bold || bi === V.idx ? 'bold 16px' : '18px') + ' var(--sans)', padding: '0 8px' }, onclick: () => openChar(bi) }, CAP[m][bi]), 8, top, 129, h));
+      }
+    }
+    // Picture2 with the thumbnails
+    const p2 = el('div', { class: 'sunk', style: { overflow: 'hidden', border: '2px inset #a0a0a0' } }); const p2w = SW - F1W - V.left - 10;
+    pos(p2, V.left, 8, p2w, MH - 30 - 40 - 8); cl.append(p2);
+    const cap = CAP[m][V.idx], vals = values(cap), items = [...vals, null];
+    const cols = Math.max(1, Math.floor(p2w / 210)), ml = Math.round((p2w - 210 * cols) / 2);
+    const picks = (S.steps[V.idx] || []).map(lc);
+    items.forEach((v, n) => {
+      const i = Math.floor(n / cols), j = n % cols;
+      const ic = v == null ? null : ((ICONS[lc(cap)] || {})[lc(v)] || {});
+      const th = el('div', { class: 'th' + ((v != null ? picks.includes(lc(v)) : V.dk === V.idx) ? ' on' : '') });
+      const box = el('div', { class: 'box', onclick: () => pick(v) }, (v == null || ic.icon) ? el('img', { src: 'img/icons/' + (v == null ? 'dont-know.jpg' : ic.icon), alt: '' }) : null);
+      th.append(box, el('div', { class: 'cap' }, v == null ? "Don't Know" : v));
+      if (v != null && (ic.icon || ic.samples)) th.append(el('div', { class: 'blue', title: '', onclick: e => { e.stopPropagation(); openPics(ic.samples || [ic.icon], 'icon'); } }));
+      p2.append(pos(th, j * 210 + ml, i * 210 + 20 + 10 * i));
+    });
+  }
+  rightPanel(cl, ft);
+}
+function rightPanel(cl, ft) {
+  const m = S.mode, R = shortlist(), fly = m === 'fly';
+  const f = el('div', { class: 'abs', style: { background: '#fff' } }); pos(f, F1L, ft, F1W, MH - 7 - 30);
+  f.append(pos(el('div', { class: 'lbl', style: { font: '15px var(--arial)' } }, 'List of Characters Picked'), 56, 8));
+  const l1 = el('div', { class: 'sunk lst', style: { font: '13px/16px var(--sans)' } }); pos(l1, 0, 29, F1W, 196);
+  R.lines.forEach(t => l1.append(el('div', { onclick: e => { [...l1.children].forEach(c => c.classList.toggle('sel', c === e.currentTarget)); } }, t)));
+  f.append(l1);
+  const backOn = V.back || R.groups.length > 0;
+  f.append(pos(el('div', { class: 'btn white hand' + (backOn ? '' : ' dis'), style: { font: 'bold 16px var(--sans)' }, onclick: goBack }, 'Back'), 64, 232, fly ? 81 : 73, 49),
+    pos(el('div', { class: 'btn white hand', style: { font: 'bold 16px var(--sans)' }, onclick: clearAll }, 'Clear'), fly ? 168 : 160, 232, 73, 49));
+  f.append(pos(el('div', { class: 'lbl', style: { font: '15px var(--arial)' } }, 'Groups Matched '), fly ? 80 : 72, 288),
+    pos(el('div', { class: 'lbl', style: { font: 'bold 15px var(--arial)' } }, R.lines.length ? String(R.groups.length) : ''), fly ? 224 : 216, 288));
+  const l3 = el('div', { class: 'sunk lst', style: { font: '16px/20px var(--verdana)', color: '#800000' } }); pos(l3, 0, 308, F1W, 130);
+  R.groups.forEach(g => l3.append(el('div', { onclick: e => { [...l3.children].forEach(c => c.classList.toggle('sel', c === e.currentTarget)); } }, g)));
+  f.append(l3);
+  f.append(pos(el('div', { class: 'lbl', style: { font: '15px var(--arial)' } }, 'Species Matched '), fly ? 112 : 104, 444),
+    pos(el('div', { class: 'lbl', style: { font: 'bold 15px var(--arial)' } }, R.lines.length ? `(${R.species.length})` : ''), fly ? 232 : 224, 444));
+  const c2top = MH - 100 - 30;
+  const l2 = el('div', { class: 'sunk lst', style: { font: (fly ? '16px/20px' : '15px/19px') + ' var(--verdana)', color: '#800000' } }); pos(l2, 0, 464, F1W, c2top - 464 - 3);
+  R.species.forEach((r, n) => l2.append(el('div', { class: S.sel2 === r.text ? 'sel' : '', onclick: e => { S.sel2 = r.text; [...l2.children].forEach(c => c.classList.toggle('sel', c === e.currentTarget)); } }, r.text)));
+  f.append(l2);
+  const imgOn = R.species.length > 0;
+  f.append(pos(el('div', { class: 'btn white hand' + (imgOn ? '' : ' dis'), style: { font: '18px var(--sans)' }, onclick: () => {
+    const r = R.species.find(x => x.text === S.sel2);
+    if (!r) return msgBox('Please select a species', 'Images');
+    const first = SP.find(s => lc(s.common) === lc(r.s.common) && s.sex === r.s.sex && s.age === r.s.age);
+    openPics(PHOTOS[lc(first.id)] || [], 'photo');
+  } }, 'Images'), fly ? 88 : 32, c2top, 105, 49),
+    pos(el('div', { class: 'btn white hand', style: { padding: 0 }, title: '', onclick: () => { closeWin('main', true); showSelect(); } }, el('img', { src: 'img/ui/home.jpg', width: 55, height: 47, alt: 'Home' })), fly ? 208 : 152, c2top, 57, 49));
+  cl.append(f);
+}
+function openPart(k) {
+  const [frame, order] = PARTS[S.mode][k];
+  V.frame = frame; V.left = frame ? 145 : 0; V.back = true;
+  const first = order.find(i => !S.hidden[i]);
+  openChar(first);
+}
+function openChar(i) { V.idx = i; V.dk = null; S.sel2 = null; draw(); }
+function goBack() { V.idx = null; V.frame = null; V.back = false; V.title = 'Choose Parameters'; draw(); }
+function clearAll() { S.steps = {}; S.hidden = { 8: true, 16: true }; S.sel2 = null; V.idx = null; V.frame = null; V.back = false; V.title = 'Choose Parameters'; draw(); }
+// a click on a thumbnail (label14_Click)
+function pick(v) {
+  const i = V.idx, cur = S.steps[i] || [];
+  V.dk = v == null ? i : null;
+  if (v == null) delete S.steps[i];                                       // Don't Know clears the character
+  else if (cur.some(x => lc(x) === lc(v))) {                              // unselect
+    S.steps[i] = cur.filter(x => lc(x) !== lc(v)); if (!S.steps[i].length) delete S.steps[i];
+    if (lc(v) === 'yes' && i === 18) { S.hidden[16] = true; delete S.steps[16]; }
+    if (lc(v) === 'yes' && i === 17) { S.hidden[8] = true; delete S.steps[8]; }
+  } else {
+    const yn = ['yes', 'no'].includes(lc(values(CAP[S.mode][i])[0] || ''));
+    S.steps[i] = yn ? [v] : [...cur, v];                                  // Yes / No take one answer
+    if (lc(v) === 'no' && i === 18) { S.hidden[16] = true; delete S.steps[16]; }
+    if (lc(v) === 'no' && i === 17) { S.hidden[8] = true; delete S.steps[8]; }
+    if (lc(v) === 'yes' && V.frame === 'throat') S.hidden[8] = false;
+    if (lc(v) === 'yes' && V.frame === 'eye') S.hidden[16] = false;
+  }
+  S.sel2 = null; draw();
+}
+
+showSplash();
+</script>
+</body>
+</html>
