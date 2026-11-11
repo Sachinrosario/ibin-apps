@@ -1,4 +1,4 @@
-## Sasya Bharathi – Version 1 (1.0.0)
+## Sasya Bharathi – Version 1 (1.0.1)
 
 A faithful rebuild of **Sasya Bharathi (India)**, 2004-05: "Distribution, Taxonomy & Diversity of Plants of Entire India" (University of Agricultural Sciences, Bangalore). The screens are the original program's own screens, and every list, count, map and table comes from its original database.
 
@@ -18,11 +18,11 @@ Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A
 ### Downloads
 | File | For |
 |---|---|
-| `SasyaBharathi_1.0.0_Setup.exe` | Windows 10/11: installs with Start-menu and desktop shortcuts, no administrator password |
+| `SasyaBharathi_1.0.1_Setup.exe` | Windows 10/11: installs with Start-menu and desktop shortcuts, no administrator password |
 | `SasyaBharathi.exe` | Windows: runs without installing |
-| `SasyaBharathi_1.0.0_universal.dmg` | macOS (Intel and Apple silicon) |
-| `SasyaBharathi_1.0.0_amd64.deb` | Ubuntu 22.04 or newer |
-| `SasyaBharathi_1.0.0_offline.zip` | Any computer, no internet needed: extract, then open `Open Kit.html` |
+| `SasyaBharathi_1.0.1_universal.dmg` | macOS (Intel and Apple silicon) |
+| `SasyaBharathi_1.0.1_amd64.deb` | Ubuntu 22.04 or newer |
+| `SasyaBharathi_1.0.1_offline.zip` | Any computer, no internet needed: extract, then open `Open Kit.html` |
 
 **Small installer:** the Windows, Mac and Ubuntu programs carry the program, the lists, maps and screens. The detail records of each plant (distribution, synonyms, common names, floras; 70 MB) and the 4,132 pictures (160 MB) are fetched from the IBIN site when a plant is opened, so they need an internet connection. The offline zip carries everything.
 

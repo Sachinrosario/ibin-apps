@@ -1425,11 +1425,75 @@
       "category": "Plants",
       "editions": [
         {
+          "id": "sasya-bharathi-2",
+          "key": "v2",
+          "label": "Version 2 – Updated names",
+          "versionName": "Version 2 – Updated names",
+          "version": "2.0.0",
+          "released": "2026-11-12",
+          "published": true,
+          "summary": "Version 1 with the names brought up to date: current Catalogue of Life names in brackets (13,375 of 30,959 changed), current families, IUCN Red List status now, and GenBank / BOLD DNA records for every species.",
+          "facts": [
+            "Catalogue of Life names",
+            "49 families renamed",
+            "IUCN status now",
+            "GenBank COI barcodes",
+            "BOLD links",
+            "Same screens as 2005"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/sasya-bharathi-2/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "SasyaBharathi2_2.0.0_Setup.exe",
+              "size": "",
+              "note": "Adds Start-menu and desktop shortcuts. No administrator password. Plant records and pictures are fetched online."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "SasyaBharathi2.exe",
+              "size": "",
+              "note": "Runs straight from a folder or pen drive. Plant records and pictures are fetched online."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "SasyaBharathi2_2.0.0_universal.dmg",
+              "size": "",
+              "note": "Intel and Apple-silicon Macs. Plant records and pictures are fetched online."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "SasyaBharathi2_2.0.0_amd64.deb",
+              "size": "",
+              "note": "Ubuntu 22.04 or newer. Plant records and pictures are fetched online."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "SasyaBharathi2_2.0.0_offline.zip",
+              "size": "",
+              "note": "Any computer, everything inside, no internet needed. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "2.0.0",
+              "date": "2026-11-12",
+              "text": "Current names and families in brackets, IUCN Red List status and DNA records added."
+            }
+          ]
+        },
+        {
           "id": "sasya-bharathi",
           "key": "v1",
           "label": "Version 1 – Original",
           "versionName": "Version 1 – Original",
-          "version": "1.0.0",
+          "version": "1.0.1",
           "released": "2026-11-11",
           "published": true,
           "summary": "The 2004-05 program rebuilt screen for screen: plant richness of India by state, biotic zone and 625 sq km grid, thematic taluk maps, pictures, and a digitized inventory of every family, genus and species (hierarchy, state map, distribution records, synonyms, common names, floras).",
@@ -1446,7 +1510,7 @@
             {
               "os": "windows",
               "kind": "Installer",
-              "file": "SasyaBharathi_1.0.0_Setup.exe",
+              "file": "SasyaBharathi_1.0.1_Setup.exe",
               "size": "",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password. Plant records and pictures are fetched online."
             },
@@ -1460,26 +1524,31 @@
             {
               "os": "mac",
               "kind": "App",
-              "file": "SasyaBharathi_1.0.0_universal.dmg",
+              "file": "SasyaBharathi_1.0.1_universal.dmg",
               "size": "",
               "note": "Intel and Apple-silicon Macs. Plant records and pictures are fetched online."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
-              "file": "SasyaBharathi_1.0.0_amd64.deb",
+              "file": "SasyaBharathi_1.0.1_amd64.deb",
               "size": "",
               "note": "Ubuntu 22.04 or newer. Plant records and pictures are fetched online."
             },
             {
               "os": "any",
               "kind": "Offline folder",
-              "file": "SasyaBharathi_1.0.0_offline.zip",
+              "file": "SasyaBharathi_1.0.1_offline.zip",
               "size": "",
               "note": "Any computer, everything inside, no internet needed. Extract, then double-click Open Kit.html."
             }
           ],
           "changes": [
+            {
+              "version": "1.0.1",
+              "date": "2026-11-12",
+              "text": "The pictures are now on the web version and in the offline zip."
+            },
             {
               "version": "1.0.0",
               "date": "2026-11-11",
