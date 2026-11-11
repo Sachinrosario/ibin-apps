@@ -32,35 +32,35 @@
               "os": "windows",
               "kind": "Installer",
               "file": "AndamanMapping2_2.0.2_Setup.exe",
-              "size": "30 MB",
+              "size": "32 MB",
               "note": "Installs beside Version 1. No administrator password."
             },
             {
               "os": "windows",
               "kind": "No-install",
               "file": "AndamanMapping2.exe",
-              "size": "40 MB",
+              "size": "43 MB",
               "note": "Runs straight from a folder or pen drive."
             },
             {
               "os": "mac",
               "kind": "App",
               "file": "AndamanMapping2_2.0.2_universal.dmg",
-              "size": "64 MB",
+              "size": "69 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
               "file": "AndamanMapping2_2.0.2_amd64.deb",
-              "size": "30 MB",
+              "size": "32 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
               "file": "AndamanMapping2_2.0.2_offline.zip",
-              "size": "29 MB",
+              "size": "30 MB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
@@ -105,35 +105,35 @@
               "os": "windows",
               "kind": "Installer",
               "file": "AndamanMapping_1.0.5_Setup.exe",
-              "size": "34 MB",
+              "size": "36 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password."
             },
             {
               "os": "windows",
               "kind": "No-install",
               "file": "AndamanMapping.exe",
-              "size": "42 MB",
+              "size": "45 MB",
               "note": "Runs straight from a folder or pen drive."
             },
             {
               "os": "mac",
               "kind": "App",
               "file": "AndamanMapping_1.0.5_universal.dmg",
-              "size": "68 MB",
+              "size": "73 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
               "file": "AndamanMapping_1.0.5_amd64.deb",
-              "size": "32 MB",
+              "size": "34 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
               "file": "AndamanMapping_1.0.5_offline.zip",
-              "size": "33 MB",
+              "size": "34 MB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
@@ -209,21 +209,21 @@
               "os": "windows",
               "kind": "No-install",
               "file": "WesternGhatsMapping2.exe",
-              "size": "86 MB",
+              "size": "87 MB",
               "note": "Runs straight from a folder or pen drive."
             },
             {
               "os": "mac",
               "kind": "App",
               "file": "WesternGhatsMapping2_2.0.1_universal.dmg",
-              "size": "127 MB",
+              "size": "128 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
               "file": "WesternGhatsMapping2_2.0.1_amd64.deb",
-              "size": "61 MB",
+              "size": "62 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
@@ -277,21 +277,21 @@
               "os": "windows",
               "kind": "No-install",
               "file": "WesternGhatsMapping.exe",
-              "size": "88 MB",
+              "size": "89 MB",
               "note": "Runs straight from a folder or pen drive."
             },
             {
               "os": "mac",
               "kind": "App",
               "file": "WesternGhatsMapping_1.0.1_universal.dmg",
-              "size": "132 MB",
+              "size": "133 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
               "file": "WesternGhatsMapping_1.0.1_amd64.deb",
-              "size": "64 MB",
+              "size": "65 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
@@ -530,7 +530,7 @@
           "versionName": "Version 2 – Updated names",
           "version": "2.0.0",
           "released": "2026-11-11",
-          "published": false,
+          "published": true,
           "summary": "Version 1 with the names brought up to date: current Catalogue of Life names in brackets (37 of 151 changed), families of the bird groups, IUCN Red List status now and in 2018, and GenBank / BOLD DNA records for every species.",
           "facts": [
             "Catalogue of Life names",
@@ -546,35 +546,35 @@
               "os": "windows",
               "kind": "Installer",
               "file": "BirdsIdentification2_2.0.0_Setup.exe",
-              "size": "",
+              "size": "9 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password. Photographs are fetched online."
             },
             {
               "os": "windows",
               "kind": "No-install",
               "file": "BirdsIdentification2.exe",
-              "size": "",
+              "size": "14 MB",
               "note": "Runs straight from a folder or pen drive. Photographs are fetched online."
             },
             {
               "os": "mac",
               "kind": "App",
               "file": "BirdsIdentification2_2.0.0_universal.dmg",
-              "size": "",
+              "size": "19 MB",
               "note": "Intel and Apple-silicon Macs. Photographs are fetched online."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
               "file": "BirdsIdentification2_2.0.0_amd64.deb",
-              "size": "",
+              "size": "9 MB",
               "note": "Ubuntu 22.04 or newer. Photographs are fetched online."
             },
             {
               "os": "any",
               "kind": "Offline folder",
               "file": "BirdsIdentification2_2.0.0_offline.zip",
-              "size": "",
+              "size": "103 MB",
               "note": "Any computer, everything inside, no internet needed. Extract, then double-click Open Kit.html."
             }
           ],
@@ -593,7 +593,7 @@
           "versionName": "Version 1 – Original",
           "version": "1.0.0",
           "released": "2026-11-11",
-          "published": false,
+          "published": true,
           "summary": "The 2018 species-level program rebuilt screen for screen: describe a sitting or flying bird by clicking its parts and picking picture thumbnails, and see the matching species (male, female, young) and bird groups, with photographs.",
           "facts": [
             "420 entries (152 species)",
