@@ -68,15 +68,19 @@ jobs:
           V=${{ inputs.version }}; B=$([ "${{ inputs.app }}" = andaman-mapping ] && echo AndamanMapping || echo WesternGhatMapping)
           mkdir -p /mnt/w/out
           python3 - "$B" "$V" <<'PY'
-          import os, sys, subprocess
+          import os, sys, zipfile
           B, V = sys.argv[1:3]
           sp = sorted(os.listdir('Images'))
-          size = lambda d: sum(os.path.getsize(os.path.join(r, f)) for r, _, fs in os.walk(os.path.join('Images', d)) for f in fs)
+          files = lambda top: sorted(os.path.join(r, f) for r, _, fs in os.walk(top) for f in fs)
+          size = lambda d: sum(os.path.getsize(f) for f in files(os.path.join('Images', d)))
           sz = [(d, size(d)) for d in sp]; tot = sum(s for _, s in sz); P = max(1, -(-tot // 1_500_000_000)); parts = [[] for _ in range(P)]; acc = 0
           for d, s in sz: parts[min(P - 1, int(acc * P / tot))].append(d); acc += s
-          for i, ps in enumerate(parts, 1):
-              subprocess.check_call(['zip', '-0', '-q', '-r', f'/mnt/w/out/{B}_Pictures_{V}_part{i}.zip'] + [os.path.join('Images', d) for d in ps])
-          subprocess.check_call(['zip', '-0', '-q', '-r', f'/mnt/w/out/{B}_Fliers_{V}.zip', 'Fliers'])
+          def write(out, paths):
+              with zipfile.ZipFile(out, 'w', zipfile.ZIP_STORED, allowZip64=True) as z:
+                  for f in paths: z.write(f, f.replace(os.sep, '/'))
+              print(out, len(paths), 'files', os.path.getsize(out))
+          for i, ps in enumerate(parts, 1): write(f'/mnt/w/out/{B}_Pictures_{V}_part{i}.zip', [f for d in ps for f in files(os.path.join('Images', d))])
+          write(f'/mnt/w/out/{B}_Fliers_{V}.zip', files('Fliers'))
           PY
           cd /mnt/w/out && python3 $GITHUB_WORKSPACE/.github/tools/pack_index.py index.json $(ls ${B}_Pictures_*_part*.zip | sort -V) ${B}_Fliers_${V}.zip
           ls -l
@@ -86,5 +90,5 @@ jobs:
         run: |
           T=${{ inputs.app }}-pictures-${{ inputs.version }}
           N=$([ "${{ inputs.app }}" = andaman-mapping ] && echo "Andaman Mapping" || echo "Western Ghats Mapping")
-          gh release view $T >/dev/null 2>&1 || gh release create $T --title "$N – Pictures and Fliers pack ${{ inputs.version }}" --notes "All original images and fliers of $N (2015). The programs fetch each picture from these files the first time it is shown, so nothing has to be installed. To use the pictures without internet: extract all the zip files into a folder called pack next to the program (Windows), or next to Open Kit.html in the offline folder."
-          for f in *; do gh release upload $T "$f" --clobber; done
+          gh release view $T -R ${{ github.repository }} >/dev/null 2>&1 || gh release create $T -R ${{ github.repository }} --title "$N – Pictures and Fliers pack ${{ inputs.version }}" --notes "All original images and fliers of $N (2015). The programs fetch each picture from these files the first time it is shown, so nothing has to be installed. To use the pictures without internet: extract all the zip files into a folder called pack next to the program (Windows), or next to Open Kit.html in the offline folder."
+          for f in *; do gh release upload $T "$f" --clobber -R ${{ github.repository }}; done
