@@ -1,0 +1,12 @@
+{
+  "name": "birds-identification-2",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Birds Identification 2 Version 1 (faithful rebuild)",
+  "scripts": {
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "2.12.4"
+  }
+}

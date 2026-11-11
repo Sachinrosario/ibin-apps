@@ -504,6 +504,69 @@
       "category": "Birds",
       "editions": [
         {
+          "id": "birds-identification-2",
+          "key": "v2",
+          "label": "Version 2 – Updated names",
+          "versionName": "Version 2 – Updated names",
+          "version": "2.0.0",
+          "released": "2026-11-11",
+          "published": false,
+          "summary": "Version 1 with the names brought up to date: current Catalogue of Life names in brackets (37 of 151 changed), families of the bird groups, IUCN Red List status now and in 2018, and GenBank / BOLD DNA records for every species.",
+          "facts": [
+            "Catalogue of Life names",
+            "IUCN status 2018 and now",
+            "GenBank COI barcodes",
+            "BOLD links",
+            "Same screens as 2018"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/birds-identification-2/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "BirdsIdentification2_2.0.0_Setup.exe",
+              "size": "",
+              "note": "Adds Start-menu and desktop shortcuts. No administrator password. Photographs are fetched online."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "BirdsIdentification2.exe",
+              "size": "",
+              "note": "Runs straight from a folder or pen drive. Photographs are fetched online."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "BirdsIdentification2_2.0.0_universal.dmg",
+              "size": "",
+              "note": "Intel and Apple-silicon Macs. Photographs are fetched online."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "BirdsIdentification2_2.0.0_amd64.deb",
+              "size": "",
+              "note": "Ubuntu 22.04 or newer. Photographs are fetched online."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "BirdsIdentification2_2.0.0_offline.zip",
+              "size": "",
+              "note": "Any computer, everything inside, no internet needed. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "2.0.0",
+              "date": "2026-11-11",
+              "text": "Same program as Version 1; scientific names checked against the Catalogue of Life (new names in brackets), IUCN Red List status and DNA records added."
+            }
+          ]
+        },
+        {
           "id": "birds-identification",
           "key": "v1",
           "label": "Version 1 – Original",
@@ -526,35 +589,35 @@
               "os": "windows",
               "kind": "Installer",
               "file": "BirdsIdentification_1.0.0_Setup.exe",
-              "size": "",
+              "size": "9 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password. Photographs are fetched online."
             },
             {
               "os": "windows",
               "kind": "No-install",
               "file": "BirdsIdentification.exe",
-              "size": "",
+              "size": "14 MB",
               "note": "Runs straight from a folder or pen drive. Photographs are fetched online."
             },
             {
               "os": "mac",
               "kind": "App",
               "file": "BirdsIdentification_1.0.0_universal.dmg",
-              "size": "",
+              "size": "19 MB",
               "note": "Intel and Apple-silicon Macs. Photographs are fetched online."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
               "file": "BirdsIdentification_1.0.0_amd64.deb",
-              "size": "",
+              "size": "9 MB",
               "note": "Ubuntu 22.04 or newer. Photographs are fetched online."
             },
             {
               "os": "any",
               "kind": "Offline folder",
               "file": "BirdsIdentification_1.0.0_offline.zip",
-              "size": "",
+              "size": "103 MB",
               "note": "Any computer, everything inside, no internet needed. Extract, then double-click Open Kit.html."
             }
           ],
