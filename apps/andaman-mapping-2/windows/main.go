@@ -134,3 +134,10 @@ func openWindow(url string) {
 	c.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
 	c.Start()
 }
+func exeDir() string {
+	p, err := os.Executable()
+	if err != nil {
+		return "."
+	}
+	return filepath.Dir(p)
+}
