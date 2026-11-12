@@ -1,0 +1,40 @@
+# Synonyms, common names and DNA-barcode records for a name list already looked up by "Names, status and DNA".
+# Reads branch taxa-<list>, shares the work between several runners and pushes each part to branch taxa-extra-<list>.
+name: Synonyms, common names and barcodes
+on:
+  workflow_dispatch:
+    inputs:
+      list: {description: "name list (as for Names, status and DNA)", required: true}
+      parts: {description: "number of runners (1-20)", required: false, default: "20"}
+permissions:
+  contents: write
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      parts: ${{ steps.p.outputs.parts }}
+    steps:
+      - id: p
+        run: echo "parts=$(python3 -c 'import json;print(json.dumps(list(range(int("${{ inputs.parts }}")))))')" >> $GITHUB_OUTPUT
+  look:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        part: ${{ fromJSON(needs.plan.outputs.parts) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Earlier lookups
+        run: git clone -q --depth 1 -b taxa-${{ inputs.list }} "https://github.com/${{ github.repository }}" prev
+      - name: Look up
+        run: mkdir out && python3 .github/tools/taxa_extra.py prev out/${{ inputs.list }}-extra-${{ matrix.part }}.json ${{ matrix.part }}/${{ inputs.parts }} | tail -60
+      - name: Push to branch taxa-extra-<list>
+        run: |
+          cd out
+          for t in 1 2 3 4 5 6 7 8; do
+            rm -rf r && git clone -q --depth 1 -b taxa-extra-${{ inputs.list }} "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" r 2>/dev/null || { mkdir -p r && (cd r && git init -q -b taxa-extra-${{ inputs.list }} && git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}"); }
+            cp *.json r/ && cd r && git add -A && git -c user.name=ci -c user.email=ci@local commit -qm "synonyms, common names, barcodes part ${{ matrix.part }}" && git push -q origin taxa-extra-${{ inputs.list }} && exit 0
+            cd ..; sleep $((RANDOM % 25 + 5))
+          done; exit 1
