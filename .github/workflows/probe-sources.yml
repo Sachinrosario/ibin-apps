@@ -1,0 +1,27 @@
+# Checks which public data services answer from a GitHub runner (used before a data update).
+name: Probe data sources
+on: workflow_dispatch
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          T='Abelia%20triflora'
+          for u in \
+            "https://portal.boldsystems.org/api/query/preprocessor?query=tax:Zabelia%20triflora" \
+            "https://portal.boldsystems.org/api/query?query=tax:Zabelia%20triflora&extent=limited" \
+            "https://v4.boldsystems.org/index.php/API_Public/stats?taxon=Zabelia%20triflora&format=json" \
+            "https://v3.boldsystems.org/index.php/API_Public/stats?taxon=Zabelia%20triflora&format=json" \
+            "https://www.boldsystems.org/index.php/API_Public/stats?taxon=Zabelia%20triflora&format=json" \
+            "https://api.checklistbank.org/dataset/3LR/match/nameusage?scientificName=Abelia%20triflora&kingdom=Plantae" \
+            "https://api.gbif.org/v1/species/match?name=Zabelia%20triflora&kingdom=Plantae" ; do
+            echo "== $u"; curl -s -m 40 -A "ibin-apps/1.0" -w "\nHTTP %{http_code}\n" "$u" | head -c 1500; echo
+          done
+          ID=$(curl -s "https://api.checklistbank.org/dataset/3LR/match/nameusage?scientificName=Zabelia%20triflora&kingdom=Plantae" | jq -r '.usage.id')
+          echo "COL id $ID"
+          for p in synonyms vernacular info; do echo "== $p"; curl -s -m 40 "https://api.checklistbank.org/dataset/3LR/taxon/$ID/$p" | head -c 2500; echo; done
+          K=$(curl -s "https://api.gbif.org/v1/species/match?name=Zabelia%20triflora&kingdom=Plantae" | jq -r '.usageKey')
+          echo "== gbif vernacular $K"; curl -s "https://api.gbif.org/v1/species/$K/vernacularNames?limit=50" | head -c 2500; echo
+          Q=$(curl -s "https://portal.boldsystems.org/api/query?query=tax:Zabelia%20triflora&extent=limited" | jq -r '.query_id // empty'); echo "query_id $Q"
+          [ -n "$Q" ] && for u in "https://portal.boldsystems.org/api/summary?query_id=$Q&fields=specimens,bin_uri,marker_code" "https://portal.boldsystems.org/api/documents/$Q?length=5"; do echo "== $u"; curl -s -m 60 "$u" | head -c 2500; echo; done
+          echo "== ncbi rbcL"; curl -s "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&retmode=json&retmax=0&term=%22Zabelia%20triflora%22%5BOrganism%5D%20AND%20rbcL%5BAll%20Fields%5D" | head -c 400
