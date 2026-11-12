@@ -28,19 +28,57 @@ function LABEL(t) { const k = String(t).trim().replace(/\\s+/g, ' ').toLowerCase
 R("    $('dTitle').textContent = `Digitized Inventory of ${D.name} in entire India`;", "    $('dTitle').textContent = `Digitized Inventory of ${LABEL(D.name)} in entire India`;")
 R("""  v.forEach((t, i) => B.append(pos(el('div', { class: 'hval' }, esc(t)), 556, 199 + 48 * i)));
 }""", """  v.forEach((t, i) => B.append(pos(el('div', { class: 'hval' }, esc(i === 5 ? LABEL(t) : t)), 556, 199 + 48 * i)));
-  const card = pos(el('div', { class: 'abs', style: { background: 'rgba(255,255,255,.88)', border: '1px solid #7d0000', font: '13px/19px var(--arial)', color: '#202020', padding: '6px 10px', boxSizing: 'border-box' } }), 330, 486, 706);
+  const card = pos(el('div', { class: 'abs', style: { background: 'rgba(255,255,255,.9)', border: '1px solid #7d0000', font: '13px/19px var(--arial)', color: '#202020', padding: '5px 10px', boxSizing: 'border-box' } }), 300, 480, 766);
   const lnk = (u, t) => `<a href="${u}" target="_blank" rel="noopener" style="color:#00e">${t}</a>`;
   if (D.kind === 'S') { const u = NOWN.get(D.key); const nm = upKey(D.row);
     if (u) { const dna = u[7] || nm;
       card.innerHTML = `<b>Name in 2005:</b> <i>${esc(nm)}</i><br><b>Catalogue of Life (2026):</b> <i>${esc(u[0] || nm)}</i> ${esc(u[1])} &nbsp;[${esc(u[0] ? (u[2] === 'accepted' ? 'accepted' : u[2] + ' of the name above') : u[2])}]` +
         (u[3] ? `<br><b>Family now:</b> ${esc(u[3])}` : '') + `<br><b>IUCN Red List now:</b> ${esc(u[4] || 'not assessed / not found')}` +
-        (u[7] || u[5] ? `<br><b>DNA:</b> ${lnk('https://www.ncbi.nlm.nih.gov/nuccore/?term=' + encodeURIComponent('"' + dna + '"[Organism]'), 'GenBank ' + u[5] + ' sequences')}, ${u[6]} COI barcodes &middot; ${lnk('https://portal.boldsystems.org/result?query=' + encodeURIComponent(dna + '[tax]'), 'BOLD Systems')}` : '<br><b>DNA:</b> not looked up (the name is not known at species level)');
+        (D.ex ? (() => { const x = D.ex, g = t => 'https://www.ncbi.nlm.nih.gov/nuccore/?term=' + encodeURIComponent('"' + x.nn + '"[Organism]' + (t ? ' AND ' + t : ''));
+            return `<br><b>DNA barcodes</b> (GenBank${x.nn !== dna ? ', filed as <i>' + esc(x.nn) + '</i>' : ''}; checked ${esc(x.d || '')}): ${lnk(g(''), x.n[0] + ' sequences')} &middot; rbcL ${lnk(g('rbcL[All Fields]'), x.n[1])} &middot; matK ${lnk(g('matK[All Fields]'), x.n[2])} &middot; ITS ${lnk(g('"internal transcribed spacer"[All Fields]'), x.n[3])} &middot; trnH-psbA ${lnk(g('"trnH-psbA"[All Fields]'), x.n[4])}` +
+              `<br><b>BOLD Systems:</b> ${x.b == null ? 'not found' : x.b + ' public barcode records'} &middot; ${lnk('https://portal.boldsystems.org/result?query=' + encodeURIComponent(dna + '[tax]'), 'open in BOLD')}`; })()
+          : '<br><b>DNA:</b> not looked up (the name is not known at species level)');
     } else card.innerHTML = `<b>Name in 2005:</b> <i>${esc(nm)}</i><br>Not found in the Catalogue of Life.`; }
   else { const f = D.kind === 'F' ? NOWF.get(D.key.toLowerCase()) : null; card.innerHTML = D.kind === 'F' ? `<b>Family in 2005:</b> ${esc(fam)}<br><b>Family now (Catalogue of Life 2026):</b> ${esc(f || fam)}${f ? '' : ' (unchanged)'}` : `<b>Genus:</b> ${esc(D.key)} &middot; the current names of its species are shown in brackets in the lists.`; }
   B.append(card);
 }""")
 R("B.append(pos(el('div', { class: 'abs', style: { font: '22px var(--arial)', color: '#804000', textAlign: 'center' } }, `${esc(nm)}&nbsp; [${STLAB[D.row[6]]}]`), 318, 10, 732));",
   "B.append(pos(el('div', { class: 'abs', style: { font: '22px var(--arial)', color: '#804000', textAlign: 'center' } }, `${esc(LABEL(nm))}&nbsp; [${STLAB[D.row[6]]}]`), 318, 10, 732));")
+R("D.imgs = SB.im[r[7].toLowerCase()] || []; }", "D.imgs = SB.im[r[7].toLowerCase()] || []; await loadExtra(D); }")
+R("""p.textContent = o ? '-' : '+'; };
+}""", """p.textContent = o ? '-' : '+'; };
+  extraPanel(B, D, 'syn');
+}""")
+R("""out.innerHTML = flat[+td.dataset.i][1].map(f => esc(f.join(' ; '))).join('<br>'); };
+}""", """out.innerHTML = flat[+td.dataset.i][1].map(f => esc(f.join(' ; '))).join('<br>'); };
+  extraPanel(B, D, 'cm');
+}""")
+R("// ---------- start ----------", """// ---------- Version 2: synonyms now, common names now and rechecked DNA barcodes ----------
+async function loadExtra(D) {
+  D.ex = null; const u = NOWN.get(D.key); if (!u || !u[7]) return;
+  try { const sh = await shard('u', crc32(u[7].toLowerCase()) % 100); D.ex = (sh || {})[u[7]] || null; } catch (e) { D.ex = null; }
+}
+function extraPanel(B, D, what) {
+  const u = NOWN.get(D.key), x = D.ex;
+  const box = pos(el('div', { class: 'abs v2x', style: { background: 'rgba(255,255,255,.93)', border: '1px solid #7d0000', font: '12px/16px var(--arial)', color: '#202020', overflow: 'auto', padding: '6px 8px', boxSizing: 'border-box' } }),
+    what === 'syn' ? 1058 : 10, what === 'syn' ? 39 : 9, what === 'syn' ? 300 : 326, what === 'syn' ? 466 : 530);
+  const acc = u && (u[0] || upKey(D.row));
+  if (what === 'syn') {
+    let h = `<div style="font:bold 12px var(--arial);color:#7d0000;margin-bottom:4px">Synonyms now &ndash; Catalogue of Life (2026)</div>`;
+    if (!x) h += '<div>The name is not known to the Catalogue of Life at species level, so it has no synonyms there.</div>';
+    else { h += `<div style="margin-bottom:4px"><b>Accepted name:</b> <i>${esc(acc)}</i> ${esc(u[1] || '')}</div>`;
+      h += x.s.length ? x.s.map(([n, a, k]) => `<div title="${k}">${k === 'homotypic' ? '&equiv;' : k === 'misapplied' ? '&ne;' : '='} <i>${esc(n)}</i> ${esc(a)}${k === 'misapplied' ? ' (misapplied)' : ''}</div>`).join('') + `<div style="margin-top:6px;color:#555;font-size:11px">&equiv; same type (homotypic) &nbsp; = different type (heterotypic) &middot; ${x.s.length} names</div>` : '<div>No synonyms are listed.</div>'; }
+    box.innerHTML = h;
+  } else {
+    let h = `<div style="font:bold 12px var(--arial);color:#7d0000;margin-bottom:4px">Common names now &ndash; GBIF (2026)</div>`;
+    if (!x || !x.c.length) h += '<div>No common names in English or the languages of India are recorded today for this plant.</div>';
+    else { let last = ''; for (const [l, n, src] of x.c) { if (l !== last) { h += `<div style="margin-top:4px;color:#008080;font-weight:bold">${esc(l)}</div>`; last = l; } h += `<div title="${esc(src)}">${esc(n)}</div>`; }
+      h += `<div style="margin-top:6px;color:#555;font-size:11px">${x.c.length} names &middot; sources shown when you hold the mouse on a name</div>`; }
+    box.innerHTML = h;
+  }
+  B.append(box);
+}
+// ---------- start ----------""")
 R("loadJs('data/core.js').then(() => { initData(); busy(false); })", "loadJs('data/core.js').then(() => loadJs('data/updates.js').catch(() => {})).then(() => { initData(); initUpdates(); busy(false); })")
 R("const REMOTE = 'https://sachinrosario.github.io/ibin-apps/sasya-bharathi/';", "const REMOTE = 'https://sachinrosario.github.io/ibin-apps/sasya-bharathi/'; // Version 1's copy of the plant records and pictures (shared)")
 open(dst, 'w', encoding='utf-8').write(s)
