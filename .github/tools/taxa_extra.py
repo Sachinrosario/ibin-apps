@@ -11,14 +11,24 @@ SRC, OUT = sys.argv[1:3]
 T = {}
 for f in sorted(glob.glob(os.path.join(SRC, '*.json'))): T.update(json.load(open(f)))
 UA = {'User-Agent': 'ibin-apps/1.0 (IBIN Apps rebuild; https://sachinrosario.github.io/ibin-apps/)'}
-def get(url, tries=5, to=40):
+FAILS = []
+_rl = {}; _rlk = threading.Lock()
+def _pace(host, gap):      # at most one request every <gap> seconds to one service from this runner
+    with _rlk:
+        t = _rl.get(host, 0); now = time.time(); w = t - now
+        _rl[host] = max(now, t) + gap
+    if w > 0: time.sleep(w)
+GAP = {'api.gbif.org': 0.35, 'api.checklistbank.org': 0.2}
+def get(url, tries=7, to=40):
+    host = urllib.parse.urlparse(url).netloc
     for i in range(tries):
+        if host in GAP: _pace(host, GAP[host])
         try: return json.loads(urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=to).read())
         except urllib.error.HTTPError as e:
             if e.code == 404: return None
-            err = e; time.sleep(2 + 3 * i)
+            err = e; time.sleep((15 + 15 * i) if e.code == 429 else (2 + 3 * i))
         except Exception as e: err = e; time.sleep(2 + 3 * i)
-    print('FAILED', url, err); return None
+    print('FAILED', url, err); FAILS.append(url); raise RuntimeError('lookup failed: ' + url)
 # the work: one task per accepted name (Catalogue of Life id, GBIF key, name for DNA)
 tasks = {}
 for n, r in T.items():
@@ -30,11 +40,21 @@ for n, r in T.items():
     if cid: t['cids'].add(cid)
     t['old'].add(' '.join(n.split()[:2]))
 keys = sorted(tasks)
+PREV = {}   # results of an earlier run (repair: DNA counts are kept, the rest is looked up again)
+if os.environ.get('PREV_DIR'):
+    for f in sorted(glob.glob(os.path.join(os.environ['PREV_DIR'], '*-extra-*.json'))): PREV.update(json.load(open(f)))
 if len(sys.argv) > 3: pi, pn = map(int, sys.argv[3].split('/')); keys = keys[pi::pn]
 INDIA = {'eng': 'English', 'hin': 'Hindi', 'kan': 'Kannada', 'tam': 'Tamil', 'tel': 'Telugu', 'mal': 'Malayalam', 'mar': 'Marathi', 'ben': 'Bengali', 'guj': 'Gujarati',
          'ori': 'Odia', 'ory': 'Odia', 'pan': 'Punjabi', 'san': 'Sanskrit', 'urd': 'Urdu', 'asm': 'Assamese', 'nep': 'Nepali', 'kok': 'Konkani', 'sat': 'Santali', 'mni': 'Manipuri',
          'brx': 'Bodo', 'doi': 'Dogri', 'kas': 'Kashmiri', 'mai': 'Maithili', 'snd': 'Sindhi', 'lus': 'Mizo', 'kha': 'Khasi', 'grt': 'Garo', 'tcy': 'Tulu', 'new': 'Newari', 'bho': 'Bhojpuri', 'sin': 'Sinhala',
          'en': 'English', 'hi': 'Hindi', 'kn': 'Kannada', 'ta': 'Tamil', 'te': 'Telugu', 'ml': 'Malayalam', 'mr': 'Marathi', 'bn': 'Bengali', 'gu': 'Gujarati', 'or': 'Odia', 'pa': 'Punjabi', 'sa': 'Sanskrit', 'ur': 'Urdu', 'as': 'Assamese', 'ne': 'Nepali'}
+def col_id(name):
+    j = get('https://api.checklistbank.org/dataset/3LR/match/nameusage?' + urllib.parse.urlencode({'scientificName': name, 'kingdom': 'Plantae', 'verbose': 'false'})) or {}
+    u = j.get('usage') or {}
+    if u.get('status') == 'accepted': return u.get('id')
+    for c in u.get('classification') or []:
+        if c.get('status') == 'accepted' and c.get('rank') in ('species', 'subspecies', 'variety', 'form'): return c.get('id')
+    return None
 def synonyms(cids):
     out = []
     for cid in cids:
@@ -83,11 +103,17 @@ def bold(gkey):
     return (j or {}).get('count')
 def one(k):
     t = tasks[k]; r = {'dna': t['dna']}
-    try: r['syn'] = synonyms(sorted(t['cids']))
+    try:
+        ids = set(t['cids']); a = col_id(t['dna'])
+        if a: ids.add(a)
+        r['syn'] = synonyms(sorted(ids))
     except Exception as e: r['syn_error'] = repr(e)
     try: r['cm'] = vernacular(t['gbif'])
     except Exception as e: r['cm_error'] = repr(e)
-    try:
+    if t['dna'] in PREV and (PREV[t['dna']].get('ncbi') or {}).get('all') is not None and not PREV[t['dna']].get('ncbi_error'):
+        r['ncbi'] = PREV[t['dna']]['ncbi']; r['ncbi_name'] = PREV[t['dna']].get('ncbi_name')
+    else:
+      try:
         d = ncbi(t['dna']); used = t['dna']
         if not d['all']:      # NCBI may still file the sequences under the name of 2005
             for o in sorted(t['old']):
@@ -95,7 +121,7 @@ def one(k):
                     d2 = ncbi(o)
                     if d2['all']: d, used = d2, o; break
         r['ncbi'] = d; r['ncbi_name'] = used
-    except Exception as e: r['ncbi_error'] = repr(e)
+      except Exception as e: r['ncbi_error'] = repr(e)
     try: r['bold'] = bold(t['gbif'])
     except Exception as e: r['bold_error'] = repr(e)
     r['checked'] = time.strftime('%Y-%m-%d')
@@ -108,4 +134,5 @@ with ThreadPoolExecutor(6) as ex:
         res[k] = r
         if i % 200 == 0: print(i, k, json.dumps(r)[:300], flush=True)
 json.dump(res, open(OUT, 'w'), ensure_ascii=False, indent=0)
+print('failed requests:', len(FAILS), '| entries with errors:', sum(1 for r in res.values() if any(k.endswith('_error') for k in r)))
 print('synonyms for', sum(1 for r in res.values() if r.get('syn')), '| common names for', sum(1 for r in res.values() if r.get('cm')), '| DNA for', sum(1 for r in res.values() if (r.get('ncbi') or {}).get('all')), '| BOLD for', sum(1 for r in res.values() if r.get('bold')))
