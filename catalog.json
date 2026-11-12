@@ -1503,7 +1503,7 @@
           "key": "v1",
           "label": "Version 1 – Original",
           "versionName": "Version 1 – Original",
-          "version": "1.0.2",
+          "version": "1.0.3",
           "released": "2026-11-12",
           "published": true,
           "summary": "The 2004-05 program rebuilt screen for screen: plant richness of India by state, biotic zone and 625 sq km grid, thematic taluk maps, pictures, and a digitized inventory of every family, genus and species (hierarchy, state map, distribution records, synonyms, common names, floras).",
@@ -1520,7 +1520,7 @@
             {
               "os": "windows",
               "kind": "Installer",
-              "file": "SasyaBharathi_1.0.2_Setup.exe",
+              "file": "SasyaBharathi_1.0.3_Setup.exe",
               "size": "5 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password. Plant records and pictures are fetched online."
             },
@@ -1534,26 +1534,31 @@
             {
               "os": "mac",
               "kind": "App",
-              "file": "SasyaBharathi_1.0.2_universal.dmg",
+              "file": "SasyaBharathi_1.0.3_universal.dmg",
               "size": "11 MB",
               "note": "Intel and Apple-silicon Macs. Plant records and pictures are fetched online."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
-              "file": "SasyaBharathi_1.0.2_amd64.deb",
+              "file": "SasyaBharathi_1.0.3_amd64.deb",
               "size": "5 MB",
               "note": "Ubuntu 22.04 or newer. Plant records and pictures are fetched online."
             },
             {
               "os": "any",
               "kind": "Offline folder",
-              "file": "SasyaBharathi_1.0.2_offline.zip",
+              "file": "SasyaBharathi_1.0.3_offline.zip",
               "size": "182 MB",
               "note": "Any computer, everything inside, no internet needed. Extract, then double-click Open Kit.html."
             }
           ],
           "changes": [
+            {
+              "version": "1.0.3",
+              "date": "2026-11-12",
+              "text": "The web page fits phone screens (it showed black on phones)."
+            },
             {
               "version": "1.0.2",
               "date": "2026-11-12",
@@ -1574,6 +1579,79 @@
       ]
     },
     {
+      "name": "Sasya Sampada",
+      "icon": "apps/sasya-sampada.png",
+      "origin": "Digitized Inventory of Plant Resources of India (Medicinal & Economically Important Plants), planned as a program of its own and later merged into Jeeva Sampada (2012).",
+      "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
+      "category": "Plants",
+      "editions": [
+        {
+          "id": "sasya-sampada",
+          "key": "v1",
+          "label": "Version 1 – Original",
+          "versionName": "Version 1 – Original",
+          "version": "1.0.0",
+          "released": "2026-11-12",
+          "published": true,
+          "summary": "The plant resources database of Jeeva Sampada as a program of its own: 1,956 medicinal and economically important plants with classification, common names, floras, distribution maps, the original plant web pages and pictures, accessions, uses and actions, pests and patents.",
+          "facts": [
+            "Original screens",
+            "1,956 plants",
+            "11 major categories",
+            "2,600 plant web pages",
+            "969 pictures",
+            "26,900 patents"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/sasya-sampada/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "SasyaSampada_1.0.0_Setup.exe",
+              "size": "",
+              "note": "Adds Start-menu and desktop shortcuts. No administrator password. Pictures and web pages are fetched online."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "SasyaSampada.exe",
+              "size": "",
+              "note": "Runs straight from a folder or pen drive. Pictures and web pages are fetched online."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "SasyaSampada_1.0.0_universal.dmg",
+              "size": "",
+              "note": "Intel and Apple-silicon Macs. Pictures and web pages are fetched online."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "SasyaSampada_1.0.0_amd64.deb",
+              "size": "",
+              "note": "Ubuntu 22.04 or newer. Pictures and web pages are fetched online."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "SasyaSampada_1.0.0_offline.zip",
+              "size": "",
+              "note": "Any computer, everything inside, no internet needed. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "1.0.0",
+              "date": "2026-11-12",
+              "text": "Sasya Sampada as a separate program, built from the same rebuild as the one inside Jeeva Sampada."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "Jeeva Sampada",
       "icon": "apps/jeeva-sampada.png",
       "origin": "Jeeva Sampada (2012): biodiversity databases of India under one roof, pooled by the DBT assembling project from databases made by scientists at centres across the country.",
@@ -1584,8 +1662,8 @@
           "key": "v1",
           "label": "Version 1 – Original (2026 rebuild)",
           "versionName": "Version 1",
-          "version": "1.11.0",
-          "released": "2026-11-07",
+          "version": "1.11.1",
+          "released": "2026-11-12",
           "published": true,
           "summary": "The original Jeeva Sampada program rebuilt screen for screen from the originals: the main screen with its menus and scrolling line, Links, and all eleven databases in their original format – Birds (Pakshi Sampada), Domestic Animals, Freshwater Fin fishes & Shell fishes, Amphibia, Reptilia & Mammals, Insects, Crop Pests, Natural Enemies & Pollinators, Laboratory Animals, Silk Worms, Plant Resources (Sasya Sampada), Marine Bio-Resources and Microbial Resources – with their windows, searches, documents, pictures, species pages and films.",
           "facts": [
@@ -1609,7 +1687,7 @@
             {
               "os": "windows",
               "kind": "Installer",
-              "file": "JeevaSampada_1.11.0_Setup.exe",
+              "file": "JeevaSampada_1.11.1_Setup.exe",
               "size": "903 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password."
             },
@@ -1623,33 +1701,38 @@
             {
               "os": "mac",
               "kind": "App (Apple silicon)",
-              "file": "JeevaSampada_1.11.0_apple-silicon.dmg",
+              "file": "JeevaSampada_1.11.1_apple-silicon.dmg",
               "size": "952 MB",
               "note": "Macs with M1 or newer chips."
             },
             {
               "os": "mac",
               "kind": "App (Intel)",
-              "file": "JeevaSampada_1.11.0_intel.dmg",
+              "file": "JeevaSampada_1.11.1_intel.dmg",
               "size": "944 MB",
               "note": "Macs with Intel processors."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
-              "file": "JeevaSampada_1.11.0_amd64.deb",
+              "file": "JeevaSampada_1.11.1_amd64.deb",
               "size": "944 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
-              "file": "JeevaSampada_1.11.0_offline.zip",
+              "file": "JeevaSampada_1.11.1_offline.zip",
               "size": "1.0 GB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
           "changes": [
+            {
+              "version": "1.11.1",
+              "date": "2026-11-12",
+              "text": "Fits phone screens; Sasya Sampada category list double-click fixed. Sasya Sampada is also available as a program of its own."
+            },
             {
               "version": "1.11.0",
               "date": "2026-11-08",

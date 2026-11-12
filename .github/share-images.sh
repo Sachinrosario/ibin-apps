@@ -43,3 +43,15 @@ if [ -z "$SKIP_MEDIA_SHARE" ]; then
     echo "shared data: $src -> $dst"
   done
 fi
+# An app whose web/SHARED_FOLDERS lists "<folder of another app> <folder here>" lines reuses those folders in its desktop and
+# offline builds (Sasya Sampada uses Jeeva Sampada's pictures and web pages); its web page reads them from the other app's web copy.
+if [ -z "$SKIP_MEDIA_SHARE" ]; then
+  for f in apps/*/web/SHARED_FOLDERS; do
+    [ -f "$f" ] || continue
+    dst=$(dirname "$f")
+    while read -r a b; do
+      [ -n "$a" ] || continue
+      [ -d "apps/$a" ] && [ ! -e "$dst/$b" ] && cp -r "apps/$a" "$dst/$b" && echo "shared folder: apps/$a -> $dst/$b"
+    done < "$f"
+  done
+fi

@@ -1,4 +1,4 @@
-## Sasya Bharathi – Version 1 (1.0.2)
+## Sasya Bharathi – Version 1 (1.0.3)
 
 A faithful rebuild of **Sasya Bharathi (India)**, 2004-05: "Distribution, Taxonomy & Diversity of Plants of Entire India" (University of Agricultural Sciences, Bangalore). The screens are the original program's own screens, and every list, count, map and table comes from its original database.
 
@@ -16,6 +16,7 @@ Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A
 - **To List Correct & Synonym Names**: valid, probably valid, synonym, probably synonym and undecided names.
 
 ### What is fixed in this version
+- **Phones:** the page opened wider than the phone and showed black; the screen now fits the phone.
 - The lists of families, genera, species and sub-species are now drawn by the program itself, so they work the same on phones, tablets and computers (on phones they had become drop-down boxes).
 - Clicking between two districts of a state now selects the state.
 - "To List Correct & Synonym Names" has an Open button (for touch screens, where there is no double-click).
@@ -24,11 +25,11 @@ Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A
 ### Downloads
 | File | For |
 |---|---|
-| `SasyaBharathi_1.0.2_Setup.exe` | Windows 10/11: installs with Start-menu and desktop shortcuts, no administrator password |
+| `SasyaBharathi_1.0.3_Setup.exe` | Windows 10/11: installs with Start-menu and desktop shortcuts, no administrator password |
 | `SasyaBharathi.exe` | Windows: runs without installing |
-| `SasyaBharathi_1.0.2_universal.dmg` | macOS (Intel and Apple silicon) |
-| `SasyaBharathi_1.0.2_amd64.deb` | Ubuntu 22.04 or newer |
-| `SasyaBharathi_1.0.2_offline.zip` | Any computer, no internet needed: extract, then open `Open Kit.html` |
+| `SasyaBharathi_1.0.3_universal.dmg` | macOS (Intel and Apple silicon) |
+| `SasyaBharathi_1.0.3_amd64.deb` | Ubuntu 22.04 or newer |
+| `SasyaBharathi_1.0.3_offline.zip` | Any computer, no internet needed: extract, then open `Open Kit.html` |
 
 **Small installer:** the Windows, Mac and Ubuntu programs carry the program, the lists, maps and screens. The detail records of each plant (distribution, synonyms, common names, floras; 70 MB) and the 4,132 pictures (160 MB) are fetched from the IBIN site when a plant is opened, so they need an internet connection. The offline zip carries everything.
 

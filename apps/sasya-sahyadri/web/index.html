@@ -65,7 +65,8 @@ table.wt td,table.wt th{border:1px solid #888;padding:1px 4px}
 .mv{margin:0 auto;width:fit-content}
 @media print { body.printing > *:not(#printbox) { display: none !important; } #printbox { display: block !important; } }
 #printbox { display: none; }
-</style></head>
+</style><style id="phonefix">/* phones: keep the fixed-size screen from widening the page (it went blank or was cut off) */html,body{position:fixed;left:0;top:0;width:100%;height:100%;overflow:hidden;margin:0}</style>
+</head>
 <body>
 <div id="stage">
 

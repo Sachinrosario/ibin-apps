@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "title": "Sasya Sampada – Version 1 – Original (1.0.0)",
+  "fileBase": "SasyaSampada",
+  "remote": [
+    "Images",
+    "NEWhtml"
+  ],
+  "test": "tests/sasya-sampada.test.js"
+}

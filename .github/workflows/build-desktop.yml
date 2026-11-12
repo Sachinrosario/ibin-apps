@@ -57,10 +57,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: t
-        run: echo "script=$(jq -r '.test // empty' apps/${{ matrix.app }}/release.json)" >> $GITHUB_OUTPUT
+        run: echo "script=$(jq -r '.test // "tests/smoke.test.js"' apps/${{ matrix.app }}/release.json)" >> $GITHUB_OUTPUT
       - name: Install the test browser
         if: steps.t.outputs.script != ''
-        run: npm install --no-save playwright@1.48.2 && npx playwright install --with-deps chromium
+        run: npm install --no-save playwright@1.48.2 pngjs@7.0.0 && npx playwright install --with-deps chromium && bash .github/share-images.sh
       - name: Test every feature (desktop screen, small installer)
         if: steps.t.outputs.script != ''
         run: node ${{ steps.t.outputs.script }} ${{ matrix.app }} desktop small
