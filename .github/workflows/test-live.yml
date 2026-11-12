@@ -1,10 +1,10 @@
-# Clicks through every feature of a published web page (the copy people open from the IBIN Apps page).
+# Clicks through the published web pages (the copies people open from the IBIN Apps page), on a computer and a phone screen.
+# Each app uses the test named in its release.json ("test"), or the basic opening-screen test.
 name: Test the live web version
 on:
   workflow_dispatch:
     inputs:
       apps: {description: "app folders, space separated", required: true}
-      test: {description: "test script", required: true}
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -14,5 +14,8 @@ jobs:
       - name: Test
         run: |
           rc=0
-          for a in ${{ inputs.apps }}; do for m in desktop phone; do node ${{ inputs.test }} $a $m live || rc=1; done; done
+          for a in ${{ inputs.apps }}; do
+            t=$(jq -r '.test // "tests/smoke.test.js"' apps/$a/release.json 2>/dev/null || echo tests/smoke.test.js)
+            for m in desktop phone; do node $t $a $m live || rc=1; done
+          done
           exit $rc
