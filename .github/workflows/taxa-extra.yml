@@ -27,9 +27,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Earlier lookups
-        run: git clone -q --depth 1 -b taxa-${{ inputs.list }} "https://github.com/${{ github.repository }}" prev
+        run: |
+          git clone -q --depth 1 -b taxa-${{ inputs.list }} "https://github.com/${{ github.repository }}" prev
+          git clone -q --depth 1 -b taxa-extra-${{ inputs.list }} "https://github.com/${{ github.repository }}" prevx 2>/dev/null || mkdir prevx
       - name: Look up
-        run: mkdir out && python3 .github/tools/taxa_extra.py prev out/${{ inputs.list }}-extra-${{ matrix.part }}.json ${{ matrix.part }}/${{ inputs.parts }} | tail -60
+        run: mkdir out && PREV_DIR=prevx python3 .github/tools/taxa_extra.py prev out/${{ inputs.list }}-extra-${{ matrix.part }}.json ${{ matrix.part }}/${{ inputs.parts }} | tail -60
       - name: Push to branch taxa-extra-<list>
         run: |
           cd out
