@@ -151,10 +151,13 @@ function quitApp() { try { window.close(); } catch (e) {} setTimeout(() => { $('
 
 // ---------- data loading: a file in this folder first, the IBIN Apps web copy when it is not there (small installers) ----------
 const loaded = {};
+// on the IBIN web site, a version that shares Version 1's records and pictures reads them from there directly
+const SHARED = /^(data\/[dg]\/|img\/photos\/)/, WEBCOPY = /github\.io$/.test(location.hostname) && !new URL('.', location.href).href.startsWith(REMOTE);
+const first = rel => (WEBCOPY && SHARED.test(rel) ? REMOTE : '') + rel;
 function loadJs(rel) {
   if (loaded[rel]) return loaded[rel];
   return loaded[rel] = new Promise((ok, bad) => {
-    const s = document.createElement('script'); s.src = rel;
+    const s = document.createElement('script'); s.src = first(rel);
     s.onload = () => ok();
     s.onerror = () => { s.remove(); const r = document.createElement('script'); r.src = REMOTE + rel; r.onload = () => ok(); r.onerror = () => { delete loaded[rel]; bad(new Error(rel)); }; document.head.appendChild(r); };
     document.head.appendChild(s);
@@ -165,7 +168,7 @@ const SHARD = {};
 SB.got = (k, i, o) => { SHARD[k + i] = o; };
 async function shard(k, i) { if (!SHARD[k + i]) await loadJs(`data/${k}/${i}.js`); return SHARD[k + i]; }
 const crc32 = (() => { const T = []; for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; T[n] = c >>> 0; } return s => { let c = 0xFFFFFFFF; for (const b of new TextEncoder().encode(s)) c = T[(c ^ b) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }; })();
-function photo(img, file) { img.onerror = () => { img.onerror = null; img.src = REMOTE + 'img/photos/' + encodeURIComponent(file); }; img.src = 'img/photos/' + encodeURIComponent(file); }
+function photo(img, file) { img.onerror = () => { img.onerror = null; img.src = REMOTE + 'img/photos/' + encodeURIComponent(file); }; img.src = first('img/photos/') + encodeURIComponent(file); }
 
 // ---------- indexes ----------
 let BYID, BYCOMB, INDIA, STATUS = ['valid', 'probably valid', 'synonym', 'probably synonym', 'undecided'];

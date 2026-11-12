@@ -1,4 +1,4 @@
-## Sasya Bharathi – Version 2 – Updated names (2.0.1)
+## Sasya Bharathi – Version 2 – Updated names (2.0.2)
 
 Version 1 of **Sasya Bharathi (India)** (2004-05) with the names brought up to date. The screens, flow and the 2005 data are unchanged; today's details are added in brackets and in a small card.
 
@@ -16,15 +16,16 @@ Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A
 - Clicking between two districts of a state now selects the state.
 - "To List Correct & Synonym Names" has an Open button (for touch screens, where there is no double-click).
 - Every screen and button was tested before this release: 69 checks on a computer screen and on a phone screen.
+- On the IBIN web site, the plant records and pictures are read straight from their shared copy (faster).
 
 ### Downloads
 | File | For |
 |---|---|
-| `SasyaBharathi2_2.0.1_Setup.exe` | Windows 10/11: installs with Start-menu and desktop shortcuts, no administrator password |
+| `SasyaBharathi2_2.0.2_Setup.exe` | Windows 10/11: installs with Start-menu and desktop shortcuts, no administrator password |
 | `SasyaBharathi2.exe` | Windows: runs without installing |
-| `SasyaBharathi2_2.0.1_universal.dmg` | macOS (Intel and Apple silicon) |
-| `SasyaBharathi2_2.0.1_amd64.deb` | Ubuntu 22.04 or newer |
-| `SasyaBharathi2_2.0.1_offline.zip` | Any computer, no internet needed: extract, then open `Open Kit.html` |
+| `SasyaBharathi2_2.0.2_universal.dmg` | macOS (Intel and Apple silicon) |
+| `SasyaBharathi2_2.0.2_amd64.deb` | Ubuntu 22.04 or newer |
+| `SasyaBharathi2_2.0.2_offline.zip` | Any computer, no internet needed: extract, then open `Open Kit.html` |
 
 **Small installer:** as in Version 1, the plant records and pictures are fetched from the IBIN site when a plant is opened; the offline zip carries everything.
 
