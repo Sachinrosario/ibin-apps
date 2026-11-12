@@ -3,7 +3,8 @@
 //   small = test like the small installers: the plant records and pictures are not in the folder and must come from the web copy.
 const { chromium, devices } = require('playwright');
 const http = require('http'), fs = require('fs'), path = require('path');
-const APP = process.argv[2] || 'sasya-bharathi', MODE = process.argv[3] || 'desktop', SMALL = process.argv[4] === 'small';
+const APP = process.argv[2] || 'sasya-bharathi', MODE = process.argv[3] || 'desktop', SMALL = process.argv[4] === 'small', LIVE = process.argv[4] === 'live';
+// live = test the published IBIN web pages themselves (https://sachinrosario.github.io/ibin-apps/<app>/)
 const ROOT = path.join(__dirname, '..', 'apps');
 const V1 = path.join(ROOT, 'sasya-bharathi', 'web');
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.woff2': 'font/woff2', '.ttf': 'font/ttf', '.csv': 'text/csv' };
@@ -28,9 +29,9 @@ const ok = (name, cond, extra) => { results.push(`${cond ? 'PASS' : 'FAIL'}  ${n
   p.on('dialog', d => { dialogs.push(d.message()); d.dismiss(); });
   p.on('response', r => { const u = r.url(); if (r.status() >= 400 && !(u.includes('/app/') && REMOTE_PREFIXES.some(x => u.includes('/app/' + x)))) bad.push(r.status() + ' ' + u); });
   // the IBIN web copy of Version 1 (where the small installers and Version 2 fetch plant records and pictures) is served from the local Version 1 folder
-  const remoteHits = []; await p.route('https://sachinrosario.github.io/ibin-apps/sasya-bharathi/**', rt => { const rel = decodeURIComponent(rt.request().url().split('/ibin-apps/sasya-bharathi/')[1].split('?')[0]); const f = path.join(V1, rel); remoteHits.push(rel);
+  const remoteHits = []; if (!LIVE) await p.route('https://sachinrosario.github.io/ibin-apps/sasya-bharathi/**', rt => { const rel = decodeURIComponent(rt.request().url().split('/ibin-apps/sasya-bharathi/')[1].split('?')[0]); const f = path.join(V1, rel); remoteHits.push(rel);
     if (fs.existsSync(f)) rt.fulfill({ path: f, contentType: MIME[path.extname(f)] }); else rt.fulfill({ status: 404, body: '' }); });
-  await p.goto(`http://localhost:${PORT()}/app/index.html`);
+  await p.goto(LIVE ? `https://sachinrosario.github.io/ibin-apps/${APP}/?t=${Date.now()}` : `http://localhost:${PORT()}/app/index.html`);
   await p.waitForFunction(() => window.SB && SB.sp && BYID && document.getElementById('busy').style.display === 'none', null, { timeout: 90000 });
   // stage coordinates -> screen coordinates (the stage is scaled to the window)
   const S = await p.evaluate(() => { const r = document.getElementById('stage').getBoundingClientRect(); return { x: r.left, y: r.top, k: r.width / 1366 }; });
@@ -152,10 +153,10 @@ const ok = (name, cond, extra) => { results.push(`${cond ? 'PASS' : 'FAIL'}  ${n
   ok('every picture listed is in the picture folder', await p.evaluate(() => Object.values(SB.im).flat().filter(x => x[0]).length) > 4000);
   // exit
   await p.evaluate(() => go('open')); await tap(1330, 741); await p.waitForTimeout(400); ok('Exit closes the program', await p.evaluate(() => getComputedStyle(document.getElementById('quit')).display === 'flex'));
-  if (SMALL || APP !== 'sasya-bharathi') ok('plant records and pictures came from the IBIN web copy', remoteHits.some(r => r.startsWith('data/d/')) && remoteHits.some(r => r.startsWith('img/photos/')), remoteHits.length + ' files');
+  if (!LIVE && (SMALL || APP !== 'sasya-bharathi')) ok('plant records and pictures came from the IBIN web copy', remoteHits.some(r => r.startsWith('data/d/')) && remoteHits.some(r => r.startsWith('img/photos/')), remoteHits.length + ' files');
   ok('no script errors', errors.length === 0, errors.slice(0, 5).join(' | '));
   ok('no failed downloads', bad.length === 0, bad.slice(0, 5).join(' | '));
   ok('no unexpected messages', dialogs.length === 0, dialogs.join(' | '));
-  console.log(`${APP} ${MODE}${SMALL ? ' small-installer' : ''}\n` + results.join('\n') + `\n${failed ? failed + ' FAILED' : 'ALL PASSED'} (${results.length} checks)`);
+  console.log(`${APP} ${MODE}${SMALL ? ' small-installer' : LIVE ? ' LIVE web page' : ''}\n` + results.join('\n') + `\n${failed ? failed + ' FAILED' : 'ALL PASSED'} (${results.length} checks)`);
   await b.close(); srv.close(); process.exit(failed ? 1 : 0);
 })().catch(e => { console.log(results.join('\n') + '\nCRASH ' + e.stack); process.exit(2); });

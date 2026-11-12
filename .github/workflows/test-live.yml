@@ -1,0 +1,18 @@
+# Clicks through every feature of a published web page (the copy people open from the IBIN Apps page).
+name: Test the live web version
+on:
+  workflow_dispatch:
+    inputs:
+      apps: {description: "app folders, space separated", required: true}
+      test: {description: "test script", required: true}
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm install --no-save playwright@1.48.2 && npx playwright install --with-deps chromium
+      - name: Test
+        run: |
+          rc=0
+          for a in ${{ inputs.apps }}; do for m in desktop phone; do node ${{ inputs.test }} $a $m live || rc=1; done; done
+          exit $rc
