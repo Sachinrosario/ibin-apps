@@ -1,8 +1,8 @@
 1 ICON "app.ico"
 1 24 "app.manifest"
 1 VERSIONINFO
-FILEVERSION 1,0,2,0
-PRODUCTVERSION 1,0,2,0
+FILEVERSION 1,0,3,0
+PRODUCTVERSION 1,0,3,0
 FILEOS 0x40004
 FILETYPE 0x1
 BEGIN
@@ -12,12 +12,12 @@ BEGIN
     BEGIN
       VALUE "CompanyName", "IBIN Apps"
       VALUE "FileDescription", "Sasya Bharathi"
-      VALUE "FileVersion", "1.0.2"
+      VALUE "FileVersion", "1.0.3"
       VALUE "InternalName", "SasyaBharathi"
       VALUE "LegalCopyright", "Sasya Bharathi (c) K.N. Ganeshaiah. Rebuild 2026."
       VALUE "OriginalFilename", "SasyaBharathi.exe"
       VALUE "ProductName", "Sasya Bharathi"
-      VALUE "ProductVersion", "1.0.2"
+      VALUE "ProductVersion", "1.0.3"
     END
   END
   BLOCK "VarFileInfo"

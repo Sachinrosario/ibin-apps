@@ -56,6 +56,7 @@ table.fg td.sel{outline:2px solid #000080;outline-offset:-2px}
 .btn{position:absolute;background:#d4d0c8;border:2px outset #fff;font:12px var(--arial);text-align:center;line-height:20px;cursor:pointer}
 #quit{position:fixed;inset:0;z-index:100000;background:#000;color:#fff;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;font:20px var(--arial)}
 </style>
+<style id="phonefix">/* phones: keep the fixed-size screen from widening the page (it went blank or was cut off) */html,body{position:fixed;left:0;top:0;width:100%;height:100%;overflow:hidden;margin:0}</style>
 </head>
 <body>
 <div id="stage">
@@ -128,7 +129,7 @@ table.fg td.sel{outline:2px solid #000080;outline-offset:-2px}
 <div id="quit"><div>Sasya Bharathi is closed. You can close this window.</div><div class="btn" style="position:static;padding:4px 16px" onclick="location.reload()">Open it again</div></div>
 <script>
 'use strict';
-const VERSION = '1.0.2';
+const VERSION = '1.0.3';
 const REMOTE = 'https://sachinrosario.github.io/ibin-apps/sasya-bharathi/';
 const SW = 1366, SH = 768, stage = document.getElementById('stage');
 const $ = id => document.getElementById(id);

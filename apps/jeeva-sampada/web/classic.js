@@ -2,12 +2,16 @@
 // Every screen is drawn on a fixed 1024 x 768 "desktop" (the size the originals filled), scaled to fit the browser.
 "use strict";
 const CL = (() => {
+  // the 1024 x 768 desktop sits in a frame that fills the window and clips it, so phones do not widen the page to 1024 pixels
+  const frame = document.createElement('div');
+  frame.style.cssText = 'position:fixed;left:0;top:0;width:100%;height:100%;overflow:hidden;';
   const stage = document.createElement('div');
   stage.id = 'stage';
-  document.body.appendChild(stage);
+  frame.appendChild(stage);
+  document.body.appendChild(frame);
   function fit() {
-    const s = Math.min(innerWidth / 1024, innerHeight / 768);
-    stage.style.transform = `translate(${(innerWidth - 1024 * s) / 2}px, ${(innerHeight - 768 * s) / 2}px) scale(${s})`;
+    const W = frame.clientWidth || innerWidth, H = frame.clientHeight || innerHeight, s = Math.min(W / 1024, H / 768);
+    stage.style.transform = `translate(${(W - 1024 * s) / 2}px, ${(H - 768 * s) / 2}px) scale(${s})`;
   }
   addEventListener('resize', fit); fit();
   const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));

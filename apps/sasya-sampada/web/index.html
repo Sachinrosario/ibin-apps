@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sasya Sampada – Medicinal &amp; Economically Important Plants</title>
+<link rel="icon" href="ui/icon.png">
+<style>
+html,body{margin:0;height:100%;background:#000;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1024px;height:768px;transform-origin:0 0;background:#808080;overflow:hidden;user-select:none;-webkit-user-select:none;font-family:Tahoma,Verdana,Arial,sans-serif}
+.lst::-webkit-scrollbar{width:16px;height:16px;background:#e8e6e0}
+.lst::-webkit-scrollbar-thumb{background:#d4d0c8;border:2px outset #fff}
+.tc{position:absolute;box-sizing:border-box;border-right:1px solid #808080;border-bottom:1px solid #808080;padding:1px 3px;overflow:hidden;white-space:nowrap}
+</style></head>
+<body>
+<script src="classic.js"></script>
+<script>
+"use strict";
+const {stage, el, img, hot, win, text, list, combo, label} = CL;
+const U = 'ui/';
+const A12 = '12px Arial,Helvetica,sans-serif', AB12 = 'bold 12px Arial,Helvetica,sans-serif', F15 = '15px Arial,Helvetica,sans-serif', BL = '#0000ff', BK = '#000', BR = '#800000', GR = '#008000';
+let LAY = null, CORE = null, CREDIT = null;
+const cache = {};
+// Sasya Sampada as a program of its own, version 1.0.0. The data come as .js files so the program also opens from disk.
+const VERSION = '1.0.0';
+const SHARED_WEB = 'https://sachinrosario.github.io/ibin-apps/jeeva-sampada/sasya/';   // pictures and web pages shared with Jeeva Sampada
+window.SSD = window.SSD || {};
+function script(src) { return new Promise((ok, bad) => { const e = document.createElement('script'); e.src = src; e.onload = ok; e.onerror = () => { e.remove(); bad(new Error(src)); }; document.head.appendChild(e); }); }
+const load = n => cache[n] || (cache[n] = script('data/' + n + '.js').then(() => window.SSD[n]));
+let BIGBASE = '';
+const BIG = p => BIGBASE + p;
+function quitApp() { try { window.close(); } catch (e) {} setTimeout(() => { document.body.innerHTML = '<div style="position:fixed;inset:0;background:#000;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font:20px Arial"><div>Sasya Sampada is closed. You can close this window.</div><button style="font:16px Arial;padding:4px 16px" onclick="location.reload()">Open it again</button></div>'; }, 250); }
+Promise.all([script(U + 'layout.js').then(() => window.SSD.layout), load('core')]).then(([l, c]) => { LAY = l; CORE = c;
+  // pictures and web pages: from this folder when they are here (offline zip), otherwise from Jeeva Sampada on the IBIN site
+  const first = c.sp.find(r => r[9].length); const probe = new Image();
+  probe.onload = () => { BIGBASE = ''; start(); }; probe.onerror = () => { BIGBASE = SHARED_WEB; start(); };
+  probe.src = 'Images/' + enc(first[9][0]);
+});
+const W = n => LAY.windows[n];
+const F = (n, i) => W(n).fields[i];
+const has = v => v != null && String(v).trim() !== '' && String(v).trim() !== '0' && String(v).trim() !== '-';
+const enc = p => p.split('/').map(encodeURIComponent).join('/');
+let SPI = null;            // id -> species row
+const nm = r => [r[1], r[2], has(r[3]) ? 'ssp. ' + r[3] : '', has(r[4]) ? 'var. ' + r[4] : ''].filter(Boolean).join(' ');
+const key = r => (r[1] + ' ' + r[2]).toLowerCase().trim();
+let banner, status, cur = null, child = null, pressed = null, tbImgs = [];
+const BTN = ['tax', 'cm', 'syn', 'dist', 'html', 'img', 'acc', 'uses', 'pests', 'pat'];
+const EN = {};   // what each button has for the current plant
+function start() {
+  SPI = new Map(CORE.sp.map(r => [r[0], r]));
+  img(U + 'top.png', 0, 0); img(U + 'status.png', 0, 743);
+  img(U + 'tb_off.png', 0, 38, stage, 'pointer-events:none;');
+  banner = img(U + 'banner.png', 72, 38);
+  status = label(stage, 0, 742, 1024, 24, '', 'bold 20px Arial,Helvetica,sans-serif', '#804000', 'center');
+  CREDIT = label(stage, 0, 744, 1024, 22, 'Proprietary right holder - Dr. K.N. Ganeshaiah  \u00b7  Updated in 2026 by Dr. Sachin A. Rosario  \u00b7  Version ' + VERSION, 'bold 12px Arial,Helvetica,sans-serif', '#804000', 'center');
+  LAY.toolbars.tb.btns.forEach(([y0, y1], i) => hot(1, y0, 70, y1 - y0 + 1, stage, () => { if (!cur || !EN[BTN[i]]) return; press(i); ACT[BTN[i]](); }));
+  addEventListener('click', closeMenu);
+  hot(14, 19, 86, 18, stage, () => dropdown());
+  hot(102, 19, 44, 18, stage, () => { closeMenu(); openWin('credits'); });
+  hot(1006, 4, 16, 14, stage, () => quitApp(), 'Close');
+  const q = new URLSearchParams(location.search), qg = (q.get('g') || '').trim().toLowerCase(), qs = (q.get('s') || '').trim().toLowerCase();
+  if (qg) { const r = CORE.sp.find(r => r[1].toLowerCase() === qg && r[2].toLowerCase() === qs); if (r) setSpecies(r[0]); }
+}
+function openWin(n, opts = {}) {
+  const [x, y, w, h] = W(n).rect; if (child) child.close();
+  const d = win(U + n + '.png', x, y, w, h, Object.assign({onclose: () => { if (child === d) child = null; }}, opts));
+  child = d; banner.style.display = 'none'; return d;
+}
+async function setSpecies(id) {
+  cur = id; const r = SPI.get(id), k = key(r); if (CREDIT) CREDIT.remove(), CREDIT = null;
+  status.textContent = nm(r);
+  const [dist, syn, acc, uses, pests, pat] = await Promise.all(['dist', 'syn', 'acc', 'uses', 'pests', 'patents'].map(load));
+  Object.assign(EN, {tax: true, cm: (CORE.cm[id] || []).length > 0, syn: !!syn.sp[id], dist: !!dist.sp[id], html: r[8].length > 0, img: r[9].length > 0 || r[8].length > 0,
+    acc: !!acc[k], uses: !!uses[k], pests: pestsOf(pests, r).length > 0, pat: !!pat[k]});
+  tbImgs.forEach(x => x.remove()); tbImgs = [];
+  LAY.toolbars.tb.btns.forEach(([y0], i) => tbImgs.push(img(U + `tb_b${i}_${EN[BTN[i]] ? 'on' : 'off'}.png`, 0, y0, stage, 'pointer-events:none;')));
+  press(0); ACT.tax();
+}
+function pestsOf(P, r) {
+  const names = [nm(r).toLowerCase(), key(r), ...(CORE.cm[r[0]] || []).filter(c => c[0] === 'English').map(c => c[1].toLowerCase())];
+  return [...new Set(names.flatMap(n => P[n] || []))].sort();
+}
+function press(i) { if (pressed) pressed.remove(); pressed = img(U + `tb_b${i}_down.png`, 0, LAY.toolbars.tb.btns[i][0], stage, 'pointer-events:none;'); }
+const box = (d, n, i, v, font, color, wrap) => { const [x, y, w, h] = F(n, i); const t = text(d, x, y, w, h, v, font || A12, color || BK, {white: true, wrap: !!wrap}); return t; };
+function lbox(d, x, y, w, h, items, font, color, onpick) { return list(d, x, y, w, h, items, font || A12, color || BK, onpick, {lh: '14px'}); }
+const ACT = {
+  tax() {
+    const r = SPI.get(cur), d = openWin('tax', {title: 'Classification of ' + nm(r)}), c = r[6];
+    [c[0] || 'Plants', c[1], c[2], c[3], c[4], r[5], r[1], r[2]].forEach((v, i) => { const t = box(d, 'tax', i, v, F15, BL); t.style.padding = '2px 2px'; });
+    hot(87, 136, 72, 30, d, () => d.close()); hot(231, 136, 72, 30, d, () => d.close());
+  },
+  cm() {
+    const r = SPI.get(cur), d = openWin('cm', {title: 'List Common Names for the Species ' + nm(r)});
+    const by = new Map(); (CORE.cm[cur] || []).forEach(([l, n]) => { l = l || 'Misc.'; (by.get(l) || by.set(l, []).get(l)).push(n); });
+    const g = el('div', 'position:absolute;left:21px;top:60px;width:455px;height:368px;overflow-y:auto;background:#fff;', d, 'lst');
+    let y = 0;
+    [...by.keys()].sort().forEach(l => {
+      const ns = by.get(l), h = ns.length * 15;
+      const c = el('div', `left:0;top:${y}px;width:200px;height:${h}px;font:${AB12};color:#000;display:flex;align-items:center;`, g, 'tc'); c.textContent = l;
+      ns.forEach((n, j) => { el('div', `left:200px;top:${y + j * 15}px;width:238px;height:15px;font:${A12};color:${BR};line-height:13px;`, g, 'tc').textContent = n; });
+      y += h;
+    });
+    label(d, 6, 447, 400, 14, `common names are available in ${by.size} Languages`, '11px Arial,Helvetica,sans-serif', '#000');
+  },
+  async syn() {
+    const r = SPI.get(cur), S = await load('syn'), d = openWin('syn', {title: 'List of Floras which qualifies the species ' + nm(r)});
+    const ent = S.sp[cur] || [];
+    const [lx, ly, lw, lh] = F('syn', 0), [mx, my, mw, mh] = F('syn', 1);
+    const L = el('div', `position:absolute;left:${lx}px;top:${ly}px;width:${lw}px;height:${lh}px;overflow:auto;font:${A12};`, d, 'lst');
+    el('div', 'padding:2px 3px;', L).textContent = 'Names corresponding to your search';
+    const M = el('div', `position:absolute;left:${mx}px;top:${my}px;width:${mw}px;height:${mh}px;overflow:auto;font:${A12};padding:2px 3px;box-sizing:border-box;`, d, 'lst');
+    const show = fl => { M.innerHTML = ''; fl.forEach(f => { const v = S.flora[f]; if (v) el('div', 'padding:1px 0;', M).textContent = `${v[0]}${has(v[1]) ? ' Vol. ' + v[1] : ''} – ${v[2]}`; }); };
+    ent.forEach(([n, fl, syns]) => {
+      const a = el('div', 'padding:1px 3px 1px 14px;cursor:default;white-space:nowrap;', L); a.textContent = '⊟ ' + n; a.onclick = () => show(fl);
+      syns.forEach(([sn, sfl]) => { const b = el('div', 'padding:1px 3px 1px 34px;color:#ff0000;cursor:default;white-space:nowrap;', L); b.textContent = sn; b.onclick = () => show(sfl); });
+    });
+    if (ent[0]) show(ent[0][1]);
+  },
+  async dist() {
+    const r = SPI.get(cur), D = await load('dist'), d = openWin('dist', {title: 'Biodiversity Database Map of ' + nm(r)});
+    const cv = el('canvas', 'position:absolute;left:0;top:0;', d); cv.width = 733; cv.height = 659;
+    const x = cv.getContext('2d'), cnt = new Map(D.sp[cur] || []);
+    const COL = ['#ffff00', '#00ff00', '#0000ff', '#00ffff', '#ff0000', '#ff00ff', '#999999'];
+    const s = 18.7, c = 0.25 * s;
+    D.grid.forEach(([X, Y, di]) => {
+      const n = cnt.get(di) || 0;
+      x.fillStyle = n ? COL[Math.min(n, 7) - 1] : '#ffffff';
+      x.fillRect(Math.round(30 + (X - 68) * s), Math.round(53 + (37 - Y) * s), Math.ceil(c), Math.ceil(c));
+    });
+    label(d, 8, 637, 700, 14, 'Screen shows thematic map for the species ' + nm(r), '11px Arial,Helvetica,sans-serif', '#000');
+  },
+  html() {
+    const r = SPI.get(cur), pages = r[8];
+    pager('Web page of ' + nm(r), pages.map(p => ({src: BIG('NEWhtml/') + enc(p)})));
+  },
+  img() {
+    const r = SPI.get(cur), pics = r[9].map(f => BIG('Images/') + enc(f));
+    const d = openWin('img', {title: 'Images of ' + nm(r)});
+    let i = 0;
+    const p = img('', 6, 26, d, 'max-width:930px;max-height:600px;');
+    const cnt = label(d, 416, 664, 118, 15, '', '11px Arial,Helvetica,sans-serif', '#000', 'center');
+    const show = () => { p.src = pics[i]; cnt.textContent = `${i + 1} of ${pics.length}`; };
+    hot(335, 663, 31, 18, d, () => { i = 0; show(); }); hot(375, 663, 31, 18, d, () => { if (i > 0) { i--; show(); } });
+    hot(543, 663, 31, 18, d, () => { if (i < pics.length - 1) { i++; show(); } }); hot(583, 663, 31, 18, d, () => { i = pics.length - 1; show(); });
+    if (pics.length) show(); else { d.close(); ACT.html(); }
+  },
+  async acc() {
+    const r = SPI.get(cur), A = (await load('acc'))[key(r)] || [], d = openWin('acc');
+    const H = ['Accession Number', 'Collector Number', 'Date of collection', 'Common Name', 'Cultivar Name', 'Village', 'District', 'State', 'Altitude', 'Temperature', 'Region Explore', 'Cultural Practices', 'Frequency', 'Habitat'];
+    const WD = [119, 119, 100, 146, 166, 166, 120, 140, 80, 90, 260, 200, 100, 100];
+    const g = el('div', 'position:absolute;left:49px;top:83px;width:850px;height:350px;overflow:auto;background:#d4d0c8;', d, 'lst');
+    let x0 = 0;
+    H.forEach((h, j) => { const c = el('div', `left:${x0}px;top:0;width:${WD[j]}px;height:24px;background:#d4d0c8;border:1px solid;border-color:#fff #808080 #808080 #fff;font:15px Arial,Helvetica,sans-serif;`, g, 'tc'); c.textContent = h; x0 += WD[j]; });
+    A.forEach((row, i) => { let xx = 0; row.forEach((v, j) => { el('div', `left:${xx}px;top:${24 + i * 20}px;width:${WD[j]}px;height:20px;background:#fff;font:${A12};`, g, 'tc').textContent = v; xx += WD[j]; }); });
+    el('div', `position:absolute;left:0;top:0;width:${x0}px;height:1px;`, g);
+    hot(812, 452, 64, 26, d, () => d.close());
+  },
+  async uses() {
+    const r = SPI.get(cur), k = key(r), U2 = (await load('uses'))[k] || [], sys = (await load('systems'))[k] || [], d = openWin('uses');
+    const u = a => [...new Set(a.filter(has))].sort((p, q) => p.localeCompare(q));
+    const [sx, sy, sw, sh] = F('uses', 0), [px, py, pw, ph] = F('uses', 1), [ux, uy, uw, uh] = F('uses', 2), [ax, ay, aw, ah] = F('uses', 3), [dx, dy, dw, dh] = F('uses', 4);
+    lbox(d, sx, sy, sw, sh, sys, A12, '#808080');
+    lbox(d, px, py, pw, ph - 17, u(U2.map(x => x[0])), A12, '#808080');
+    const det = text(d, dx, dy, dw, dh, '', A12, BK, {white: true, wrap: true});
+    const showDet = (col, v) => { det.textContent = U2.filter(x => x[col] === v).map(x => `${x[3]} ; ${x[4]} ; ${x[5]}`).filter((v2, i, a) => a.indexOf(v2) === i).join('\n'); };
+    lbox(d, ux, uy, uw - 17, uh - 17, u(U2.map(x => x[2])), A12, BK, (i, v) => showDet(2, v));
+    lbox(d, ax, ay, aw - 17, ah - 17, u(U2.map(x => x[1])), A12, BK, (i, v) => showDet(1, v));
+  },
+  async pests() {
+    const r = SPI.get(cur), P = pestsOf(await load('pests'), r), d = openWin('pests');
+    label(d, 24, 31, 550, 20, nm(r), 'bold 15px Arial,Helvetica,sans-serif', '#000', 'center');
+    const [x, y, w, h] = F('pests', 0); lbox(d, x, y, w, h, P, A12, BK);
+  },
+  async pat() {
+    const r = SPI.get(cur), P = (await load('patents'))[key(r)] || [], d = openWin('pat');
+    const ORD = [0, 1, 2, 3, 5, 4, 6, 7, 8, 9];
+    const bx = ORD.map((c, i) => box(d, 'pat', i, '', A12, BK, i >= 8 || i === 2 || i === 3));
+    const nav = box(d, 'pat', 10, '', '11px Arial,Helvetica,sans-serif', BK);
+    let i = 0;
+    const show = () => { ORD.forEach((c, j) => { bx[j].textContent = String(P[i][c] || '').replace(/<\/?[a-z]+>/gi, ''); }); nav.textContent = `Record: ${i + 1} out of ${P.length}`; };
+    hot(320, 597, 15, 20, d, () => { i = 0; show(); }); hot(335, 597, 15, 20, d, () => { if (i > 0) { i--; show(); } });
+    hot(573, 597, 15, 20, d, () => { if (i < P.length - 1) { i++; show(); } }); hot(588, 597, 15, 20, d, () => { i = P.length - 1; show(); });
+    show();
+  }
+};
+// the window that shows the original web pages, one after another
+function pager(title, pages) {
+  if (child) child.close();
+  const d = el('div', 'position:absolute;left:0;top:0;width:1024px;height:743px;z-index:500;background:#fff;'); child = {close: () => d.remove()};
+  const bar = el('div', 'position:absolute;left:0;top:0;width:1024px;height:18px;background:linear-gradient(90deg,#0a246a,#a6caf0);color:#fff;font:bold 11px Tahoma,Verdana,Arial,sans-serif;line-height:18px;padding-left:20px;box-sizing:border-box;', d);
+  bar.textContent = title;
+  img('ui/icon.png', 2, 1, d, 'width:16px;height:16px;');
+  hot(1006, 2, 16, 14, d, () => d.remove(), 'Close');
+  const fr = el('iframe', 'position:absolute;left:0;top:18px;width:1024px;height:690px;border:0;background:#fff;', d); fr.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups');
+  const nb = el('div', 'position:absolute;left:400px;top:710px;width:224px;height:30px;background:#d4d0c8;border:1px solid #808080;', d);
+  let i = 0;
+  const cnt = el('div', 'position:absolute;left:88px;top:18px;width:48px;height:11px;font:9px Arial,Helvetica,sans-serif;text-align:center;border:1px solid #808080;background:#fff;', nb);
+  const show = () => { fr.src = pages[i].src; cnt.textContent = `${i + 1} of ${pages.length}`; };
+  [['<<', 4, () => { i = 0; }], ['<', 46, () => { if (i > 0) i--; }], ['>', 144, () => { if (i < pages.length - 1) i++; }], ['>>', 184, () => { i = pages.length - 1; }]].forEach(([t, x, f]) => {
+    const b = el('div', `position:absolute;left:${x}px;top:3px;width:36px;height:14px;background:#ffff80;border:1px outset #fff;font:bold 10px Arial,Helvetica,sans-serif;text-align:center;line-height:13px;cursor:default;`, nb);
+    b.textContent = t; b.onclick = () => { f(); show(); };
+  });
+  show();
+}
+// ---- menu ----
+let menu = null;
+function closeMenu() { if (menu) { menu.remove(); menu = null; } }
+function dropdown() {
+  if (menu) return closeMenu();
+  menu = el('div', 'position:absolute;left:0;top:0;width:1024px;height:0;z-index:99999;');
+  const [x0, y0] = LAY.menus.sd; img(U + 'menu_sd.png', x0, y0, menu, 'pointer-events:none;');
+  let hl = null;
+  [['Vernacular Names/Common Names', dlgCommon, 41], ['Scientific Names', dlgSci, 57], ['Species List By Major Category', dlgCat, 73], ['Criteria Search through DataBase', dlgDb, 89], ['Criteria Search through Webpages', dlgWeb, 105], ['Exit', () => quitApp(), 128]].forEach(([t, fn, y]) => {
+    const r = el('div', `position:absolute;left:${x0 + 3}px;top:${y}px;width:205px;height:16px;`, menu);
+    r.addEventListener('mouseenter', () => { if (hl) hl.remove(); hl = el('div', `position:absolute;left:${x0 + 3}px;top:${y}px;width:205px;height:16px;background:#0a246a;color:#fff;font:11px Tahoma,Verdana,Arial,sans-serif;line-height:16px;padding-left:17px;box-sizing:border-box;pointer-events:none;`, menu); hl.textContent = t; });
+    r.addEventListener('click', e => { e.stopPropagation(); closeMenu(); fn(); });
+  });
+}
+function dlgSci() {
+  const d = openWin('dlg_sci'), sp = CORE.sp;
+  let ge = '', s = '';
+  const cs = combo(d, 155, 94, 169, 25, [], F15, '#0000c0', v => { s = v; }, {rows: 10, selHi: true});
+  combo(d, 155, 46, 169, 25, [...new Set(sp.map(r => r[1]))].sort(), F15, '#0000c0', v => { ge = v; s = ''; cs.set(sp.filter(r => r[1] === ge).map(r => nm(r).slice(ge.length + 1))); }, {rows: 10, selHi: true});
+  hot(131, 142, 66, 34, d, () => { const r = sp.find(r => r[1] === ge && nm(r).slice(ge.length + 1) === s); if (!r) return; d.close(); setSpecies(r[0]); });
+  hot(211, 142, 66, 34, d, () => d.close());
+}
+function dlgCommon() {
+  const d = openWin('dlg_cm'), all = [];
+  Object.entries(CORE.cm).forEach(([id, ns]) => ns.forEach(([l, n]) => { if (l && n && SPI.has(id)) all.push([l, n, id]); }));
+  let la = '', n0 = '';
+  const [c1, c2] = W('dlg_cm').fields;
+  const cn = combo(d, c2[0] - 2, c2[1] - 2, c2[2] + 22, c2[3] + 4, [], A12, BL, v => { n0 = v; }, {rows: 12, lh: 15, selHi: true});
+  combo(d, c1[0] - 2, c1[1] - 2, c1[2] + 22, c1[3] + 4, CORE.lang, A12, BL, v => { la = v; n0 = ''; cn.set([...new Set(all.filter(r => r[0] === la).map(r => r[1]))].sort()); }, {rows: 12, lh: 15, selHi: true});
+  hot(100, 162, 70, 30, d, () => { const r = all.find(r => r[0] === la && r[1] === n0); if (!r) return; d.close(); setSpecies(r[2]); });
+  hot(172, 162, 70, 30, d, () => d.close());
+  label(d, 4, 297, 360, 14, 'Select Language from the list of languages', '11px Arial,Helvetica,sans-serif', '#000');
+}
+function speciesList(d, rect, ids) {
+  const [x, y, w, h] = rect;
+  // double-click opens the plant on the line; l.ids follows the list when it is refilled
+  const l = list(d, x, y + 18, w, h - 34, ids.map(id => nm(SPI.get(id))), A12, BK, null, {lh: '14px', ondbl: i => { const id = (l.ids || ids)[i]; if (id == null) return; d.close(); setSpecies(id); }});
+  return l;
+}
+function dlgCat() {
+  const d = openWin('dlg_cat'), [c1, c2] = W('dlg_cat').fields;
+  let ids = [];
+  const l = speciesList(d, c2, []);
+  combo(d, c1[0] - 2, c1[1] - 2, c1[2] + 22, c1[3] + 4, CORE.cats, A12, BK, v => { ids = CORE.sp.filter(r => r[7].includes(v)).map(r => r[0]); l.ids = ids; l.set(ids.map(id => nm(SPI.get(id)))); }, {rows: 12, lh: 15, selHi: true});
+}
+async function dlgDb() {
+  const d = openWin('dlg_db'), [fb, fs, fp, fu, fa, fc, fl] = W('dlg_db').fields, U2 = await load('uses'), SYS = await load('systems');
+  const all = Object.entries(U2), u = a => [...new Set(a.filter(has))].sort((p, q) => p.localeCompare(q));
+  const byKey = new Map(CORE.sp.map(r => [key(r), r[0]]));
+  let op = 'OR', crit = [];
+  const cbox = text(d, fc[0], fc[1], fc[2], fc[3], '', A12, BK, {white: true});
+  const add = (t, v) => { crit.push([t, v]); cbox.textContent = crit.map(([a, b]) => `${a} = ${b}`).join(` ${op} `); };
+  const C = (f, items, t) => combo(d, f[0] - 2, f[1] - 2, f[2] + 22, f[3] + 4, items, A12, BK, v => add(t, v), {rows: 12, lh: 15});
+  combo(d, fb[0] - 2, fb[1] - 2, fb[2] + 22, fb[3] + 4, ['OR', 'AND'], A12, BK, v => { op = v; }, {value: 'OR', rows: 2, lh: 15, selHi: true});
+  C(fs, u(Object.values(SYS).flat()), 'Medicinal'); C(fp, u(all.flatMap(([k, v]) => v.map(x => x[0]))), 'Part');
+  C(fu, u(all.flatMap(([k, v]) => v.map(x => x[2]))), 'Use'); C(fa, u(all.flatMap(([k, v]) => v.map(x => x[1]))), 'Action');
+  let ids = [];
+  const l = list(d, fl[0], fl[1] + 18, fl[2], fl[3] - 34, [], A12, BK, null, {lh: '14px', ondbl: i => { d.close(); setSpecies(ids[i]); }});
+  hot(296, 214, 46, 18, d, () => { crit = []; cbox.textContent = ''; l.set([]); });
+  hot(374, 214, 52, 18, d, () => {
+    const test = ([k, rows], [t, v]) => t === 'Medicinal' ? (SYS[k] || []).includes(v) : rows.some(x => x[{Part: 0, Use: 2, Action: 1}[t]] === v);
+    const keys = all.filter(e => crit.length && (op === 'AND' ? crit.every(c => test(e, c)) : crit.some(c => test(e, c)))).map(e => e[0]);
+    ids = keys.map(k => byKey.get(k)).filter(Boolean); l.set(ids.map(id => nm(SPI.get(id))));
+  });
+}
+async function dlgWeb() {
+  const d = openWin('dlg_web'), f = W('dlg_web').fields, C = await load('webcrit');
+  const byKey = new Map(CORE.sp.map(r => [key(r), r[0]]));
+  let op = 'OR', sel = [];
+  combo(d, f[0][0] - 2, f[0][1] - 2, f[0][2] + 22, f[0][3] + 4, ['OR', 'AND'], A12, BK, v => { op = v; }, {rows: 2, lh: 15, selHi: true});
+  ['Parts', 'Action/Use', 'Product/Chemical', 'Reference/Chapter'].forEach((t, i) => combo(d, f[i + 1][0] - 2, f[i + 1][1] - 2, f[i + 1][2] + 22, f[i + 1][3] + 4, C.types[t] || [], A12, BK, v => { sel[i] = v; }, {rows: 12, lh: 15, selHi: true}));
+  const g = el('div', 'position:absolute;left:41px;top:287px;width:610px;height:196px;overflow:auto;', d, 'lst');
+  const run = () => {
+    const sets = sel.filter(Boolean).map(t => new Set(C.hits[t] || []));
+    if (!sets.length) return;
+    let ks = op === 'AND' ? [...sets[0]].filter(k => sets.every(s => s.has(k))) : [...new Set(sets.flatMap(s => [...s]))];
+    const ids = ks.map(k => byKey.get(k)).filter(Boolean);
+    g.innerHTML = '';
+    ids.forEach((id, j) => { const r = SPI.get(id); [r[1], r[2], has(r[3]) ? r[3] : '', has(r[4]) ? r[4] : ''].forEach((v, c) => { const e = el('div', `left:${[0, 101, 202, 303][c]}px;top:${j * 18}px;width:101px;height:18px;background:#fff;font:${A12};cursor:default;`, g, 'tc'); e.textContent = v; e.ondblclick = () => { d.close(); setSpecies(id); }; }); });
+  };
+  hot(470, 210, 54, 18, d, () => { sel = []; g.innerHTML = ''; });
+  hot(560, 210, 64, 18, d, run);
+}
+</script>
+</body></html>

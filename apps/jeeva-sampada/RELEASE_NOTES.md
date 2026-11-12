@@ -1,3 +1,12 @@
+## Jeeva Sampada – 1.11.1
+
+### What is fixed in 1.11.1
+- **Phones and tablets:** the screen now fits the phone (before, the page could open wider than the phone and be cut off or misplaced).
+- **Sasya Sampada ▸ Species List By Major Category:** double-clicking a plant in the list now opens that plant (before, it could fail and leave the program without a plant).
+- Every database was opened on a computer screen and on a phone screen before this release.
+
+Sasya Sampada is now also available as a program of its own (see Sasya Sampada on the IBIN Apps page); inside Jeeva Sampada it stays as it was.
+
 ## Jeeva Sampada – 1.11.0
 
 The original Jeeva Sampada program (Digital Inventory of Biological Resources of India, NBDB, Department of Biotechnology) rebuilt **screen for screen**: every window was captured from the original programs running on Windows and redrawn from those pictures, with the original data live behind them.

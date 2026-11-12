@@ -221,15 +221,15 @@ function dlgCommon() {
 }
 function speciesList(d, rect, ids) {
   const [x, y, w, h] = rect;
-  const l = list(d, x, y + 18, w, h - 34, ids.map(id => nm(SPI.get(id))), A12, BK, null, {lh: '14px', ondbl: i => { d.close(); setSpecies(ids[i]); }});
+  // double-click opens the plant on the line; l.ids follows the list when it is refilled
+  const l = list(d, x, y + 18, w, h - 34, ids.map(id => nm(SPI.get(id))), A12, BK, null, {lh: '14px', ondbl: i => { const id = (l.ids || ids)[i]; if (id == null) return; d.close(); setSpecies(id); }});
   return l;
 }
 function dlgCat() {
   const d = openWin('dlg_cat'), [c1, c2] = W('dlg_cat').fields;
   let ids = [];
   const l = speciesList(d, c2, []);
-  combo(d, c1[0] - 2, c1[1] - 2, c1[2] + 22, c1[3] + 4, CORE.cats, A12, BK, v => { ids = CORE.sp.filter(r => r[7].includes(v)).map(r => r[0]); l.set(ids.map(id => nm(SPI.get(id)))); }, {rows: 12, lh: 15, selHi: true});
-  l.addEventListener('dblclick', () => { const i = l.get(); if (i >= 0) { d.close(); setSpecies(ids[i]); } });
+  combo(d, c1[0] - 2, c1[1] - 2, c1[2] + 22, c1[3] + 4, CORE.cats, A12, BK, v => { ids = CORE.sp.filter(r => r[7].includes(v)).map(r => r[0]); l.ids = ids; l.set(ids.map(id => nm(SPI.get(id)))); }, {rows: 12, lh: 15, selHi: true});
 }
 async function dlgDb() {
   const d = openWin('dlg_db'), [fb, fs, fp, fu, fa, fc, fl] = W('dlg_db').fields, U2 = await load('uses'), SYS = await load('systems');

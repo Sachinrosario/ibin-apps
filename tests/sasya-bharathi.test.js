@@ -44,11 +44,14 @@ const ok = (name, cond, extra) => { results.push(`${cond ? 'PASS' : 'FAIL'}  ${n
   const V2 = await p.evaluate(() => VERSION.startsWith('2'));
   // a visible list row inside a list box at stage position; returns its text
   const pickRow = async (boxSel, i = 0) => { const [scr, k] = boxSel.split('@'); const r = await p.evaluate(([s, k, i]) => { const b = document.querySelectorAll(s + ' .lb')[+k || 0]; if (b) { b.scrollTop = Math.max(0, i * 15 - 30); b.dispatchEvent(new Event('scroll')); } const row = b && b.querySelector(`.row[data-i="${i}"]`); if (!row) return null; const q = row.getBoundingClientRect(); return { x: q.left + 5, y: q.top + 6, t: row.textContent }; }, [scr, k, i]);
-    if (!r) return null; if (MODE === 'phone') await p.touchscreen.tap(r.x, r.y); else await p.mouse.click(r.x, r.y); await p.waitForTimeout(150); return r.t; };
+    if (!r) return null; const h = await p.$(`${scr} .lb >> nth=${+k || 0}`).then(b => b.$(`.row[data-i="${i}"]`)); if (MODE === 'phone') await h.tap(); else await h.click(); await p.waitForTimeout(150); return r.t; };
   const boxes = scr => p.evaluate(s => [...document.querySelectorAll(`#${s} .lb`)].map(b => b.items.length), scr);
   const cnts = scr => p.evaluate(s => [...document.querySelectorAll(`#${s} .cnt`)].filter(e => e.style.display !== 'none').map(e => e.textContent.trim()), scr);
 
   // 1 opening, credits, modules
+  // the screen must really show on this screen size (on phones the page once went blank)
+  { const im = require('pngjs').PNG.sync.read(await p.screenshot()); let lit = 0, n = 0; for (let i = 0; i < im.data.length; i += 64) { n++; if (im.data[i] + im.data[i + 1] + im.data[i + 2] > 40) lit++; }
+    ok(`the program is visible on this screen (${Math.round(100 * lit / n)}% drawn)`, lit / n > 0.25 && await p.evaluate(() => innerWidth <= document.documentElement.clientWidth + 1)); }
   ok('opening screen shows credit lines', (await txt('#open')).includes('Proprietary right holder - Dr. K.N. Ganeshaiah') && (await txt('#open')).includes('Updated in 2026 by Dr. Sachin A. Rosario'));
   await tap(1193, 744); ok('Credits opens the team screen', await cur() === 'team');
   await tap(715, 740); ok('Credits Back returns to opening', await cur() === 'open');
