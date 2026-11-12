@@ -1,10 +1,11 @@
 {
-  "version": "2.0.0",
-  "title": "Sasya Bharathi – Version 2 – Updated names (2.0.0)",
+  "version": "2.0.1",
+  "title": "Sasya Bharathi – Version 2 – Updated names (2.0.1)",
   "fileBase": "SasyaBharathi2",
   "remote": [
     "img/photos",
     "data/d",
     "data/g"
-  ]
+  ],
+  "test": "tests/sasya-bharathi.test.js"
 }

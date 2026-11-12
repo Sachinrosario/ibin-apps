@@ -44,8 +44,32 @@ jobs:
           echo "Apps to release: $JSON"
           echo "apps=$JSON" >> $GITHUB_OUTPUT
 
-  release:
+  # Every feature is tested before anything is released: an app whose release.json names a "test" script
+  # is clicked through on a desktop-sized and a phone-sized screen, as the small installers use it.
+  test:
     needs: prepare
+    if: needs.prepare.outputs.apps != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJSON(needs.prepare.outputs.apps) }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: t
+        run: echo "script=$(jq -r '.test // empty' apps/${{ matrix.app }}/release.json)" >> $GITHUB_OUTPUT
+      - name: Install the test browser
+        if: steps.t.outputs.script != ''
+        run: npm install --no-save playwright@1.48.2 && npx playwright install --with-deps chromium
+      - name: Test every feature (desktop screen, small installer)
+        if: steps.t.outputs.script != ''
+        run: node ${{ steps.t.outputs.script }} ${{ matrix.app }} desktop small
+      - name: Test every feature (phone screen)
+        if: steps.t.outputs.script != ''
+        run: node ${{ steps.t.outputs.script }} ${{ matrix.app }} phone small
+
+  release:
+    needs: [prepare, test]
     if: needs.prepare.outputs.apps != '[]'
     runs-on: ubuntu-latest
     strategy:

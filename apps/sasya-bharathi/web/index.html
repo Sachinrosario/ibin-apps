@@ -20,10 +20,11 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:var(-
 .abs{position:absolute}
 .hot{position:absolute;cursor:pointer}
 .hot:active{background:rgba(0,0,0,.08);border-radius:14px}
-select.lb{position:absolute;border:1px solid #808080;border-right-color:#fff;border-bottom-color:#fff;box-shadow:inset 1px 1px 0 #404040;background:#fff;
-  font:13px/15px var(--arial);color:#000;padding:0;margin:0;outline:none;box-sizing:border-box}
-select.lb option{padding:0 2px;min-height:15px}
-select.lb option:checked{background:#000080 linear-gradient(#000080,#000080);color:#fff}
+/* list boxes: drawn by the page itself (a browser <select> becomes a drop-down on phones and tablets) */
+.lb{position:absolute;border:1px solid #808080;border-right-color:#fff;border-bottom-color:#fff;box-shadow:inset 1px 1px 0 #404040;background:#fff;
+  font:13px/15px var(--arial);color:#000;padding:0;margin:0;outline:none;box-sizing:border-box;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;cursor:default}
+.lb .row{position:absolute;left:0;right:0;height:15px;padding:0 2px;white-space:nowrap;overflow:hidden;text-overflow:clip}
+.lb .row.sel{background:#000080;color:#fff}
 .cnt{position:absolute;background:#ddcca9;font:11px var(--arial);text-align:center;color:#000}
 .cnt u{display:block;margin-top:4px}
 .ttl{position:absolute;font:12px var(--arial);text-align:center;color:#000}
@@ -127,7 +128,7 @@ table.fg td.sel{outline:2px solid #000080;outline-offset:-2px}
 <div id="quit"><div>Sasya Bharathi is closed. You can close this window.</div><div class="btn" style="position:static;padding:4px 16px" onclick="location.reload()">Open it again</div></div>
 <script>
 'use strict';
-const VERSION = '1.0.1';
+const VERSION = '1.0.2';
 const REMOTE = 'https://sachinrosario.github.io/ibin-apps/sasya-bharathi/';
 const SW = 1366, SH = 768, stage = document.getElementById('stage');
 const $ = id => document.getElementById(id);
@@ -191,11 +192,29 @@ function speciesRow(comb) { const rs = BYCOMB.get(comb.toLowerCase()) || []; ret
 function sspRows(comb) { return (BYCOMB.get(comb.toLowerCase()) || []).filter(r => r[4] || r[5]); }
 
 // ---------- the four-list panel (Plant Richness ...) ----------
-function opts(sel, items) { sel.innerHTML = items.map(t => `<option>${esc(t)}</option>`).join(''); sel.scrollTop = 0; }
+function opts(box, items) { box.setItems(items); }
+// a list box like the program's: click selects (and tells the program), double-click opens, arrow keys move; only the visible rows are drawn
+function listBox() {
+  const box = el('div', { class: 'lb', tabindex: 0 }), sp = el('div', { style: { position: 'relative', width: '1px' } }); box.append(sp);
+  let items = [], sel = -1; const RH = 15;
+  const draw = () => { const a = Math.max(0, Math.floor(box.scrollTop / RH) - 2), b = Math.min(items.length, a + Math.ceil(box.clientHeight / RH) + 5);
+    let h = ''; for (let i = a; i < b; i++) h += `<div class="row${i === sel ? ' sel' : ''}" data-i="${i}" style="top:${i * RH}px">${esc(LABEL(items[i]))}</div>`;
+    sp.style.height = items.length * RH + 'px'; sp.style.width = '100%'; sp.innerHTML = h; };
+  const pick = (i, tell) => { if (i < 0 || i >= items.length) return; sel = i; const t = i * RH; if (t < box.scrollTop) box.scrollTop = t; else if (t + RH > box.scrollTop + box.clientHeight) box.scrollTop = t + RH - box.clientHeight; draw(); if (tell && box.onchange) box.onchange(); };
+  box.addEventListener('scroll', draw);
+  box.addEventListener('click', e => { const r = e.target.closest('.row'); if (r) pick(+r.dataset.i, true); });
+  box.addEventListener('keydown', e => { const k = { ArrowDown: 1, ArrowUp: -1, PageDown: 10, PageUp: -10 }[e.key]; if (k) { e.preventDefault(); pick(Math.max(0, Math.min(items.length - 1, (sel < 0 ? 0 : sel + k))), true); } else if (e.key === 'Enter' && box.ondblclick) box.ondblclick(); });
+  box.setItems = a => { items = a.slice(); sel = -1; box.scrollTop = 0; draw(); };
+  box.select = v => { const i = items.findIndex(x => String(x).toLowerCase() === String(v).toLowerCase()); if (i >= 0) pick(i, true); return i; };
+  Object.defineProperty(box, 'value', { get: () => sel >= 0 ? items[sel] : '' });
+  Object.defineProperty(box, 'items', { get: () => items });
+  return box;
+}
+const LABEL = t => t;
 function panel(host, x, y, withImage) {
   const P = { host, set: null };
   if (withImage) { P.img = pos(el('img', { class: 'abs', src: 'img/ui/panel.png', alt: '' }), x, y); host.append(P.img); }
-  const L = (l, t, w, h) => { const s = pos(el('select', { class: 'lb', size: 2 }), x + l, y + t, w, h); host.append(s); return s; };
+  const L = (l, t, w, h) => { const s = pos(listBox(), x + l, y + t, w, h); host.append(s); return s; };
   P.title = pos(el('div', { class: 'ttl' }), x + 20, y + 13, 500); host.append(P.title);
   const C = (l, w) => { const d = pos(el('div', { class: 'cnt' }), x + l, y + 62, w, 26); host.append(d); return d; };
   P.cf = C(24, 132); P.cg = C(184, 132); P.cs = pos(C(351, 150), x + 351, y + 58, 150, 34); P.cv = C(535, 150);
@@ -234,7 +253,12 @@ function homeExit(host, x) {
 const polXY = (x, y) => [67.9 + (x - 8) / 21.25, 37.25 - (y - 34) / 23.79]; // fitted to the program's own map picture
 function inRing(px, py, ring) { let c = false; for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) { const [xi, yi] = ring[i], [xj, yj] = ring[j]; if ((yi > py) !== (yj > py) && px < (xj - xi) * (py - yi) / (yj - yi) + xi) c = !c; } return c; }
 function stateAt(lon, lat) {
+  // state outlines first (no gaps between districts), then the districts, then the nearest state within about 10 km
+  for (const [st, rings] of Object.entries(SB.so)) { if (st !== 'SouthindiaStates' && rings.some(r => inRing(lon, lat, r))) return st; }
   for (const [st, ds] of Object.entries(SB.poly)) { if (st === 'SouthindiaStates') continue; for (const [, rings] of ds) for (const r of rings) if (inRing(lon, lat, r)) return st; }
+  let best = null, bd = 0.1;
+  for (const [st, rings] of Object.entries(SB.so)) { if (st === 'SouthindiaStates') continue; for (const r of rings) for (const [x, y] of r) { const d = Math.hypot(x - lon, y - lat); if (d < bd) { bd = d; best = st; } } }
+  return best;
   return null;
 }
 let POL;
@@ -294,7 +318,7 @@ let IMG;
 function openImages() {
   go('img');
   if (!IMG) { const h = $('img'); IMG = {};
-    const L = (l, w) => { const s = pos(el('select', { class: 'lb', size: 2 }), l, 171, w, 213); h.append(s); return s; };
+    const L = (l, w) => { const s = pos(listBox(), l, 171, w, 213); h.append(s); return s; };
     const C = (l, w, t, hh) => { const d = pos(el('div', { class: 'cnt' }), l, t, w, hh); h.append(d); return d; };
     IMG.cf = C(846, 132, 119, 26); IMG.cg = C(1006, 132, 121, 26); IMG.cs = C(1172, 148, 113, 44);
     IMG.lf = L(831, 154); IMG.lg = L(991, 158); IMG.ls = L(1154, 183);
@@ -348,9 +372,11 @@ function statusLists(lists) {
   const d = $('stl'), w = $('stlIn'); w.innerHTML = ''; d.style.display = 'block';
   const H = ['Valid', 'Probably Valid', 'Synonym', 'Probably Synonym', 'Undecided'];
   H.forEach((t, i) => { w.append(pos(el('div', { class: 'abs', style: { font: 'bold 12px var(--arial)' } }, `${t} (${lists[i].length})`), 14 + i * 216, 34));
-    const s = pos(el('select', { class: 'lb', size: 2 }), 12 + i * 216, 52, 208, 490); opts(s, lists[i]); w.append(s);
+    const s = pos(listBox(), 12 + i * 216, 52, 208, 490); w.append(s); opts(s, lists[i].map(x => x.trim().replace(/\s+/g, ' ')));
+    s.onchange = () => { w.last = s; };
     s.ondblclick = () => { const v = s.value.trim().replace(/\s+/g, ' ').toLowerCase(); const r = SB.sp.find(r => r[8].toLowerCase() === v) || speciesRow(v); if (r) { d.style.display = 'none'; detail('S', r[0]); } }; });
-  w.append(pos(el('div', { class: 'abs', style: { font: '11px var(--arial)' } }, 'Double-click a name to open its inventory.'), 14, 552));
+  w.append(pos(el('div', { class: 'abs', style: { font: '11px var(--arial)' } }, 'Double-click (or select and press Open) a name to open its inventory.'), 14, 552));
+  w.append(pos(el('div', { class: 'btn', onclick: () => { if (w.last && w.last.value) w.last.ondblclick(); else alert('Select a name'); } }, 'Open'), 890, 548, 90, 24));
   w.append(pos(el('div', { class: 'btn', onclick: () => d.style.display = 'none' }, 'Close'), 990, 548, 90, 24));
 }
 

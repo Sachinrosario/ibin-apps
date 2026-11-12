@@ -1,4 +1,4 @@
-## Sasya Bharathi – Version 2 – Updated names (2.0.0)
+## Sasya Bharathi – Version 2 – Updated names (2.0.1)
 
 Version 1 of **Sasya Bharathi (India)** (2004-05) with the names brought up to date. The screens, flow and the 2005 data are unchanged; today's details are added in brackets and in a small card.
 
@@ -11,14 +11,20 @@ Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A
 - `name-changes.csv`: every 2005 name with its current name, status, family, IUCN category and GenBank counts.
 - 4,760 names of 2005 are known to the Catalogue of Life only at genus level (old or misspelt names); they are shown without a bracket.
 
+### What is fixed in this version
+- The lists of families, genera, species and sub-species are now drawn by the program itself, so they work the same on phones, tablets and computers (on phones they had become drop-down boxes).
+- Clicking between two districts of a state now selects the state.
+- "To List Correct & Synonym Names" has an Open button (for touch screens, where there is no double-click).
+- Every screen and button was tested before this release: 69 checks on a computer screen and on a phone screen.
+
 ### Downloads
 | File | For |
 |---|---|
-| `SasyaBharathi2_2.0.0_Setup.exe` | Windows 10/11: installs with Start-menu and desktop shortcuts, no administrator password |
+| `SasyaBharathi2_2.0.1_Setup.exe` | Windows 10/11: installs with Start-menu and desktop shortcuts, no administrator password |
 | `SasyaBharathi2.exe` | Windows: runs without installing |
-| `SasyaBharathi2_2.0.0_universal.dmg` | macOS (Intel and Apple silicon) |
-| `SasyaBharathi2_2.0.0_amd64.deb` | Ubuntu 22.04 or newer |
-| `SasyaBharathi2_2.0.0_offline.zip` | Any computer, no internet needed: extract, then open `Open Kit.html` |
+| `SasyaBharathi2_2.0.1_universal.dmg` | macOS (Intel and Apple silicon) |
+| `SasyaBharathi2_2.0.1_amd64.deb` | Ubuntu 22.04 or newer |
+| `SasyaBharathi2_2.0.1_offline.zip` | Any computer, no internet needed: extract, then open `Open Kit.html` |
 
 **Small installer:** as in Version 1, the plant records and pictures are fetched from the IBIN site when a plant is opened; the offline zip carries everything.
 
