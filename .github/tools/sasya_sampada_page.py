@@ -30,6 +30,7 @@ const BIG = p => BIGBASE + p;
 function quitApp() {{ try {{ window.close(); }} catch (e) {{}} setTimeout(() => {{ document.body.innerHTML = '<div style="position:fixed;inset:0;background:#000;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font:20px Arial"><div>Sasya Sampada is closed. You can close this window.</div><button style="font:16px Arial;padding:4px 16px" onclick="location.reload()">Open it again</button></div>'; }}, 250); }}
 Promise.all([script(U + 'layout.js').then(() => window.SSD.layout), load('core')]).then(([l, c]) => {{ LAY = l; CORE = c;
   // pictures and web pages: from this folder when they are here (offline zip), otherwise from Jeeva Sampada on the IBIN site
+  if (/github\.io$/.test(location.hostname)) {{ BIGBASE = SHARED_WEB; start(); return; }}   // the IBIN web copy: always the shared copy
   const first = c.sp.find(r => r[9].length); const probe = new Image();
   probe.onload = () => {{ BIGBASE = ''; start(); }}; probe.onerror = () => {{ BIGBASE = SHARED_WEB; start(); }};
   probe.src = 'Images/' + enc(first[9][0]);
