@@ -1,4 +1,4 @@
-# Pictures and Fliers pack of a mapping program (Andaman Mapping, Western Ghats Mapping), built from the original 2015 installer
+# Pictures and Fliers pack of a mapping program (Andaman, Western Ghats and Eastern Ghats Mapping), built from the original 2015 installer
 # and published on this repository's Releases page (<app>-pictures-<version>) as uncompressed zip parts plus index.json.
 # The programs fetch each picture from these zips when it is first shown (HTTP Range), so the installers stay small.
 # Input ids: the Google Drive file ids of the original setup.exe followed by its setup-1a.bin, setup-1b.bin ... in order.
@@ -6,7 +6,7 @@ name: Pictures pack
 on:
   workflow_dispatch:
     inputs:
-      app: {description: "andaman-mapping or western-ghats-mapping", required: true}
+      app: {description: "andaman-mapping, western-ghats-mapping or eastern-ghats-mapping", required: true}
       ids: {description: "Drive ids: setup.exe, then the .bin parts in order (space separated)", required: true}
       version: {description: "Pack version", default: "1.0.0"}
 permissions:
@@ -35,8 +35,8 @@ jobs:
           cd .. && mkdir un && cd un && innoextract -s ../dl/setup.exe | tail -2
           rm -rf ../dl
           echo "images $(find app/Images -type f | wc -l)  fliers $(find app/Fliers -type f | wc -l)"
-      - name: Western Ghats - name the flier folders by species and number the slides
-        if: inputs.app == 'western-ghats-mapping'
+      - name: Western and Eastern Ghats - name the flier folders by species and number the slides
+        if: inputs.app == 'western-ghats-mapping' || inputs.app == 'eastern-ghats-mapping'
         working-directory: /mnt/w/un/app
         run: |
           M=$(ls *.mdb *.MDB 2>/dev/null | head -1)
@@ -65,7 +65,7 @@ jobs:
         working-directory: /mnt/w/un/app
         run: |
           set -e
-          V=${{ inputs.version }}; B=$([ "${{ inputs.app }}" = andaman-mapping ] && echo AndamanMapping || echo WesternGhatMapping)
+          V=${{ inputs.version }}; B=$(case "${{ inputs.app }}" in andaman-mapping) echo AndamanMapping;; eastern-ghats-mapping) echo EasternGhatMapping;; *) echo WesternGhatMapping;; esac)
           mkdir -p /mnt/w/out
           python3 - "$B" "$V" <<'PY'
           import os, sys, zipfile
@@ -89,6 +89,6 @@ jobs:
         env: {GH_TOKEN: "${{ github.token }}"}
         run: |
           T=${{ inputs.app }}-pictures-${{ inputs.version }}
-          N=$([ "${{ inputs.app }}" = andaman-mapping ] && echo "Andaman Mapping" || echo "Western Ghats Mapping")
+          N=$(case "${{ inputs.app }}" in andaman-mapping) echo "Andaman Mapping";; eastern-ghats-mapping) echo "Eastern Ghats Mapping";; *) echo "Western Ghats Mapping";; esac)
           gh release view $T -R ${{ github.repository }} >/dev/null 2>&1 || gh release create $T -R ${{ github.repository }} --title "$N – Pictures and Fliers pack ${{ inputs.version }}" --notes "All original images and fliers of $N (2015). The programs fetch each picture from these files the first time it is shown, so nothing has to be installed. To use the pictures without internet: extract all the zip files into a folder called pack next to the program (Windows), or next to Open Kit.html in the offline folder."
           for f in *; do gh release upload $T "$f" --clobber -R ${{ github.repository }}; done

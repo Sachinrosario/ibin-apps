@@ -1,4 +1,6 @@
-## Andaman Mapping – Version 1 – Original (1.0.5)
+## Andaman Mapping – Version 1 – Original (1.0.6)
+
+1.0.6: fixed Textform Search: clicking a species in the result list did not select it (so "Select species and click for more details" did nothing). Every screen and button is now tested before each release (desktop and phone).
 
 1.0.5: all original images and fliers now come by themselves. The Images and Fliers tabs fetch each picture from the public Pictures and Fliers pack on the IBIN Apps releases page the first time it is shown (internet needed once; the computer keeps a copy for offline use). Installing the pack is no longer needed; an installed pack folder is still used when present. Everything else is as before.
 
