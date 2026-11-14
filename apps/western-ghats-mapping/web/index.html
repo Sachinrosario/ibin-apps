@@ -260,7 +260,7 @@ function initText() {
     tSel = null; $('tList').innerHTML = r.map(n => `<div>${esc(n)}</div>`).join('');
     $('tCount').textContent = 'Number of Species matched : ' + r.length;
   };
-  $('tList').onclick = e => { const d = e.target.closest('div[class!="lb"]'); if (!d || d.parentNode !== $('tList')) return; [...$('tList').children].forEach(x => x.classList.remove('sel')); d.classList.add('sel'); tSel = d.textContent; };
+  $('tList').onclick = e => { const d = e.target.closest('#tList > div'); if (!d || d.parentNode !== $('tList')) return; [...$('tList').children].forEach(x => x.classList.remove('sel')); d.classList.add('sel'); tSel = d.textContent; };
   $('tList').ondblclick = () => $('tMore').click();
   $('tMore').onclick = () => tSel ? openSpecies(tSel, 'txt') : say('Please select a species');
   $('tBack').onclick = () => show('mods'); $('tExit').onclick = quit;
