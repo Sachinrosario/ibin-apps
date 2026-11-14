@@ -1,0 +1,6 @@
+{
+  "version": "1.0.0",
+  "title": "Pathanga Bharathi – Version 1 – Original (1.0.0)",
+  "fileBase": "PathangaBharathi",
+  "test": "tests/pathanga-bharathi.test.js"
+}

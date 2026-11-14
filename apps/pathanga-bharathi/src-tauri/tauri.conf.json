@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Pathanga Bharathi",
+  "mainBinaryName": "pathanga-bharathi",
+  "version": "1.0.3",
+  "identifier": "in.ibinapps.pathangabharathi",
+  "build": {
+    "frontendDist": "../web"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Pathanga Bharathi",
+        "width": 1366,
+        "height": 800,
+        "minWidth": 960,
+        "minHeight": 560,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "publisher": "IBIN Apps",
+    "copyright": "Pathanga Bharathi (c) K.N. Ganeshaiah, University of Agricultural Sciences, Bangalore. Rebuild 2026.",
+    "category": "Education",
+    "shortDescription": "Distribution, taxonomy and host plants of the butterflies of India",
+    "longDescription": "Version 1: a faithful rebuild of Pathanga Bharathi (India) 2006-07: butterfly richness of India by state and biotic zone, search by common name, state and district or scientific name, butterfly and host plant search, and the digitized inventory of every family, genus and species with maps, pictures, distribution data, synonyms, common names, flora list and host plants. Works offline.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    }
+  }
+}
