@@ -35,7 +35,7 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:var(-
 #det .body{position:absolute;left:0;top:96px;width:1366px;height:672px;overflow:hidden}
 .tab{position:absolute;top:40px;height:50px;cursor:pointer;background-size:100% 100%}
 .dtitle{position:absolute;left:300px;top:8px;width:660px;text-align:center;font:bold 14px var(--arial);color:#8b0000}
-.hval{position:absolute;width:354px;height:34px;background:url(img/ui/hbox.png);font:20px var(--arial);color:#7d0000;text-align:center;line-height:22px}
+.hval{position:absolute;width:351px;height:31px;font:22px var(--arial);color:#7d0000;text-align:center;line-height:22px}
 table.fg{border-collapse:collapse;font:11px var(--arial);color:#804040;table-layout:fixed}
 table.fg th{background:#804040;color:#fff;font:bold 11px var(--arial);text-align:left;height:32px;padding:0 3px;border:1px solid #808080}
 table.fg td{border:1px solid #808080;padding:0 3px;height:32px;vertical-align:middle;overflow:hidden;cursor:pointer}
@@ -345,7 +345,7 @@ function tabTax(B, D) {
   const c = SB.cls[(D.fam || '').toUpperCase()] || ['Plants', '', '', '', ''];
   const fam = D.kind === 'F' ? D.key : (D.fam || '');
   const v = [...c, fam.charAt(0).toUpperCase() + fam.slice(1).toLowerCase()];
-  v.forEach((t, i) => B.append(pos(el('div', { class: 'hval' }, esc(t)), 556, 199 + 48 * i)));
+  v.forEach((t, i) => B.append(pos(el('div', { class: 'hval' }, esc(t)), 557, 200 + 48 * i)));
 }
 // state polygons drawn the way the program's MapX map showed them
 const LEG = ['ANDHRA PRADESH', 'ARUNACHAL PRADESH', 'ASSAM', 'GOA', 'KARNATAKA', 'KERALA', 'TAMILNADU', 'GUJARAT', 'MAHARASTRA', 'ORISSA', 'WEST BENGAL', 'RAJASTHAN', 'PUNJAB', 'HARYANA', 'JAMMU_KASHMIR', 'HIMACHAL PRADESH', 'MANIPUR', 'MIZORAM', 'NAGALAND', 'MEGHALAYA', 'TRIPURA', 'SIKKIM', 'DELHI', 'MADHYA PRADESH', 'JHARKHAND', 'BIHAR', 'UTTAR PRADESH', 'UTTARANCHAL', 'CHHATISGARH'];
