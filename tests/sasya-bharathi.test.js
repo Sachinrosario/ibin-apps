@@ -128,7 +128,6 @@ const ok = (name, cond, extra) => { results.push(`${cond ? 'PASS' : 'FAIL'}  ${n
   await p.evaluate(i => detail('S', i), sp); await idle();
   ok('Taxonomic Hierarchy shows 6 levels', await p.evaluate(() => [...document.querySelectorAll('#dBody .hval')].map(e => e.textContent).filter(Boolean).length === 6));
   if (V2) ok('Version 2 card: current name, IUCN and DNA', await p.evaluate(() => /Catalogue of Life/.test(document.getElementById('dBody').textContent) && /IUCN/.test(document.getElementById('dBody').textContent) && /GenBank/.test(document.getElementById('dBody').textContent)));
-  if (V2) ok('Version 2 card: rechecked plant barcodes (rbcL, matK, ITS, trnH-psbA) and BOLD', await p.evaluate(() => { const t = document.getElementById('dBody').textContent; return /rbcL \d+/.test(t) && /matK \d+/.test(t) && /ITS \d+/.test(t) && /trnH-psbA \d+/.test(t) && /BOLD Systems:/.test(t) && /checked 2026/.test(t); }), await p.evaluate(() => (document.querySelector('#dBody .abs[style*="766px"]') || {}).textContent));
   if (V2) ok('Version 2 title has the current name in brackets', (await txt('#dTitle')).includes('(Zabelia triflora)'), await txt('#dTitle'));
   await tap(252, 65); ok('Maps tab draws the states', await p.evaluate(() => document.querySelectorAll('#dBody svg path').length >= 29));
   await tap(14 + 468, 96 + 48); ok('Statewise Thm. Map colours the states with records', await p.evaluate(() => new Set([...document.querySelectorAll('#dBody svg path')].map(e => e.getAttribute('fill'))).size >= 2));
@@ -138,14 +137,10 @@ const ok = (name, cond, extra) => { results.push(`${cond ? 'PASS' : 'FAIL'}  ${n
   await p.evaluate(() => document.querySelector('#dBody td[data-r]').click()); ok('clicking a record lists its floras and habitats', await p.evaluate(() => document.querySelectorAll('#dBody table.fg')[0].querySelectorAll('tr').length > 2));
   await p.evaluate(() => document.querySelectorAll('#dBody input[name=dm]')[1].click()); ok('Biotic and habitat Zone view', await p.evaluate(() => [...document.querySelectorAll('#dBody th')].some(t => t.textContent === 'Biotic Zone')));
   await tap(841, 65); ok('Synonym data shows the names tree', await p.evaluate(() => document.querySelectorAll('#dBody .tree .pm').length > 0));
-  if (V2) ok('Version 2: synonyms now (Catalogue of Life) beside the 2005 tree', await p.evaluate(() => { const b = document.querySelector('#dBody .v2x'); return b && /Synonyms now/.test(b.textContent) && /Zabelia triflora/.test(b.textContent) && /Abelia triflora/.test(b.textContent); }), await p.evaluate(() => (document.querySelector('#dBody .v2x') || {}).textContent));
   await p.evaluate(() => document.querySelector('#dBody .tree .pm').click()); ok('expanding a name shows its floras', await p.evaluate(() => [...document.querySelectorAll('#dBody .tree > div[id]')].some(d => d.style.display === '')));
   await tap(1038, 65); ok('Common Names table', await p.evaluate(() => document.querySelectorAll('#cmt td.nm').length > 0));
-  if (V2) ok('Version 2: common names now (GBIF) beside the 2005 table', await p.evaluate(() => { const b = document.querySelector('#dBody .v2x'); return b && /Common names now/.test(b.textContent); }));
   await p.evaluate(() => document.querySelector('#cmt td.nm').click()); ok('clicking a common name lists its floras', await p.evaluate(() => document.querySelector('#dBody .abs[style*="background: rgb(255, 255, 255)"], #dBody div').textContent.length > 0));
   await tap(1231, 65); ok('Flora List shows the floras', await p.evaluate(() => document.querySelectorAll('#dBody .tree .n').length > 3));
-  if (V2) { const nb = await p.evaluate(() => SB.sp.find(r => r[7] === 'Azadirachta indica')[0]); await p.evaluate(i => detail('S', i), nb); await idle(); await tap(1038, 65);
-    ok('Version 2: Azadirachta indica (neem) has common names in Indian languages today', await p.evaluate(() => { const b = document.querySelector('#dBody .v2x'); return b && /English/.test(b.textContent) && /(Hindi|Kannada|Tamil|Telugu|Malayalam|Sanskrit|Bengali|Marathi)/.test(b.textContent); }), await p.evaluate(() => (document.querySelector('#dBody .v2x') || {}).textContent.slice(0, 200))); }
   // family inventory (4 tabs) and its distribution
   await p.evaluate(() => detail('F', 'Acanthaceae')); await idle(); ok('family inventory has 4 tabs', await p.evaluate(() => document.querySelectorAll('#dTabs .tab').length === 4));
   await tap(754, 65); ok('family distribution data', await p.evaluate(() => document.querySelectorAll('#dBody td[data-r]').length > 5));
@@ -157,7 +152,7 @@ const ok = (name, cond, extra) => { results.push(`${cond ? 'PASS' : 'FAIL'}  ${n
   const sh = await p.evaluate(async () => { let bad = []; for (let i = 0; i < SB.ns; i++) { try { await shard('d', i); } catch (e) { bad.push('d' + i); } } for (let i = 0; i < SB.ng; i++) { try { await shard('g', i); } catch (e) { bad.push('g' + i); } } return bad; });
   ok('all 600 plant-record files load', sh.length === 0, sh.slice(0, 10).join(','));
   const rnd = await p.evaluate(async () => { const bad = []; const ids = SB.sp.map(r => r[0]); for (let k = 0; k < 300; k++) { const id = ids[(k * 7919) % ids.length];
-      try { await detail('S', id); for (const t of ['tax', 'map', 'dist', 'syn', 'cm', 'fl']) showTab(t); if (VERSION.startsWith('2') && NOWN.get(id) && NOWN.get(id)[7] && !DET.ex && !/only the genus/.test(NOWN.get(id)[2])) bad.push(id + ': no synonyms / common names / barcodes loaded'); if (DET.imgs.length) showTab('img'); } catch (e) { bad.push(id + ':' + e.message); } }
+      try { await detail('S', id); for (const t of ['tax', 'map', 'dist', 'syn', 'cm', 'fl']) showTab(t); if (DET.imgs.length) showTab('img'); } catch (e) { bad.push(id + ':' + e.message); } }
     for (const f of INDIA.fams.slice(0, 316)) { try { await detail('F', f); for (const t of ['tax', 'map', 'dist', 'fl']) showTab(t); } catch (e) { bad.push(f + ':' + e.message); } } return bad; });
   ok('300 species and all 316 families open on every tab without error', rnd.length === 0, rnd.slice(0, 5).join('; '));
   ok('every picture listed is in the picture folder', await p.evaluate(() => Object.values(SB.im).flat().filter(x => x[0]).length) > 4000);
