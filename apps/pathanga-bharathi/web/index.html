@@ -344,7 +344,7 @@ function tabTax(B, D) {
   B.style.background = 'url(img/ui/hbody.jpg)';
   const c = SB.cls[(D.fam || '').toUpperCase()] || ['Plants', '', '', '', ''];
   const fam = D.kind === 'F' ? D.key : (D.fam || '');
-  const v = [...c, fam.charAt(0).toUpperCase() + fam.slice(1).toLowerCase()];
+  const v = [...c, fam.toUpperCase()];
   v.forEach((t, i) => B.append(pos(el('div', { class: 'hval' }, esc(t)), 557, 200 + 48 * i)));
 }
 // state polygons drawn the way the program's MapX map showed them
@@ -357,12 +357,12 @@ function tabMap(B, D) {
   const area = pos(el('div', { class: 'abs', style: { background: '#e3fde6', border: '1px solid #808080', overflow: 'hidden' } }), 14, 76, 1344, 586); B.append(area);
   const cnt = {}; for (const [s, n] of Object.entries((D.data.m || [{}])[0])) cnt[nk(s)] = (cnt[nk(s)] || 0) + n;
   const dcnt = (D.data.m || [{}, {}])[1] || {};
-  const st = { thm: false, lab: true, places: true, bg: '#e3fde6' };
-  const lab = pos(el('input', { type: 'checkbox' }), 668, 31); lab.checked = true; const pl = pos(el('input', { type: 'checkbox' }), 668, 52); pl.checked = true;
-  [lab, pl].forEach(c => { c.className = 'abs'; c.style.margin = 0; c.style.width = c.style.height = '13px'; B.append(c); });
+  const st = { thm: true, lab: true, places: false, bg: '#e3fde6' };
+  const lab = pos(el('input', { type: 'checkbox' }), 668, 31); lab.checked = true;
+  [lab].forEach(c => { c.className = 'abs'; c.style.margin = 0; c.style.width = c.style.height = '13px'; B.append(c); });
   const draw = () => {
     const vals = Object.values(cnt).filter(v => v > 0), lo = Math.min(...vals), hi = Math.max(...vals), br = vals.length ? (hi - lo) / 3 : 0;
-    const col = v => !st.thm ? '#ffffc0' : !v ? '#ffffc0' : br === 0 ? '#ffc0c0' : v < lo + br ? '#ffffc0' : v < lo + 2 * br ? '#ffc0c0' : '#ffc080';
+    const col = v => !st.thm || !v ? '#ffc0c0' : br === 0 ? '#ffc0c0' : v < lo + br ? '#ffc0c0' : v < lo + 2 * br ? '#ffc080' : '#ff8000';
     let svg = `<svg width="1344" height="586" style="position:absolute;left:0;top:0;background:${st.bg}">`;
     const labels = [];
     for (const [s, rings] of Object.entries(SB.so)) { if (s === 'SouthindiaStates') continue;
@@ -378,18 +378,18 @@ function tabMap(B, D) {
       svg += `<circle cx="${mx(hit[2][0])}" cy="${my(hit[2][1])}" r="2.5" fill="#c00000"/><text x="${mx(hit[2][0]) + 4}" y="${my(hit[2][1]) + 3}" font-family="Arial" font-size="9" fill="#600">${esc(dn)}</text>`; }
     svg += '</svg>';
     let leg = '<div style="position:absolute;left:1049px;top:276px;font:11px var(--arial);line-height:13.4px">' + LEG.slice(0, 23).map((s, i) => `${i + 1}. ${s}`).join('<br>') + '</div><div style="position:absolute;left:1177px;top:279px;font:11px var(--arial);line-height:13.4px">' + LEG.slice(23).map((s, i) => `${i + 24}. ${s}`).join('<br>') + '</div>';
-    leg += '<div style="position:absolute;left:1106px;top:0;width:233px;height:16px;border:1px solid #000;background:#fff;font:11px var(--arial);text-align:center">Legend</div>';
-    if (st.thm && vals.length) { const r = [[lo, lo + br, '#ffffc0'], [lo + br, lo + 2 * br, '#ffc0c0'], [lo + 2 * br, hi, '#ffc080']];
+    leg += '<div style="position:absolute;left:1106px;top:0;width:233px;height:16px;border:1px solid #000;background:#fff;font:11px var(--arial);text-align:center;cursor:pointer" id="legBar">Legend<b style="position:absolute;right:3px;top:-2px;font-size:13px">&#9660;</b></div><div id="legBtn" style="position:absolute;left:1065px;top:0;width:38px;height:32px;background:linear-gradient(135deg,#ddd,#999);border:2px outset #eee;cursor:pointer"></div>';
+    if (st.thm && st.leg && vals.length) { const r = [[lo, lo + br, '#ffc0c0'], [lo + br, lo + 2 * br, '#ffc080'], [lo + 2 * br, hi, '#ff8000']];
       leg += '<div style="position:absolute;left:1106px;top:18px;width:225px;padding:4px;border:1px solid #000;background:#fff;font:11px var(--arial)">Number of flora records' + (br === 0 ? `<div><span style="display:inline-block;width:14px;height:10px;background:#ffc0c0;border:1px solid #000;margin-right:6px"></span>${lo}</div>` : r.map(([a, b, c]) => `<div><span style="display:inline-block;width:14px;height:10px;background:${c};border:1px solid #000;margin-right:6px"></span>${Math.round(a)} to ${Math.round(b)}</div>`).join('')) + '</div>'; }
-    area.innerHTML = svg + leg;
+    area.innerHTML = svg + leg; $('legBar').onclick = $('legBtn').onclick = () => { st.leg = !st.leg; draw(); };
   };
   const H = (l, w, f) => B.append(pos(el('div', { class: 'hot', onclick: f }), l, 30, w, 38));
   H(18, 110, () => { st.lab = lab.checked = !lab.checked; draw(); });
-  H(137, 104, () => { st.thm = false; draw(); });
+  H(137, 104, () => { st.thm = true; draw(); });
   H(247, 98, () => { st.bg = st.bg === '#e3fde6' ? '#ffffff' : '#e3fde6'; draw(); });
   H(353, 64, () => window.print());
   H(424, 116, () => { st.thm = true; draw(); });
-  lab.onchange = () => { st.lab = lab.checked; draw(); }; pl.onchange = () => { st.places = pl.checked; draw(); };
+  lab.onchange = () => { st.lab = lab.checked; draw(); };
   draw();
 }
 function tabImg(B, D) {
