@@ -2003,15 +2003,81 @@
         }
       ],
       "category": "Bioresource databases"
-    }
-  ],
-  "upcoming": [
+    },
     {
       "name": "Pathanga Bharathi",
-      "summary": "Butterfly species database",
-      "stage": "Waiting for intake"
+      "icon": "apps/pathanga-bharathi.png",
+      "origin": "Butterflies of India: distribution, taxonomy and diversity, with their host plants.",
+      "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
+      "category": "Butterflies",
+      "editions": [
+        {
+          "id": "pathanga-bharathi",
+          "key": "v1",
+          "label": "Version 1 – Original",
+          "versionName": "Version 1 – Original",
+          "version": "1.0.0",
+          "released": "2026-11-16",
+          "published": false,
+          "summary": "The original program rebuilt screen for screen: click a state or biotic zone on the map of India to list its butterfly families, genera and species; search by common name, state and district, scientific name, or butterfly and host plant; open the Digitized Inventory of any family, genus or species with its taxonomy, state maps, pictures, distribution data, synonyms, common names and flora list.",
+          "facts": [
+            "2,043 butterfly species",
+            "437 genera",
+            "29 states",
+            "20 biotic zones",
+            "Host plants"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/pathanga-bharathi/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "PathangaBharathi_1.0.0_Setup.exe",
+              "size": "",
+              "note": "Adds Start-menu and desktop shortcuts. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "PathangaBharathi.exe",
+              "size": "",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "PathangaBharathi_1.0.0_universal.dmg",
+              "size": "",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "PathangaBharathi_1.0.0_amd64.deb",
+              "size": "",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "PathangaBharathi_1.0.0_offline.zip",
+              "size": "",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "1.0.0",
+              "date": "2026-11-16",
+              "text": "Faithful rebuild of Pathanga Bharathi."
+            }
+          ]
+        }
+      ]
     }
   ],
+  "upcoming": [],
   "categories": [
     "Mapping and GIS",
     "Birds",
