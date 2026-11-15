@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sahyadri Pathanga</title>
+<link rel="icon" href="img/ui/icon.png">
+<style>
+/* Sahyadri Pathanga (Butterflies of Western Ghats) - Version 1, faithful web rebuild.
+   The screens and pictures are the original program's own; its lists, counts, maps and tables are filled from the original database. */
+:root{--arial:Arial,"Liberation Sans",Helvetica,sans-serif}
+html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:var(--arial)}
+#stage{position:absolute;width:1024px;height:768px;transform-origin:0 0;overflow:hidden;user-select:none;-webkit-user-select:none;background:#007f00}
+#stage img{-webkit-user-drag:none}
+.scr{position:absolute;inset:0;display:none;background-repeat:no-repeat}
+.scr.on{display:block}
+.abs{position:absolute}
+.hot{position:absolute;cursor:pointer}
+.lb{position:absolute;border:2px solid #808080;border-right-color:#fff;border-bottom-color:#fff;background:#fff;font:12px/15px var(--arial);color:#0000a0;padding:0;margin:0;outline:none;box-sizing:border-box;overflow-y:auto;overflow-x:hidden;cursor:default}
+.lb .row{position:absolute;left:0;right:0;height:15px;padding:0 2px;white-space:nowrap;overflow:hidden}
+.lb .row.sel{background:#000080;color:#fff}
+.lb.it .row{font-style:italic}
+.pt{position:absolute;font:12px var(--arial);color:#0000a0;text-align:center}
+.pb{position:absolute;font:11px var(--arial);text-align:center;line-height:19px;color:#808080;cursor:default}
+.pb.on{color:#000;cursor:pointer}
+.sel1{position:absolute;font:12px var(--arial);height:22px;box-sizing:border-box;border:2px inset #fff;background:#fff;color:#00007a}
+.cmb{position:absolute;box-sizing:border-box;font:12px var(--arial);cursor:pointer}
+.tb{position:absolute;font:bold 12px var(--arial);color:#ffff00;text-align:right}
+.gbtn{position:absolute;font:bold 12px var(--arial);background:#d4d0c8;border:2px outset #fff;text-align:center;cursor:pointer;box-sizing:border-box}
+.gbtn.dis{color:#808080;cursor:default;font-weight:bold}
+#busy{position:absolute;inset:0;display:none;z-index:900;cursor:wait}
+#busy div{position:absolute;left:412px;top:360px;width:200px;padding:10px;background:#ffffe1;border:1px solid #000;font:12px var(--arial);text-align:center}
+#quit{position:fixed;inset:0;z-index:100000;background:#000;color:#fff;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;font:20px var(--arial)}
+.bar{position:absolute;left:0;height:19px;background:linear-gradient(90deg,#0a246a,#a6caf0);color:#fff;font:bold 11px/19px var(--arial);padding-left:3px;box-sizing:border-box}
+.dtitle{position:absolute;left:100px;top:19px;width:640px;text-align:center;font:19px var(--arial);color:#1a1ac8;white-space:nowrap}
+table.dd{border-collapse:collapse;table-layout:fixed;font:11px var(--arial);color:#000}
+table.dd th{background:#000080;color:#fff;text-align:left;height:33px;padding:0 3px;font-weight:bold;border:1px solid #808080}
+table.dd td{border:1px solid #808080;padding:0 3px;vertical-align:middle;height:32px}
+table.dd td.a{background:#c0c0c0}table.dd td.w{background:#fff}
+.tree{position:absolute;background:#fff;border:2px inset #fff;overflow:auto;font:italic bold 15px var(--arial)}
+.tree div{white-space:nowrap;height:31px;line-height:31px}
+.sr div{white-space:nowrap;height:21px;line-height:21px;font:bold 11px/21px var(--arial);color:#000}
+</style>
+<style id="phonefix">html,body{position:fixed;left:0;top:0;width:100%;height:100%;overflow:hidden;margin:0}</style>
+</head>
+<body>
+<div id="stage">
+  <div class="scr on" id="open" style="background-image:url(img/ui/open.jpg)">
+    <div class="abs" style="left:150px;top:520px;width:790px;text-align:center;font:bold 14px/20px var(--arial);color:#fff">
+      <div>Proprietary right holder - Dr. K.N. Ganeshaiah</div><div>Updated in 2026 by Dr. Sachin A. Rosario &middot; <span id="ver"></span></div></div>
+    <div class="hot" style="left:845px;top:590px;width:110px;height:28px" id="bTeam" title="Team"></div>
+    <div class="hot" style="left:845px;top:635px;width:110px;height:34px" onclick="go('mods')" title="Data"></div>
+    <div class="hot" style="left:845px;top:683px;width:110px;height:34px" onclick="quitApp()" title="Exit"></div>
+  </div>
+  <div class="scr" id="mods" style="background-image:url(img/ui/modules.jpg)">
+    <div class="hot" style="left:212px;top:215px;width:120px;height:120px" onclick="openPolitical()" title="Political Boundary"></div>
+    <div class="hot" style="left:437px;top:215px;width:120px;height:120px" onclick="openVeg()" title="Vegetation"></div>
+    <div class="hot" style="left:677px;top:215px;width:120px;height:120px" onclick="openGrid()" title="Gridwise"></div>
+    <div class="hot" style="left:212px;top:460px;width:120px;height:120px" onclick="openThem()" title="Thematic Maps"></div>
+    <div class="hot" style="left:437px;top:460px;width:120px;height:120px" onclick="openImgs()" title="Images"></div>
+    <div class="hot" style="left:677px;top:445px;width:120px;height:30px" onclick="openText()" title="Common Name Search"></div>
+    <div class="hot" style="left:677px;top:482px;width:120px;height:28px" onclick="openText()" title="Talukwise Search"></div>
+    <div class="hot" style="left:677px;top:518px;width:120px;height:28px" onclick="openText()" title="Scientific Name Search"></div>
+    <div class="hot" style="left:677px;top:555px;width:120px;height:30px" onclick="openText()" title="Host Plant Search"></div>
+    <div class="hot" style="left:122px;top:622px;width:40px;height:30px" onclick="go('open')" title="Back"></div>
+  </div>
+  <div class="scr" id="pol" style="background-image:url(img/ui/pol.jpg)">
+    <img class="abs" id="polHi" alt="" style="left:0;top:2px;width:517px;height:776px;pointer-events:none;display:none">
+    <div class="hot" id="polMap" style="left:0;top:0;width:512px;height:745px;cursor:crosshair"></div>
+  </div>
+  <div class="scr" id="veg" style="background-image:url(img/ui/veg.jpg)"></div>
+  <div class="scr" id="grid" style="background-image:url(img/ui/grid.jpg)"></div>
+  <div class="scr" id="them" style="background-image:url(img/ui/them.jpg)"></div>
+  <div class="scr" id="imgs" style="background-image:url(img/ui/imgs.jpg)"></div>
+  <div class="scr" id="txt" style="background-image:url(img/ui/text.jpg)"></div>
+  <div class="scr" id="det" style="background:#d4d0c8">
+    <div id="dBody" class="abs" style="left:0;top:75px;width:1024px;height:693px;overflow:hidden"></div>
+    <div id="dTop" class="abs" style="left:0;top:0;width:1024px;height:76px;background-repeat:no-repeat"></div>
+    <div class="dtitle" id="dTitle"></div>
+    <div class="hot" style="left:978px;top:18px;width:46px;height:28px" onclick="detBack()" title="Back"></div>
+    <div id="dTabs"></div>
+  </div>
+  <div id="busy"><div>Please wait&hellip;</div></div>
+</div>
+<div id="quit"><div>Sahyadri Pathanga is closed. You can close this window.</div><div class="gbtn" style="position:static;padding:4px 16px" onclick="location.reload()">Open it again</div></div>
+<script>
+'use strict';
+const VERSION = '1.0.0';
+const REMOTE = 'https://sachinrosario.github.io/ibin-apps/sahyadri-pathanga/';
+const SW = 1024, SH = 768, stage = document.getElementById('stage');
+const $ = id => document.getElementById(id);
+function fit() { const s = Math.min(innerWidth / SW, innerHeight / SH); stage.style.transform = `scale(${s})`; stage.style.left = Math.max(0, (innerWidth - SW * s) / 2) + 'px'; stage.style.top = Math.max(0, (innerHeight - SH * s) / 2) + 'px'; }
+addEventListener('resize', fit); fit();
+$('ver').textContent = 'Version ' + VERSION;
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[c]);
+const el = (tag, attrs, html) => { const e = document.createElement(tag); if (attrs) for (const k in attrs) { if (k === 'style') Object.assign(e.style, attrs.style); else if (k.startsWith('on')) e[k] = attrs[k]; else e.setAttribute(k, attrs[k]); } if (html != null) e.innerHTML = html; return e; };
+const pos = (e, l, t, w, h) => { e.style.left = l + 'px'; e.style.top = t + 'px'; if (w != null) e.style.width = w + 'px'; if (h != null) e.style.height = h + 'px'; return e; };
+function busy(on) { $('busy').style.display = on ? 'block' : 'none'; }
+let CUR = 'open';
+function go(id) { document.querySelectorAll('.scr').forEach(s => s.classList.toggle('on', s.id === id)); CUR = id; }
+function quitApp() { try { window.close(); } catch (e) {} setTimeout(() => { $('quit').style.display = 'flex'; }, 250); }
+const say = m => { try { alert(m); } catch (e) {} };
+
+// ---------- data: a file in this folder first, the IBIN Apps web copy when it is not there (small installers) ----------
+const loaded = {};
+const WEBCOPY = /github\.io$/.test(location.hostname) && !new URL('.', location.href).href.startsWith(REMOTE);
+function loadJs(rel) {
+  if (loaded[rel]) return loaded[rel];
+  return loaded[rel] = new Promise((ok, bad) => {
+    const s = document.createElement('script'); s.src = rel; s.onload = () => ok();
+    s.onerror = () => { s.remove(); const r = document.createElement('script'); r.src = REMOTE + rel; r.onload = () => ok(); r.onerror = () => { delete loaded[rel]; bad(new Error(rel)); }; document.head.appendChild(r); };
+    document.head.appendChild(s);
+  });
+}
+function photo(img, file, dir) { const d = (dir || 'img/photos/'); img.onerror = () => { img.onerror = null; img.src = REMOTE + d + encodeURIComponent(file); }; img.src = d + encodeURIComponent(file); }
+let READY = null;
+function ensureData() { return READY || (READY = Promise.all([loadJs('data/core.js'), loadJs('data/grid.js'), loadJs('data/maps.js')]).then(initData)); }
+
+// ---------- indexes ----------
+let BYID, SPN, CMN, GRSP;
+const unpack = s => { const o = []; let p = 0; if (s) for (const d of s.split('.')) { p += parseInt(d, 16); o.push(p); } return o; };
+const SN = id => { const r = BYID.get(+id); return r[2] + ' ' + r[3]; };
+const STN = { Gujarat: 'Gujarat', Karnataka: 'Karnataka', Kerala: 'Kerala', Goa: 'Goa', Maharastra: 'Maharastra', Tamilnadu: 'Tamilnadu', 'Dadra & Nagarhaveli': 'Dadra & Nagarhaveli' };
+const POLNAME = { gujarat: 'Gujarat', maharashtra: 'Maharashtra', karnataka: 'Karnataka', kerala: 'Kerala', goa: 'Goa', 'tamil nadu': 'Tamil Nadu' };
+function initData() {
+  BYID = new Map(); for (const r of SB.sp) BYID.set(r[0], r);
+  CMN = {}; for (const [id, v] of Object.entries(SB.cm)) for (const [lang, nm] of v) { ((CMN[lang] = CMN[lang] || {})[nm] = CMN[lang][nm] || []).push(+id); }
+  GRSP = new Map(); for (const [id, s] of Object.entries(SBG.sp)) for (const gi of unpack(s)) { if (!GRSP.has(gi)) GRSP.set(gi, []); GRSP.get(gi).push(+id); }
+}
+const srt = a => a.sort((x, y) => x.toLowerCase() < y.toLowerCase() ? -1 : x.toLowerCase() > y.toLowerCase() ? 1 : 0);
+// a set of butterflies shown in the three lists: species ids
+function makeSet(ids) {
+  const fam = new Set(), gen = new Map(), sp = new Map();
+  for (const i of new Set(ids)) { const r = BYID.get(+i); if (!r) continue; fam.add(r[1].toUpperCase()); if (!gen.has(r[2])) gen.set(r[2], r[1].toUpperCase()); sp.set(r[2] + ' ' + r[3], [r[0], r[1].toUpperCase(), r[2]]); }
+  return { ids: [...new Set(ids)], fams: srt([...fam]), gens: srt([...gen.keys()]).map(g => [g, gen.get(g)]), sps: srt([...sp.keys()]).map(k => [k, ...sp.get(k)]) };
+}
+const ALL = () => makeSet(SB.sp.map(r => r[0]));
+const stateIds = st => unpack(SB.st[st]);
+
+// ---------- list boxes and the four-list panel ----------
+function listBox(italic) {
+  const box = el('div', { class: 'lb' + (italic ? ' it' : ''), tabindex: 0 }), sp = el('div', { style: { position: 'relative', width: '1px' } }); box.append(sp);
+  let items = [], sel = -1; const RH = 15;
+  const draw = () => { const a = Math.max(0, Math.floor(box.scrollTop / RH) - 2), b = Math.min(items.length, a + Math.ceil((box.clientHeight || 200) / RH) + 5);
+    let h = ''; for (let i = a; i < b; i++) h += `<div class="row${i === sel ? ' sel' : ''}" data-i="${i}" style="top:${i * RH}px">${esc(items[i])}</div>`;
+    sp.style.height = items.length * RH + 'px'; sp.style.width = '100%'; sp.innerHTML = h; };
+  const pick = (i, tell) => { if (i < 0 || i >= items.length) return; sel = i; const t = i * RH; if (t < box.scrollTop) box.scrollTop = t; else if (t + RH > box.scrollTop + box.clientHeight) box.scrollTop = t + RH - box.clientHeight; draw(); if (tell && box.onchange) box.onchange(); };
+  box.addEventListener('scroll', draw);
+  box.addEventListener('click', e => { const r = e.target.closest('.row'); if (r) pick(+r.dataset.i, true); });
+  box.addEventListener('dblclick', e => { if (e.target.closest('.row') && box.ondblclick) box.ondblclick(); });
+  box.addEventListener('keydown', e => { const k = { ArrowDown: 1, ArrowUp: -1, PageDown: 10, PageUp: -10 }[e.key]; if (k) { e.preventDefault(); pick(Math.max(0, Math.min(items.length - 1, (sel < 0 ? 0 : sel + k))), true); } });
+  box.setItems = a => { items = a.slice(); sel = -1; box.scrollTop = 0; draw(); };
+  box.select = v => { const i = items.findIndex(x => String(x).toLowerCase() === String(v).toLowerCase()); if (i >= 0) pick(i, true); return i; };
+  Object.defineProperty(box, 'value', { get: () => sel >= 0 ? items[sel] : '' });
+  Object.defineProperty(box, 'items', { get: () => items });
+  return box;
+}
+let CTX = 'Western Ghats';          // the region named in the inventory window's title
+function panel(host) {
+  const x = 521, y = 10, P = { set: null };
+  P.img = pos(el('img', { class: 'abs', src: 'img/ui/panel.png', alt: '' }), x, y);
+  P.title = pos(el('div', { class: 'pt' }), 531, 22, 480, 17);
+  const C = l => pos(el('div', { class: 'pt', style: { color: '#000' } }), l, 70, 160, 18);
+  P.cf = C(524); P.cg = C(689); P.cs = C(854);
+  P.lf = pos(listBox(false), 525, 107, 160, 198); P.lg = pos(listBox(true), 690, 107, 160, 198); P.ls = pos(listBox(true), 855, 107, 160, 198);
+  P.cm = pos(el('div', { class: 'pt', style: { color: '#0000a0', textAlign: 'left' } }), 825, 316, 184, 20);
+  const BT = (l, t, w, h, label, f) => { const b = pos(el('div', { class: 'pb', onclick: () => b.classList.contains('on') && f() }, label), l, t, w, h); return b; };
+  P.bf = BT(530, 347, 156, 19, '<u>F</u>amily&nbsp; Search', () => detail('F', P.lf.value));
+  P.bg = BT(695, 347, 158, 19, '<u>G</u>enus&nbsp; Search', () => detail('G', P.lg.value));
+  P.bs = BT(859, 347, 160, 19, '<u>S</u>pecies&nbsp; Search', () => P.ls.sel && detail('S', P.ls.sel[1]));
+  P.br = BT(715, 376, 113, 23, '<u>R</u>efresh', () => P.show(P.set, P.title.textContent));
+  P.els = [P.img, P.title, P.cf, P.cg, P.cs, P.lf, P.lg, P.ls, P.cm, P.bf, P.bg, P.bs, P.br];
+  P.els.forEach(e => host.append(e));
+  const flags = () => { P.bf.classList.toggle('on', !!P.lf.value); P.bg.classList.toggle('on', !!P.lg.value); P.bs.classList.toggle('on', !!P.ls.value); P.br.classList.toggle('on', !!(P.lf.value || P.lg.value || P.ls.value)); };
+  P.lf.onchange = () => { P.set.gensF = P.set.gens.filter(g => g[1] === P.lf.value).map(g => g[0]); P.lg.setItems(P.set.gensF); P.ls.setItems(P.set.sps.filter(s => s[2] === P.lf.value).map(s => s[0] === 0 ? '' : s[0])); P.ls.sel = null; P.cm.textContent = ''; flags(); };
+  P.lg.onchange = () => { P.ls.setItems(P.set.sps.filter(s => s[3] === P.lg.value).map(s => s[0])); P.ls.sel = null; P.cm.textContent = ''; flags(); };
+  P.ls.onchange = () => { P.ls.sel = P.set.sps.find(s => s[0] === P.ls.value); const cn = ((SB.cm[P.ls.sel[1]] || []).find(c => c[0] === 'English') || (SB.cm[P.ls.sel[1]] || [])[0] || [])[1]; P.cm.textContent = cn || ''; flags(); };
+  P.lf.ondblclick = () => detail('F', P.lf.value);
+  P.lg.ondblclick = () => detail('G', P.lg.value);
+  P.ls.ondblclick = () => P.ls.sel && detail('S', P.ls.sel[1]);
+  P.show = (set, title) => {
+    P.set = set; P.title.textContent = title || '';
+    P.cf.textContent = set.fams.length; P.cg.textContent = set.gens.length; P.cs.textContent = set.sps.length;
+    P.els.forEach(e => e.style.display = '');
+    P.lf.setItems(set.fams); P.lg.setItems(set.gens.map(g => g[0])); P.ls.setItems(set.sps.map(s => s[0])); P.ls.sel = null; P.cm.textContent = '';
+    P.els.forEach(e => e.style.display = ''); flags();
+  };
+  P.hide = () => { P.set = null; P.els.forEach(e => e.style.display = 'none'); };
+  P.hide();
+  return P;
+}
+function homeExit(host) {
+  host.append(pos(el('div', { class: 'hot', onclick: () => go('mods'), title: 'Home' }), 876, 676, 48, 48));
+  host.append(pos(el('div', { class: 'hot', onclick: quitApp, title: 'Exit' }), 930, 676, 48, 48));
+}
+const built = {};
+async function prep(id, fn) { busy(true); try { await ensureData(); if (!built[id]) { built[id] = fn(); } return built[id]; } catch (e) { say('The data could not be loaded. Please check the internet connection and try again.'); throw e; } finally { busy(false); } }
+$('bTeam').onclick = () => {};
+
+// ---------- Political boundary ----------
+const POLLAB = [['gujarat', 'Gujarat', 150, 90, 70, 22], ['maharashtra', 'Maharastra', 260, 190, 90, 22], ['karnataka', 'Karnataka', 290, 427, 80, 22], ['goa', 'Goa', 222, 427, 40, 22], ['kerala', 'Kerala', 275, 595, 70, 22], ['tamilnadu', 'Tamilnadu', 365, 595, 80, 22]];
+let POL;
+async function openPolitical() {
+  const P = await prep('pol', () => { const h = $('pol'), p = panel(h); homeExit(h);
+    for (const [k, st, l, t, w, hh] of POLLAB) h.append(pos(el('div', { class: 'hot', title: st, onclick: () => polPick(k, st) }), l, t, w, hh));
+    $('polMap').ondblclick = () => polPick('wg', null);
+    return p; });
+  go('pol'); $('polHi').style.display = 'none'; P.hide(); CTX = 'Western Ghats';
+}
+function polPick(k, st) {
+  const P = built.pol; const hi = $('polHi'); hi.src = `img/ui/pol_${k}.png`; hi.style.display = '';
+  CTX = st ? (st === 'Maharastra' ? 'Maharashtra' : st === 'Tamilnadu' ? 'Tamil Nadu' : st) : 'Western Ghats'; CTX_STATE = st;
+  P.show(makeSet(st ? stateIds(st) : SB.sp.map(r => r[0])), 'Butterfly Richness of Western Ghats' + (st ? ' in ' + CTX : ''));
+}
+let CTX_STATE = null;
+
+// ---------- Vegetation ----------
+const VEGB = [['DRY DECIDUIOUS', 514, 463], ['HIGH ELEVATION EVERGREEN', 643, 458], ['MID ELEVATION EVERGREEN', 777, 462], ['DRY EVERGREEN', 514, 501], ['HIGH ELEVATION PLANTATION', 643, 497], ['SCRUB', 777, 509], ['LOW ELEVATION PLANTATION', 514, 533], ['LOW ELEVATION EVERGREEN', 643, 534], ['SHOLA', 777, 548], ['HIGH ELEVATION ARABLE', 514, 571], ['MOIST DECIDUIOUS', 643, 579]];
+const nice = s => s.toLowerCase().replace('deciduious', 'deciduous').replace(/\b\w/g, c => c.toUpperCase());
+async function openVeg() {
+  await prep('veg', () => { const h = $('veg'), p = panel(h); homeExit(h);
+    for (const [k, l, t] of VEGB) h.append(pos(el('div', { class: 'hot', title: nice(k), onclick: () => p.show(makeSet(unpack(SB.hab[k])), nice(k) + ' regions in Western ghats') }), Math.round(l * 1.0235) - 4, Math.round(t * 1.0235) - 14, 125, 30));
+    return p; });
+  go('veg'); built.veg.hide(); CTX = 'Western Ghats'; CTX_STATE = null;
+}
+
+// ---------- Gridwise ----------
+let GRIDSEL = -1;
+async function openGrid() {
+  const G = await prep('grid', () => { const h = $('grid'), p = panel(h); homeExit(h);
+    const box = pos(el('div', { class: 'abs', style: { overflow: 'scroll', background: '#fff' } }), 0, 0, 516, 768); h.append(box);
+    const img = el('img', { src: 'img/ui/gridmap.png', alt: '', style: { display: 'block', position: 'relative' } }); box.append(img);
+    const mark = el('div', { style: { position: 'absolute', background: '#ff00ff', opacity: '.9', pointerEvents: 'none', display: 'none' } }); box.append(mark);
+    // the Longitude / Latitude box
+    const cover = pos(el('div', { class: 'abs', style: { background: '#d4d0c8' } }), 527, 415, 215, 84); h.append(cover);
+    h.append(pos(el('div', { class: 'abs', style: { font: '12px var(--arial)', color: '#0000a0', textDecoration: 'underline' } }, 'Enter Longitude &amp; Latitude'), 530, 417, 200, 16));
+    h.append(pos(el('div', { class: 'abs', style: { font: '12px var(--arial)', color: '#000' } }, 'Longitude:'), 535, 437, 70, 16), pos(el('div', { class: 'abs', style: { font: '12px var(--arial)', color: '#000' } }, 'Latitude:'), 535, 461, 70, 16));
+    const lon = pos(el('input', { type: 'text', id: 'gLon', style: { font: '11px var(--arial)', border: '2px inset #fff', boxSizing: 'border-box', padding: '0 2px' } }), 617, 435, 101, 18), lat = pos(el('input', { type: 'text', id: 'gLat', style: { font: '11px var(--arial)', border: '2px inset #fff', boxSizing: 'border-box', padding: '0 2px' } }), 617, 459, 101, 18); h.append(lon, lat);
+    const en = pos(el('div', { class: 'gbtn', style: { font: 'bold 11px var(--arial)', lineHeight: '16px' }, id: 'gEnter' }, 'Enter'), 619, 480, 46, 18); h.append(en);
+    const where = pos(el('div', { class: 'abs', style: { background: '#d4d0c8', display: 'none', font: '12px/19px var(--arial)', color: '#000080', padding: '4px 8px', boxSizing: 'border-box' }, id: 'gWhere' }), 752, 415, 256, 84); h.append(where);
+    const sel = gi => { const r = SBG.g[gi]; GRIDSEL = gi;
+      mark.style.cssText += `;display:block;left:${r[7] / 15}px;top:${r[9] / 15}px;width:${Math.max(3, (r[8] - r[7]) / 15)}px;height:${Math.max(3, (r[10] - r[9]) / 15)}px`;
+      lon.value = r[1].toFixed(6); lat.value = r[2].toFixed(6);
+      where.style.display = ''; where.innerHTML = `<div style="text-decoration:underline">The last grid you selected lies at</div><div>State : ${esc(r[11])}</div><div>District : ${esc(r[12])}</div><div>Taluk : ${esc(r[13])}</div>`;
+      p.show(makeSet(GRSP.get(gi) || []), 'GRIDWISE(100 Sq.kms) SEARCH'); };
+    img.addEventListener('click', e => { const rc = img.getBoundingClientRect(), s = rc.width / img.naturalWidth || 1; const px = (e.clientX - rc.left) / s, py = (e.clientY - rc.top) / s, tx = px * 15, ty = py * 15;
+      let best = -1, bd = 1e12; SBG.g.forEach((r, i) => { if (tx >= r[7] && tx <= r[8] && ty >= r[9] && ty <= r[10]) { const d = Math.abs((r[7] + r[8]) / 2 - tx) + Math.abs((r[9] + r[10]) / 2 - ty); if (d < bd) { bd = d; best = i; } } });
+      if (best >= 0) sel(best); });
+    en.onclick = () => { const x = parseFloat(lon.value), y = parseFloat(lat.value); if (isNaN(x) || isNaN(y)) return say('Enter the Longitude and Latitude');
+      let best = -1, bd = 1e9; SBG.g.forEach((r, i) => { const d = Math.hypot(r[1] - x, r[2] - y); if (d < bd) { bd = d; best = i; } });
+      if (best < 0 || bd > 0.2) return say('The point is outside the Western Ghats grids');
+      sel(best); const r = SBG.g[best]; box.scrollLeft = Math.max(0, r[7] / 15 - 250); box.scrollTop = Math.max(0, r[9] / 15 - 300); };
+    return { p, box, sel, lon, lat }; });
+  go('grid'); G.p.hide(); CTX = 'Western Ghats'; CTX_STATE = null;
+}
+
+// ---------- Thematic maps ----------
+async function openThem() {
+  await prep('them', () => { const h = $('them'); homeExit(h);
+    const map = pos(el('img', { class: 'abs', src: 'img/ui/tm1.jpg', alt: '', id: 'tmImg' }), 0, 0, 512, 768); h.append(map);
+    const box = pos(el('div', { class: 'abs', style: { background: '#808080' } }), 520, 33, 182, 117); h.append(box);
+    const names = ['GENERA DISTRIBUTION', 'SPECIES DISTRIBUTION', 'CONSERVATION VALUE'], dots = [];
+    names.forEach((n, i) => { const r = pos(el('div', { class: 'hot', title: n, id: 'tmR' + i, style: { background: '#c0c0c0' } }), 537, 49 + i * 32, 151, 23);
+      r.append(el('span', { style: { position: 'absolute', left: '3px', top: '4px', width: '11px', height: '11px', borderRadius: '50%', border: '1px solid #808080', background: '#fff' } }), el('span', { style: { position: 'absolute', left: '22px', top: '4px', font: '11px var(--arial)', letterSpacing: '.3px', color: '#000080', whiteSpace: 'nowrap' } }, n));
+      const dot = el('span', { style: { position: 'absolute', left: '7px', top: '8px', width: '5px', height: '5px', borderRadius: '50%', background: '#000' } }); r.append(dot); dots.push(dot);
+      r.onclick = () => { map.src = `img/ui/tm${i + 1}.jpg`; dots.forEach((d, j) => d.style.display = j === i ? '' : 'none'); }; h.append(r); });
+    dots.forEach((d, j) => d.style.display = j ? 'none' : ''); return 1; });
+  go('them'); $('tmR0').click();
+}
+
+// ---------- Images ----------
+async function openImgs() {
+  const P = await prep('imgs', () => { const h = $('imgs'), p = panel(h); homeExit(h); return p; });
+  go('imgs'); CTX = 'Western Ghats'; CTX_STATE = null; P.show(makeSet(SB.imsp), 'Images are available for the listed Species');
+}
+
+// ---------- Text search ----------
+async function openText() {
+  const T = await prep('txt', () => { const h = $('txt'), p = panel(h); homeExit(h); const o = {}; o.p = p;
+    const S = (l, t, w, hh) => { const s = el('select', { class: 'sel1' }); pos(s, l, t, w || 200, hh || 24); h.append(s); return s; };
+    const fill = (s, a) => { s.innerHTML = '<option></option>' + a.map(x => `<option>${esc(x)}</option>`).join(''); };
+    const B = (l, t, w, hh, label, f, dis) => { const b = pos(el('div', { class: 'gbtn' + (dis ? ' dis' : ''), style: { lineHeight: (hh - 4) + 'px' } }, label), l, t, w, hh); b.onclick = () => { if (!b.classList.contains('dis')) f(); }; h.append(b); return b; };
+    const en = (b, on) => b.classList.toggle('dis', !on);
+    const langs = Object.keys(CMN).sort(); const lang = S(120, 31, 200); fill(lang, langs); lang.options[0].remove(); lang.value = 'English';
+    const cname = S(120, 63, 200); const bC = B(328, 49, 62, 24, 'Search', () => { const ids = (CMN[lang.value] || {})[cname.value]; if (ids) p.show(makeSet(ids), `Butterflies with the common name '${cname.value}'`); }, true);
+    const fillC = () => fill(cname, Object.keys(CMN[lang.value] || {}).sort((a, b) => a.toLowerCase() < b.toLowerCase() ? -1 : 1)); fillC(); lang.onchange = () => { fillC(); en(bC, false); }; cname.onchange = () => en(bC, !!cname.value);
+    const st = S(120, 127, 200), dist = S(120, 159, 200), tal = S(120, 191, 200); fill(st, Object.keys(SB.pol));
+    const bP = B(328, 160, 62, 24, 'Search', () => { const d = SB.pol[st.value][dist.value]; if (!d) return; const ids = tal.value ? unpack(d[tal.value]) : Object.values(d).flatMap(unpack);
+      p.show(makeSet(ids), `Butterfly Richness of ${tal.value ? tal.value + ', ' : ''}${dist.value} (${st.value})`); }, true);
+    st.onchange = () => { fill(dist, Object.keys(SB.pol[st.value] || {})); fill(tal, []); en(bP, false); };
+    dist.onchange = () => { fill(tal, Object.keys((SB.pol[st.value] || {})[dist.value] || {})); en(bP, !!dist.value); };
+    B(176, 224, 62, 24, 'Refresh', () => { st.value = ''; fill(dist, []); fill(tal, []); en(bP, false); p.hide(); });
+    const al = ALL(); const fam = S(120, 287, 200), gen = S(120, 319, 200), spp = S(120, 351, 200); fill(fam, al.fams);
+    const bS = B(328, 320, 62, 24, 'Search', () => { if (spp.value) { const s = al.sps.find(x => x[0] === spp.value); if (s) return detail('S', s[1]); } if (gen.value) return detail('G', gen.value); if (fam.value) return detail('F', fam.value); }, true);
+    fam.onchange = () => { fill(gen, al.gens.filter(g => g[1] === fam.value).map(g => g[0])); fill(spp, []); en(bS, !!fam.value); };
+    gen.onchange = () => { fill(spp, al.sps.filter(s => s[3] === gen.value).map(s => s[0])); en(bS, true); }; spp.onchange = () => en(bS, true);
+    B(186, 385, 58, 24, 'Refresh', () => { fam.value = ''; fill(gen, []); fill(spp, []); en(bS, false); });
+    // butterflies and their host plants
+    const HPS = new Map(); for (const [id, v] of Object.entries(SB.hp)) for (const [g, s] of v) { const k = g + ' ' + s; if (!HPS.has(k)) HPS.set(k, new Set()); HPS.get(k).add(+id); }
+    const bsp = S(72, 417, 184, 22), bcm = S(72, 449, 184, 22), hpl = S(320, 417, 192, 22);
+    const hl = pos(listBox(true), 72, 481, 184, 108), bl = pos(listBox(true), 320, 449, 192, 140); h.append(hl, bl);
+    fill(bsp, srt(Object.keys(SB.hp).map(SN))); fill(hpl, srt([...HPS.keys()]));
+    const idOf = n => { const r = SB.sp.find(x => x[2] + ' ' + x[3] === n); return r && r[0]; };
+    const showHosts = id => hl.setItems(id ? [...new Set((SB.hp[id] || []).map(x => x[0] + ' ' + x[1]))] : []);
+    bsp.onchange = () => { const id = idOf(bsp.value); fill(bcm, id ? (SB.cm[id] || []).map(c => c[1]) : []); if (bcm.options.length > 1) bcm.selectedIndex = 1; showHosts(id); };
+    hpl.onchange = () => bl.setItems(srt([...(HPS.get(hpl.value) || [])].map(SN)));
+    hl.ondblclick = () => { if (hl.value) { hpl.value = hl.value; hpl.onchange(); } };
+    bl.ondblclick = () => { const id = idOf(bl.value); if (id) detail('S', id, 'img'); };
+    o.sel = { lang, cname, st, dist, tal, fam, gen, spp, bsp, bcm, hpl, hl, bl };
+    return o; });
+  go('txt'); T.p.hide(); CTX = 'Western Ghats'; CTX_STATE = null;
+}
+
+// ---------- the Digitized Inventory window ----------
+let DET = null, BACKTO = 'mods';
+const TS = [['tax', 0, 145], ['map', 145, 147], ['img', 292, 146], ['dist', 438, 146], ['syn', 584, 146], ['cm', 730, 147], ['src', 877, 147]];
+const TG = [['tax', 0, 256], ['map', 256, 256], ['dist', 512, 256], ['src', 768, 256]];
+function speciesOfKey(kind, key) {
+  if (kind === 'S') return [+key];
+  const k = key.toLowerCase();
+  return SB.sp.filter(r => kind === 'G' ? r[2].toLowerCase() === k : r[1].toLowerCase() === k).map(r => r[0]);
+}
+async function detail(kind, key, tab) {
+  if (!key) return say('Select the ' + (kind === 'S' ? 'Species' : kind === 'G' ? 'Genus' : 'Family'));
+  if (CUR !== 'det') BACKTO = CUR;
+  busy(true);
+  try {
+    await ensureData();
+    const D = { kind, key, ids: speciesOfKey(kind, key) };
+    if (kind === 'S') { const r = BYID.get(+key); D.row = r; D.name = r[2] + ' ' + r[3]; D.fam = r[1]; D.ims = SB.im[key] || []; D.hp = SB.hp[key] || []; }
+    else { D.name = kind === 'F' ? key.charAt(0) + key.slice(1).toLowerCase() : key; D.fam = kind === 'F' ? key : (BYID.get(D.ids[0]) || [, ''])[1]; }
+    DET = D;
+    $('dTitle').innerHTML = `Digitized Inventory of ${kind === 'S' ? `<i>${esc(D.row[2])}&nbsp; ${esc(D.row[3])}</i>` : kind === 'G' ? `<i>${esc(D.name)}</i>` : esc(D.name.toUpperCase())} in ${esc(CTX)}`;
+    go('det'); showTab(tab && (kind === 'S' || tab !== 'img') ? (tab === 'img' && !D.ims.length && !D.hp.length ? 'tax' : tab) : 'tax');
+  } catch (e) { console.error(e); say('The data of this butterfly could not be loaded. Please check the internet connection and try again.'); }
+  finally { busy(false); }
+}
+function detBack() { go(BACKTO); }
+function showTab(t) {
+  const D = DET, host = $('dTabs'); host.innerHTML = '';
+  const tabs = D.kind === 'S' ? TS : TG; D.tab = t;
+  $('dTop').style.backgroundImage = `url(img/ui/tab${D.kind === 'S' ? 'S' : 'G'}_${t}.png)`;
+  for (const [k, x, w] of tabs) { const b = pos(el('div', { class: 'hot', title: k, 'data-tab': k, onclick: () => showTab(k) }), x, 49, w, 26); host.append(b); }
+  const B = $('dBody'); B.innerHTML = ''; B.style.background = '#d4d0c8';
+  ({ tax: tabTax, map: tabMap, img: tabImg, dist: tabDist, syn: tabSyn, cm: tabCm, src: tabSrc })[t](B, D);
+}
+const bar = (B, text, top) => B.append(pos(el('div', { class: 'bar' }, esc(text)), 0, top == null ? 2 : top, 1024, 19));
+function tabTax(B, D) {
+  B.style.background = 'url(img/ui/tax_bg.jpg) 0 0/1024px 693px';
+  const hi = SB.hi[D.ids[0]] || ['', '', ''];
+  const rows = D.kind === 'S' ? [['Tribe', hi[0]], ['Sub family', hi[1]], ['Family', hi[2]]] : D.kind === 'G' ? [['Tribe', hi[0]], ['Sub family', hi[1]], ['Family', hi[2]]] : [['Family', D.name.toUpperCase()]];
+  const gr = D.kind === 'F' ? [['Family', (BYID.get(D.ids[0]) || [, ''])[1]]] : rows;
+  gr.forEach(([l, v], i) => { B.append(pos(el('div', { class: 'abs', style: { font: 'bold 13px var(--arial)', color: '#fff' } }, l), 266, 246 + 31 * i, 90, 18), pos(el('div', { class: 'abs', style: { font: '13px var(--arial)', color: '#33ff33', border: '2px solid rgba(255,255,255,.7)', boxSizing: 'border-box', padding: '1px 3px' } }, esc(v)), 358, 240 + 31 * i, 233, 24)); });
+}
+// ---- maps ----
+function mapXY(lon, lat) { return [48 + (lon - 68.15) / (80.3 - 68.15) * 457, 4 + (24.75 - lat) / (24.75 - 8.07) * 582]; }
+function tabMap(B, D) {
+  bar(B, D.kind === 'S' ? 'Species Richness' : D.kind === 'G' ? 'Species Per Genera' : 'Genera Per Family', 2);
+  B.append(pos(el('img', { class: 'abs', src: 'img/ui/tabS_map.png', style: { objectFit: 'none', objectPosition: '0 -98px' }, alt: '' }), 0, 23, 0, 0)); B.lastChild.remove();
+  const tb = el('div', { class: 'abs', style: { left: '0', top: '23px', width: '1024px', height: '43px', background: '#d4d0c8' } }); B.append(tb);
+  const BT = (l, w, label, f) => tb.append(pos(el('div', { class: 'gbtn', style: { font: '11px/14px var(--arial)', paddingTop: '3px', background: '#d4d0c8' }, onclick: f }, label), l, 2, w, 38));
+  const st = { state: true, dist: false, wg: false, bg: '#c0c0c0' };
+  BT(1, 32, '', () => {}); BT(37, 32, '', () => {}); BT(73, 32, '', () => window.print());
+  tb.firstChild.innerHTML = '&#128193;'; tb.children[1].innerHTML = '&#127758;'; tb.children[2].innerHTML = '&#128438;';
+  BT(114, 100, 'Cancel State<br>Border', () => { st.state = !st.state; draw(); }); BT(219, 98, 'Apply District<br>Border', () => { st.dist = !st.dist; draw(); }); BT(321, 100, 'Apply Western<br>Ghat Border', () => { st.wg = !st.wg; draw(); });
+  tb.append(pos(el('div', { class: 'abs', style: { font: '11px/12px var(--arial)', color: '#0000c8' } }, 'Double Click on the screen to Select &amp;<br>Change the Background Colour.'), 440, 6, 260, 30));
+  const area = pos(el('div', { class: 'abs', style: { background: st.bg, overflow: 'hidden' } }), 0, 68, 1024, 625); B.append(area);
+  const cells = new Map(); const addIds = (ids) => { for (const id of ids) for (const gi of unpack(SBG.sp[id] || '')) cells.set(gi, (cells.get(gi) || 0) + 1); }; addIds(D.ids);
+  const inState = r => !CTX_STATE || r[11] === CTX_STATE;
+  const draw = () => {
+    area.style.background = st.bg;
+    let svg = `<svg width="1024" height="625" style="position:absolute;left:0;top:0">`;
+    const ring = (rings, fill, sw) => rings.map(r => `<path d="M${r.map(([x, y]) => { const p = mapXY(x, y); return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join('L')}Z" fill="${fill}" stroke="#000" stroke-width="${sw}"/>`).join('');
+    if (st.state) for (const [k, rings] of Object.entries(SBM.states)) svg += ring(rings, 'none', 1);
+    if (st.dist) for (const d of SBM.districts) svg += ring(Array.isArray(d[0][0]) ? d : [d], 'none', .5);
+    const vals = [...cells.values()], mx = Math.max(1, ...vals);
+    for (const [gi, n] of cells) { const r = SBG.g[gi]; if (!inState(r)) continue; const [x, y] = mapXY(r[1], r[2]);
+      const c = D.kind === 'S' ? '#008000' : D.kind === 'G' ? (n > mx * .66 ? '#00a0b0' : n > mx * .33 ? '#40d0e0' : '#a0f0ff') : (n > mx * .66 ? '#00c000' : n > mx * .33 ? '#40e040' : '#a0ffa0');
+      svg += `<rect x="${(x - 1.8).toFixed(1)}" y="${(y - 1.8).toFixed(1)}" width="3.6" height="3.6" fill="${c}"/>`; }
+    if (D.kind === 'S') for (const id of D.ids) for (const [lo, la] of (SBG.pts[id] || [])) { const [x, y] = mapXY(lo, la); svg += `<rect x="${(x - 1.5).toFixed(1)}" y="${(y - 1.5).toFixed(1)}" width="3" height="3" fill="#f00"/>`; }
+    if (st.wg) for (const rr of SBM.wg) svg += ring(Array.isArray(rr[0][0]) ? rr : [rr], 'none', 1.6);
+    for (const [k, l, lo, la] of [['gujarat', 'GUJARAT', 70.9, 22.6], ['maharashtra', 'MAHARASHTRA', 75.6, 19.5], ['karnataka', 'KARNATAKA', 76.2, 14.6], ['kerala', 'KERALA', 76.1, 10.3], ['tamilnadu', 'TAMIL NADU', 78.3, 10.9], ['goa', 'GOA', 74.2, 15.4]]) { const [x, y] = mapXY(lo, la); svg += `<text x="${x}" y="${y}" font-family="Arial" font-size="10" fill="#000" text-anchor="middle">${l}</text>`; }
+    svg += '</svg>';
+    if (D.kind === 'S') svg += `<div style="position:absolute;left:10px;top:226px;width:142px;height:62px;background:#e6e6e6;font:11px Arial;color:#0000c8"><div style="position:absolute;left:10px;top:9px;width:14px;height:14px;background:#008000;border:1px solid #444"></div><div style="position:absolute;left:32px;top:8px">Distribution in range</div><div style="position:absolute;left:10px;top:40px;width:14px;height:14px;background:#f00;border:1px solid #444"></div><div style="position:absolute;left:32px;top:39px">Distribution in points</div></div>`;
+    area.innerHTML = svg;
+  };
+  area.ondblclick = () => { st.bg = st.bg === '#c0c0c0' ? '#ffffff' : '#c0c0c0'; draw(); };
+  draw();
+}
+// ---- images ----
+function tabImg(B, D) {
+  const hostOnly = !D.ims.length, ims = D.ims, hostNames = [...new Set(D.hp.map(x => x[0] + ' ' + x[1]))];
+  const hostImgs = []; for (const n of hostNames) for (const [f, s] of (SB.hpi[n.toLowerCase()] || [])) hostImgs.push([f, s, n]);
+  let mode = hostOnly && hostImgs.length ? 'host' : 'but', i = 0;
+  const draw = () => {
+    B.innerHTML = ''; const list = mode === 'but' ? ims.map(([f, s]) => [f, s, D.name]) : hostImgs;
+    bar(B, list.length ? list[i][2] : D.name, 2);
+    const mk = (l, w, label, m) => { const t = pos(el('div', { class: 'abs', style: { font: '12px var(--arial)', color: '#0000a0', textAlign: 'center', lineHeight: '22px', border: '1px solid #808080', borderBottom: m === mode ? '0' : '1px solid #808080', background: m === mode ? '#d4d0c8' : '#c8c4bc', cursor: 'pointer', boxSizing: 'border-box', textDecoration: m === mode ? 'underline' : 'none' }, 'data-m': m, onclick: () => { if (m === 'host' && !hostImgs.length) return; mode = m; i = 0; draw(); } }, label), l, 24, w, 24); B.append(t); };
+    mk(6, 505, 'Butterfly Images', 'but'); mk(512, 505, 'Host Plant Images', 'host');
+    if (list.length) { const im = pos(el('img', { class: 'abs', id: 'dImg', alt: '' }), 40, 56, 503, 362); photo(im, list[i][0]); B.append(im);
+      B.append(pos(el('div', { class: 'abs', style: { font: '20px var(--arial)', color: '#1a1ac8', textAlign: 'center', whiteSpace: 'nowrap' } }, esc(list[i][1] ? 'Courtesy : ' + list[i][1] : '')), 0, 596, 1024, 28)); }
+    else B.append(pos(el('div', { class: 'abs', style: { font: '14px var(--arial)', color: '#555' } }, 'No pictures are available.'), 40, 70, 400, 20));
+    const pg = (l, t, f, id) => B.append(pos(el('div', { class: 'gbtn', id, style: { font: 'bold 12px/20px var(--arial)' }, onclick: f }, t), l, 629, 28, 28));
+    pg(14, '|&lt;', () => { i = 0; draw(); }, 'pF'); pg(44, '&lt;', () => { if (i > 0) i--; draw(); }, 'pP');
+    B.append(pos(el('div', { class: 'abs', id: 'pN', style: { font: '12px var(--arial)', background: '#fff', textAlign: 'center', lineHeight: '24px', border: '2px inset #fff', boxSizing: 'border-box', color: '#555' } }, list.length ? `[${i + 1}/${list.length}]` : ''), 74, 629, 130, 28));
+    pg(208, '&gt;', () => { if (i < list.length - 1) i++; draw(); }, 'pX'); pg(236, '&gt;|', () => { i = Math.max(0, list.length - 1); draw(); }, 'pL');
+  };
+  draw();
+}
+// ---- distribution ----
+function tabDist(B, D) {
+  bar(B, 'Distribution Data', 2);
+  let mode = 'pol';
+  const top = pos(el('div', { class: 'abs' }), 0, 22, 1024, 40); B.append(top);
+  const fam = D.kind === 'F' ? D.name.toUpperCase() : D.fam.toUpperCase(), gen = D.kind === 'S' ? D.row[2] : D.kind === 'G' ? D.name : '', sp = D.kind === 'S' ? D.row[3] : '';
+  const bx = (l, w, t, it) => top.append(pos(el('div', { class: 'abs', style: { font: (it ? 'italic ' : '') + '13px var(--arial)', color: '#0000a0', background: '#fff', border: '2px inset #fff', boxSizing: 'border-box', padding: '2px 3px', lineHeight: '17px' } }, esc(t)), l, 4, w, 24));
+  bx(437, 285, fam); bx(724, 144, gen, 1); bx(870, 146, sp, 1);
+  const rad = (l, label, m) => { const r = pos(el('div', { class: 'hot', 'data-m': m, style: { font: '11px var(--arial)', color: '#0000a0', lineHeight: '16px' }, onclick: () => { mode = m; draw(); } }), l, 14, 200, 16); r.innerHTML = `<span style="display:inline-block;width:9px;height:9px;border-radius:50%;border:1px solid #808080;background:#fff;vertical-align:middle;margin-right:6px" class="rd">${m === mode ? '<i style="display:block;width:5px;height:5px;margin:2px;border-radius:50%;background:#000"></i>' : ''}</span>${label}`; top.append(r); };
+  const body = pos(el('div', { class: 'abs', style: { background: '#d4d0c8' } }), 0, 64, 1024, 629); B.append(body);
+  const draw = () => {
+    top.querySelectorAll('.hot').forEach(x => x.remove()); rad(36, 'Political Zone', 'pol'); rad(194, 'Political,habitat and Biotic Zone', 'hab');
+    body.innerHTML = '';
+    const photoEl = pos(el('img', { class: 'abs', src: 'img/ui/dist_bg.jpg', alt: '' }), 646, 0, 378, 629); body.append(photoEl);
+    const box = pos(el('div', { class: 'abs', style: { overflow: 'auto', background: '#fff', border: '1px solid #808080' } }), 12, 8, 630, 590); body.append(box);
+    let h = '';
+    if (mode === 'pol') {
+      const rows = new Map();
+      for (const id of D.ids) for (const [s, d, t] of (SB.sd[id] || [])) { const a = rows.get(s) || new Map(); const b = a.get(d) || new Set(); b.add(t); a.set(d, b); rows.set(s, a); }
+      h = '<table class="dd" style="width:612px"><colgroup><col width="204"><col width="204"><col width="204"></colgroup><tr><th>State</th><th>District</th><th>Taluk</th></tr>';
+      for (const s of [...rows.keys()].sort()) { const ds = rows.get(s); let first = true; const n = [...ds.values()].reduce((a, b) => a + b.size, 0);
+        for (const d of [...ds.keys()].sort()) { let fd = true; for (const t of [...ds.get(d)].sort()) { h += '<tr>' + (first ? `<td class="a" rowspan="${n}">${esc(s)}</td>` : '') + (fd ? `<td class="w" rowspan="${ds.get(d).size}">${esc(d)}</td>` : '') + `<td class="a">${esc(t)}</td></tr>`; first = false; fd = false; } } }
+      h += '</table>';
+    } else {
+      const rows = []; for (const id of D.ids) for (const [z, hb] of (SB.shab[id] || [])) rows.push([z, nice(hb), D.kind === 'S' ? '' : SN(id)]);
+      const uniq = [...new Map(rows.map(r => [r.join('|'), r])).values()].sort();
+      h = '<table class="dd" style="width:612px"><colgroup><col width="204"><col width="204"><col width="204"></colgroup><tr><th>Biotic Zone</th><th>Habitat</th><th>' + (D.kind === 'S' ? '' : 'Species') + '</th></tr>' + uniq.map(r => `<tr><td class="a">${esc(nice(r[0]))}</td><td class="w">${esc(r[1])}</td><td class="a">${esc(r[2])}</td></tr>`).join('') + '</table>';
+    }
+    box.innerHTML = h;
+  };
+  draw();
+}
+// ---- synonyms ----
+function tabSyn(B, D) {
+  bar(B, 'Synonyms', 2);
+  B.append(pos(el('img', { class: 'abs', src: 'img/ui/syn_bg.jpg', alt: '' }), 556, 30, 468, 663));
+  const t = pos(el('div', { class: 'tree' }), 18, 30, 530, 348); B.append(t);
+  let h = `<div style="padding-left:34px"><span style="background:#0a246a;color:#fff;padding:3px 3px">Synonyms for ' ${esc(D.name)} '</span></div>`;
+  const syn = SB.syn[D.key] || [];
+  for (const [g, s, fl] of syn) { h += `<div style="padding-left:75px;color:#e01010">${esc(g + ' ' + s)}</div><div style="padding-left:112px;color:#008000">Source for the Synonym</div>`;
+    for (const f of fl) { const r = SB.fl[f] || []; h += `<div style="padding-left:150px;color:#1010e0">${esc(r[0] || '')}${r[2] ? ' ; ' + esc(r[2]) : ''}</div>`; } }
+  if (!syn.length) h += '<div style="padding-left:75px;color:#555;font-weight:normal">No synonyms</div>';
+  t.innerHTML = h;
+}
+function tabCm(B, D) {
+  B.style.background = 'url(img/ui/cm_bg.jpg) 0 0/1024px 693px';
+  const cn = D.ids.flatMap(id => (SB.cm[id] || []).map(c => [c[0], c[1]]));
+  const rows = [...new Map(cn.map(c => [c.join('|'), c])).values()];
+  const w = pos(el('div', { class: 'abs', style: { background: '#d4d0c8', border: '2px outset #fff', boxSizing: 'border-box', padding: '0' } }), 345, 468, 356, 26 + 20 * Math.min(rows.length + 1, 14) + 12);
+  w.innerHTML = `<div class="bar" style="top:0;width:100%;height:16px;line-height:16px">Common Name</div><div style="position:absolute;left:3px;top:19px;width:344px;max-height:${20 * 13 + 20}px;overflow:auto;background:#fff;border:1px solid #808080"><table style="border-collapse:collapse;font:bold 15px var(--arial);width:100%"><tr style="background:#000080;color:#fff"><td style="width:50%;padding:0 3px;border:1px solid #808080">LANGUAGE</td><td style="padding:0 3px;border:1px solid #808080">NAME</td></tr>${rows.map(r => `<tr style="font-weight:normal;font-size:14px"><td style="padding:0 3px;border:1px solid #808080">${esc(r[0])}</td><td style="padding:0 3px;border:1px solid #808080">${esc(r[1])}</td></tr>`).join('')}</table></div>`;
+  B.append(w);
+  if (!rows.length) w.querySelector('table').insertAdjacentHTML('beforeend', '<tr><td colspan="2" style="font-weight:normal;font-size:13px;padding:2px 3px">No common names</td></tr>');
+}
+function tabSrc(B, D) {
+  B.style.background = '#fff';
+  const fl = [...new Set(D.ids.flatMap(id => SB.src[id] || []))];
+  const hdr = pos(el('div', { class: 'abs', style: { font: 'bold 10px/16px var(--arial)', color: '#000', background: '#d4d0c8', paddingLeft: '4px' } }, 'Checklist; Journal name; Author; Year Of Publication Respectively'), 0, 0, 1024, 16); B.append(hdr);
+  const lbl = D.kind === 'S' ? `the species '${D.name}'` : D.kind === 'G' ? `the genus '${D.name}'` : `the family '${D.name.toUpperCase()}'`;
+  const box = pos(el('div', { class: 'abs sr', style: { overflow: 'auto', background: '#fff' } }), 0, 17, 1024, 676); B.append(box);
+  box.innerHTML = `<div style="background:#000080;color:#fff;margin:2px 22px 4px 22px;display:inline-block;padding:0 4px;font:bold 11px/16px var(--arial)">Source of information for ${esc(lbl)} in entire Western Ghats ( ${fl.length} )</div>` +
+    fl.map(f => { const r = SB.fl[f] || []; return `<div style="padding-left:34px;position:relative"><span style="position:absolute;left:12px;top:3px;width:12px;height:15px;border:1px solid #444;background:#fff;box-sizing:border-box"></span>${esc([r[0], r[1], r[2], r[3]].filter(x => x != null).join(' ; '))}</div>`; }).join('');
+}
+</script>
+</body>
+</html>

@@ -2075,6 +2075,78 @@
           ]
         }
       ]
+    },
+    {
+      "name": "Sahyadri Pathanga",
+      "icon": "apps/sahyadri-pathanga.png",
+      "origin": "Butterflies of Western Ghats: distribution maps, host plants and images of butterflies. DBT, Govt of India; M. Soubadra Devy and K.N. Ganeshaiah, ATREE (Ashoka Trust for Research in Ecology and the Environment).",
+      "credit": "Proprietary right holder: Dr. K.N. Ganeshaiah · Updated in 2026 by Dr. Sachin A. Rosario",
+      "category": "Butterflies",
+      "editions": [
+        {
+          "id": "sahyadri-pathanga",
+          "key": "v1",
+          "label": "Version 1 – Original",
+          "versionName": "Version 1 – Original",
+          "version": "1.0.0",
+          "released": "2026-11-16",
+          "published": true,
+          "summary": "The original program rebuilt screen for screen: click a state or the whole Western Ghats on the map to list its butterflies; open the vegetation, gridwise (click a 100 sq km grid) and thematic maps; list the butterflies that have pictures; search by common name, state, district and taluk, scientific name, or butterfly and host plant; open the Digitized Inventory of any family, genus or species with its taxonomy, maps, pictures, distribution data, synonyms, common names and sources.",
+          "facts": [
+            "305 butterfly species",
+            "160 genera",
+            "5 families",
+            "11 habitat types",
+            "Host plants"
+          ],
+          "web": "https://sachinrosario.github.io/ibin-apps/sahyadri-pathanga/",
+          "preview": "",
+          "downloads": [
+            {
+              "os": "windows",
+              "kind": "Installer",
+              "file": "SahyadriPathanga_1.0.0_Setup.exe",
+              "size": "29 MB",
+              "note": "Adds Start-menu and desktop shortcuts. No administrator password."
+            },
+            {
+              "os": "windows",
+              "kind": "No-install",
+              "file": "SahyadriPathanga.exe",
+              "size": "35 MB",
+              "note": "Runs straight from a folder or pen drive."
+            },
+            {
+              "os": "mac",
+              "kind": "App",
+              "file": "SahyadriPathanga_1.0.0_universal.dmg",
+              "size": "57 MB",
+              "note": "Intel and Apple-silicon Macs."
+            },
+            {
+              "os": "ubuntu",
+              "kind": "Package",
+              "file": "SahyadriPathanga_1.0.0_amd64.deb",
+              "size": "29 MB",
+              "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
+            },
+            {
+              "os": "any",
+              "kind": "Offline folder",
+              "file": "SahyadriPathanga_1.0.0_offline.zip",
+              "size": "27 MB",
+              "note": "Any computer. Extract, then double-click Open Kit.html."
+            }
+          ],
+          "changes": [
+            {
+              "version": "1.0.0",
+              "date": "2026-11-16",
+              "text": "Faithful rebuild of Sahyadri Pathanga."
+            }
+          ]
+        }
+      ]
     }
   ],
   "upcoming": [],

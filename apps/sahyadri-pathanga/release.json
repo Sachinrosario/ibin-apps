@@ -1,0 +1,7 @@
+{
+  "version": "1.0.0",
+  "title": "Sahyadri Pathanga – Version 1 – Original (1.0.0)",
+  "fileBase": "SahyadriPathanga",
+  "remote": ["img/photos"],
+  "test": "tests/sahyadri-pathanga.test.js"
+}
