@@ -100,7 +100,7 @@ const ok = (name, cond, extra) => { results.push(`${cond ? 'PASS' : 'FAIL'}  ${n
   await go('#/changes'); await p.waitForTimeout(400);
   const tl = (await text('.tiles')); ok('What\'s changed page shows the counts', /names confirmed/.test(tl) && /names updated/.test(tl));
   const rows1 = await count('#ct tr'); await p.fill('#cf', S.ch[1].split(' ')[0]); await p.waitForTimeout(200); ok('What\'s changed: filter works', (await count('#ct tr')) < rows1);
-  await p.click('[data-t="check"]'); await p.waitForTimeout(200); ok('What\'s changed: "To check" tab lists plants', (await count('#ct tr')) > 1);
+  await p.fill('#cf', ''); await p.click('[data-t="check"]'); await p.waitForTimeout(200); ok('What\'s changed: "To check" tab lists plants', (await count('#ct tr')) > 1);
   await p.click('[data-t="genus"]'); await p.waitForTimeout(200); ok('What\'s changed: genus-level tab lists entries', (await count('#ct tr')) > 1);
   { const [d] = await Promise.all([p.waitForEvent('download', { timeout: 8000 }).catch(() => null), p.click('#cdl')]); ok('name-change list downloads as CSV', !!d && /status,name_2015/.test(fs.readFileSync(await d.path(), 'utf8'))); }
   // 6 about

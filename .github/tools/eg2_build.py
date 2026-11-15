@@ -76,6 +76,7 @@ def rep(a, b, cnt=1):
     assert h.count(a) >= 1, a[:80]
     h = h.replace(a, b)
 rep('x0: 72.7, x1: 78.7, y0: 8.0, y1: 21.5', 'x0: 74.0, x1: 87.6, y0: 8.0, y1: 22.7'); rep('Math.cos(14.8 * Math.PI / 180)', 'Math.cos(15.3 * Math.PI / 180)')
+rep("  path(x, g) { const ps = g.t === 'Polygon' ? [g.c] : g.c;", "  path(x, g) { if (g.t === 'LineString' || g.t === 'MultiLineString') return this.lines(x, g); const ps = g.t === 'Polygon' ? [g.c] : g.c;")  # one Eastern Ghats district edge is stored as a line
 rep('<script src="data/names.js"></script>', '<script src="data/names.js"></script>\n<script src="data/extra.js"></script>')
 rep('NM = AM_NAMES;', 'NM = AM_NAMES, EX = AM_EXTRA;')
 # per plant extras into SP
