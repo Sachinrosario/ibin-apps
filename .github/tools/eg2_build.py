@@ -103,6 +103,6 @@ rep(team_old, '<h2>Team</h2><div class="card">' + team + '<img src="img/ui/team1
 rep("<p>This is Version 2 of its 2026 rebuild by IBIN Apps: the original data with current plant names,", "<p>This is Version 2 of its 2026 rebuild by IBIN Apps: the original data with current plant names, IUCN Red List status, current synonyms and common names and DNA-barcode counts,")
 rep("<li>GIS export of a plant's grids", "<li>New in 2026: the <b>IUCN Red List status</b>, <b>current synonyms</b> and <b>common names</b> (Catalogue of Life, GBIF) and <b>DNA-barcode counts</b> (GenBank rbcL, matK, ITS, trnH-psbA; BOLD) are shown on each plant page. Distribution, pictures and fliers stay as in 2015.</li><li>GIS export of a plant's grids")
 open(p, 'w', encoding='utf-8').write(h)
-json.dump({'version': ver, 'title': f'Eastern Ghats Mapping – Version 2 – Updated ({ver})', 'fileBase': 'EasternGhatsMapping2', 'test': 'tests/mapping.test.js'}, open(f'{E2}/release.json', 'w'), ensure_ascii=False)
+json.dump({'version': ver, 'title': f'Eastern Ghats Mapping – Version 2 – Updated ({ver})', 'fileBase': 'EasternGhatsMapping2', 'test': 'tests/mapping2.test.js'}, open(f'{E2}/release.json', 'w'), ensure_ascii=False)
 pj = json.load(open(f'{E2}/package.json')); pj['version'] = ver; json.dump(pj, open(f'{E2}/package.json', 'w'), indent=2)
 print('built', E2)
