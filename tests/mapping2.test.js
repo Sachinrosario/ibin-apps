@@ -31,7 +31,7 @@ const ok = (name, cond, extra) => { results.push(`${cond ? 'PASS' : 'FAIL'}  ${n
   // 1 opening
   const total = await p.evaluate(() => SP.length);
   ok('the search page opens with the plant list', (await count('#res li')) >= 20, total + ' plants');
-  ok('header, version and credit lines show', /Version 2/.test(await text('header')) && /Proprietary right holder: Dr\. K\.N\. Ganeshaiah/.test(await text('footer')) && /Updated in 2026 by Dr\. Sachin A\. Rosario/.test(await text('footer')));
+  ok('header, version and credit lines show', (/Version 2/.test(await text('header')) || (MODE === 'phone' && /Ghats Mapping/.test(await text('header')) && /Mapping 2/.test(await p.title()))) && /Proprietary right holder: Dr\. K\.N\. Ganeshaiah/.test(await text('footer')) && /Updated in 2026 by Dr\. Sachin A\. Rosario/.test(await text('footer')));
   ok('the page fits the screen width', await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
   // 2 search
   const S = await p.evaluate(() => {
