@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Sasya Sampada 2",
+  "mainBinaryName": "sasya-sampada-2",
+  "version": "2.0.0",
+  "identifier": "in.ibinapps.sasyasampada2",
+  "build": {
+    "frontendDist": "../web"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Sasya Sampada 2",
+        "width": 1100,
+        "height": 840,
+        "minWidth": 380,
+        "minHeight": 560,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "publisher": "IBIN Apps",
+    "copyright": "Sasya Sampada 2 (c) K.N. Ganeshaiah, University of Agricultural Sciences, Bangalore. Rebuild 2026.",
+    "category": "Education",
+    "shortDescription": "Medicinal and economically important plants of India",
+    "longDescription": "Version 1: Sasya Sampada 2, the plant resources database of Jeeva Sampada, as a program of its own: 1,956 medicinal and economically important plants with classification, common names, floras, distribution maps, web pages, pictures, accessions, uses, pests and patents.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    }
+  }
+}
