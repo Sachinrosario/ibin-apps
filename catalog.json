@@ -2018,7 +2018,7 @@
           "versionName": "Version 1 – Original",
           "version": "1.0.0",
           "released": "2026-11-16",
-          "published": false,
+          "published": true,
           "summary": "The original program rebuilt screen for screen: click a state or biotic zone on the map of India to list its butterfly families, genera and species; search by common name, state and district, scientific name, or butterfly and host plant; open the Digitized Inventory of any family, genus or species with its taxonomy, state maps, pictures, distribution data, synonyms, common names and flora list.",
           "facts": [
             "2,043 butterfly species",
@@ -2034,35 +2034,35 @@
               "os": "windows",
               "kind": "Installer",
               "file": "PathangaBharathi_1.0.0_Setup.exe",
-              "size": "",
+              "size": "29 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password."
             },
             {
               "os": "windows",
               "kind": "No-install",
               "file": "PathangaBharathi.exe",
-              "size": "",
+              "size": "35 MB",
               "note": "Runs straight from a folder or pen drive."
             },
             {
               "os": "mac",
               "kind": "App",
               "file": "PathangaBharathi_1.0.0_universal.dmg",
-              "size": "",
+              "size": "57 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
               "file": "PathangaBharathi_1.0.0_amd64.deb",
-              "size": "",
+              "size": "29 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
               "file": "PathangaBharathi_1.0.0_offline.zip",
-              "size": "",
+              "size": "27 MB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
