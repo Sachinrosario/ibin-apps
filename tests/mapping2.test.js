@@ -59,6 +59,7 @@ const ok = (name, cond, extra) => { results.push(`${cond ? 'PASS' : 'FAIL'}  ${n
   // 3 plant pages
   await q(S.ch[0]); await p.click('#res li a'); await p.waitForTimeout(500);
   ok('clicking a result opens the plant page', /#\/s\//.test(await p.evaluate(() => location.hash)) && (await text('.sci')).includes(S.ch[0]));
+  await go('#/s/' + S.ch[2]);
   ok('plant page shows the updated-name note with the 2015 name', /Name updated in 2026/.test(await text('#app')) && (await text('#app')).includes(S.ch[1]));
   for (const h of ['Where it grows', 'Local names', 'Synonyms and the floras that use them', 'Synonyms now (Catalogue of Life)', 'Common names now', 'DNA barcodes', 'Images and flier', 'Classification']) ok('plant page section: ' + h, await p.evaluate(h => [...document.querySelectorAll('h2')].some(x => x.textContent.trim() === h), h));
   ok('plant page map is drawn', await p.evaluate(() => { const c = document.querySelector('#sm canvas'); return !!c && c.width > 50; }));
@@ -84,7 +85,8 @@ const ok = (name, cond, extra) => { results.push(`${cond ? 'PASS' : 'FAIL'}  ${n
   await go('#/map'); await p.waitForTimeout(800);
   ok('map page opens and draws', await p.evaluate(() => { const c = document.querySelector('#mm canvas'); return !!c && c.width > 100; }));
   const box = await p.locator('#mm canvas').first().boundingBox(); let sel = 0;
-  for (const [fx, fy] of [[.5, .5], [.45, .45], [.55, .5], [.5, .4], [.4, .6], [.6, .6], [.35, .35], [.65, .45]]) { await p.mouse.click(box.x + box.width * fx, box.y + box.height * fy); await p.waitForTimeout(200); sel = parseInt((await text('.tile b')) || '0'); if (sel > 0) break; }
+  const pts = []; for (let a = 0.2; a < 0.85; a += 0.07) for (let c = 0.2; c < 0.85; c += 0.07) pts.push([a, c]);
+  for (const [fx, fy] of pts) { await p.mouse.click(box.x + box.width * fx, box.y + box.height * fy); await p.waitForTimeout(120); sel = parseInt((await text('.tile b')) || '0'); if (sel > 0 && (await count('.list a')) > 0) break; }
   ok('clicking the map selects a grid and lists its plants', sel > 0 && (await count('.list a')) > 0, sel + ' grids, ' + (await count('.list a')) + ' plants');
   for (const k of ['geojson', 'kml', 'csv']) { const [d] = await Promise.all([p.waitForEvent('download', { timeout: 8000 }).catch(() => null), p.locator(`#side [data-ex="${k}"]`).first().click()]); ok('GIS export of selected grids: ' + k, !!d && fs.readFileSync(await d.path(), 'utf8').length > 40); }
   { const [d] = await Promise.all([p.waitForEvent('download', { timeout: 8000 }).catch(() => null), p.click('#csv')]); ok('plant list of the selected grids downloads as CSV', !!d && /scientific_name/.test(fs.readFileSync(await d.path(), 'utf8'))); }
