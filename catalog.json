@@ -2106,35 +2106,35 @@
               "os": "windows",
               "kind": "Installer",
               "file": "SahyadriPathanga_1.0.0_Setup.exe",
-              "size": "29 MB",
+              "size": "5.9 MB",
               "note": "Adds Start-menu and desktop shortcuts. No administrator password."
             },
             {
               "os": "windows",
               "kind": "No-install",
               "file": "SahyadriPathanga.exe",
-              "size": "35 MB",
+              "size": "14 MB",
               "note": "Runs straight from a folder or pen drive."
             },
             {
               "os": "mac",
               "kind": "App",
               "file": "SahyadriPathanga_1.0.0_universal.dmg",
-              "size": "57 MB",
+              "size": "11 MB",
               "note": "Intel and Apple-silicon Macs."
             },
             {
               "os": "ubuntu",
               "kind": "Package",
               "file": "SahyadriPathanga_1.0.0_amd64.deb",
-              "size": "29 MB",
+              "size": "5.6 MB",
               "note": "Ubuntu 22.04 or newer, Intel/AMD PCs."
             },
             {
               "os": "any",
               "kind": "Offline folder",
               "file": "SahyadriPathanga_1.0.0_offline.zip",
-              "size": "27 MB",
+              "size": "32 MB",
               "note": "Any computer. Extract, then double-click Open Kit.html."
             }
           ],
