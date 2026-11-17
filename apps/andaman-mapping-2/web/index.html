@@ -137,7 +137,7 @@ const SP = C.sp.map(r => {
   const id = r[0], n = NM.n[id] || null, name15 = r[2];
   const s = {id, genus: r[1], name15, fam: C.fams[r[3]], hab: r[4].map(i => C.habits[i]), mask: r[5], fl: r[6], rep: r[7], code: n ? n[0] : 0};
   s.cur = n && n[0] === 2 ? n[1] : name15;
-  s.auth = n && n[0] !== 3 ? n[2] : ''; s.key = n && n[3] ? n[3] : ''; s.gfam = n && n[0] !== 3 ? n[4] : ''; s.sug = n && n[0] === 3 ? n[1] : ''; s.why = n && n[0] === 3 ? n[2] : '';
+  s.auth = n && n[0] !== 3 ? n[2] : ''; s.key = n && n[3] ? n[3] : ''; s.gfam = n && n[0] !== 3 ? n[4] : ''; s.sug = n && n[0] === 3 ? n[1] : ''; s.why = n && n[0] === 3 ? ({'no species match': 'GBIF found no species with this spelling (a misspelling, a genus-only record or a name GBIF does not list)', 'accepted name is not a species': 'GBIF accepts this name only above species level (genus, hybrid or variety)'}[n[2]] || n[2]) : '';
   s.changed = s.cur !== name15;
   const dd = D.d[id] || [[], [], [], []];
   s.cm = dd[0]; s.syn = dd[1];
@@ -221,6 +221,9 @@ const _ctr = [];
 function ctr(i) { if (_ctr[i]) return _ctr[i]; const g = M.grid[i], ring = g.t === 'Polygon' ? g.c[0] : g.c[0][0]; let x = 0, y = 0; ring.forEach(p => { x += p[0]; y += p[1]; }); return (_ctr[i] = [x / ring.length, y / ring.length]); }
 const gridBox = i => { const g = M.grid[i], ring = g.t === 'Polygon' ? g.c[0] : g.c[0][0]; const xs = ring.map(p => p[0]), ys = ring.map(p => p[1]); return [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)]; };
 const AREAS = [...new Set(C.grids.map(g => g[2]).filter(Boolean))].sort();
+// The 2015 database stored island names in a 15-letter field, so some are cut short or in lower case; show them in full
+const AN = {'Barren hot spri':'Barren Hot Spring','Batti Maly':'Batti Malv Island','East I':'East Island','Interview':'Interview Island','Land fall':'Landfall Island','Mahatma gandhi':'Mahatma Gandhi','Neil':'Neil Island','Paget I':'Paget Island','Reef I':'Reef Island','Sir hugh ross':'Sir Hugh Ross Island','Spike I':'Spike Island','West I':'West Island','Havelock':'Havelock Island','Rutland':'Rutland Island','Chowra':'Chowra Island','Teressa':'Teressa Island','Bompoka':'Bompoka Island','Katchal':'Katchal Island','Camorta':'Camorta Island','Nancowry':'Nancowry Island','Trinkat':'Trinkat Island','Tillanghong':'Tillanghong Island','Kondul':'Kondul Island'};
+const an = a => AN[a] || a;
 
 class MapView {
   constructor(el, o = {}) {
@@ -277,7 +280,7 @@ class MapView {
 }
 
 /* ---------- GIS export ---------- */
-function gridProps(i, n) { const g = C.grids[i]; const [lon, lat] = ctr(i); return {grid: g[0], code: g[1], area: g[2], division: g[3], lon: +lon.toFixed(5), lat: +lat.toFixed(5), count: n}; }
+function gridProps(i, n) { const g = C.grids[i]; const [lon, lat] = ctr(i); return {grid: g[0], code: g[1], area: an(g[2]), division: g[3], lon: +lon.toFixed(5), lat: +lat.toFixed(5), count: n}; }
 const csvq = v => /[",\n]/.test(String(v)) ? '"' + String(v).replace(/"/g, '""') + '"' : String(v);
 function download(name, mime, text) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], {type: mime})); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); }
 function exportGrids(kind, items, base, label) { // items: [[gridIndex, count]]
@@ -304,7 +307,7 @@ function viewSpecies(app, id) {
   const s = byId.get(+id); if (!s) { app.innerHTML = '<h1>Not found</h1><p><a href="#/">Back to search</a></p>'; return; }
   document.title = nameTxt(s) + ' · Andaman Mapping 2';
   const p = picOf(s), dd = D.d[s.id] || [[], [], [], []], sg = new Map(M.sg[s.id] || []);
-  const gs = [...sg.keys()].map(i => C.grids[i]), areas = [...new Set(gs.map(g => g[2]).filter(Boolean))], divs = [...new Set(gs.map(g => g[3]).filter(Boolean))];
+  const gs = [...sg.keys()].map(i => C.grids[i]), areas = [...new Set(gs.map(g => an(g[2])).filter(Boolean))], divs = [...new Set(gs.map(g => g[3]).filter(Boolean))];
   const t = C.tax[C.fams.indexOf(s.fam)] || [];
   const dist = dd[2].filter(r => r.some(clean)), rng = dd[3].filter(r => r.some(clean));
   const byLang = new Map(); s.cm.forEach(([l, n]) => { (byLang.get(l) || byLang.set(l, []).get(l)).push(n); });
@@ -343,7 +346,7 @@ function viewMap(app) {
   app.innerHTML = `<h1>Map</h1><p class="lead">Drag to move, pinch or scroll to zoom. Tap grids to select them and list the plants recorded there, or switch to the species-count map.</p>
   <div class="tabs"><button class="chip" data-m="pick">Pick grids, list plants</button><button class="chip" data-m="count">Species count per grid</button></div>
   <div class="cols"><div class="mapcol"><div class="map" id="mm"></div>
-  <div class="row" style="margin-top:8px"><span class="lead" style="margin:0">Go to:</span><select id="area" aria-label="Area"><option value="">Whole archipelago</option>${AREAS.map(a => `<option>${esc(a)}</option>`).join('')}</select>
+  <div class="row" style="margin-top:8px"><span class="lead" style="margin:0">Go to:</span><select id="area" aria-label="Area"><option value="">Whole archipelago</option>${AREAS.map(a => `<option value="${esc(a)}">${esc(an(a))}</option>`).join('')}</select>
   <label><input type="checkbox" id="lG" checked> Grids</label><label><input type="checkbox" id="lP" checked> Places</label><label><input type="checkbox" id="lR"> Roads</label><label><input type="checkbox" id="lV"> Rivers</label></div></div>
   <div id="side"></div></div>`;
   const mv = new MapView($('#mm'), {onPick: i => { if (mp.mode !== 'pick' || i < 0) return; mp.sel.has(i) ? mp.sel.delete(i) : mp.sel.add(i); mv.sel = mp.sel; side(); mv.draw(); }}); mapsToClean.push(mv); mv.sel = mp.sel;

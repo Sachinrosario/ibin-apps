@@ -1,1 +1,1 @@
-{"version": "2.0.2", "title": "Andaman Mapping – Version 2 – Updated (2.0.2)", "fileBase": "AndamanMapping2"}
+{"version": "2.0.3", "title": "Andaman Mapping – Version 2 – Updated (2.0.3)", "fileBase": "AndamanMapping2", "test": "tests/andaman-mapping-2.test.js"}

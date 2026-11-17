@@ -1,4 +1,6 @@
-## Andaman Mapping – Version 2 – Updated (2.0.2)
+## Andaman Mapping – Version 2 – Updated (2.0.3)
+
+2.0.3: island names in the map's "Go to" list are written in full (the 2015 database cut them at 15 letters, for example "Barren hot spri", "Batti Maly", "Interview"), and the note on a plant whose name is left for a taxonomist to check now explains why in plain words. Found by installing and testing the Windows installer. Everything else is as before.
 
 2.0.2: a plant page has a new button, "Show all … original images and the complete flier", which fetches them from the public Pictures and Fliers pack on the IBIN Apps releases page (internet needed once; the computer keeps a copy for offline use). Everything else is as before.
 
